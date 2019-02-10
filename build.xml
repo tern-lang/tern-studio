@@ -10,18 +10,18 @@
       <arg value="install" />
       <arg value="-DskipTests" />
    </exec>
-   <delete file="../tern-site/www.snapscript.org/download/snapd.jar" />
-   <copy file="tern-studio/target/snapd.jar" tofile="../tern-site/www.snapscript.org/download/snapd.jar" overwrite="true" />
+   <delete file="../tern-site/www.tern-lang.org/download/ternd.jar" />
+   <copy file="tern-studio/target/ternd.jar" tofile="../tern-site/www.tern-lang.org/download/ternd.jar" overwrite="true" />
    <exec executable="${ant.home}\bin\ant.bat">
       <arg value="-f" />
       <arg value="tern-studio-agent\build.xml" />
    </exec>
-   <delete file="../tern-site/www.snapscript.org/download/snap.jar" />
-   <copy file="tern-studio-agent/target/tern-studio-agent-${build.version}-jar-with-dependencies.jar" tofile="../tern-site/www.snapscript.org/download/snap.jar" overwrite="true" />
+   <delete file="../tern-site/www.tern-lang.org/download/tern.jar" />
+   <copy file="tern-studio-agent/target/tern-studio-agent-${build.version}-jar-with-dependencies.jar" tofile="../tern-site/www.tern-lang.org/download/tern.jar" overwrite="true" />
    <exec executable="${java.home}\bin\java.exe">
       <arg value="-agentlib:jdwp=transport=dt_socket,server=y,address=8111,suspend=n"/>
       <arg value="-jar" />
-      <arg value="../tern-site/www.snapscript.org/download/snapd.jar" />
+      <arg value="../tern-site/www.tern-lang.org/download/ternd.jar" />
       <arg value="--directory=tern-studio\work" />
       <arg value="--port=4457"/>
       <arg value="--log-level=INFO"/>  

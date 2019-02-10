@@ -19,10 +19,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class StudioApplication {
 
-   private static final String ABOUT_NAME = "Snap Develop";
+   private static final String ABOUT_NAME = "Tern Studio";
    private static final String[] SEARCH_FILES = {
-      "snapd.ini",
-      "snap-studio.ini"
+      "ternd.ini",
+      "tern-studio.ini"
    };
 
    public static void main(String[] list) throws Exception {
@@ -49,7 +49,7 @@ public class StudioApplication {
          System.setProperty("com.apple.mrj.application.apple.menu.about.name", ABOUT_NAME);
          UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
          SplashScreen.getPanel().show(60000); // 1 minute
-         SplashScreen.getPanel().update("Snap Studio " + version);
+         SplashScreen.getPanel().update(ABOUT_NAME + " " + version);
       }
       SpringApplication.run(StudioApplication.class, list);
       

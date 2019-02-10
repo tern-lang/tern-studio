@@ -70,7 +70,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <mainClass>tern.studio.StudioApplication</mainClass>
-          <finalName>snapd</finalName>
+          <finalName>ternd</finalName>
           <excludes>
             <exclude>
               <groupId>tern</groupId>
