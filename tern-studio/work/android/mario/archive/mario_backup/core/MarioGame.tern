@@ -1,0 +1,62 @@
+import tern.game.framework.Screen;
+import tern.game.framework.gfx.AndroidGame;
+
+import mario.screens.SplashLoadingScreen;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface;
+
+/**
+ * Main Entry Class for the game (Only activity used in game)
+ * 
+ * @author mahesh
+ *
+ */
+class MarioGame extends AndroidGame {
+
+   public const resourceManager: MarioResourceManager;
+   public const soundManager: MarioSoundManager;
+   public static const QUIT_GAME_DIALOG: Integer = 0;
+   
+   public new(activity: Activity, w: Float, h: Float, isLandscape: Boolean): super(activity, w, h, isLandscape) {
+      this.soundManager = new MarioSoundManager(this);
+      this.resourceManager = new MarioResourceManager(this);
+   }
+
+   public override getStartScreen(): Screen {
+      return new SplashLoadingScreen(this);
+   }
+
+   public override onBackPressed() {
+      getCurrentScreen().onBackPressed();
+   }
+
+   public override onResume() {
+      super.onResume();
+      if (soundManager != null)
+         soundManager.playMusic();
+
+   }
+
+   public override onPause() {
+      super.onPause();
+      if (soundManager != null)
+         soundManager.pauseMusic();
+   }
+
+   public override onCreateDialog(id: Integer): Dialog {
+      var dialog: Dialog = null;
+      if (id == QUIT_GAME_DIALOG) {
+
+         dialog = new AlertDialog.Builder(getContext()).setTitle("Quit Game").setPositiveButton("Return to main menu?", 
+            (dialog: DialogInterface, whichButton: Integer) -> {
+               getContext().finish();
+            }
+         ).setNegativeButton("Quit", null).setMessage("Cancel").create();
+      }
+      return dialog;
+   }
+}
+

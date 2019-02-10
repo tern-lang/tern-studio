@@ -54539,15 +54539,15 @@ var ts;
             ScriptInfo.prototype.addChild = function (childInfo) {
                 this.children.push(childInfo);
             };
-            ScriptInfo.prototype.snap = function () {
+            ScriptInfo.prototype.tern = function () {
                 return this.svc.getSnapshot();
             };
             ScriptInfo.prototype.getText = function () {
-                var snap = this.snap();
+                var snap = this.tern();
                 return snap.getText(0, snap.getLength());
             };
             ScriptInfo.prototype.getLineInfo = function (line) {
-                var snap = this.snap();
+                var snap = this.tern();
                 return snap.index.lineNumberToInfo(line);
             };
             ScriptInfo.prototype.editContent = function (start, end, newText) {
@@ -54557,7 +54557,7 @@ var ts;
                 return this.svc.getTextChangesBetweenVersions(startVersion, endVersion);
             };
             ScriptInfo.prototype.getChangeRange = function (oldSnapshot) {
-                return this.snap().getChangeRange(oldSnapshot);
+                return this.tern().getChangeRange(oldSnapshot);
             };
             return ScriptInfo;
         }());
@@ -54626,7 +54626,7 @@ var ts;
             LSHost.prototype.getScriptSnapshot = function (filename) {
                 var scriptInfo = this.getScriptInfo(filename);
                 if (scriptInfo) {
-                    return scriptInfo.snap();
+                    return scriptInfo.tern();
                 }
             };
             LSHost.prototype.setCompilationSettings = function (opt) {
@@ -54691,7 +54691,7 @@ var ts;
             LSHost.prototype.saveTo = function (filename, tmpfilename) {
                 var script = this.getScriptInfo(filename);
                 if (script) {
-                    var snap = script.snap();
+                    var snap = script.tern();
                     this.host.writeFile(tmpfilename, snap.getText(0, snap.getLength()));
                 }
             };
@@ -54726,7 +54726,7 @@ var ts;
             LSHost.prototype.lineToTextSpan = function (filename, line) {
                 var path = ts.toPath(filename, this.host.getCurrentDirectory(), this.getCanonicalFileName);
                 var script = this.filenameToScript.get(path);
-                var index = script.snap().index;
+                var index = script.tern().index;
                 var lineInfo = index.lineNumberToInfo(line + 1);
                 var len;
                 if (lineInfo.leaf) {
@@ -54745,7 +54745,7 @@ var ts;
             LSHost.prototype.lineOffsetToPosition = function (filename, line, offset) {
                 var path = ts.toPath(filename, this.host.getCurrentDirectory(), this.getCanonicalFileName);
                 var script = this.filenameToScript.get(path);
-                var index = script.snap().index;
+                var index = script.tern().index;
                 var lineInfo = index.lineNumberToInfo(line);
                 // TODO: assert this offset is actually on the line
                 return (lineInfo.offset + offset - 1);
@@ -54757,7 +54757,7 @@ var ts;
             LSHost.prototype.positionToLineOffset = function (filename, position) {
                 var path = ts.toPath(filename, this.host.getCurrentDirectory(), this.getCanonicalFileName);
                 var script = this.filenameToScript.get(path);
-                var index = script.snap().index;
+                var index = script.tern().index;
                 var lineOffset = index.charOffsetToLineNumberAndPos(position);
                 return { line: lineOffset.line, offset: lineOffset.offset + 1 };
             };

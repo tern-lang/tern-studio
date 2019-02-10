@@ -19,13 +19,13 @@ public class LocalProcessLauncher {
 //      CommandLineInterpreter.main(
 //            new String[] {
 //            "--cp=c:/Work/development/snapscript/snap-release/../snap-develop/snap-studio/work/demo/physics/src;c:/Work/development/snapscript/snap-release/../snap-develop/snap-studio/work/demo/physics/assets/",      
-//            "--s=wireframe/render3d.snap",
+//            "--s=wireframe/render3d.tern",
 //            "--v=true"});     
       
       LocalProcess.main(
             new String[] {
             "--cp=../snap-studio/work/demo/games/src;../snap-studio/work/demo/games/assets/",      
-            "--s=mario/MarioGame.snap",
+            "--s=mario/MarioGame.tern",
             "--w=true", // suspend
             "--p=7799",
             "--v=true", 
@@ -35,7 +35,7 @@ public class LocalProcessLauncher {
 //      LocalProcess.main(
 //            new String[] {
 //            "--cp=../snap-studio/work/demo/misc/src",      
-//            "--s=text_test.snap",
+//            "--s=text_test.tern",
 //            "--e=main(args)",
 //            "--p=7799",
 //            "--v=true", 
@@ -44,7 +44,7 @@ public class LocalProcessLauncher {
       
 //      LocalProcess.main(
 //            new String[] {
-//            "--script=foo.snap",
+//            "--script=foo.tern",
 //            "--verbose=true", 
 //            "foo", 
 //            "blah"});        

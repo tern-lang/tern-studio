@@ -1,0 +1,87 @@
+import java.util.List;
+
+import tern.game.framework.Game;
+import tern.game.framework.Graphics;
+import tern.game.framework.Screen;
+import tern.game.framework.Input.TouchEvent;
+
+import mario.core.Assets;
+import android.graphics.Rect;
+import android.util.Log;
+
+class MainMenuScreen extends Screen {
+   var playBound=new Rect(6,42,100,77);
+   var scoreBound=new Rect(6,95,150,117);
+   var optionBound=new Rect(6,141,99,163);
+   
+   public new(game): super(game) {
+    }
+
+    
+    public override update(deltaTime: Float) {
+      try {
+        var touchEvents = game.getInput().getTouchEvents();
+
+        var len = touchEvents.size();
+        for (var i = 0; i < len; i++) {
+            var event = touchEvents.get(i);
+            if (event.type == TouchEvent.TOUCH_UP) {
+               if (inBounds(event, playBound)) {
+                   var gameScreen=new GameScreen(game);
+                  game.setScreen(gameScreen);
+                  gameScreen.loadGame();
+                  Log.i("Game","starts");
+               }else if(inBounds(event, scoreBound)){
+                  Log.i("Game","hight Score clicked");
+               }else if(inBounds(event, optionBound)){
+                  Log.i("Game","Options clicked");
+               }
+            }
+        }
+      }catch(e){
+         e.printStackTrace();
+      }
+    }
+
+     
+   private inBounds(event, x, y, width,
+             height) {
+        if (event.x > x && event.x < x + width - 1 && event.y > y
+                && event.y < y + height - 1)
+            return true;
+        else
+            return false;
+    }
+
+    private inBounds(event, r) {
+          if (event.x > r.left && event.x < r.right && event.y > r.top
+                && event.y < r.bottom)
+            return true;
+        else
+            return false;
+          //r.contains(x,y);
+    }
+
+    
+    public override paint(deltaTime: Float) {
+        var g = game.getGraphics();
+        g.drawImage(Assets.menu, 0, 0);
+    }
+
+    public override pause() {
+    }
+
+    public override resume() {
+
+    }
+    
+    public override dispose() {
+
+    }
+    
+    public override onBackPressed() {
+        android.os.Process.killProcess(android.os.Process.myPid());
+
+    }
+}
+

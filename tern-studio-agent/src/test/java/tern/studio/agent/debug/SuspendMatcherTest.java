@@ -19,15 +19,15 @@ public class SuspendMatcherTest extends TestCase {
       large.put(210, true);
       large.put(66, true);
       large.put(7, true);
-      breakpoints.put("/test.snap", test);
-      breakpoints.put("/path/large.snap", large);
+      breakpoints.put("/test.tern", test);
+      breakpoints.put("/path/large.tern", large);
       BreakpointMatcher matcher = new BreakpointMatcher();
       matcher.update(breakpoints);
-      assertTrue(matcher.isBreakpoint("/test.snap", 7));
-      assertFalse(matcher.isBreakpoint("/test.snap", 77));
-      assertFalse(matcher.isBreakpoint("/test.snap", 1334));
-      assertTrue(matcher.isBreakpoint("/test.snap", 12));
-      assertFalse(matcher.isBreakpoint("/test.snap", 8));
-      assertTrue(matcher.isBreakpoint("/path/large.snap", 7));
+      assertTrue(matcher.isBreakpoint("/test.tern", 7));
+      assertFalse(matcher.isBreakpoint("/test.tern", 77));
+      assertFalse(matcher.isBreakpoint("/test.tern", 1334));
+      assertTrue(matcher.isBreakpoint("/test.tern", 12));
+      assertFalse(matcher.isBreakpoint("/test.tern", 8));
+      assertTrue(matcher.isBreakpoint("/path/large.tern", 7));
    }
 }

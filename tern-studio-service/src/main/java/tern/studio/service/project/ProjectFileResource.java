@@ -43,7 +43,7 @@ public class ProjectFileResource implements Resource {
    public void handle(Request request, Response response) throws Throwable {
       Path path = request.getPath();
       Project project = workspace.getByPath(path);
-      String projectPath = getPath(project, request); // /<project-name>/<project-path> or /default/blah.snap
+      String projectPath = getPath(project, request); // /<project-name>/<project-path> or /default/blah.tern
    
       if(projectPath.startsWith("/decompile") && projectPath.endsWith(".java")) {
          handleDecompile(request, response);
@@ -56,7 +56,7 @@ public class ProjectFileResource implements Resource {
       Path path = request.getPath();
       Project project = workspace.getByPath(path);
       String projectName = project.getName();
-      String projectPath = getPath(project, request); // /<project-name>/<project-path> or /default/blah.snap
+      String projectPath = getPath(project, request); // /<project-name>/<project-path> or /default/blah.tern
       FileData projectFile = cache.getFile(projectName, projectPath);
       OutputStream stream = response.getOutputStream();
       String type = resolver.resolveType(projectPath);
@@ -125,7 +125,7 @@ public class ProjectFileResource implements Resource {
    
    protected String getPath(Project project, Request request) throws Exception {
       Path path = request.getPath(); 
-      String projectPath = path.getPath(2); // /<project-name>/<project-path> or /default/blah.snap
+      String projectPath = path.getPath(2); // /<project-name>/<project-path> or /default/blah.tern
       
       if(isDownload()) {
          return project.getRealPath(projectPath);

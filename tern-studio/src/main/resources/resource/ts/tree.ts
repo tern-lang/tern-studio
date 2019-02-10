@@ -5,11 +5,11 @@ import {Command} from "commands"
 
 export class FilePath {
    
-   private _resourcePath: string; // /resource/<project>/blah/script.snap
-   private _projectPath: string; // /blah/script.snap
+   private _resourcePath: string; // /resource/<project>/blah/script.tern
+   private _projectPath: string; // /blah/script.tern
    private _projectDirectory: string; // /blah
-   private _filePath: string; // /blah/script.snap
-   private _fileName: string; // script.snap
+   private _filePath: string; // /blah/script.tern
+   private _fileName: string; // script.tern
    private _fileDirectory: string; // /blah
    private _originalPath: string;
    
@@ -367,7 +367,7 @@ export module FileTree {
          var cleanPath = path.replace(/\/+/, "/").replace(/\.#/, ""); // replace // with /
          
          while(cleanPath.indexOf("//") != -1) {
-            cleanPath = cleanPath.replace("//", "/"); // remove double slashes like /x/y//z.snap
+            cleanPath = cleanPath.replace("//", "/"); // remove double slashes like /x/y//z.tern
          }
          if(Common.stringEndsWith(cleanPath, "/")) {
             cleanPath = cleanPath.substring(0,cleanPath.length-1);
@@ -382,40 +382,40 @@ export module FileTree {
       var resourcePathRoot = "/resource/" + Common.getProjectName();
       
       while(path.indexOf("//") != -1) {
-         path = path.replace("//", "/"); // remove double slashes like /x/y//z.snap
+         path = path.replace("//", "/"); // remove double slashes like /x/y//z.tern
       }
       if(path == resourcePathRoot || path == resourcePathPrefix) { // its the root /
 //         var currentPathDetails = {
-//            resourcePath: resourcePathPrefix, // /resource/<project>/blah/script.snap
-//            projectPath: "/", // /blah/script.snap
+//            resourcePath: resourcePathPrefix, // /resource/<project>/blah/script.tern
+//            projectPath: "/", // /blah/script.tern
 //            projectDirectory: "/", // /blah
-//            filePath: "/", // /blah/script.snap
-//            fileName: null, // script.snap
+//            filePath: "/", // /blah/script.tern
+//            fileName: null, // script.tern
 //            fileDirectory: "/", // /blah
 //            originalPath: path
 //         };
          //var currentPathText = JSON.stringify(currentPathDetails);
          //console.log("FileTree.createResourcePath(" + path + "): " + currentPathText);
          return new FilePath(
-               cleanResourcePath(resourcePathPrefix), // /resource/<project>/blah/script.snap
-               "/", // /blah/script.snap
+               cleanResourcePath(resourcePathPrefix), // /resource/<project>/blah/script.tern
+               "/", // /blah/script.tern
                "/", // /blah
-               "/", // /blah/script.snap
-               null, // script.snap
+               "/", // /blah/script.tern
+               null, // script.tern
                "/", // /blah
                path
             );
       }
       //console.log("FileTree.createResourcePath(" + path + ")");
       
-      if(path.indexOf("/") != 0) {  // script.snap
+      if(path.indexOf("/") != 0) {  // script.tern
          path = "/" + path; // /snap.script
       }
       if(path.indexOf(resourcePathPrefix) != 0) { // /resource/<project>/(<file-path>)
          path = "/resource/" + Common.getProjectName() + path;
       }
       var isFolder = isResourceFolder(path); // /resource/<project>/blah/
-      var pathSegments: string[] = path.split("/"); // [0="", 1="resource", 2="<project>", 3="blah", 4="script.snap"]
+      var pathSegments: string[] = path.split("/"); // [0="", 1="resource", 2="<project>", 3="blah", 4="script.tern"]
       var currentResourcePath: string = "/resource/" + Common.getProjectName();
       var currentProjectPath: string = "";
       var currentProjectDirectory: string = "";   
@@ -439,7 +439,7 @@ export module FileTree {
          } else {
             currentFileDirectory = "/";
          }
-      } else { // /resource/<project>/blah/script.snap
+      } else { // /resource/<project>/blah/script.tern
          var currentFileName: string = pathSegments[pathSegments.length - 1];
          
          if(pathSegments.length > 4) {
@@ -452,11 +452,11 @@ export module FileTree {
          }
       }
       return new FilePath(
-         cleanResourcePath(currentResourcePath), // /resource/<project>/blah/script.snap
-         cleanResourcePath(currentProjectPath), // /blah/script.snap
+         cleanResourcePath(currentResourcePath), // /resource/<project>/blah/script.tern
+         cleanResourcePath(currentProjectPath), // /blah/script.tern
          cleanResourcePath(currentProjectDirectory == "" ? "/" : currentProjectDirectory), // /blah
-         cleanResourcePath(currentFilePath), // /blah/script.snap
-         cleanResourcePath(currentFileName), // script.snap
+         cleanResourcePath(currentFilePath), // /blah/script.tern
+         cleanResourcePath(currentFileName), // script.tern
          cleanResourcePath(currentFileDirectory), // /blah
          path
       );

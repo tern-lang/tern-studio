@@ -4,7 +4,7 @@
   <artifactId>tern-studio-agent</artifactId>
   <packaging>jar</packaging>
   <version>1.4.6</version>
-  <url>http://www.snapscript.org</url>
+  <url>http://www.tern-lang.org</url>
   <dependencies>
     <dependency>
       <groupId>tern</groupId>

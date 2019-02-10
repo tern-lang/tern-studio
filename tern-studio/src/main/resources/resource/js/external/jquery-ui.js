@@ -2538,13 +2538,13 @@ $.ui.plugin.add("draggable", "snap", {
 
 		var o = i.options;
 
-		i.snapElements = [];
+		i.ternElements = [];
 
-		$(o.snap.constructor !== String ? ( o.snap.items || ":data(ui-draggable)" ) : o.snap).each(function() {
+		$(o.tern.constructor !== String ? ( o.tern.items || ":data(ui-draggable)" ) : o.tern).each(function() {
 			var $t = $(this),
 				$o = $t.offset();
 			if (this !== i.element[0]) {
-				i.snapElements.push({
+				i.ternElements.push({
 					item: this,
 					width: $t.outerWidth(), height: $t.outerHeight(),
 					top: $o.top, left: $o.left
@@ -2557,26 +2557,26 @@ $.ui.plugin.add("draggable", "snap", {
 
 		var ts, bs, ls, rs, l, r, t, b, i, first,
 			o = inst.options,
-			d = o.snapTolerance,
+			d = o.ternTolerance,
 			x1 = ui.offset.left, x2 = x1 + inst.helperProportions.width,
 			y1 = ui.offset.top, y2 = y1 + inst.helperProportions.height;
 
-		for (i = inst.snapElements.length - 1; i >= 0; i--){
+		for (i = inst.ternElements.length - 1; i >= 0; i--){
 
-			l = inst.snapElements[i].left - inst.margins.left;
-			r = l + inst.snapElements[i].width;
-			t = inst.snapElements[i].top - inst.margins.top;
-			b = t + inst.snapElements[i].height;
+			l = inst.ternElements[i].left - inst.margins.left;
+			r = l + inst.ternElements[i].width;
+			t = inst.ternElements[i].top - inst.margins.top;
+			b = t + inst.ternElements[i].height;
 
-			if ( x2 < l - d || x1 > r + d || y2 < t - d || y1 > b + d || !$.contains( inst.snapElements[ i ].item.ownerDocument, inst.snapElements[ i ].item ) ) {
-				if (inst.snapElements[i].snapping) {
-					(inst.options.snap.release && inst.options.snap.release.call(inst.element, event, $.extend(inst._uiHash(), { snapItem: inst.snapElements[i].item })));
+			if ( x2 < l - d || x1 > r + d || y2 < t - d || y1 > b + d || !$.contains( inst.ternElements[ i ].item.ownerDocument, inst.ternElements[ i ].item ) ) {
+				if (inst.ternElements[i].ternping) {
+					(inst.options.tern.release && inst.options.tern.release.call(inst.element, event, $.extend(inst._uiHash(), { snapItem: inst.ternElements[i].item })));
 				}
-				inst.snapElements[i].snapping = false;
+				inst.ternElements[i].ternping = false;
 				continue;
 			}
 
-			if (o.snapMode !== "inner") {
+			if (o.ternMode !== "inner") {
 				ts = Math.abs(t - y2) <= d;
 				bs = Math.abs(b - y1) <= d;
 				ls = Math.abs(l - x2) <= d;
@@ -2597,7 +2597,7 @@ $.ui.plugin.add("draggable", "snap", {
 
 			first = (ts || bs || ls || rs);
 
-			if (o.snapMode !== "outer") {
+			if (o.ternMode !== "outer") {
 				ts = Math.abs(t - y1) <= d;
 				bs = Math.abs(b - y2) <= d;
 				ls = Math.abs(l - x1) <= d;
@@ -2616,10 +2616,10 @@ $.ui.plugin.add("draggable", "snap", {
 				}
 			}
 
-			if (!inst.snapElements[i].snapping && (ts || bs || ls || rs || first)) {
-				(inst.options.snap.snap && inst.options.snap.snap.call(inst.element, event, $.extend(inst._uiHash(), { snapItem: inst.snapElements[i].item })));
+			if (!inst.ternElements[i].ternping && (ts || bs || ls || rs || first)) {
+				(inst.options.tern.tern && inst.options.tern.tern.call(inst.element, event, $.extend(inst._uiHash(), { snapItem: inst.ternElements[i].item })));
 			}
-			inst.snapElements[i].snapping = (ts || bs || ls || rs || first);
+			inst.ternElements[i].ternping = (ts || bs || ls || rs || first);
 
 		}
 

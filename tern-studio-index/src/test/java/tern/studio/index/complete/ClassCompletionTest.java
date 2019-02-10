@@ -32,7 +32,7 @@ public class ClassCompletionTest extends TestCase {
       request.setComplete("S");
       request.setSource("\nclass SomeClass{}\n");
       request.setLine(1);
-      request.setResource("/example.snap");
+      request.setResource("/example.tern");
       
       Map<String, String> completion = compiler.completeExpression(request).getTokens();
       
@@ -48,7 +48,7 @@ public class ClassCompletionTest extends TestCase {
       request.setComplete("Hash");
       request.setSource("\nclass SomeClass{}\n");
       request.setLine(1);
-      request.setResource("/other.snap");
+      request.setResource("/other.tern");
       
       completion = compiler.completeExpression(request).getTokens();
       

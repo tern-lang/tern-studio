@@ -39,7 +39,7 @@ public class DefaultConstructorTest extends TestCase {
       IndexDatabase database = new IndexScanner(SystemIndexConfigFile.getSystemClassPath(), context, pool, file, "test");
       PathTranslator translator = new PathTranslator();
       SourceIndexer indexer = new SourceIndexer(translator, database, context, pool, null);
-      SourceFile searcher = indexer.index("/double.snap", SOURCE_1);
+      SourceFile searcher = indexer.index("/double.tern", SOURCE_1);
       Map<String, IndexNode> nodes = searcher.getNodesInScope(1);
    
       assertNotNull(nodes.get("DoubleComparator()"));
@@ -56,7 +56,7 @@ public class DefaultConstructorTest extends TestCase {
       IndexDatabase database = new IndexScanner(SystemIndexConfigFile.getSystemClassPath(), context, pool, file, "test");
       PathTranslator translator = new PathTranslator();
       SourceIndexer indexer = new SourceIndexer(translator, database, context, pool, null);
-      SourceFile searcher = indexer.index("/double.snap", SOURCE_2);
+      SourceFile searcher = indexer.index("/double.tern", SOURCE_2);
       Map<String, IndexNode> nodes = searcher.getNodesInScope(1);
 
       assertNull(nodes.get("DoubleComparator()"));

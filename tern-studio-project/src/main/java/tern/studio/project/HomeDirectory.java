@@ -4,7 +4,7 @@ import java.io.File;
 
 public class HomeDirectory {
 
-   public static final String HOME_DIRECTORY = ".snap";
+   public static final String HOME_DIRECTORY = ".tern";
    
    public static File getRootPath() {
       try {

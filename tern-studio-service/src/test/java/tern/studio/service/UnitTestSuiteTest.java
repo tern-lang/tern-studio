@@ -14,7 +14,7 @@ public class UnitTestSuiteTest extends TestCase {
 //      Store store = new FileStore(root);
 //      Context context = new StoreContext(store);
 //      Compiler compiler = new ResourceCompiler(context);
-//      Executable executable = compiler.compile("run.snap");
+//      Executable executable = compiler.compile("run.tern");
 //
 //      executable.execute();
    }

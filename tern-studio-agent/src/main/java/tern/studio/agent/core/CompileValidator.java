@@ -26,7 +26,7 @@ public class CompileValidator {
    private final Path path;
    
    public CompileValidator(ProcessContext context) {
-      this.path = new Path("/internalPrivateScript.snap");
+      this.path = new Path("/internalPrivateScript.tern");
       this.context = context;
    }
 

@@ -58,7 +58,7 @@ public class IndexScanner implements IndexDatabase {
       
       if(cache == null || cache.isExpired()) {
          String path = root.getCanonicalPath();
-         Set<SourceFile> results = processor.process(project, path + "/**.snap"); // build all resources
+         Set<SourceFile> results = processor.process(project, path + "/**.tern"); // build all resources
    
          if(!results.isEmpty()) {
             Map<String, SourceFile> matches = new HashMap<String, SourceFile>();

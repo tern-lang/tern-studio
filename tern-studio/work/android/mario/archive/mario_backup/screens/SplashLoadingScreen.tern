@@ -1,0 +1,45 @@
+import tern.game.framework.Game;
+import tern.game.framework.Graphics;
+import tern.game.framework.Screen;
+import tern.game.framework.Graphics.ImageFormat;
+
+import mario.core.Assets;
+
+class SplashLoadingScreen extends Screen {
+    
+   public new(game: Game): super(game) {
+    }
+
+    
+    public override update(deltaTime: Float) {
+       var g: Graphics = game.getGraphics();
+       Assets.splash= g.newImage("backgrounds/splash.png",ImageFormat.RGB565);
+       try {
+         var s = new LoadingScreen(game);
+         game.setScreen(s);
+       }catch(e) {
+         e.printStackTrace();
+       }
+    }
+
+    public override paint(deltaTime: Float) {
+        
+    }
+
+    public override pause() {
+
+    }
+    
+    public override resume() {
+
+    }
+
+    public override dispose() {
+       
+    }
+
+    public override onBackPressed() {
+
+    }
+}
+

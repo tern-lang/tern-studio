@@ -1,0 +1,187 @@
+import java.util.Random;
+
+import tern.game.framework.Game;
+import tern.game.framework.Music;
+import tern.game.framework.Sound;
+import tern.game.framework.sfx.AndroidAudio;
+
+/**
+ * Manages sound and musics for the game
+ * @author mahesh
+ *
+ */
+class MarioSoundManager extends AndroidAudio{
+   private static var bump;
+   private static var kick; 
+   private static var coin;
+   private static var jump;
+   private static var pause;
+   private static var itemSprout;
+   private static var bonusPoints;
+   private static var healthUp;
+   private static var healthDown;
+   private static var brick_shatter;
+   private static var fireball;
+    
+   private static var hurt1; 
+   private static var hurt2;  
+   private static var yahoo1; 
+   private static var yahoo2; 
+
+   private static var music;
+   /**volume of sound in Float (0 to 1)*/
+   private  var soundVolume=0.9f;
+    /**volume of music in Float (0 to 1)*/
+   private  var musicVolume=0.7f;
+    
+   private static var firstTimeCreate = true;
+   
+   public static var musicEnabled=true;
+   public static var soundEnabled=true;
+   public new(game):super(game) {
+    }
+   
+   /**
+    * loads resources in memory if resources are not already loaded
+    */
+   public  loadResouces(){
+      if (firstTimeCreate==true){
+         bump = createSound("sounds/bump.wav");
+          kick = createSound("sounds/kick.wav");
+          coin = createSound("sounds/coin.wav");
+          jump = createSound("sounds/jump.wav");
+          pause = createSound("sounds/pause.wav");
+          itemSprout = createSound("sounds/item_sprout.wav");
+          bonusPoints = createSound("sounds/veggie_throw.wav");
+          healthUp = createSound("sounds/power_up.wav");
+          healthDown = createSound("sounds/power_down.wav");
+          
+          hurt1 = createSound("sounds/mario_ooh.wav");
+          hurt2 = createSound("sounds/mario_oh.wav");
+          yahoo1 = createSound("sounds/mario_waha.wav");
+          yahoo2 = createSound("sounds/mario_woohoo.wav");
+          brick_shatter=createSound("sounds/crack.wav");
+          fireball=createSound("sounds/fireball.wav");
+          loadMusic();
+      }
+      firstTimeCreate=false;
+   }
+   
+   /**
+    * returns true if resources are ready (loaded in memory)
+    * @return
+    */
+   public isReady(){
+      return !firstTimeCreate;
+   }
+   
+   private loadMusic(){
+      //music=createMusic(filename);
+      var r = new Random();
+      var rNum = r.nextInt(4);
+      if(rNum == 0) {
+         music=createMusic("sounds/smwovr2.mid");
+      } else if(rNum == 1) {
+         music=createMusic("sounds/smwovr2.mid");
+      } else if(rNum == 2) {
+         music=createMusic("music/smb_hammerbros.mid");
+      } else  {
+         music=createMusic("music/smrpg_nimbus1.mid");
+      }
+      if (music!=null)music.setLooping(true);
+   }
+   
+   
+   public playHealthUp() {
+      if (soundEnabled) healthUp.play(soundVolume);
+   }
+   
+   public playHealthDown() {
+      if (soundEnabled) healthDown.play(soundVolume);
+   }
+   
+   public playBonusPoints() {
+      if (soundEnabled) bonusPoints.play(soundVolume);
+   }
+   
+   public playItemSprout() {
+      if (soundEnabled) itemSprout.play(soundVolume);
+   }
+   
+   public playCoin() {
+      if (soundEnabled) coin.play(soundVolume);
+   }
+   
+   public playKick() {
+      //kick.play(soundVolume);
+   }
+   
+   public playBump() {
+      if (soundEnabled) bump.play(soundVolume);
+   }
+   
+   public playJump() {
+      if (soundEnabled) jump.play(soundVolume);
+   }
+   
+   public playPause() {
+      if (soundEnabled) pause.play(soundVolume);
+   }
+
+   public playBrickShatter() {
+      if (soundEnabled) brick_shatter.play(soundVolume);
+   }
+
+   public playFireBall() {
+      if (soundEnabled) fireball.play(soundVolume);
+   }
+   
+   public playHurt() {
+      var r = new Random();
+      var rNum = r.nextInt(2);
+      if(rNum == 0) {
+         hurt1.play(soundVolume);
+      } else {
+         hurt2.play(soundVolume);
+      }
+   }
+   
+   public playCelebrate() {
+      var r = new Random();
+      var rNum = r.nextInt(2);
+      if(rNum == 0) {
+         yahoo1.play(soundVolume);
+      } else {
+         yahoo2.play(soundVolume);
+      }
+   }
+   
+   public playMusic(){
+      if (music!=null)music.play();
+   }
+   
+   public pauseMusic(){
+      if (music!=null)music.pause();
+   }
+   
+   public stopMusic(){
+      if (music!=null)music.stop();
+   }
+   
+   public getSoundVolume() {
+      return soundVolume;
+   }
+
+   public setSoundVolume(soundVolume) {
+      this.soundVolume = soundVolume;
+   }
+
+   public getMusicVolume() {
+      return musicVolume;
+   }
+
+   public setMusicVolume(musicVolume) {
+      this.musicVolume = musicVolume;
+   }
+}
+

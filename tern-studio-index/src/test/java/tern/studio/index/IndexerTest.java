@@ -83,7 +83,7 @@ public class IndexerTest extends TestCase {
       IndexDatabase database = new IndexScanner(SystemIndexConfigFile.getSystemClassPath(), context, pool, file, "test");
       PathTranslator translator = new PathTranslator();
       SourceIndexer indexer = new SourceIndexer(translator, database, context, pool, null);
-      SourceFile searcher = indexer.index("/some/package.snap", SOURCE);
+      SourceFile searcher = indexer.index("/some/package.tern", SOURCE);
       Map<String, IndexNode> nodes = searcher.getNodesInScope(5);
    
       assertNotNull(nodes.get("SomeClass()"));
@@ -98,7 +98,7 @@ public class IndexerTest extends TestCase {
       IndexDatabase database = new IndexScanner(SystemIndexConfigFile.getSystemClassPath(), context, pool, file, "test");
       PathTranslator translator = new PathTranslator();
       SourceIndexer indexer = new SourceIndexer(translator, database, context, pool, null);
-      SourceFile searcher = indexer.index("/some/package.snap", SOURCE);
+      SourceFile searcher = indexer.index("/some/package.tern", SOURCE);
       Map<String, IndexNode> nodes = searcher.getTypeNodes();
       
       assertNotNull(nodes.get("String"));
@@ -130,7 +130,7 @@ public class IndexerTest extends TestCase {
       IndexDatabase database = new IndexScanner(SystemIndexConfigFile.getSystemClassPath(), context, pool, file, "test");
       PathTranslator translator = new PathTranslator();
       SourceIndexer indexer = new SourceIndexer(translator, database, context, pool, null);
-      SourceFile searcher = indexer.index("/some/package.snap", SOURCE);
+      SourceFile searcher = indexer.index("/some/package.tern", SOURCE);
       Map<String, IndexNode> nodes = searcher.getNodesInScope(6);
       
       assertNotNull(nodes.get("String"));
@@ -170,7 +170,7 @@ public class IndexerTest extends TestCase {
       IndexDatabase database = new IndexScanner(SystemIndexConfigFile.getSystemClassPath(), context, pool, file, "test");
       PathTranslator translator = new PathTranslator();
       SourceIndexer indexer = new SourceIndexer(translator, database, context, pool, null);
-      SourceFile searcher = indexer.index("/some/package.snap", SOURCE);
+      SourceFile searcher = indexer.index("/some/package.tern", SOURCE);
       IndexNode node = searcher.getRootNode();
       
       System.err.println(IndexDumper.dump(node, node, ""));
@@ -193,7 +193,7 @@ public class IndexerTest extends TestCase {
       assertEquals(searcher.getNodeAtLine(13).getName(), "SizeEnum");
       assertEquals(searcher.getNodeAtLine(13).getFullName(), "some.package.SizeEnum");
       assertEquals(searcher.getNodeAtLine(32).getType(), IndexType.SCRIPT);
-      assertEquals(searcher.getNodeAtLine(32).getName(), "/some/package.snap");
+      assertEquals(searcher.getNodeAtLine(32).getName(), "/some/package.tern");
       assertEquals(searcher.getNodeAtLine(25).getType(), IndexType.CONSTRUCTOR);
       assertEquals(searcher.getNodeAtLine(25).getName(), "ModClass()");
       assertEquals(searcher.getNodeAtLine(25).getFullName(), "ModClass()");      

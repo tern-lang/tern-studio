@@ -56,7 +56,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
                 var originalDialogFolder = $('#dialogFolder').html();
                 var dialogPathName = tree_1.FileTree.cleanResourcePath(originalDialogFileName);
                 var dialogFolder = tree_1.FileTree.cleanResourcePath(originalDialogFolder);
-                var dialogProjectPath = dialogFolder + "/" + dialogPathName; // /src/blah/script.snap
+                var dialogProjectPath = dialogFolder + "/" + dialogPathName; // /src/blah/script.tern
                 var dialogPathDetails = tree_1.FileTree.createResourcePath(dialogProjectPath);
                 return dialogPathDetails;
             };
@@ -117,7 +117,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
             if (resourceDetails != null) {
                 $('#dialogFolder').html(tree_1.FileTree.cleanResourcePath(resourceDetails.getProjectDirectory())); // /src/blah
                 if (!nameIsBlank) {
-                    $('#dialogPath').html(tree_1.FileTree.cleanResourcePath(resourceDetails.getFileName())); // script.snap
+                    $('#dialogPath').html(tree_1.FileTree.cleanResourcePath(resourceDetails.getFileName())); // script.tern
                 }
             }
             tree_1.FileTree.createTree(treePath, "dialog", "dialogTree", dialogExpandPath, foldersOnly, null, function (event, data) {
@@ -127,7 +127,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
                 }
                 else {
                     $('#dialogFolder').html(tree_1.FileTree.cleanResourcePath(selectedFileDetails.getProjectDirectory())); // /src/blah
-                    $('#dialogPath').html(tree_1.FileTree.cleanResourcePath(selectedFileDetails.getFileName())); // file.snap
+                    $('#dialogPath').html(tree_1.FileTree.cleanResourcePath(selectedFileDetails.getFileName())); // file.tern
                 }
             });
         }

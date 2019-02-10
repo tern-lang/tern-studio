@@ -10,7 +10,7 @@ The language is ideal for embedding in to an existing application, and is a frac
 similar languages for the Java platform. In addition to embedding it can be run as a standalone 
 interpreter and has an development environment which allows scripts to be debugged and profiled.
 
-[http://www.snapscript.org/](http://www.snapscript.org/)
+[http://www.tern-lang.org/](http://www.tern-lang.org/)
 
 #### Development Environment
 

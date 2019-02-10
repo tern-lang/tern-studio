@@ -100,7 +100,7 @@ define(["require", "exports", "w2ui", "common", "socket", "tree", "editor", "pro
                             resource: problemItem.getResourcePath().getFilePath(),
                             description: problemItem.getMessage(),
                             project: problemItem.getProject(),
-                            script: problemItem.getResourcePath().getResourcePath() // /resource/<project>/blah/file.snap
+                            script: problemItem.getResourcePath().getResourcePath() // /resource/<project>/blah/file.tern
                         });
                     }
                 }

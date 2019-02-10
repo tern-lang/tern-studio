@@ -17,7 +17,7 @@ public class FileSystem {
    }
    
    public File getFile(Path path) {
-      String projectPath = path.getPath(2); // /<project-name>/<project-path> or /default/blah.snap
+      String projectPath = path.getPath(2); // /<project-name>/<project-path> or /default/blah.tern
       File rootPath = directory.getBasePath();
       String realPath = projectPath.replace('/', File.separatorChar);
       return new File(rootPath, realPath);
@@ -50,7 +50,7 @@ public class FileSystem {
    }
    
    public FileData readFile(Path path) throws Exception {
-      String projectPath = path.getPath(2); // /<project-name>/<project-path> or /default/blah.snap
+      String projectPath = path.getPath(2); // /<project-name>/<project-path> or /default/blah.tern
       return readFile(projectPath);
    }
    

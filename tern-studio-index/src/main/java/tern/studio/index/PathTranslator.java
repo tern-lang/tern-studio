@@ -18,7 +18,7 @@ public class PathTranslator {
       }
    }
    
-   public String getRealPath(File root, String resource) { //  "/demo/mario/MarioGame.snap" -> "/demo/mario/src/mario/MarioGame.snap"
+   public String getRealPath(File root, String resource) { //  "/demo/mario/MarioGame.tern" -> "/demo/mario/src/mario/MarioGame.tern"
       if(resource != null) {
          File file = new File(root, resource);
          

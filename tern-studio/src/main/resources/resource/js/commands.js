@@ -215,7 +215,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
         Command.searchAndReplaceFiles = searchAndReplaceFiles;
         function searchOrReplaceFiles(enableReplace, filePatterns) {
             if (!filePatterns) {
-                filePatterns = '*.snap,*.properties,*.xml,*.txt,*.json';
+                filePatterns = '*.tern,*.properties,*.xml,*.txt,*.json';
             }
             var searchFunction = dialog_1.DialogBuilder.createTextSearchOnlyDialog;
             if (enableReplace) {

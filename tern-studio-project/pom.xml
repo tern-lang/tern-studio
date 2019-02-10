@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>tern-studio-project</artifactId>
   <packaging>jar</packaging>
-  <url>http://www.snapscript.org</url>
+  <url>http://www.tern-lang.org</url>
   <parent>
     <groupId>tern</groupId>
     <artifactId>tern-studio-parent</artifactId>

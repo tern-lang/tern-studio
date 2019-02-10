@@ -32,7 +32,7 @@ public class ImportAliasCompletionTest extends TestCase {
       request.setComplete("Au");
       request.setSource("import sound.sampled.AudioFormat;\n\n"); // this is an alias for javax.sound.sampled.AudioFormat
       request.setLine(2);
-      request.setResource("/example.snap");
+      request.setResource("/example.tern");
       
       Map<String, String> completion = compiler.completeExpression(request).getTokens();
       

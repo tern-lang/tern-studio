@@ -25,7 +25,7 @@ public class TextMatchScanner {
    private final ThreadPool pool;
    
    public TextMatchScanner(ThreadPool pool) {
-      this.scanner = new TextFileScanner(); // e.g *.snap, *.txt
+      this.scanner = new TextFileScanner(); // e.g *.tern, *.txt
       this.history = new TextMatchHistory(pool);
       this.finder = new TextMatchFinder();
       this.pool = pool;

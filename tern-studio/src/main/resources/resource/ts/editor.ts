@@ -733,7 +733,7 @@ export module FileEditor {
    export function resolveEditorMode(resource) {
       var token = resource.toLowerCase();
       
-      if(Common.stringEndsWith(token, ".snap")) {
+      if(Common.stringEndsWith(token, ".tern")) {
          return "ace/mode/snapscript";
       }
       if(Common.stringEndsWith(token, ".policy")) {

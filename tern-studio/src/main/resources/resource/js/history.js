@@ -29,7 +29,7 @@ define(["require", "exports", "jquery", "w2ui", "./common", "tree", "editor", "e
                             resource: "<div class='historyPath'>" + recordResource.getFilePath() + "</div>",
                             date: currentRecord.date,
                             time: currentRecord.timeStamp,
-                            script: recordResource.getResourcePath() // /resource/<project>/blah/file.snap
+                            script: recordResource.getResourcePath() // /resource/<project>/blah/file.tern
                         });
                     }
                     w2ui_1.w2ui['history'].records = historyRecords;

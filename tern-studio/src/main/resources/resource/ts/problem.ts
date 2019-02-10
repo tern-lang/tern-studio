@@ -131,10 +131,10 @@ export module ProblemManager {
          	      recid: problemIndex++,
          		   line: problemItem.getLine(),
          		   location: "Line " + problemItem.getLine(), 
-                  resource: problemItem.getResourcePath().getFilePath(), // /blah/file.snap 
+                  resource: problemItem.getResourcePath().getFilePath(), // /blah/file.tern
                   description: problemItem.getMessage(), 
                   project: problemItem.getProject(), 
-                  script: problemItem.getResourcePath().getResourcePath() // /resource/<project>/blah/file.snap
+                  script: problemItem.getResourcePath().getResourcePath() // /resource/<project>/blah/file.tern
                });
          	}
          }

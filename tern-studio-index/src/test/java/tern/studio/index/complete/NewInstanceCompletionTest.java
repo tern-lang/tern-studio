@@ -32,7 +32,7 @@ public class NewInstanceCompletionTest extends TestCase {
       request.setComplete("new S");
       request.setSource("\nclass SomeClass{}\n");
       request.setLine(1);
-      request.setResource("/example.snap");
+      request.setResource("/example.tern");
       
       Map<String, String> completion = compiler.completeExpression(request).getTokens();
       

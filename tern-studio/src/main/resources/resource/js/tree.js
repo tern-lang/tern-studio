@@ -307,7 +307,7 @@ define(["require", "exports", "jquery", "common", "commands"], function (require
             if (path != null) {
                 var cleanPath = path.replace(/\/+/, "/").replace(/\.#/, ""); // replace // with /
                 while (cleanPath.indexOf("//") != -1) {
-                    cleanPath = cleanPath.replace("//", "/"); // remove double slashes like /x/y//z.snap
+                    cleanPath = cleanPath.replace("//", "/"); // remove double slashes like /x/y//z.tern
                 }
                 if (common_1.Common.stringEndsWith(cleanPath, "/")) {
                     cleanPath = cleanPath.substring(0, cleanPath.length - 1);
@@ -321,25 +321,25 @@ define(["require", "exports", "jquery", "common", "commands"], function (require
             var resourcePathPrefix = "/resource/" + common_1.Common.getProjectName() + "/";
             var resourcePathRoot = "/resource/" + common_1.Common.getProjectName();
             while (path.indexOf("//") != -1) {
-                path = path.replace("//", "/"); // remove double slashes like /x/y//z.snap
+                path = path.replace("//", "/"); // remove double slashes like /x/y//z.tern
             }
             if (path == resourcePathRoot || path == resourcePathPrefix) {
                 //         var currentPathDetails = {
-                //            resourcePath: resourcePathPrefix, // /resource/<project>/blah/script.snap
-                //            projectPath: "/", // /blah/script.snap
+                //            resourcePath: resourcePathPrefix, // /resource/<project>/blah/script.tern
+                //            projectPath: "/", // /blah/script.tern
                 //            projectDirectory: "/", // /blah
-                //            filePath: "/", // /blah/script.snap
-                //            fileName: null, // script.snap
+                //            filePath: "/", // /blah/script.tern
+                //            fileName: null, // script.tern
                 //            fileDirectory: "/", // /blah
                 //            originalPath: path
                 //         };
                 //var currentPathText = JSON.stringify(currentPathDetails);
                 //console.log("FileTree.createResourcePath(" + path + "): " + currentPathText);
-                return new FilePath(cleanResourcePath(resourcePathPrefix), // /resource/<project>/blah/script.snap
-                "/", // /blah/script.snap
+                return new FilePath(cleanResourcePath(resourcePathPrefix), // /resource/<project>/blah/script.tern
+                "/", // /blah/script.tern
                 "/", // /blah
-                "/", // /blah/script.snap
-                null, // script.snap
+                "/", // /blah/script.tern
+                null, // script.tern
                 "/", // /blah
                 path);
             }
@@ -351,7 +351,7 @@ define(["require", "exports", "jquery", "common", "commands"], function (require
                 path = "/resource/" + common_1.Common.getProjectName() + path;
             }
             var isFolder = isResourceFolder(path); // /resource/<project>/blah/
-            var pathSegments = path.split("/"); // [0="", 1="resource", 2="<project>", 3="blah", 4="script.snap"]
+            var pathSegments = path.split("/"); // [0="", 1="resource", 2="<project>", 3="blah", 4="script.tern"]
             var currentResourcePath = "/resource/" + common_1.Common.getProjectName();
             var currentProjectPath = "";
             var currentProjectDirectory = "";
@@ -387,11 +387,11 @@ define(["require", "exports", "jquery", "common", "commands"], function (require
                     currentFileDirectory = "/";
                 }
             }
-            return new FilePath(cleanResourcePath(currentResourcePath), // /resource/<project>/blah/script.snap
-            cleanResourcePath(currentProjectPath), // /blah/script.snap
+            return new FilePath(cleanResourcePath(currentResourcePath), // /resource/<project>/blah/script.tern
+            cleanResourcePath(currentProjectPath), // /blah/script.tern
             cleanResourcePath(currentProjectDirectory == "" ? "/" : currentProjectDirectory), // /blah
-            cleanResourcePath(currentFilePath), // /blah/script.snap
-            cleanResourcePath(currentFileName), // script.snap
+            cleanResourcePath(currentFilePath), // /blah/script.tern
+            cleanResourcePath(currentFileName), // script.tern
             cleanResourcePath(currentFileDirectory), // /blah
             path);
         }

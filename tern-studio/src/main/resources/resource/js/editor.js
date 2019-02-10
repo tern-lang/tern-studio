@@ -563,7 +563,7 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         }
         function resolveEditorMode(resource) {
             var token = resource.toLowerCase();
-            if (common_1.Common.stringEndsWith(token, ".snap")) {
+            if (common_1.Common.stringEndsWith(token, ".tern")) {
                 return "ace/mode/snapscript";
             }
             if (common_1.Common.stringEndsWith(token, ".policy")) {

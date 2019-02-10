@@ -18,7 +18,7 @@ import tern.studio.agent.worker.store.WorkerStore;
 
 public class CamundaScriptTask {
    
-   private static final String RESOURCE = "/task.snap";
+   private static final String RESOURCE = "/task.tern";
    private static final String PROJECT = "camunda";
    private static final String URL = "http://%s:4457/resource/";
 

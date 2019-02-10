@@ -1,0 +1,9 @@
+var ROOT = "C:\\Work\\development\\snapscript\\snap-develop\\snap-develop\\work\\android";
+
+new File(ROOT).findFiles(file -> file.name.endsWith(".tern"))
+   .stream()
+   .forEach(file -> {
+      var text = file.readText();
+      text = text.replace("\t", "   ");
+      file.writeText(text);
+   });

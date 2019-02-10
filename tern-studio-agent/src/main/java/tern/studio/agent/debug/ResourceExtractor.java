@@ -2,7 +2,7 @@ package tern.studio.agent.debug;
 
 public class ResourceExtractor {
    
-   private static final String SOURCE_SUFFIX = ".snap";
+   private static final String SOURCE_SUFFIX = ".tern";
 
    public static String extractModule(String path) {
       int length = path.length();

@@ -19,7 +19,7 @@ public class IndexSearcherTest extends TestCase {
       ThreadPool pool = new ThreadPool(2);
       File file = File.createTempFile("test", getClass().getSimpleName());
       IndexDatabase database = new IndexScanner(SystemIndexConfigFile.getSystemClassPath(), context, pool, file, "test");
-      SourceFile indexFile = database.getFile("/file.snap", "class X extends HashMap with Runnable {\nconst x = 0;\n}\n");
+      SourceFile indexFile = database.getFile("/file.tern", "class X extends HashMap with Runnable {\nconst x = 0;\n}\n");
       IndexNode root = indexFile.getRootNode();
       String detail = IndexDumper.dump(root, root, "");
       

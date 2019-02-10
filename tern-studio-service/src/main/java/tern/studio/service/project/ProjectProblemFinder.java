@@ -41,7 +41,7 @@ public class ProjectProblemFinder {
       long start = System.currentTimeMillis();
       
       try {
-         return processor.process(name, root + "/**.snap"); // build all resources
+         return processor.process(name, root + "/**.tern"); // build all resources
       } finally {
          long finish = System.currentTimeMillis();
          long duration = finish - start;

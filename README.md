@@ -1,14 +1,14 @@
-![Snap](https://raw.githubusercontent.com/snapscript/snap-site/master/www.snapscript.org/img/logo.png)
+![Snap](https://raw.githubusercontent.com/snapscript/snap-site/master/www.tern-lang.org/img/logo.png)
 
 Snap is an open source, optionally typed, object oriented scripting language for the Java platform. The learning curve is small for anyone with experience of Java, JavaScript, TypeScript, or Scala, amongst others. It has excellent integration with the host platform, and can do whatever can be done with Java and much more.
 
 The language is ideal for embedding in to an existing application, and is a fraction of the size of similar languages for the Java platform. In addition to embedding it can be run as a standalone interpreter and has an development environment which allows scripts to be debugged and profiled.
 
-[http://www.snapscript.org/](http://www.snapscript.org/)
+[http://www.tern-lang.org/](http://www.tern-lang.org/)
 
 #### Development Environment
 
-Snap comes with a development environment that is available over HTTP on any web browser that supports Web Sockets. To develop and debug scripts the devlopment environment can be started with the command shown below. All that is required is a web browser and Java 1.5 or greater. The development environment is a single JAR file that can be downloaded from [here](http://www.snapscript.org/download.html). In addition an embeddable version is available which can be integrated in to any Java application.
+Snap comes with a development environment that is available over HTTP on any web browser that supports Web Sockets. To develop and debug scripts the devlopment environment can be started with the command shown below. All that is required is a web browser and Java 1.5 or greater. The development environment is a single JAR file that can be downloaded from [here](http://www.tern-lang.org/download.html). In addition an embeddable version is available which can be integrated in to any Java application.
 
 *java -jar snapd.jar --directory=work --port=4457*
 

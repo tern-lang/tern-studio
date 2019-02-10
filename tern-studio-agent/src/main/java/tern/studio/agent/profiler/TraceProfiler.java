@@ -67,10 +67,10 @@ public class TraceProfiler extends TraceAdapter {
          
          if(!local.endsWith(SCRIPT_EXTENSION)) { // a.b.c
             local = local.replace('.', '/'); // a/b/c
-            local = local + SCRIPT_EXTENSION; // a/b/c.snap
+            local = local + SCRIPT_EXTENSION; // a/b/c.tern
          }
          if(!local.startsWith("/")) {
-            local = "/" + local; // /a/b/c.snap
+            local = "/" + local; // /a/b/c.tern
          }
          profiler = profilers.fetch(local);        
          

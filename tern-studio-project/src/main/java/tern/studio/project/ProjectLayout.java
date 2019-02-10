@@ -29,7 +29,7 @@ public class ProjectLayout {
       return false;
    }
    
-   public String getRealPath(File projectPath, String resource) { //  "/demo/mario/MarioGame.snap" -> "/demo/mario/src/mario/MarioGame.snap"
+   public String getRealPath(File projectPath, String resource) { //  "/demo/mario/MarioGame.tern" -> "/demo/mario/src/mario/MarioGame.tern"
       if(resource != null) {
          File resourcePath = new File(projectPath, resource);
          
@@ -49,7 +49,7 @@ public class ProjectLayout {
       return resource;
    }
    
-   public String getDownloadPath(File projectPath, String resource) { // "/demo/mario/src/mario/MarioGame.snap" -> "/demo/mario/MarioGame.snap"
+   public String getDownloadPath(File projectPath, String resource) { // "/demo/mario/src/mario/MarioGame.tern" -> "/demo/mario/MarioGame.tern"
       if(resource != null) {
          for(String path : paths) {
             path = path.replace("\\", "/");

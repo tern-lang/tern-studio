@@ -56,7 +56,7 @@ public class VariableCompletionTest extends TestCase {
       request.setComplete("point.g");
       request.setSource(SOURCE);
       request.setLine(22);
-      request.setResource("/example.snap");
+      request.setResource("/example.tern");
       
       Map<String, String> completion = compiler.completeExpression(request).getTokens();
       
@@ -70,7 +70,7 @@ public class VariableCompletionTest extends TestCase {
       request.setComplete("builder.ap");
       request.setSource(SOURCE);
       request.setLine(22);
-      request.setResource("/other.snap");
+      request.setResource("/other.tern");
       
       completion = compiler.completeExpression(request).getTokens();
       

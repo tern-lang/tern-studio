@@ -32,7 +32,7 @@ public class StaticMethodCompletionTest extends TestCase {
       request.setComplete("System.cu");
       request.setSource("\nclass SomeClass{}\n");
       request.setLine(1);
-      request.setResource("/example.snap");
+      request.setResource("/example.tern");
       
       Map<String, String> completion = compiler.completeExpression(request).getTokens();
       
@@ -44,7 +44,7 @@ public class StaticMethodCompletionTest extends TestCase {
       request.setComplete("Runtime.g");
       request.setSource("\nclass SomeClass{}\n");
       request.setLine(1);
-      request.setResource("/other.snap");
+      request.setResource("/other.tern");
       
       completion = compiler.completeExpression(request).getTokens();
       
@@ -56,7 +56,7 @@ public class StaticMethodCompletionTest extends TestCase {
       request.setComplete("Integer.");
       request.setSource("\nclass SomeClass{}\n");
       request.setLine(1);
-      request.setResource("/blah.snap");
+      request.setResource("/blah.tern");
       
       completion = compiler.completeExpression(request).getTokens();
       

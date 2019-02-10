@@ -1,6 +1,6 @@
 {
    "Workspace": {
-      "class": "org.snapscript.develop.Workspace",
+      "class": "tern.develop.Workspace",
       "init-method": "create",
       "constructor-arguments": [
          "${directory}"
@@ -8,7 +8,7 @@
    },
    
    "BackupManager": {
-      "class": "org.snapscript.develop.BackupManager",
+      "class": "tern.develop.BackupManager",
       "constructor-arguments": [
          "ConsoleLogger",
          "Workspace"

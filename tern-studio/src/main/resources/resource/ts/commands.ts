@@ -246,7 +246,7 @@ export module Command {
    
    function searchOrReplaceFiles(enableReplace, filePatterns) {
       if(!filePatterns) {
-         filePatterns = '*.snap,*.properties,*.xml,*.txt,*.json';
+         filePatterns = '*.tern,*.properties,*.xml,*.txt,*.json';
       } 
       var searchFunction = DialogBuilder.createTextSearchOnlyDialog;
       

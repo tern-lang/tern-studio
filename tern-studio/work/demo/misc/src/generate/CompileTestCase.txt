@@ -1,4 +1,4 @@
-package org.snapscript.compile.staticanalysis;
+package tern.compile.staticanalysis;
 
 %imports%
 

@@ -32,7 +32,7 @@ public class ImportCompletionTest extends TestCase {
       request.setComplete("import S");
       request.setSource("\nclass SomeClass{}\n");
       request.setLine(1);
-      request.setResource("/example.snap");
+      request.setResource("/example.tern");
       
       Map<String, String> completion = compiler.completeExpression(request).getTokens();
       
@@ -46,7 +46,7 @@ public class ImportCompletionTest extends TestCase {
       request.setComplete("import Hash");
       request.setSource("\nclass SomeClass{}\n");
       request.setLine(1);
-      request.setResource("/other.snap");
+      request.setResource("/other.tern");
       
       completion = compiler.completeExpression(request).getTokens();
       
@@ -75,7 +75,7 @@ public class ImportCompletionTest extends TestCase {
       request.setComplete("import Has");
       request.setSource("");
       request.setLine(1);
-      request.setResource("/example.snap");
+      request.setResource("/example.tern");
       
       Map<String, String> completion = compiler.completeExpression(request).getTokens();
       

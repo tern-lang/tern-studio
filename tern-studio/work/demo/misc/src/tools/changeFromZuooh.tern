@@ -1,0 +1,124 @@
+
+func performRefactor(directory, fromPackage, toPackage, fromPrefixes, toPrefix, test){
+   rewritePackageFiles(directory, fromPackage, toPackage, test);
+   rewritePrefixFiles(directory, fromPrefixes, toPrefix, test);   
+   renameDirs(directory, fromPackage, toPackage, test);
+   renameFiles(directory, fromPrefixes, toPrefix, test);   
+}
+
+func rewritePrefixFiles(directory, fromPrefixes, toPrefix, test) {
+   File(directory)
+      .findFiles(f -> f.getName().endsWith(".project") || f.getName().endsWith("pom.xml"))
+      .stream()
+      .forEach(f -> {
+         try {
+            const text = f.readText();
+            let replace = text;
+            
+            for(prefix in fromPrefixes) {
+               if(!test) {
+                  replace = replace.replace(prefix, toPrefix);               
+               } else {
+                  println("rewritePrefixFiles(): ${prefix} -> ${toPrefix}");
+               }
+            }
+            if(!test) {
+               f.writeText(replace);
+            }
+         } catch(e){
+            e.printStackTrace();
+         }
+      });
+}
+
+func rewritePackageFiles(directory, fromPackage, toPackage, test) {
+   File(directory)
+      .findFiles(f -> f.getName().endsWith(".java") || f.getName().endsWith("pom.xml"))
+      .stream()
+      .forEach(f -> {
+         try {
+            const text = f.readText();
+            
+            if(!test) {
+               const replace = text.replaceAll(fromPackage, toPackage);            
+               f.writeText(replace);
+            } else {
+               println("rewritePackageFiles(): ${f.getName()}");            
+            }
+         } catch(e){
+            e.printStackTrace();
+         }
+      });
+}
+
+func renameFiles(directory, fromPrefixes, toPrefix, test) {
+   File(directory)
+      .findFiles(f -> f.isDirectory())
+      .stream()
+      .filter(f -> {
+         for(prefix in fromPrefixes) {
+            if(f.getName().startsWith(prefix) && f.isDirectory()) {
+               return true;
+            }
+         }
+         return false;
+      })
+      .forEach(f -> {
+         if(f.exists()) {
+            for(prefix in fromPrefixes) {
+               if(f.getName().startsWith(prefix) && f.isDirectory()) {
+                  let fromFile = f.getCanonicalPath();
+                  let toFile = fromFile.replace(prefix, toPrefix);
+                  
+                  if(!test) {
+                     new File(f).renameTo(new File(toFile));
+                  } else {
+                     println("renameFiles(): ${fromFile} -> ${toFile}");
+                  }
+               }
+            }
+         }
+      });
+}
+
+func renameDirs(directory, fromPackage, toPackage, test) {
+   let fromPath = fromPackage.replace(".", File.separator);
+   let toPath = toPackage.replace(".", File.separator);  
+   let fromParts = fromPackage.split("\\.");
+   let toParts = toPackage.split("\\.");
+   
+   if(fromParts.length != toParts.length) {
+      throw new Exception("Lengths do not match");
+   }
+   File(directory)
+      .findFiles(f -> f.isDirectory())
+      .stream()
+      .filter(f -> f.getCanonicalPath().endsWith(fromPath) && f.isDirectory())
+      .forEach(f -> {
+         if(f.exists()) {
+            let fromRoot = f.getCanonicalPath().replace(fromPath, "");
+            let toRoot = f.getCanonicalPath().replace(fromPath, toPath);
+            
+            for(i in 0 .. toParts.length -1) {
+               let fromDir = new File(fromRoot, fromParts[i]);
+               let toDir = new File(fromRoot, toParts[i]);
+               
+               if(test) {
+                  println("renameDirs(): ${fromDir} -> ${toDir}");
+               } else {
+                  fromDir.renameTo(toDir);
+               }
+               fromRoot = toDir.getCanonicalPath();
+            }
+         }
+      });
+}
+
+
+performRefactor("C:\\Work\\development\\tern", 
+   "tern",
+   "tern",
+   ["snap-"],
+   "tern-",
+   false);
+

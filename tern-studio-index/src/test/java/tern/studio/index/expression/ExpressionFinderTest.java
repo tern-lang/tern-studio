@@ -59,7 +59,7 @@ public class ExpressionFinderTest extends TestCase {
       File file = File.createTempFile("test", getClass().getSimpleName());
       IndexDatabase database = new IndexScanner(SystemIndexConfigFile.getSystemClassPath(), context, pool, file, "test");
       ExpressionFinder finder = new ExpressionFinder(database);
-      SourceFile indexFile = database.getFile("/test.snap", SOURCE_1);
+      SourceFile indexFile = database.getFile("/test.tern", SOURCE_1);
       IndexNode nodeAtLine = indexFile.getNodeAtLine(5);
       IndexNode root = indexFile.getRootNode();
       String details = IndexDumper.dump(root, nodeAtLine, "memb2.someInnerFunc().a");

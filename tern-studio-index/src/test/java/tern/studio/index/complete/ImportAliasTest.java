@@ -24,7 +24,7 @@ public class ImportAliasTest extends TestCase {
       ThreadPool pool = new ThreadPool(2);
       File file = File.createTempFile("test", getClass().getSimpleName());
       IndexDatabase database = new IndexScanner(SystemIndexConfigFile.getSystemClassPath(), context, pool, file, "test");
-      SourceFile resource = database.getFile("/test.snap", "import sound.sampled.AudioFormat;");
+      SourceFile resource = database.getFile("/test.tern", "import sound.sampled.AudioFormat;");
       IndexNode root = resource.getRootNode();
       Map<String, IndexNode> nodes = database.getNodesInScope(root);
       

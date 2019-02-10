@@ -1,0 +1,171 @@
+
+import common.store.CacheStore;
+import common.store.ClassPathStore;
+import parse.*;
+
+new TerminalTokenFilter().filter("/semicolon_insertion.tern");
+
+/*
+http://www.ecma-international.org/ecma-262/6.0/index.html#sec-automatic-semicolon-insertion
+http://www.bradoncode.com/blog/2015/08/26/javascript-semi-colon-insertion/
+ */
+class TerminalTokenFilter {
+   
+  filter(name) {
+      var source = TerminalTokenFilter.class.getModule().getContext().getManager().getString(name);
+      var semiColonFree = source.replace(";", "");
+      
+      return replaceTokens(createTokens(semiColonFree, name));
+   }
+   
+   createTokens(text, resource) {
+      var tokens = new ArrayList();
+      var grammarIndexer = new GrammarIndexer();
+      var grammars = new LinkedHashMap();      
+      var grammarResolver = new GrammarResolver(grammars);
+      var grammarCompiler = new GrammarCompiler(grammarResolver, grammarIndexer);  
+      var grammarReader = new GrammarReader("grammar.bnf");
+      var sourceProcessor = new SourceProcessor(100);
+      
+      for(var definition in grammarReader) {
+         var name = definition.getName();
+         var value = definition.getDefinition();
+         var grammar = grammarCompiler.process(name, value);
+         
+         grammars.put(name, grammar);
+      }
+      var source = sourceProcessor.process(text);
+      var original = source.getOriginal();
+      var compress = source.getSource();
+      var lines = source.getLines();
+      var types = source.getTypes();
+
+      var tokenIndexer = new TokenIndexer(grammarIndexer, resource, original, compress, lines, types);
+      tokenIndexer.index(tokens);
+      return tokens;
+   }
+   
+   replaceTokens(tokens) {
+      var done = new ArrayList();
+
+      if(tokens.isEmpty()){
+         throw new IllegalStateException("No tokens");
+      }
+      for(var i = 0; i < tokens.size(); i++) {
+         try {
+            var converted = convertTo(tokens, i);
+            
+            for(var token in converted) {
+               if(isText(token)) {
+                  System.err.print("'"+token.getValue()+"'");
+               } else {
+                  System.err.print(token.getValue());
+                  if(token.getValue().equals(';'.charAt(0))) {
+                     System.err.println();
+                  }
+               }
+            }
+            done.addAll(converted);
+         }catch(e){
+            e.printStackTrace(); 
+         }
+      }
+      return done;
+   }
+   
+   convertTo(tokens, i) {
+      var token = tokens.get(i);
+      
+      if(token.getValue().equals('\n'.charAt(0))) {
+         if(!isLiteralBefore(tokens, i) && isLiteralAfter(tokens, i)) {
+            return Arrays.asList(new CharacterToken(';', token.getLine(), token.getType()));
+         }
+         if(isPreviousOneOf(tokens, i, "return", "continue", "break")) {
+            return Arrays.asList(new CharacterToken(';', token.getLine(), token.getType()), token);
+         }
+         if((isAlphaBefore(tokens, i) && isAlphaAfter(tokens, i)) && !isLiteralBefore(tokens, i) && !isLiteralAfter(tokens, i)) {
+            return Arrays.asList(new CharacterToken(';', token.getLine(), token.getType()), token);
+         }
+      }
+      if(token.getValue().equals("}")) {
+         if(!isPreviousOneOf(tokens, i, "}")) {
+            return Arrays.asList(new CharacterToken(';', token.getLine(), token.getType()), token);
+         }
+      }
+      if(token.getValue().equals(")") || token.getValue().equals("]")) {
+         if(isAlphaAfter(tokens, i)) {
+            return Arrays.asList(token, new CharacterToken(';', token.getLine(), token.getType()));
+         }
+      }
+      return Arrays.asList(token);
+   }
+   
+   isText(token) {
+      return ((token.getType() & TokenType.TEXT.mask) == TokenType.TEXT.mask) || 
+              ((token.getType() & TokenType.TEMPLATE.mask) == TokenType.TEMPLATE.mask);
+   }
+   
+   isPreviousOneOf(tokens, index, values...) {
+      if(index > 0){
+         var after = tokens.get(index-1);
+         for(var value in values) {
+            if(after.getValue().equals(value)) {
+               return true;
+            }
+         }
+      }
+      return false;
+   }
+   
+   isLiteral(token){
+      return (token.getType() & TokenType.LITERAL.mask) == TokenType.LITERAL.mask;
+   }
+   
+   isAlphaBefore(tokens, index) {
+      if(index > 0){
+         var value = tokens.get(index-1).getValue();
+         var text = String.valueOf(value);
+         
+         return isIdentitfier(text.charAt(text.length()-1));
+      }
+      return false;
+   }
+   
+   isAlphaAfter(tokens, index) {
+      if(tokens.size() > index+1){
+         var value = tokens.get(index+1).getValue();
+         var text = String.valueOf(value);
+         
+         return isIdentitfier(text.charAt(0));
+      }
+      return false;
+   }
+   
+   isIdentitfier(value) {
+      value = value.toString();
+      if(value >= 'a' && value <= 'z') {
+         return true;
+      }
+      if(value >= 'A' && value <= 'Z') {
+         return true;
+      }
+      if(value >= '0' && value <= '9') {
+         return true;
+      }
+      return false;
+   }
+   
+   isLiteralBefore(tokens, index) {
+      if(index > 0){
+         return (tokens.get(index-1).getType() & TokenType.LITERAL.mask) == TokenType.LITERAL.mask;
+      }
+      return false;
+   }
+   
+   isLiteralAfter(tokens, index) {
+      if(tokens.size() > index+1){
+         return (tokens.get(index+1).getType() & TokenType.LITERAL.mask) == TokenType.LITERAL.mask;
+      }
+      return false;
+   }
+}

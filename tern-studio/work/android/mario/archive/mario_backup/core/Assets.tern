@@ -1,0 +1,66 @@
+import java.util.Random;
+
+import tern.game.framework.Image;
+import tern.game.framework.Music;
+import tern.game.framework.Sound;
+
+class Assets {
+    
+      public static var menu: Image; 
+      public static var splash: Image;
+      public static var background: Image;
+      public static var character: Image;
+      public static var character2: Image;
+      public static var character3: Image;
+      public static var heliboy: Image;
+      public static var heliboy2: Image;
+      public static var heliboy3: Image;
+      public static var heliboy4: Image;
+      public static var heliboy5: Image;
+       public static var tiledirt: Image;
+       public static var tilegrassTop: Image; 
+       public static var tilegrassBot: Image;
+       public static var tilegrassLeft: Image;
+       public static var tilegrassRight: Image;
+       public static var characterJump: Image;
+       public static var characterDown: Image;
+       public static var button: Image;
+       public static var click: Sound; 
+       public static var bump: Sound; 
+       public static var kick: Sound;
+       public static var coin: Sound;
+       public static var jump: Sound;
+       public static var pause: Sound;
+       public static var itemSprout: Sound;
+       public static var bonusPoints: Sound;
+       public static var healthUp: Sound;
+       public static var healthDown: Sound;
+       public static var hurt1: Sound;
+       public static var hurt2: Sound; 
+       public static var yahoo1: Sound;
+       public static var yahoo2: Sound;
+
+       public static var music: Music;
+
+       
+       public static load(game: MarioGame) {
+           //Play random background mUsic
+         var r: Random = new Random();
+         var rNum: Integer = r.nextInt(4);
+         if(rNum == 0) {
+            music =game.getAudio().createMusic("sounds/smwovr2.mid");
+         } else if(rNum == 1) {
+            music =game.getAudio().createMusic("sounds/smwovr2.mid");
+         } else if(rNum == 2) {
+            music =game.getAudio().createMusic("music/smb_hammerbros.mid");
+         } else  {
+            music =game.getAudio().createMusic("music/smrpg_nimbus1.mid");
+         }
+          music.setLooping(true);
+          music.setVolume(0.85f);
+          music.play();
+       }
+       
+}
+ 
+

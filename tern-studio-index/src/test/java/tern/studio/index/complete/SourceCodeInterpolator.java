@@ -28,7 +28,7 @@ public class SourceCodeInterpolator {
       
       request.setComplete(expression);
       request.setLine(line);
-      request.setResource("/some/resource.snap");
+      request.setResource("/some/resource.tern");
       request.setSource(formatted);
       
       return request;

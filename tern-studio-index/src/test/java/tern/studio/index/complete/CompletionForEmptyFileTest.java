@@ -32,7 +32,7 @@ public class CompletionForEmptyFileTest extends TestCase {
       request.setComplete("new S");
       request.setSource("");
       request.setLine(1);
-      request.setResource("/example.snap");
+      request.setResource("/example.tern");
       
       Map<String, String> completion = compiler.completeExpression(request).getTokens();
       

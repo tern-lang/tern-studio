@@ -35,10 +35,10 @@ export module History {
                
                historyRecords.push({ 
                   recid: historyIndex++,
-                  resource: "<div class='historyPath'>" + recordResource.getFilePath() + "</div>", // /blah/file.snap 
+                  resource: "<div class='historyPath'>" + recordResource.getFilePath() + "</div>", // /blah/file.tern
                   date: currentRecord.date,
                   time: currentRecord.timeStamp,
-                  script: recordResource.getResourcePath() // /resource/<project>/blah/file.snap
+                  script: recordResource.getResourcePath() // /resource/<project>/blah/file.tern
                });
             }
             w2ui['history'].records = historyRecords;

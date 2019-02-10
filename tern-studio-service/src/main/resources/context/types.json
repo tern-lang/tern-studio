@@ -19,7 +19,7 @@
 	".*.css": "text/css",
 	".*.js": "text/javascript",
 	".*.json": "application/json",
-	".*.snap": "text/plain",
+	".*.tern": "text/plain",
 	".*.woff": "text/plain",
 	".*.project": "text/xml",
 	".*.index": "application/json",

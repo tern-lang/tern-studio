@@ -77,7 +77,7 @@ public class TreeEntryBuilder {
          builder.append("data-icon=\"");
          builder.append(imageFolder);
          builder.append("/file_zip.png\"");
-      } else if (!name.endsWith(".snap")) {
+      } else if (!name.endsWith(".tern")) {
          builder.append("data-icon=\"");
          builder.append(imageFolder);
          builder.append("/file_text.png\"");
