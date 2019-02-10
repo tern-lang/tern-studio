@@ -1,0 +1,36 @@
+import mario.core.sound.specific.MarioSoundManager22050Hz;
+
+
+class CollidableObject extends Sprite {
+   
+   public var soundManager;
+   private var isCollidable;
+   private var isOnScreen = false;
+   
+   public new(pixelX, pixelY, soundManager): super(pixelX, pixelY){
+      this.isCollidable = true;
+      setIsOnScreen(false);
+      this.soundManager = soundManager;
+   }
+   
+   public new(pixelX, pixelY):this(pixelX, pixelY, null) {
+      
+   }
+   
+   public isCollidable() {
+      return isCollidable;
+   }
+   
+   public setIsCollidable(isCollidable) {
+      this.isCollidable = isCollidable;
+   }
+   
+   public isOnScreen() {
+      return isOnScreen;
+   }
+   
+   public setIsOnScreen(isOnScreen) {
+      this.isOnScreen = isOnScreen;
+   }
+}
+

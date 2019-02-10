@@ -1,0 +1,16 @@
+class A{
+   const a=2;
+}
+
+class B{
+   const b=3+new CB().cb;
+}
+// this is to be saved..........
+class CB{
+   static const DEFAULT =2;
+   const cb=DEFAULT;
+}
+
+assert new A().a+new B().b==7;
+
+println(new A().a+new B().b==7);

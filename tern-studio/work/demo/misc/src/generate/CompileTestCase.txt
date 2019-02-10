@@ -1,0 +1,8 @@
+package org.snapscript.compile.staticanalysis;
+
+%imports%
+
+public class %name%Test extends CompileTestCase {
+   %sources%
+   %tests%
+}

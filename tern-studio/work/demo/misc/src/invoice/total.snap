@@ -1,0 +1,29 @@
+//const INVOICE_PATH = "C:/Work/docs/zuooh/lab49/invoices/archive";
+const INVOICE_PATH = "C:/Work/docs/zuooh/lab49/invoices";
+var total = 0;
+
+calculateTotal();
+
+function calculateTotal() {
+   var file = new File("${INVOICE_PATH}/timesheets.csv");
+   
+   file.readLines().stream().forEach(line -> processLine(line));
+   var totalDays = total/8;
+   var gross = totalDays * 600;
+   var vat = gross * 0.20;
+   //println(vat);
+   
+   println("Gross + VAT: " + (gross + vat));
+   
+   // var actualPay = 43200.0;
+   // var expectedPay = 46800.0;
+   
+   // println(expectedPay - actualPay);
+}
+
+function processLine(line) {
+   if(line != null && line != "") {
+      var value = line.split(",")[6];
+      total += Integer.parseInt(value);
+   }
+}

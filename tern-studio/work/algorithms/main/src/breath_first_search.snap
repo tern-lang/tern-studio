@@ -1,0 +1,98 @@
+import util.stream.Collectors;
+
+let tree: Tree = new Tree();
+
+tree.add(7);
+tree.add(2);
+tree.add(6);
+tree.add(9);
+tree.add(3);
+tree.add(5);
+tree.add(1);
+tree.add(8);
+
+let breathFirstOrder = tree.breathFirstOrder();
+let sortOrder = tree.sortOrder();
+
+println(breathFirstOrder);
+println(sortOrder);
+
+class Tree {
+   let root: Node;
+
+   public add(val) {  
+      let node: Node = new Node(val);
+      
+      if(root == null) {
+         root = node;
+      } else {
+         add(root, node);   
+      }
+   }
+   
+   private add(parent: Node, node: Node) {
+      if(parent.val > node.val) {
+         if(parent.left) {
+            add(parent.left, node);
+         } else {
+            parent.left = node;
+         }
+      } else if(parent.val < node.val){
+         if(parent.right) {
+            add(parent.right, node);
+         } else {
+            parent.right = node;
+         }
+      }
+   }
+   
+   public sortOrder() {
+      let list = [];
+      
+      if(root) {
+         sortOrder(root, list);
+      }
+      return list;
+   }
+   
+   private sortOrder(node: Node, list) {
+      if(node.left) {
+         sortOrder(node.left, list);
+      }
+      list.add(node.val);
+      
+      if(node.right) {
+         sortOrder(node.right, list);
+      }
+   }
+   
+   public breathFirstOrder() {
+      let list = root ? [{'node': root, 'level': 0}] : [];
+      let index = 0;
+      
+      while(index < list.length){
+         let next: Node = list[index].node;
+         
+         if(next.left) {
+            list.add({'node': next.left, 'level': list[index].level + 1});
+         }
+         if(next.right) {
+            list.add({'node': next.right, 'level': list[index].level + 1});
+         }
+         index++;
+      }
+      return list.stream()
+         .map(node -> "[${node.node.val}@${node.level}]")
+         .collect(Collectors.toList());
+   }
+   
+   class Node {
+      let left: Node;
+      let right: Node;
+      let val;
+      
+      new(val) {
+         this.val = val;
+      }
+   }
+}

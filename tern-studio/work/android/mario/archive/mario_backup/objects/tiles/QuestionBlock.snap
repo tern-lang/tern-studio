@@ -1,0 +1,77 @@
+import java.util.Random;
+
+import mario.core.MarioResourceManager;
+import mario.core.MarioSoundManager;
+import mario.core.animation.Animation;
+import mario.core.tile.GameTile;
+import mario.core.tile.TileMap;
+import mario.objects.creatures.Coin;
+import mario.objects.creatures.Mushroom;
+import mario.objects.creatures.Score;
+import android.graphics.Bitmap;
+
+
+class QuestionBlock extends GameTile {
+
+   private var soundManager: MarioSoundManager;
+   private var map: TileMap;
+   
+   private var active: Animation;
+   private var dead: Animation;
+   private var isActive: Boolean = false;
+   private var hasCoin: Boolean = false;
+   private var hasMushroom: Boolean = false;
+   
+   public new(pixelX: Integer, pixelY: Integer, map: TileMap, soundManager: MarioSoundManager, hasCoin: Boolean,
+          hasMushroom: Boolean): super(pixelX, pixelY, null, null) {
+      
+      // Integer pixelX, pixelY: Integer, anim: Animation, Image img
+      
+      setIsSloped(false);
+      isActive = true;
+      this.hasCoin = hasCoin;
+      this.hasMushroom = hasMushroom;
+      this.soundManager = soundManager;
+      this.map = map;
+
+      var q: Bitmap[] = [ 
+         MarioResourceManager.Question_Block_0, 
+         MarioResourceManager.Question_Block_1,
+         MarioResourceManager.Question_Block_2, 
+         MarioResourceManager.Question_Block_3,
+         MarioResourceManager.Question_Block_Dead
+      ];
+      
+      var r: Random = new Random();
+      active = new Animation(r.nextInt(20) + 140).addFrame(q[0]).addFrame(q[1]).addFrame(q[2]).addFrame(q[3]);
+      dead = new Animation(2000).addFrame(q[4]);
+      setAnimation(active);
+   }
+   
+   public update(time: Integer) {
+      super.update(time);
+      if(getOffsetY() != 0) { setOffsetY(getOffsetY() + 2); }
+   }
+   
+   public doAction() {
+      if(isActive) {
+         if(hasCoin) {
+            setOffsetY(-10);
+            soundManager.playCoin();
+            var newCoin: Coin = new Coin(getPixelX(), getPixelY());
+            var score: Score = new Score(getPixelX(), getPixelY());
+            map.creaturesToAdd().add(newCoin);
+            map.creaturesToAdd().add(score);
+            newCoin.shoot();
+         } else if(hasMushroom) {
+            setOffsetY(-10);
+            soundManager.playItemSprout();
+            var shroom: Mushroom = new Mushroom(getPixelX(), getPixelY()-26);
+            map.creaturesToAdd().add(shroom);
+         }
+         setAnimation(dead);
+         isActive = false;
+      }
+   }
+}
+

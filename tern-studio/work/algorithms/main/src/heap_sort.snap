@@ -1,0 +1,49 @@
+
+// smallest at top
+let sorted = heapSort([7, 2, 6, 9, 3, 5, 1, 8]);
+println(sorted);
+
+func heapSort(vals){
+   // in a heap the levels of the tree are at powers of 2
+   let list = [];
+   let sorted = [];
+   
+   for(i in 0 .. vals.length - 1){
+      list.add(vals[i]);
+      moveUp(list, i); // move up from bottom
+   }
+   for(i in vals.length - 1 .. 0){
+      sorted.add(list[0]);
+      (list[0], list[i]) = (list[i], list[0]);
+      moveDown(list, 0, i);
+   }
+   return sorted;
+}
+
+func moveDown(vals, parent, length) {
+   let left = (parent * 2) + 1;
+   let right = left + 1;
+   
+   if(left < length) {
+      let index = left;
+      
+      if(right < length) {
+         index = vals[left] < vals[right] ? left : right; // use smallest index
+      }
+      if(vals[parent] > vals[index]) {
+         (vals[parent], vals[index]) = (vals[index], vals[parent]);
+         moveDown(vals, index, length);
+      }
+   }
+}
+
+func moveUp(vals, index){
+   let parent = index / 2;
+   
+   if(vals[index] < vals[parent]) {
+      (vals[index], vals[parent]) = (vals[parent], vals[index]);
+   }
+   if(parent > 0) {
+      moveUp(vals, parent);
+   }
+}

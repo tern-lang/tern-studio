@@ -1,0 +1,89 @@
+// import org.simpleframework.transport.reactor.ActionSelector;
+
+import nio.channels.SelectableChannel;
+import nio.channels.ServerSocketChannel;
+import nio.channels.SocketChannel;
+import nio.channels.SelectionKey;
+import nio.channels.Selector;
+
+// var selector = new ActionSelector();
+// var server = ServerSocketChannel.open();
+// var socket = server.socket();
+// var address = new InetSocketAddress(4459);
+
+// server.configureBlocking(false);
+// socket.setReuseAddress(true);
+// socket.bind(address, 100);
+// selector.register(server, SelectionKey.OP_ACCEPT);
+
+// for(var i in 0..1000){
+//    println("selecting="+address+ " i="+i);
+//    selector.select(5000);
+   
+//    var selectedSets = selector.selectedSets();
+//    var iter = selectedSets.iterator();
+   
+//    while (iter.hasNext()) {
+//       var key = iter.next();
+   
+//       println("key="+key.channel());
+//    }
+// }
+
+import org.simpleframework.transport.reactor.ActionDistributor;
+import org.simpleframework.transport.reactor.Operation;
+import util.concurrent.ScheduledThreadPoolExecutor;
+import org.simpleframework.transport.trace.Trace;
+
+var executor = new ScheduledThreadPoolExecutor(1);
+var distributor = new ActionDistributor(executor);
+
+println("distributor.start()");
+distributor.start();
+
+var server = ServerSocketChannel.open();
+var socket = server.socket();
+var address = new InetSocketAddress(4459);
+
+server.configureBlocking(false);
+socket.setReuseAddress(true);
+socket.bind(address, 100);
+
+var op = new Op(server);
+
+println("distributor.process()");
+distributor.process(op, SelectionKey.OP_ACCEPT);
+
+class Tr with Trace{
+   trace(a){
+      println("trace(${a})");
+   }
+   trace(a,b){
+      println("trace(${a},${b})");
+   }
+}
+class Op with Operation{
+   var channel;
+   var tr;
+   new(channel){
+      this.tr = new Tr();
+      this.channel = channel;
+   }
+   
+   getTrace(){
+      return tr;
+   }
+   
+   getChannel(){
+      return channel;
+   }
+   
+   run(){
+      println("done="+channel);
+   }
+   
+   cancel(){
+      println("cancel");
+   }
+}
+sleep(Integer.MAX_VALUE);

@@ -1,0 +1,28 @@
+// https://leetcode.com/problems/merge-intervals/
+
+assert insertInterval([[1,3], [6,9]], [2,5]) == [[1,5 ],[6, 9]];
+assert insertInterval([[1,2], [3,5], [6,7], [8,10], [12,16]],[4,8]) == [[1,2],[3,10],[12,16]];
+
+func insertInterval(intervals, newInterval) {
+   let merged = [];
+   let read = 0;
+   
+   while(read < intervals.length) {
+      if(intervals[read][1] > newInterval[0]) { // we have our start
+         let start = Math.min(intervals[read][0], newInterval[0]);
+         let finish = newInterval[1];
+            
+         while(read < intervals.length) {
+            if(intervals[read][0] > newInterval[1]) { 
+               finish = Math.max(intervals[read-1][1], newInterval[1]); 
+               break;
+            }
+            read++;
+         }
+         merged.add([start, finish]);
+      }
+      merged.add(intervals[read]);
+      read++;
+   }
+   return merged;
+}

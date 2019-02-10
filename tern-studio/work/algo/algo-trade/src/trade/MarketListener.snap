@@ -1,0 +1,5 @@
+
+
+trait MarketListener extends DepthListener extends TradeListener{
+   
+}

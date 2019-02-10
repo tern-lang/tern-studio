@@ -1,0 +1,42 @@
+import test.TestCase;
+
+class Entry{
+   const x;
+   const name;
+   new(x, name){
+      this.x=x;
+      this.name=name;
+   }
+   hashCode(){
+      return x ^ name.hashCode();
+   }
+   equals(other){
+      return other.x == x && other.name == name;
+   }
+   toString(){
+      return "x=${x} name=${name}";
+   }
+}
+
+class EqualsAndHashTest with TestCase {
+
+   testEqualsAndHash(){
+      var set = {};
+      set.add(new Entry(1, "a"));
+      set.add(new Entry(1, "b"));
+      set.add(new Entry(2, "c"));
+      set.add(new Entry(2, "d"));
+      set.add(new Entry(3, "e"));
+      set.add(new Entry(3, "f"));   
+   
+      assert set.contains(new Entry(1, "a"));
+      assert set.contains(new Entry(1, "b"));
+      assert set.contains(new Entry(2, "c"));
+      assert set.contains(new Entry(2, "d"));
+      assert set.contains(new Entry(3, "e"));
+      assert set.contains(new Entry(3, "f"));
+      assert !set.contains(new Entry(1, "x"));
+      assert !set.contains(new Entry(1, "y"));
+      assert !set.contains(new Entry(1, "z"));      
+   }
+}

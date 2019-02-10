@@ -1,0 +1,22 @@
+
+
+let sorted = bubbleSort([34,43,34,43,4,34,3,5,6,6,5,7,5,722]);
+
+println(sorted);
+
+func bubbleSort(vals) {
+   let list = ArrayList(vals);
+   
+   for(i in 0 .. list.length -1){
+      for(j in 0 .. list.length -1){
+         if(list[j] > list[i]) {
+            let swap = list[j];
+            
+            list[j] = list[i];
+            list[i] = swap;
+            
+         }
+      }
+   }
+   return list;
+}

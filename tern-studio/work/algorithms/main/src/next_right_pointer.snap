@@ -1,0 +1,99 @@
+
+let tree: Tree = new Tree();
+
+tree.add(7);
+tree.add(2);
+tree.add(6);
+tree.add(9);
+tree.add(3);
+tree.add(5);
+tree.add(1);
+tree.add(8);
+
+let sortOrder = tree.sortOrder();
+
+println(sortOrder);
+
+class Tree {
+   let root: TreeLinkNode;
+   let levels: List<TreeLinkNode> = [];
+
+   public add(val) {
+      let node = new TreeLinkNode(val);
+      
+      if(root) {
+         add(node, root, 0);
+      } else {
+         root = node;
+      }
+   }
+   
+   private add(node: TreeLinkNode, root: TreeLinkNode, level) {
+      if(node.val < root.val) {
+         if(root.left) {
+            add(node, root.left, level+1);
+         } else {
+            root.left = node;
+            link(node, level);
+         }
+      }
+      if(node.val > root.val) {
+         if(root.right) {
+            add(node, root.right, level+1);
+         } else {
+            root.right = node;
+            link(node, level);
+         }
+      }
+   }
+   
+   private link(node: TreeLinkNode, level) {
+      if(levels.length > 0) {
+         for(i in 0 .. levels.length -1) {
+            let next = levels[i];
+            
+            if(node.val < next.val) {
+               node.next = next;
+               
+               if(i > 0) {
+                  levels[i - 1].next = node;
+               }
+            }
+         }
+      } else {
+         levels.add(node);
+      }
+   }
+   
+   public sortOrder() {
+      let list = [];
+      
+      if(root) {
+         sortOrder(root, list);
+      }
+      return list;
+   }
+   
+   private sortOrder(node: TreeLinkNode, list) {
+      if(node.left) {
+         sortOrder(node.left, list);
+      }
+      list.add(node.val);
+      
+      if(node.right) {
+         sortOrder(node.right, list);
+      }
+   }
+}
+
+
+class TreeLinkNode {
+   let left: TreeLinkNode;
+   let right: TreeLinkNode;
+   let next: TreeLinkNode;
+   let val;
+   
+   new(val) {
+      this.val = val;
+   }
+}

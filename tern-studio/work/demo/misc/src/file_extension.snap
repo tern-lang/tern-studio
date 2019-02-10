@@ -1,0 +1,15 @@
+File("c:\\temp")
+   .findFiles(".*")
+   .stream()
+   .sorted()
+   .forEach(file: File -> println(file));
+   
+File("c:\\temp\\pom.xml")
+   .contains("project")
+   .stream()
+   .forEach(line -> println(line));
+   
+println(Date().addYears(1).minusMonths(1).addDays(1).format("yyyy-MM-dd"));
+
+println(Date().format("yyyy-MM-dd"));
+println(Date().minusMonths(1).format("yyyy-MM-dd"));

@@ -1,0 +1,47 @@
+
+
+type User {
+	name as String;
+	countryOfOrigin as Country;
+   paymentType as String;
+}
+
+type Country {
+	name as String;
+	locale as Locale;
+}
+
+enum Action {
+ 	READ,
+ 	WRITE,
+	SEARCH
+}
+
+enum Resource {
+ 	CONTENT
+}
+
+policy SearchResults {
+
+	/*
+	 * Press reader role which is valid when the user is not in N. Korea.
+	 */
+
+	role PressReader {
+	
+		allow Action.READ on Resource.CONTENT 
+				where 
+					User.discipline in ['x'] 
+				and 
+					User.country !in ['north korea']
+				and
+					(User.age > 18 and User.age < 90)
+				or
+				   User.paymentType == 'Cash';		
+		
+		
+		allow Action.READ on Resource.CONTENT where User.discipline in ['x'] and User.country !in ['north korea'];
+		allow Action.READ on Resource.CONTENT where User.discipline in ['x'] and User.country !in ['north korea'];
+	
+	}
+}

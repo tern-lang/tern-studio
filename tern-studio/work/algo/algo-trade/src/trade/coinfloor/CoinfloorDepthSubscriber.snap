@@ -1,0 +1,29 @@
+
+class CoinfloorDepthSubscriber extends WebSocketSubscriber {
+
+   const printer: PrettyPrinter;
+   const mapper: ObjectMapper;
+   const listener: DepthListener;
+
+   new(listener: DepthListener, u: URI): super(u){
+      this.printer = new DefaultPrettyPrinter();
+      this.mapper = new ObjectMapper();
+      this.listener = listener;
+   }
+
+	override onMessage(msg: String) {
+	   try {
+   	   const data = mapper.readValue(msg, Object.class.type);
+   	   const writer = mapper.writer(printer);
+   	   const text = writer.writeValueAsString(data);
+   	   const trade = new Depth
+   	   (text);
+   	   
+   	   listener.onDepth(trade);
+         //println(text);
+      }catch(e:Exception){
+         e.printStackTrace();
+      }
+	}
+}
+

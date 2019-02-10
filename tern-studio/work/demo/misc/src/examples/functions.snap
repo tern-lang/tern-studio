@@ -1,0 +1,55 @@
+
+function printIt(a){ 
+   println(a);
+}
+
+function fn(a: String) {
+   println("string=${a} type=${a.class}");
+}
+ 
+function printAll(a...) {
+   a.stream().forEach(x -> println(x));
+}
+
+function fn(a, b){
+   println("${a}, ${b}");
+}
+
+function fn(x, y, f: (a,b)) {
+   var result = f(x, y);
+   println(result); 
+}
+
+function returnFunc1(){
+   return (a, b) -> Math.max(a,b);
+}
+
+function returnFunc2() {
+   return Math::max;
+}
+
+function returnFunc3(): Runnable { // coerce closure returned
+   return -> println("run()");
+}
+
+function runIt(a: Runnable) { // coerce parameter
+   a.run();
+}
+
+printIt(1);
+fn(1); // coerce int to string
+fn("hello");
+printAll(1,2,3,4,5); // var args
+fn(1,2);
+fn(1,2, Math::max); // method handles
+
+var x1 = returnFunc1()(12,22);
+println(x1);
+
+var x2 = returnFunc2()(12,22);
+println(x2);
+
+var x3 = returnFunc3(); // coerce function
+x3.run();
+
+runIt(-> println("x"));

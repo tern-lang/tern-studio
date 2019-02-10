@@ -1,0 +1,38 @@
+import test.TestCase;
+
+module Mod{
+   var x = new Byte[10];
+   for(var i =0; i < 10; i++){
+      x[i]=i;
+   }
+   get(i: Integer):Integer{
+      return x[i];
+   }
+   toList():[]{
+      return x;
+   }
+}
+
+class ModuleInitializationTest with TestCase {
+
+   testModuleInit(){
+      assert Mod.x[0] == 0;
+      assert Mod.x[1] == 1;
+      assert Mod.x[2] == 2;
+      assert Mod.x[3] == 3;
+      assert Mod.x[4] == 4;
+      assert Mod.x[5] == 5;
+      assert Mod.get(0) == 0;
+      assert Mod.get(1) == 1;
+      assert Mod.get(2) == 2;
+      assert Mod.get(3) == 3;
+      assert Mod.get(4) == 4;
+      assert Mod.get(5) == 5;
+      assert Mod.toList().get(0) == 0;
+      assert Mod.toList().get(1) == 1;
+      assert Mod.toList().get(2) == 2;
+      assert Mod.toList().get(3) == 3;
+      assert Mod.toList().get(4) == 4;
+      assert Mod.toList().get(5) == 5;
+   }
+}

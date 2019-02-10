@@ -1,0 +1,40 @@
+/*
+Print shortest path to print a string on screen
+
+Given screen containing aplhabets from A-Z and input string, by using remote we can go from one character to another character, remote contains only left, right, top and bottom keys. write a function that will find the shortest path to type all the charcters of given string using remote.
+
+Screen:
+
+A B C D E
+F G H I J
+K L M N O
+P Q R S T
+U V W X Y
+Z
+
+Example:
+
+Input: “GEEK”
+Output:
+Move Down
+Move Right
+Press OK
+Move Up
+Move Right
+Move Right
+Move Right
+Press OK
+Press OK
+Move Left
+Move Left
+Move Left
+Move Left
+Move Down
+Move Down
+Press OK
+
+Solution: https://www.geeksforgeeks.org/print-shortest-path-print-string-screen/
+*/
+
+func shorestPath() {
+}

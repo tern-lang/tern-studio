@@ -1,0 +1,49 @@
+import test.TestCase;
+
+class ClosureTest with TestCase {
+
+   testClosure() {
+      var list = ["a1", "a2", "b1", "c2", "c1"];
+      var result = [];
+      
+      list.stream()
+          .filter((s) -> s.startsWith("c"))
+          .map(s -> s.toUpperCase())
+          .sorted()
+          .forEach(s: String -> result.add(s));
+      
+      assert result.length == 2;
+      assert result[0] == 'C1';
+      assert result[1] == 'C2';
+   }
+
+   testClosureFunctions() {
+      var func1 = () -> println("func1()");
+      var func2 = (a) -> println(a);
+      
+      assert func1.name == "anonymous";
+      assert func1.getName() == func1.name;
+      assert func1.annotations == [];
+      assert func1.getAnnotations() == [];
+      assert func1.signature.parameters == [];
+      assert func1.getSignature().getParameters().isEmpty();
+      
+      assert func2.name == "anonymous";
+      assert func2.getName() == func2.name;
+      assert func2.annotations == [];
+      assert func2.getAnnotations() == [];
+      assert func2.getSignature().getParameters().size() == 1;
+      assert func2.signature.parameters.length == 1;
+      
+      println(func1);
+      println(func2);
+      
+      var set = {func1, func2, func2};
+      
+      println(set);
+      
+      assert set.contains(func2);
+      assert set.contains(func1);
+   
+   }
+}

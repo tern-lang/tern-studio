@@ -1,0 +1,13 @@
+
+class Foo{
+   var text;
+   new(text){
+      this.text=text;
+   }
+   get(){
+      return "Foo.get(): ${text}";
+   }
+   toString(){
+      return "Foo(${text})";
+   }
+}

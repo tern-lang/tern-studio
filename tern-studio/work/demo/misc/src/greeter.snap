@@ -1,0 +1,18 @@
+
+
+class Greeter {
+   var message;
+   
+   new(message) {
+      this.message = message;
+   }
+   
+   greet(person) {
+      var x = BLAH;
+      println("${message} ${person} ${BLAH}");
+   }
+}
+const BLAH = 'aa';
+var greeter = new Greeter('Hello');
+
+greeter.greet('World!');

@@ -1,0 +1,55 @@
+import test.TestCase;
+
+trait Nuh{
+   const VAL3=3;
+}
+
+trait Blah extends Nuh{
+   const VAL11 =8+VAL3;
+   const VAL12 = 12;
+}
+
+class Foo with Blah{
+   static const VAL12PLUSVAL11 = VAL11+VAL12;
+   static get(){
+      return VAL12PLUSVAL11;
+   }
+   var x;
+   var y;
+   new(x, y){
+      println("x=${x} y=${y}");
+      this.x = x;
+      this.y = y;
+   }
+   getX(){
+      println("x=${x}");
+      return x;
+   }
+   getY(){
+      return y;
+   }
+}
+class Boo extends Foo{
+   static const V24 = VAL12PLUSVAL11 + 1;
+   var z;
+   new(x) :super(V24, VAL12){
+      this.z=x;
+   }
+   getBoo(){
+      return z;
+   }
+}
+
+class StaticConstantTest with TestCase {
+
+   testStaticConstIneritance(){
+      var val = Foo.get();
+      println(val);
+      assert val == 12+11;
+      var boo = new Boo(667);
+      //XXX this is a bug
+      //assert boo.getX() == 24;
+      assert boo.getY() == 12;
+      assert boo.getBoo() == 667;
+   }
+}

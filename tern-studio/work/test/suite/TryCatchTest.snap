@@ -1,0 +1,57 @@
+import test.TestCase;
+
+class TryCatchTest with TestCase {
+
+   testThrowString(){
+   	try {
+   		throw "A string";
+   	}catch(e){
+   	   println(e);
+   	   println(e.class);
+   		assert e == "A string";
+   	}
+   }
+   
+   testThrowException() {
+   	try {
+   		throw new IllegalStateException("Some text");
+   	} catch(e) {
+   		e.printStackTrace();
+   		assert e.message == "Some text";
+   	}
+   }
+   
+   testNullPointerException() {
+   	try {
+   	   var x = null;
+   	   x.toString();
+   	} catch(e) {
+   		e.printStackTrace();
+   	   assert e.message == "Reference to a null object";
+   	}
+   }
+   
+   testNullPointerExceptionOnIncrement() {
+   	try {
+   	   var x = "xx";
+   	   x++;
+   	} catch(e) {
+   		e.printStackTrace();
+   	}
+   }
+   
+   testMultipleCatchException(){
+      var caught = null;
+      try {
+         throw 1;
+      }catch(e: Boolean){
+         caught = "Boolean";
+      }catch(e: Integer){
+         caught = "Integer";
+      }catch(e: Exception){
+         caught = "Exception";
+      }
+      println(caught);
+      assert caught == "Integer";
+   }
+}

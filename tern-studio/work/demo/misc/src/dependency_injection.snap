@@ -1,0 +1,56 @@
+module Mod{
+   func(){
+      println("Mod.func()");
+   }
+}
+dump(Mod.this);
+function dump(mod){
+   mod.func();
+}
+
+class Test{
+   foo(a, b){
+      println("Test.foo(${a}, ${b})");
+   }
+   func(a){
+      println("Test.func(${a})");
+   }
+}
+var x = new Test();
+var a = 11;
+var b = 22;
+eval("x.foo(${a},${b})");
+call(x, "func", 45);
+
+function call(obj, name, arg){
+   eval("obj.${name}(${arg})");
+}
+
+class Loader{
+   
+   create(name){
+      var type = class.getModule().getContext().getLoader().resolveType(name);
+      return type.new(type);
+   }
+}
+var loader = new Loader();
+var inst = loader.create("dependency_injection.Test");
+inst.func("hello");
+
+for(var mod in Loader.class.getModule().getContext().getRegistry().getModules()){
+   println("==>"+mod.getName());
+}
+for(var i in 0..9){
+   var s = time();
+   var type = load("math.stuff").getType("Blah");
+   println(type);
+   var f = time();
+   println(f-s);
+}
+var inst2 = loader.create("math.stuff.Blah");
+println(inst2);
+
+var type = load("math.stuff").getType("Blah");
+var object = type.new(type);
+
+println(object);

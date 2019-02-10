@@ -1,0 +1,20 @@
+import awt.geom.Ellipse2D$Double;
+import awt.geom.Ellipse2D$Float;
+import awt.geom.Line2D$Double;
+import awt.geom.Line2D$Float;
+import test.TestCase;
+
+/**
+ * Make sure the inner class does not get confused
+ * with other inner classes of the same name.
+ */
+class InnerClassDollarTest with TestCase {
+
+   testInnerClassImport(){
+      assert new Ellipse2D$Double(1,2,3,4).class.getType().getName() == "java.awt.geom.Ellipse2D$Double";
+      assert new Ellipse2D$Float(1,2,3,4).class.getType().getName() == "java.awt.geom.Ellipse2D$Float";
+      assert new Line2D$Double(1,2,3,4).class.getType().getName() == "java.awt.geom.Line2D$Double";
+      assert new Line2D$Float(1,2,3,4).class.getType().getName() == "java.awt.geom.Line2D$Float";   
+   
+   }
+}

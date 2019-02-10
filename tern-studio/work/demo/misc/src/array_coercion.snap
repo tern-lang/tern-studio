@@ -1,0 +1,37 @@
+var x = new Byte[1][1];
+println(x.class.getType().getComponentType().getComponentType());
+println(x.class);
+println(x.class.getEntry());
+println(x.class.getEntry().getEntry());
+// this is to save
+var s : String[][] = [['a','b'],[]];
+var i : Integer[][] = [['1','2', 3.0d, 11L],[2]];
+// this is a test
+// blah blah blah 
+fun(s);
+fun(i);
+
+
+function fun(s: String[][]){
+   for(var e in s){
+      fun(e);
+   }
+}
+
+function fun(s: String[]){
+   for(var e in s){
+      println("string=${e}");
+   }
+}
+
+function fun(s: Float[][]){
+   for(var e in s){
+      fun(e);
+   }
+}
+
+function fun(s: Float[]){
+   for(var e in s){
+      println("float=${e}");
+   }
+}

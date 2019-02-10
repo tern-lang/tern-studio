@@ -1,0 +1,42 @@
+
+/*
+ * Quicksort works by splitting the list around a pivot value. This
+ * pivot is used to place values lower to one side and values higher to
+ * another side. Once you have split the array like so you can reduce
+ * the problem to two smaller arrays where you repat the problem.
+ *
+ * https://www.youtube.com/watch?v=ZHVk2blR45Q
+ */
+
+let sorted = quickSort([4, 10, 8, 7, 6, 5, 3, 12, 14, 2]);
+
+println(sorted);
+
+func quickSort(vals){
+   let list = ArrayList(vals);
+   quickSort(list, 0, list.length -1); // start
+   return list;
+}
+
+func quickSort(vals, start, finish){
+   if(start < finish) {
+      let mid = start + ((finish - start) / 2); // mid point
+      let pivot = vals[mid];
+      
+      (vals[mid], vals[finish]) = (vals[finish], vals[mid]); // swap
+      partition(vals, start, finish, pivot); // start
+   }
+}
+
+func partition(vals, start, finish, pivot) { // partition around the pivot
+   let mark = start;
+
+   for(i in start .. finish) {
+      if(vals[i] <= pivot) {
+         (vals[i], vals[mark]) = (vals[mark++], vals[i]); // swap
+      }
+   }
+   quickSort(vals, mark, finish);
+   quickSort(vals, start, mark -1);
+}
+

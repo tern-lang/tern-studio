@@ -1,0 +1,8 @@
+
+class ThreadTest {
+
+   @Test
+   testThread() {
+      println(Thread.currentThread());
+   }
+}

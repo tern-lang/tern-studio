@@ -1,0 +1,67 @@
+import util.stream.Collectors;
+import test.TestCase;
+
+@ManagedResource(description: "Some resource")
+module Mod{
+
+   @ManagedOperation(name: "resolve")
+   @ManagedOperationParameters(
+      values: [@ManagedOperationParameter(name: "text")]
+   )
+   resolve(text){
+      return text;
+   }
+}
+
+class Foo {
+
+   @Field
+   var x;
+   
+   @Constructor
+   new(@Parameter x){
+      this.x = x;
+   }
+}
+
+class AnnotationTest with TestCase {
+
+   testModuleAnnotations() {
+      var annotations = Mod.getAnnotations();
+      
+      assert annotations.length == 1;
+      assert annotations[0].name == 'ManagedResource';
+      assert annotations[0].getAttribute('description') == 'Some resource';
+   }
+   
+   testParameterAnnotations() {
+      var annotations1 = Foo.class
+         .getProperties()
+         .stream()
+         .filter(x -> x.name == "x")
+         .map(x -> x.getAnnotations())
+         .collect(Collectors.toList());
+         
+      var annotations2 = Foo.class
+         .getFunctions()
+         .stream()
+         .filter(x -> x.name == "new")
+         .map(x -> x.getSignature().getParameters()[1].getAnnotations()) // param [0] is Type
+         .collect(Collectors.toList());
+         
+      var annotations3 = Foo.class
+         .getFunctions()
+         .stream()
+         .filter(x -> x.name == "new")
+         .map(x -> x.signature.parameters[1].annotations)
+         .collect(Collectors.toList());
+      
+      assert annotations1.isEmpty() == false;
+      assert annotations2.isEmpty() == false;
+      assert annotations3.isEmpty() == false;   
+      
+      println(annotations1);
+      println(annotations2);
+      println(annotations3);
+   }
+}

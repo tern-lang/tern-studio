@@ -1,0 +1,18 @@
+import test.TestCase;
+
+class OperatorTest with TestCase {
+
+   testOperators(){
+      var x = 10;
+      
+      assert ~x == -11;
+      assert x>>1 == 5;
+      assert x>>>1 == 5;
+      assert x<<1 == 20;
+      assert x+2 == 12;
+      assert x-2 == 8;
+      assert x&0xff==10;
+      assert x|0xff == 255;
+      assert x^0xff == 245;
+   }
+}

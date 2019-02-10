@@ -1,0 +1,88 @@
+import awt.Point;
+import awt.image.BufferedImage;
+import util.Random;
+
+import mario.core.animation.Animation;
+import mario.core.sound.specific.MarioSoundManager22050Hz;
+import mario.objects.base.Creature;
+import mario.util.ImageManipulator;
+
+
+class RedKoopa extends Creature {
+   
+   private var left;
+   private var right;
+   private var dead;
+   private var flip;
+   private var r;
+   
+   public new(x, y, soundManager): super(x, y, soundManager) {
+      
+      r = new Random();
+      
+      var left_1 = ImageManipulator.loadImage("/mario/baddies/Koopa_Red_Left_1.png");
+      var left_2 = ImageManipulator.loadImage("/mario/baddies/Koopa_Red_Left_2.png");
+      var right_1 = ImageManipulator.loadImage("/mario/baddies/Koopa_Red_Right_1.png");
+      var right_2 = ImageManipulator.loadImage("/mario/baddies/Koopa_Red_Right_2.png");
+      var shell = ImageManipulator.loadImage("/mario/baddies/Red_Shell_1.png");
+      var flipped = ImageManipulator.loadImage("/mario/baddies/Red_Shell_Flip.png");
+      
+      left = new Animation(150).addFrame(left_1).addFrame(left_2);
+      right = new Animation(150).addFrame(right_1).addFrame(right_2);
+
+      dead = new Animation(-> kill());
+      flip = new Animation(-> kill());
+      dead.addFrame(shell, 10);
+      dead.addFrame(shell, 10);
+      flip.addFrame(flipped, 1200);
+      flip.addFrame(flipped, 1200);
+      setAnimation(left);
+   }
+   
+   public xCollide(p) {
+      super.xCollide(p);
+      if(currentAnimation() == left) {
+         setAnimation(right);
+      } else {
+         setAnimation(left);
+      }
+   }
+   
+   public creatureXCollide() {
+      if(dx > 0) {
+         x = x - 2;
+         setAnimation(left);
+      } else {
+         setAnimation(right);
+         x = x + 2;
+      }
+      dx = -dx;
+   }
+   
+   public flip() {
+      setAnimation(flip);
+      setIsFlipped(true);
+      setIsCollidable(false);
+      dy = -0.2f;
+      dx = 0;
+   }
+   
+   public wakeUp() {
+      super.wakeUp();
+      var rNum = r.nextInt(3);
+         if(rNum == 0 || rNum == 1) {
+            dx = -0.03f;
+            setAnimation(left);
+         } else {
+            dx = 0.03f;
+            setAnimation(right);
+         }
+   }
+   
+   public jumpedOn() {
+      setAnimation(dead);
+      setIsCollidable(false);
+      dx = 0;
+   }
+}
+

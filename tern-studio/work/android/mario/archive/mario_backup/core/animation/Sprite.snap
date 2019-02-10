@@ -1,0 +1,100 @@
+import org.snapscript.game.framework.Input.KeyEvent;
+
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+
+
+class Sprite extends Animatible {
+   
+   public var x: Float = 0f;
+    public var y: Float = 0f;
+    public var dx: Float = 0f;
+    public var dy: Float = 0f;
+   
+   public new(): this(0, 0){
+   }
+   
+   public new(x: Integer, y: Integer) {
+      this.x = x;
+      this.y = y;
+      dx = 0;
+      dy = 0;
+   }
+   
+   public draw(g: Canvas, x: Integer, y: Integer) {
+      g.drawBitmap(currentAnimation().getImage(), x, y, null);
+   }
+   
+   public draw(g: Canvas, x: Integer, y: Integer, offsetX: Integer, offsetY: Integer) {
+      draw(g, x + offsetX, y + offsetY);
+      
+   }
+   public getImage(): Bitmap {
+      return (currentAnimation() == null) ? null : currentAnimation().getImage();
+   }
+   
+    public getX(): Float {
+        return x;
+    }
+    
+    public setX(x: Float) {
+       this.x = x;
+    }
+    
+    public getY(): Float {
+        return y;
+    }
+    
+    public setY(y: Float) {
+       this.y = y;
+    }
+    
+    public getdX(): Float {
+       return dx;
+    }
+    
+    public setdX(dx: Float) {
+       this.dx = dx;   
+    }
+    
+    public setdY(dy: Float) {
+       this.dy = dy;
+    }
+    
+    public getdY(): Float {
+       return dy;
+    }
+    
+    public getHeight(): Integer {
+       return currentAnimation().getHeight();
+    }
+    
+    public getWidth(): Integer {
+       return currentAnimation().getWidth();
+    }
+    
+    public keyReleased(e: KeyEvent) {}
+    public keyPressed(e: KeyEvent) {} 
+    public keyTyped(e: KeyEvent) {} 
+    
+   // Checks simple collision between sprites.
+   // Checks if two Sprites collide with one another. Returns false if the two Sprites 
+   // are the same. Returns false if one of the Sprites is a Creature that is not alive.
+   public static isCollision(s1: Sprite, s2: Sprite): Boolean {
+       // if the Sprites are the same, return false
+       if (s1 == s2) {
+           return false;
+       }
+   
+       // get the pixel location of the Sprites
+       var s1x: Integer = Math.round(s1.getX());
+       var s1y: Integer = Math.round(s1.getY());
+       var s2x: Integer = Math.round(s2.getX());
+       var s2y: Integer = Math.round(s2.getY());
+   
+       // check if the two sprites' boundaries intersect
+       return (s1x < s2x + s2.getWidth() && s2x < s1x + s1.getWidth() && 
+             s1y < s2y + s2.getHeight() && s2y < s1y + s1.getHeight());
+   }
+}
+

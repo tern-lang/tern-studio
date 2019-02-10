@@ -1,0 +1,42 @@
+class A {
+   new(x){
+      System.err.println("A.new("+x+")->"+class);
+   }
+}
+class B extends A {
+   new(x):super(x){
+      System.err.println("B.new("+x+")->"+class);
+   }
+}
+class C extends B {
+   new(x):super(x){
+      System.err.println("C.new("+x+")->"+class);
+   }
+}
+class D extends C {
+   new(x) :super(x){
+      System.err.println("D.new("+x+")->"+class);
+   }
+}
+var d = blah();
+
+function blah() {
+   foo(11);
+}
+
+function foo(x) {
+   return new D(x);
+}
+
+class Vec{
+   var x:Number;
+   var y:Number;
+   var z:Number;
+   new(x:Number, y:Number, z: Number){
+      this.x=x;
+      this.y=y;
+      this.z=z;
+   }
+}
+var v = new Vec(1,1.1,-0.2);
+println(v.x);

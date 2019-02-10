@@ -1,0 +1,91 @@
+import io.File;
+import io.FileReader;
+import io.BufferedReader;
+
+@Foo
+@Snuh
+trait Searcher {
+   search(text);
+}
+
+function search(searcher: Searcher, text) {
+   var results = searcher.search(text);
+   
+   for(var result in results) {
+      println(result);
+   }
+}
+
+class TextFileSearcher with Searcher {
+   
+   static const DEFAULT_PATTERN = ".snap";
+   
+   var pattern;
+   var root; // reference directory
+   
+   new(root) : this(root, DEFAULT_PATTERN){}
+   
+   new(root, pattern) {
+      this.root = new File(root);
+      this.pattern = pattern;
+   }
+   
+   override search(text) {
+      var results = find(pattern); // find files matching
+      var matches = [];
+      
+      for(var result in results) {
+         if(result.source.contains(text)) {
+            matches.add(result.file); // matches contain text
+         }
+      }
+      return matches;
+   }
+
+   find(pattern){
+      return find(root, pattern, []);
+   }
+
+   static find(root, pattern, found) { // recursive search of directory
+      var list = root.listFiles((entry) -> { // closure coercion to FileFilter
+
+         if(entry.isFile()) {
+            return entry.name.endsWith(pattern);
+         }
+         return entry.isDirectory();
+      });
+      for(var entry in list) {
+         if(entry.isDirectory()) {
+            find(entry, pattern, found); // recursive find
+         } else {
+            var text = read(entry); // read contents
+            
+            found.add({ // add map with 'file' and 'source'
+               file: entry,
+               source: text
+            });
+         }
+      }
+      return found; // results
+   }
+}
+
+
+function read(file) {
+   var reader = new FileReader(file);
+   var buffer = new BufferedReader(reader);
+   var builder = new StringBuilder();
+   
+   loop { // infinite loop
+      var line = buffer.readLine();
+      
+      if(line == null) { // when EOF is reached
+         return builder.toString();
+      }
+      builder.append(line);
+   }
+}
+
+var directory = new TextFileSearcher("C:\\Work\\development\\github\\ngallagher.github.io");
+
+search(directory, "class");

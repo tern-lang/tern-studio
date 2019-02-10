@@ -1,0 +1,36 @@
+trait Trait1 {
+   fun1() {
+      System.err.println("Trait1.fun1");
+   }
+}
+trait Trait2 {
+   fun1() {
+      System.err.println("Trait2.fun1");
+   }
+}
+class A with Trait1 {
+}
+class B extends A with Trait2 {
+
+   fun2() {
+      System.err.println("B.fun2");   
+   }   
+   fun1() {
+      System.err.println("B.fun1");
+   }
+}
+class C extends B {
+ 
+}
+class D extends A with Trait2 {
+   fun2() {
+      System.err.println("D.fun2");
+   }
+}
+var c = new C();
+c.fun1();
+c.fun2();
+System.err.println("----");
+var d = new D();
+d.fun1();
+d.fun2();

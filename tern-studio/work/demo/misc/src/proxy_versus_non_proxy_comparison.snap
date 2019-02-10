@@ -1,0 +1,59 @@
+class Point {
+   var x;
+   var y;
+   new(x,y){
+      this.x=x;
+      this.y=y;
+   }
+   hashCode(){
+      return x+y;
+   }
+   equals(point){
+      return point.x==x && point.y==y;
+   }
+   toString(){
+      return "("+x+","+y+")";
+   }
+}
+var start = System.currentTimeMillis();
+var list = new Point[100000];
+
+for(var i in 0..5) {
+   iterate(list);
+   allocate(list);
+   map(list);
+}
+
+function iterate(list) {
+   var start = System.currentTimeMillis();
+   
+   for(var i = 0; i < list.size(); i++) {
+      //list[i];
+   }
+   var stop = System.currentTimeMillis();
+
+   System.err.println("iterate="+(stop -start));
+}
+
+function allocate(list) {
+   var start = System.currentTimeMillis();
+   
+   for(var i = 0; i < list.size(); i++) {
+      new Point(i, i+1);
+   }
+   var stop = System.currentTimeMillis();
+
+   System.err.println("allocate="+(stop-start));
+}
+
+function map(list) {
+   var start = System.currentTimeMillis();
+   var p = null;
+   
+   for(var i = 0; i < list.size(); i++) {
+      p = {x: i,  y: i+1};
+   }
+   var stop = System.currentTimeMillis();
+
+   System.err.println("map="+(stop-start));
+}

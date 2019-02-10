@@ -1,0 +1,48 @@
+import test.suite.ThreadTest;
+
+class TestCollector {
+   const tests;
+
+   new(suite){
+      this.tests = suite.suite();
+   }
+
+   collectTests() {
+      var functions = [];
+      
+      for(var test in tests) {
+         var instance = eval("new ${test.name}()", "${test.module.name}");
+         var methods = test.getFunctions();
+
+         for(var method in methods){
+            if(acceptTest(method) && !ignoreTest(method)) {
+               functions.add(-> {
+                  println("RUNNING: ${test.name}.${method.name}()");
+                  eval("instance.${method.name}()");
+               });
+            }
+         }
+      }
+      return functions;
+   }
+   
+   acceptTest(method) {
+      var annotations = method.getAnnotations();
+      
+      for(var annotation in annotations){
+         if(annotation.name.equals("Test")) 
+            return true;
+      }
+      return false;
+   }
+    
+   ignoreTest(method) {
+      var annotations = method.getAnnotations();
+      
+      for(var annotation in annotations){
+         if(annotation.name.equals("Ignore")) 
+            return true;
+      }
+      return false;
+   }
+}

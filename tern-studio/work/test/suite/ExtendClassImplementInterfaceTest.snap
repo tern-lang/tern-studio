@@ -1,0 +1,54 @@
+import test.TestCase;
+
+class RunnableOutputStream extends FilterOutputStream with Runnable{
+   new(out):super(out){
+      println("${out}");
+   }
+   getOutputStream() {
+      return out;
+   }
+   override run(){
+      println("RunnableOutuputStream.run()");
+   }
+}
+
+class ExtendRunnableOutputStream extends RunnableOutputStream with Closeable {
+
+   new(out):super(out){}
+   
+   override close(){
+      println("ExtendRunnableOutputStream.run()");
+   }
+}
+
+class ExtendClassImplementInterfaceTest with TestCase {
+
+   testExtendsAndImplements() {
+      var stream = new RunnableOutputStream(System.out);
+      stream.run();
+      
+      var task: Runnable = stream;
+      task.run();
+      
+      assert stream instanceof Runnable;
+      assert task instanceof Runnable;
+      assert stream.outputStream == System.out;
+   }
+   
+   testExtendsAndExtendsAndImplements() {
+      var stream = new ExtendRunnableOutputStream(System.out);
+      stream.run();
+      stream.close();
+      
+      var closeable: Closeable = stream;
+      closeable.close();
+      
+      var task: Runnable = stream;
+      task.run();
+      
+      assert stream instanceof Closeable;
+      assert stream instanceof Runnable;
+      assert closeable instanceof Closeable;
+      assert stream.outputStream == System.out;
+   }
+}

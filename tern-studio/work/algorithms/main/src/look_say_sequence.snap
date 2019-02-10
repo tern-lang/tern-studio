@@ -1,0 +1,34 @@
+import util.stream.Collectors;
+
+printLookSaySequence(10);
+
+func printLookSaySequence(count) {
+   let number = "1";
+   
+   for(i in 0 .. count - 1) {
+      number = makeLookSay(number);
+      println(number);
+   }
+}
+
+func makeLookSay(number) {
+   let builder = new StringBuilder();
+   
+   if(number.length > 0) {
+      let current = number.charAt(0);
+      let count = 1;
+      
+      for(let i = 1; i < number.length; i++){
+         let next = number.charAt(i);
+   
+         if(current != next){
+            builder.append("${count}${current}");
+            current = next;
+            count = 0;
+         }
+         count++;
+      }
+      builder.append("${count}${current}");   
+   }
+   return builder.toString();
+}

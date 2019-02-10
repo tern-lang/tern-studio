@@ -1,0 +1,38 @@
+.consoleError {
+	color: ${CONSOLE_ERROR_FONT_COLOR};
+	white-space: pre;
+}
+
+.consoleNormal {
+	color: ${CONSOLE_ERROR_COLOR};
+	white-space: pre;
+}
+
+#console {
+    font-family: "Consolas",Monaco,"Andale Mono","Lucida Console","Bitstream Vera Sans Mono","Courier New",Courier,monospace; 
+    font-size: 1em;   
+	background-color: ${CONSOLE_BACKGROUND_COLOR};
+	/*border-radius: 4px;*/
+	border-style: solid;
+	border-width: 1px;
+	border-color: #c0c0c0;
+	padding: 5px;
+	position: absolute;
+	padding: 0px;
+	top: 12px;
+	right: 8px;
+	bottom: 8px;
+	left: 8px;
+}
+
+.consoleTab {
+	background-image: url('${IMAGE_FOLDER}/console.png');
+	background-size: contain;
+	background-position: left bottom;
+	background-repeat: no-repeat;
+	padding-top: 3px;
+	padding-bottom: 2px;
+	padding-left: 22px; /* Or size of icon + spacing */
+	margin-left: -10px;
+	z-index: 1009;
+}

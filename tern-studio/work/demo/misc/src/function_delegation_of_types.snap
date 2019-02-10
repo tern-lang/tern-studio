@@ -1,0 +1,23 @@
+class InvokeIt{
+   var x;
+   new(x){
+      this.x=x;
+   }
+   invoke(y){
+      System.err.println("x="+x+" y="+y);
+   }
+}
+class Invoker{
+   var y;
+   new(y){
+      this.y=y;
+   }
+   invoke(i: InvokeIt){
+      i.invoke(y);
+   }
+}   
+var a = new InvokeIt("invokeIt");
+var b = new Invoker("invoker");
+System.err.println(a.x);
+System.err.println(b.y);
+b.invoke(a); 

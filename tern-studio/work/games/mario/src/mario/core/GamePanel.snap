@@ -1,0 +1,316 @@
+/**
+ * GamePanel extends Jpanel. Contains the main game loop.
+ */
+
+import awt.Graphics;
+import awt.Graphics2D;
+import awt.Image;
+import awt.event.KeyAdapter;
+import awt.event.KeyEvent;
+import awt.image.BufferedImage;
+import io.File;
+import io.IOException;
+import util.Random;
+
+import imageio.ImageIO;
+import sound.midi.Sequence;
+import sound.sampled.AudioFormat;
+import swing.JPanel;
+import swing.JPopupMenu;
+
+import mario.core.animation.SpriteListener;
+import mario.core.sound.MidiPlayer;
+import mario.core.sound.specific.MarioSoundManager10512Hz;
+import mario.core.sound.specific.MarioSoundManager22050Hz;
+import mario.core.tile.GameTile;
+import mario.core.tile.TileMap;
+import mario.objects.base.Creature;
+import mario.objects.creatures.Coin;
+import mario.objects.mario.Mario;
+import mario.util.ImageManipulator;
+import mario.util.SampleAverager;
+
+class GamePanel extends JPanel with Runnable {
+
+   private var panelWidth;
+   private var panelHeight;
+   private var panelScale;
+   private var dbg;
+   private var dbImage = null;
+
+   private var running = false; 
+   private var gameOver = false;
+   private var gameFreeze = false;
+   
+   private var averager;
+   private var animator;
+   private var period = 20; 
+   private var frames = 0;
+   
+   private var mario;
+   private var map;
+   private var backgroundMap;
+   private var foregroundMap;
+   private var renderer;
+   private var manager;
+   private var screen;
+   
+   
+   private var player;
+   private var SM_22050_Hz;
+   private var SM_10512_Hz;
+   
+   public new(w, h, scale) {
+      
+      this.panelWidth = w;
+      this.panelHeight = h;
+      this.panelScale = scale;
+      
+      SM_22050_Hz = new MarioSoundManager22050Hz(new AudioFormat(22050, 8, 1, true, true));
+      SM_10512_Hz = new MarioSoundManager10512Hz(new AudioFormat(10512, 8, 1, true, true));
+      averager = new SampleAverager(100);
+       mario = new Mario(SM_22050_Hz);
+      
+      try {
+         manager = new GameLoader();
+         renderer = new GameRenderer();
+         renderer.setBackground(ImageManipulator.loadImage("/mario/backgrounds/background2.png"));
+         //renderer.setBackground(ImageManipulator.loadImage("/mario/backgrounds/Icy_Background.png"));
+         //renderer.setBackground(ImageManipulator.loadImage("/mario/backgrounds/swamp_background.png"));
+         map = manager.loadMap("/mario/maps/map4.txt", SM_22050_Hz); // use the ResourceManager to load the game map
+         //backgroundMap = manager.loadOtherMaps("backgroundMap.txt");
+         //foregroundMap = manager.loadOtherMaps("foregroundMap.txt");
+         map.setPlayer(mario); // set the games main player to mario
+      } catch (e){
+         e.printStackTrace();
+      }
+      
+      player = new MidiPlayer();
+      var sequence;
+      var r = new Random();
+      var rNum = r.nextInt(4);
+      if(rNum == 0) {
+         sequence = player.getSequence("/mario/sounds/smwovr2.mid");
+           player.play(sequence, true);
+      } else if(rNum == 1) {
+         sequence = player.getSequence("/mario/sounds/smwovr2.mid");
+           player.play(sequence, true);
+      } else if(rNum == 2) {
+         sequence = player.getSequence("/mario/music/smb_hammerbros.mid");
+           player.play(sequence, true);
+      } else if(rNum == 3) {
+         sequence = player.getSequence("/mario/music/smrpg_nimbus1.mid");
+           player.play(sequence, true);
+      }
+      
+      JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+      this.addKeyListener(new SpriteListener(mario));
+      this.addKeyListener(new GameListener(this, player));
+      this.setFocusable(true); 
+   }
+   
+   /**
+    * Automatically called as GamePanel is being added to its enclosing GUI component,
+    * and so is a good place to initiate the animation thread.
+    */
+   public addNotify() {
+      super.addNotify(); // creates the peer
+      startGame(); // start the thread
+   }
+   
+   /**
+    * Start the game thread.
+    */
+   private startGame() {
+      if(animator == null || !running) {
+         animator = new Thread(this, "The Animator V 3.0");
+         animator.start();
+      }
+   }
+   
+   /**
+    * Stop the game.
+    */
+   public stopGame() { running = false; }
+   
+   /**
+    * Defines a single game loop.
+    */
+   public gameAction() {
+      gameUpdate(); // Update game state.
+      gameRender(); // Draw to the Double buffer.
+      paintScreen(); // Draw Double buffer to screen.
+   }
+   
+   /**
+    * The main game loop - repeatedly update, repaint, sleep.
+    */
+   public run() {
+      
+      running = true;
+      while(running) {
+         var start = System.currentTimeMillis();
+      
+         if(!gameFreeze) {
+            gameAction();
+         }
+         var finish = System.currentTimeMillis();
+         var duration = finish - start;
+         var slip = Math.max(0, duration - 8);
+         
+         try {
+            var wait = period - slip;
+            
+            if(wait > 0) {
+               Thread.sleep(wait);
+            }
+            averager.sample(duration);
+            frames++;
+
+            if(frames % 100 == 0) {
+                var average = averager.average();
+                println(average);
+            }
+         } catch(e){}
+      }
+      System.exit(0); // so enclosing JFrame/JApplet exits
+   }
+   
+   /**
+    * Update the state of all game objects. In the future this game logic
+    * should probably be abstracted out of this class.
+    */
+   private gameUpdate() {
+      
+      if (!gameOver) {
+         // Update all relevant Creatures.
+         for(var i = 0; i < map.relevantCreatures().size(); i++) {
+            var c = map.relevantCreatures().get(i);
+            if(c !instanceof Coin) {
+               c.updateCreature(map, period);
+               mario.playerCollision(map, c);
+               for(var other in map.relevantCreatures()) {
+                  c.creatureCollision(other);
+               }
+            } else {
+               c.updateCreature(map, period);
+               mario.playerCollision(map, c);
+            }
+         }
+         
+         // Debugging information:
+         //System.out.println("relevant creatures size: " + map.relevantCreatures().size());
+         //System.out.println("creatures size: " + map.creatures().size());
+         //System.out.println(map.platforms().size());
+         
+         for(var tile in map.animatedTiles()) {
+               tile.collidingCreatures().clear();  // clear the colliding sprites on the tile
+               tile.update(period);
+         }
+        
+         // Add creatures that need to be created. They are added here to aconcurrent modifcation errors.
+            for(var c in map.creaturesToAdd()) {
+               map.creatures().add(c);
+            }
+            
+            map.creaturesToAdd().clear(); // This line MUST be called BEFORE mario.update(). Why?
+                                   // If it is called after, all the creatures that are created
+                                   // as a result of mario colliding are not added next update because
+                                   // they are cleared immediately afterwards.
+
+         mario.update(map, period);
+         Coin.turn.update(period);
+         map.relevantCreatures().clear();
+         map.platforms().clear();
+      }
+   }
+   
+   /**
+    * Draws the game image to the buffer.
+    */
+   private gameRender() {
+      if(dbImage == null) {
+         dbImage = createImage(this.panelWidth, this.panelHeight);
+         return;
+      }
+       dbg = dbImage.getGraphics();    
+      renderer.draw(dbg, map, backgroundMap, foregroundMap, panelWidth, panelHeight);
+   }
+   
+   /**
+    * Draws the game image to the screen by drawing the buffer.
+    */
+   private paintScreen() {   
+      var g;
+      try {
+         g = this.getGraphics();
+         if ((g != null) && (dbImage != null))  {
+            g.drawImage(dbImage, 0, 0, panelWidth * panelScale, panelHeight * panelScale, null);
+            g.dispose();
+         } 
+      } catch (e) { System.out.println("Graphics context error: " + e); }
+   }
+   
+   /**
+    * Adds debugging features so it is possible to single step a game loop one by one.
+    * 'Z' pauses the game.
+    * 'X' resumes the game.
+    * '1' runs a single game loop if the game if paused.
+    * 'L' runs a single game loop if pressed and continously runs the game loop if held.
+    */
+   class GameListener extends KeyAdapter {
+      
+      const panel;
+      const player;
+      
+      new(panel, player) {
+         this.panel = panel;
+         this.player = player;
+      }
+      
+       public keyReleased(e: KeyEvent) {
+          var key = e.getKeyCode();
+         
+          // 'Z' is pressed.
+           if (key == KeyEvent.VK_Z) { // pause
+              if(panel.gameFreeze == false) {
+                 panel.gameFreeze = true;
+                 player.setPaused(true);
+                 panel.SM_22050_Hz.playPause();
+              }
+           }
+           
+           // 'X' is pressed.
+           if (key == KeyEvent.VK_X) { // resume
+              if(panel.gameFreeze == true) {
+                 panel.gameFreeze = false;
+                 player.setPaused(false);
+                 panel.SM_22050_Hz.playPause();
+              }
+           }
+           
+           // '1' is pressed.
+           if (key == KeyEvent.VK_1) {
+              if(panel.gameFreeze == true) {
+                 System.out.println();
+                 System.out.println("Game Update (1) Starting...");
+                 panel.gameAction();
+                 System.out.println();
+                 System.out.println("Game Update (1) Completed.");
+              }
+           }
+
+       } 
+       
+       // 'L' is pressed or held.
+       public keyPressed(e: KeyEvent) {
+          var key = e.getKeyCode();
+          if (key == KeyEvent.VK_L) {
+             panel.gameAction();
+          }
+
+       }
+      
+   }
+}
+

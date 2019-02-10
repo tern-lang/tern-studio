@@ -1,0 +1,55 @@
+import sound.sampled.AudioFormat;
+import sound.sampled.AudioInputStream;
+import sound.sampled.AudioSystem;
+import util.concurrent.atomic.AtomicInteger;
+
+
+var dir = "C:\\Work\\development\\snapscript\\snap-develop\\snap-develop\\work\\demo\\mario\\resources\\maps\\";
+var original = "map2.txt";
+var append = "map2.txt";
+var dest = "map4.txt";
+var reverse = true;
+
+var originalLines = normalizeLines(dir, original, false);
+var appendLines = normalizeLines(dir, append, reverse);
+var finalLines = [];
+
+for(var i = 0; i < appendLines.length; i++){
+   finalLines.add(originalLines.get(i)+appendLines.get(i));
+}
+var builder = new StringBuilder();
+for(var line in finalLines){
+   builder.append(line);
+   builder.append("\n");
+}
+new File(dir+dest).writeText(builder.toString());
+
+function normalizeLines(dir, file, reverse) {
+   var list = [];
+   var max: AtomicInteger = new AtomicInteger();
+   println(dir+file);
+   new File(dir + file)
+      .readLines()
+      .forEach(line -> {
+         if(line.length > max.get()){
+            max.set(line.length);
+         }
+      });
+      
+   new File(dir + file)
+      .readLines()
+      .forEach(line -> {
+         var remainder = max.get()-line.length;
+         for(var i = 0; i < remainder;i++){
+            line = line + " ";
+         }
+         if(reverse) {
+            list.add(new StringBuilder(line).reverse().toString());
+         }else {
+            list.add(line);
+         }
+      });
+   return list;
+}
+   
+

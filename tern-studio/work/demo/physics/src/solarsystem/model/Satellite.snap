@@ -1,0 +1,236 @@
+
+import awt.BasicStroke;
+import awt.BorderLayout;
+import awt.Color;
+import awt.Container;
+import awt.Graphics;
+import awt.Graphics2D;
+import awt.event.ActionEvent;
+import awt.event.ActionListener;
+import awt.geom.AffineTransform;
+import awt.geom.Area;
+import awt.geom.Ellipse2D;
+import awt.geom.GeneralPath;
+import awt.geom.Line2D;
+import awt.geom.Rectangle2D;
+import util.Vector;
+
+import solarsystem.display.SkyPanel;
+import solarsystem.display.SkyFrame;
+import solarsystem.display.Coord;
+
+/**
+ * The abstract class Satellite defines satellites that orbit about a Sun.
+ * 
+ * @see Sun
+ */
+class Satellite with Host{
+    /**
+     * The x and y coordinates of the Satellite's position.
+     */
+    var xPos = 0.0d;
+    var yPos = 0.0d;
+    /**
+     * The x and y components of the Satellite's velocity.
+     */
+    var xVel = 0.0d;
+    var yVel = 0.0d;
+    /**
+     * The x and y components of the Satellite's acceleration.
+     */
+    var xAcc = 0.0d;
+    var yAcc = 0.0d;
+    var dt = 0.0d;
+    /**
+     * The diameter of the Satellite.
+     */
+    var diameter;
+    /**
+     * The mass of the Satellite (arb. units).
+     */
+    var mass;
+    /**
+     * The color of the Satellite
+     */
+    var color;
+    /**
+     * The Host about which the Satellite orbits.
+     * 
+     * @see Host
+     */
+    var host;
+    /**
+     * Constructor for Satellite objects.
+     * 
+     * @param mDt The time increment for calculating the motion.
+     * @param mDiameter The diameter of the satellite (arb. units).
+     * @param mRadius The initial radius of the Satellite's orbit.
+     * @param mMass The mass of the Satellite (arb. units).
+     * @param mHost The Host about which the Satellite orbits.
+     * @see Host
+     */
+    new(mDt, mDiameter, mRadius, mColor, mMass, mHost){
+        dt = mDt;
+        diameter = mDiameter;
+        mass = mMass;
+        color = mColor;
+        host = mHost;
+        //
+        // The satellite's coordinates (xPos, yPos) relative to the
+        // coordinates of the host satellite.
+        //
+        xPos = Math.random()*mRadius;
+        yPos = Math.sqrt(mRadius*mRadius - xPos*xPos);
+        //
+        // Choose at random from the four Cartesian quadrants for the
+        // intial position.
+        //
+        if (probOneHalf())
+            xPos*= -1.0d;
+        if (probOneHalf())
+            yPos*= -1.0d;
+    }
+    /**
+     * The method probOneHalf returns true with probability 1/2, otherwise
+     * returns false.
+     * 
+     * @return boolean
+     */
+    probOneHalf() {
+        return Math.random() > 0.5;
+    }
+    /**
+     * The method getAbsPos calculates the absolute position of the Satellite.
+     * This is the position used to display the Satellite and is taken with
+     * respect to the upper left corner of the display.
+     * 
+     * @param mAxis The cartesian axis with respect to which the position is to
+     *               be calculated.
+     * @return double The absolute position of the Satellite with respect to
+     *         the given axis.
+     */
+    getAbsPos(mAxis) {
+        if (mAxis == Coord.X)
+            return xPos/SkyFrame.getScaleFactor() + host.getAbsPos(mAxis);
+        else
+            return yPos/SkyFrame.getScaleFactor() + host.getAbsPos(mAxis);
+    }
+    /**
+     * The getRelPosScaled calculate the relative position of the Satellite
+     * scaled by the scale factor of the SkyFrame.
+     * 
+     * @see SkyFrame
+     * @param mAxis The cartesian axis with respect to which the position is to
+     *               be calculated.
+     * @return double The relative position of the Satellite scaled and with
+     *          respect to the given axis.
+     */
+    getRelPosScaled(mAxis) {
+        if (mAxis == Coord.X)
+            return xPos/SkyFrame.getScaleFactor();
+        else
+            return yPos/SkyFrame.getScaleFactor();
+    }
+    /**
+     * The method getRelPosUnscaled calculates the relative position of the
+     * Satellite without scaling.
+     * 
+     * @param mAxis The cartesian axis with respect to which to calculate the
+     *               position.
+     * @return double The relative position of the Satellite with respect to
+     *         the given axis.
+     */
+    getRelPosUnscaled(mAxis) {
+      if (mAxis == Coord.X)
+            return xPos;
+        else
+            return yPos;
+    }
+    /**
+     * The method getTheta returns the angular position of the Satellite. The
+     * angle is measured clockwise from the positive horizontal axis, with the
+     * Sun at the origin.
+     * 
+     * @return double The angular position in radians.
+     */
+    getTheta() {
+        var theta = Math.atan(yPos/xPos);
+        if (xPos < 0)
+            theta = Math.PI + theta;
+        else if (xPos > 0 && yPos < 0)
+            theta = 2*Math.PI + theta;
+        return theta;
+    }
+    /**
+     * The method getVel calculates a Cartesian component of the Satellite's
+     * velocity (arb. units).
+     * 
+     * @param mAxis The cartesian component of the velocity to calculate.
+     * @return double A cartesian component of the velocity (arb. units).
+     */
+    getVel(mAxis) {
+        if (mAxis == Coord.X)
+            return xVel;
+        else
+            return yVel;
+    }
+    /**
+     * The method getAcc calculates a Cartesian component of the Satellite's
+     * acceleration (arb. units).
+     * 
+     * @param mAxis The cartesian component of the acceleration to calculate.
+     * @return double A cartesian component of the acceleration (arb. units).
+     */
+    getAcc(mAxis) {
+        if (mAxis == Coord.X)
+            return xAcc;
+        else
+            return yAcc;
+    }
+    /**
+     * The abstract method translate calculates the displacement of the
+     * Satellite as a function of time and updates the Satellite's coordinates
+     * xPos and yPos.
+     */
+    translate(){}
+    /**
+     * The method getDiameter returns the Satellite's diameter.
+     * 
+     * @return double.
+     */
+    getDiameter() {
+        return diameter;
+    }
+    /**
+     * The method getColor returns the Satellite's color.
+     * 
+     * @return Color
+     * @see Color
+     */
+    getColor() {
+      return color;
+    }
+    /**
+     * The method getMass returns the Satellite's mass (arb. units).
+     * 
+     * @return double
+     */
+    getMass() {
+      return mass;
+    }
+    /**
+     * The method draw displays the Satellite.
+     * 
+     * @param comp2D The Graphics2D object in which to display the Satellite.
+     * @see Graphics2D
+     */
+    draw(comp2D) {
+        var zoomedDiameter = diameter/SkyFrame.getScaleFactor();
+        var form = new Ellipse2D.Double((getAbsPos(Coord.X) - zoomedDiameter/2),
+                                  (getAbsPos(Coord.Y) - zoomedDiameter/2),
+                                  zoomedDiameter,
+                                  zoomedDiameter);
+        comp2D.setColor(color);
+        comp2D.fill(form);
+    }
+}

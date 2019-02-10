@@ -1,0 +1,70 @@
+function x(){
+   return 1;
+}
+module Empty{
+   
+}
+
+class TestCase {
+   runTests(){
+      println(this.class);
+      println(this.class.getFunctions());
+      for(var fn in this.class.functions){
+         if(fn.name.startsWith("test")){   
+            System.out.println("Running.. "+fn.name+"()");
+            fn();
+         }
+      }
+   }
+   assertEquals(a,b){
+      if(a!=b){
+         throw "Assertion failed";
+      }
+   }
+   assertNotEquals(a,b){
+      if(a==b){
+         throw "Assertion failed";
+      }
+   }   
+   assertNotNull(a){
+      if(a==null){
+         throw "Assertion failed";
+      }
+   }
+   assertNull(a){
+      if(a!=null){
+         throw "Assertion failed";
+      }
+   }
+   assertTrue(a){
+      if(a!=true){
+         throw "Assertion failed";
+      }
+   }   
+   assertFalse(a){
+      if(a!=false){
+         throw "Assertion failed";
+      }
+   }   
+}
+
+class SimpleTest extends TestCase{
+   
+   testNumbers(){
+      println("testNumbers()");
+      var x=0;
+      assertNotEquals(1d,21f);
+      assertEquals(1d,1d);
+      assertEquals(++x,1);
+      assertTrue(x==1);
+   }
+   testSomethingElse(){
+      assertFalse(2==3);
+   }   
+}
+
+var test = new SimpleTest();
+
+test.runTests();
+
+

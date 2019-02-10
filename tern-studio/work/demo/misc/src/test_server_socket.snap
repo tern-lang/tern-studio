@@ -1,0 +1,40 @@
+// var server = new ServerSocket(4459);
+// var socket = server.accept();
+
+// println(socket.getRemoteSocketAddress().toString());
+import nio.channels.SelectableChannel;
+import nio.channels.ServerSocketChannel;
+import nio.channels.SocketChannel;
+import nio.channels.SelectionKey;
+import nio.channels.Selector;
+
+var selector = Selector.open();
+var server = ServerSocketChannel.open();
+var socket = server.socket();
+var address = new InetSocketAddress(4459);
+
+server.configureBlocking(false);
+socket.setReuseAddress(true);
+socket.bind(address, 100);
+server.register(selector, SelectionKey.OP_ACCEPT);
+
+for(var i in 0..1000){
+   println("selecting="+address+ " i="+i);
+   selector.select(5000);
+   
+   var selectedKeys = selector.selectedKeys();
+   var iter = selectedKeys.iterator();
+   
+   while (iter.hasNext()) {
+      var key = iter.next();
+   
+      if (key.isAcceptable()) {
+         var client = server.accept();
+         client.configureBlocking(false);
+         println("channel="+client);
+      }else{
+         println("key="+key);
+      }
+   }
+}
+

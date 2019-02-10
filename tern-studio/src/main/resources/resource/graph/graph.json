@@ -1,0 +1,37 @@
+[
+	{
+		"source": "ROUTER_M",
+		"destination": "PBRIDGE",
+		"type": 3
+	},
+		{
+		"source": "ROUTER_M",
+		"destination": "ION_WEB_SERVER",
+		"type": 3
+	},
+		{
+		"source": "ROUTER_M",
+		"destination": "ION_STREAMING_SERVER",
+		"type": 3
+	},
+		{
+		"source": "ROUTER_M",
+		"destination": "GENERIC_RFQ",
+		"type": 3
+	},
+		{
+		"source": "ROUTER_M",
+		"destination": "CASE_MANAGER",
+		"type": 3
+	},
+		{
+		"source": "ROUTER_M",
+		"destination": "ITAS",
+		"type": 3
+	},
+		{
+		"source": "PBRIDGE",
+		"destination": "SDP_CLIENT_GW",
+		"type": 3
+	}
+]

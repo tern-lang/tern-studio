@@ -1,0 +1,130 @@
+
+::-webkit-scrollbar-corner {
+	background-color: ${SCROLL_BAR_TRACK};
+}
+
+#fontSize {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+	width: 70px;
+	height: 25px;
+	overflow: hidden;
+	background: url('${IMAGE_FOLDER}/down_arrow.png') no-repeat right ${SELECT_LIST_BACKGROUND_COLOR};
+	background-size: contain;
+	border: 1px solid #c0c0c0;
+	border-radius: 0px;
+	color: ${SELECT_LIST_FONT_COLOR};
+}
+
+#fontFamily {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+	width: 150px;
+	height: 25px;
+	overflow: hidden;
+	background: url('${IMAGE_FOLDER}/down_arrow.png') no-repeat right ${SELECT_LIST_BACKGROUND_COLOR};
+	background-size: contain;
+	border: 1px solid #c0c0c0;
+	border-radius: 0px;
+	color: ${SELECT_LIST_FONT_COLOR};
+}
+
+#editorTheme {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+	width: 150px;
+	height: 25px;
+	overflow: hidden;
+	background: url('${IMAGE_FOLDER}/down_arrow.png') no-repeat right ${SELECT_LIST_BACKGROUND_COLOR};
+	background-size: contain;
+	border: 1px solid #c0c0c0;
+	border-radius: 0px;
+	color: ${SELECT_LIST_FONT_COLOR};
+}
+
+#navigateToTreeArrow {
+	background-image: url('${IMAGE_FOLDER}/arrow_left.png');
+	background-size: 16px 16px;	
+	background-position: right;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+
+#navigateToTreeArrow:active {
+	background-image: url('${IMAGE_FOLDER}/arrow_left.png');
+	background-size: 18px 18px;	
+	background-position: right;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+ 
+::-webkit-scrollbar-track {
+    background: ${SCROLL_BAR_TRACK};
+}
+
+::-webkit-scrollbar-thumb {
+    background: ${SCROLL_BAR_THUMB};
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+	background: ${SCROLL_BAR_THUMB}; 
+}
+
+
+input[type=radio] {
+	display:none;
+}
+ 
+input[type=radio] + label {
+	background: #ffffff;
+	height: 10px;
+	width: 10px;
+	display:inline-block;
+	margin-bottom: 0px;
+	padding: 0 0 0 0;
+	border-radius: 10px;
+	border: 1px solid #c0c0c0;
+}
+
+input[type=radio]:checked + label {
+	background: #919191;
+	height: 10px;
+	width: 10px;
+	display:inline-block;
+	margin-bottom: 0px;
+	padding: 0 0 0 0;
+	border-radius: 10px;
+	border: 1px solid #c0c0c0;
+}
+
+input[type=checkbox] {
+	display:none;
+}
+ 
+input[type=checkbox] + label {
+	background: #ffffff;
+	height: 10px;
+	width: 10px;
+	margin-bottom: 0px;
+	display:inline-block;
+	padding: 0 0 0 0;
+	border: 1px solid #c0c0c0;
+}
+
+input[type=checkbox]:checked + label {
+	background: #919191;
+	height: 10px;
+	width: 10px;
+	margin-bottom: 0px;
+	display:inline-block;
+	padding: 0 0 0 0;
+	border: 1px solid #c0c0c0;
+}

@@ -1,0 +1,10 @@
+
+class Foo{
+   var text;
+   new(text){
+      this.text = text;
+   }
+   toString(){
+      return text;
+   }
+}

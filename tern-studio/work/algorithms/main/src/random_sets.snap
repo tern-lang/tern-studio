@@ -1,0 +1,21 @@
+import security.SecureRandom;
+
+let set = chooseRandomSet([1, 2, 7, 4, 5], 2);
+
+println(set);
+
+func chooseRandomSet(list, n) {
+   let random = new SecureRandom();
+   let done = new BitSet(list.length);
+   let set = [];
+   
+   while(set.length < n) {
+      let index = random.nextInt(list.length);
+      
+      if(!done.get(index)) {
+         set.add(list[index]);
+         done.set(index);
+      }
+   }
+   return set;
+}

@@ -1,0 +1,26 @@
+<html>
+   <body>
+      <!-- error -->
+      <h1>Save Test</h1>
+      <table border='1'>
+         <tr>
+            <td valign='top'>
+               <form action='/generate' method='POST'>
+                  <input type='text' style="width: 200px;" name="name" value=""></br>
+                  <textarea style='width: 500px; height: 200px;' name="source"><!-- content --></textarea><br>
+                  <input type='hidden' id="action" name="action" value="test"></br>                   
+                  <input type='text' style="width: 500px;" name="message" value=""></br> 
+                  Success <input type='checkbox' name='success' checked></br></br>
+                  <input type='submit' value='Compile'>&nbsp;&nbsp;   
+                  <input type='submit' value='Add' onclick='document.getElementById("action").value = "add"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   
+                  <input type='submit' value='Save' onclick='document.getElementById("action").value = "save"'></br>                  
+                  <!-- history -->
+               </form>
+            </td>
+            <td valign='top'>
+               <pre><!-- result --></pre>
+            </td>
+         </tr>
+      </table>
+   </body>
+</html>

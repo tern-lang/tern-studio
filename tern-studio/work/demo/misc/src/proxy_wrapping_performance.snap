@@ -1,0 +1,62 @@
+class Point {
+   var x;
+   var y;
+   new(x,y){
+      this.x=x;
+      this.y=y;
+   }
+   hashCode(){
+      return x+y;
+   }
+   equals(point){
+      return point.x==x && point.y==y;
+   }
+   toString(){
+      return "("+x+","+y+")";
+   }
+}
+
+for(var n in 0..20) {
+   var start = System.currentTimeMillis();
+   var list = new Point[10000];
+   var copy = new Point[10000];
+   var ints = new Integer[10000];
+   
+   for(var i = 0; i < list.size(); i++) {
+      list[i] = new Point(i, i+1);
+   }
+   var time1 = System.currentTimeMillis();
+   for(var i = 0; i < list.size(); i++) {
+      var temp = list[i]; // unproxy
+      temp.x++;
+      temp.y++;
+      copy[i] = temp; // proxy
+   }
+   for(var i = 0; i < list.size(); i++) {
+      var temp = copy[i]; // unproxy
+      temp.x++;
+      temp.y++;
+      list[i] = temp; // proxy
+   }
+   var stop = System.currentTimeMillis();
+   var duration1= stop-time1;
+   var duration = stop -start;
+   
+   System.err.println("duration="+duration+" proxy="+duration1);
+   
+   start = System.currentTimeMillis();
+   
+   for(var i = 0; i < ints.size(); i++){
+      ints[i] = i;
+   }
+   for(var i = 0; i < ints.size(); i++){
+      ints[i]++;
+   }
+   for(var i = 0; i < ints.size(); i++){
+      ints[i]+=3;
+   }
+   stop = System.currentTimeMillis();
+   duration = stop-start;
+   
+   System.err.println("duration="+duration);
+}

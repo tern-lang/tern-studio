@@ -1,0 +1,28 @@
+
+module Shape {
+
+   class Point{
+      const x,y;
+      new(x,y){
+         this.x =x;
+         this.y =y;
+      }
+      show(){
+         return "${x},${y}";
+      }
+      toString(){
+         return "Point(${x},${y})";
+      }
+   }
+   
+   class Line {
+      const a,b;
+      new(a,b){
+         this.a=a;
+         this.b=b;
+      }
+      show(){
+         return "${a}->${b}";
+      }
+   }
+}

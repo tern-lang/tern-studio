@@ -1,0 +1,21 @@
+//import com.google.gson.Gson;
+
+//var text = String.class.getModule().getContext().getManager().getString("/algorithms/blah.json");
+var text = String.class.getModule().getContext().getManager().getString("/algorithms/large_file.json");
+//var gson = new Gson();
+
+//for(var i in 0..100) {
+//   text += " ";
+//   timeIt(-> gson.fromJson(text, List.class.type), "Gson.fromJson()");
+//}
+for(var i in 0..100) {
+   text += " ";
+   timeIt(-> eval(text), "eval()");
+}
+
+func timeIt(f, message){
+   const start = System.currentTimeMillis();
+   f();
+   const finish = System.currentTimeMillis();
+   println("${message}: "+(finish - start));
+}

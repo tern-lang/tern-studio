@@ -1,0 +1,28 @@
+class Point{
+   var x;
+   var y;
+   new(x,y){
+      this.x=x;
+      this.y=y;
+   }
+   swap(){
+      return new Point(y,x);
+   }
+   equals(point){
+      return point.x == x && point.y == y;
+   }
+   toString(){
+      return "("+x+","+y+")";
+   }
+}
+var p1 = new Point(11,346);
+var p2 = new Point(11,346);
+
+System.err.println(p1.x);
+System.err.println(p1.y);
+System.err.println(p2.x);
+System.err.println(p2.y);
+System.err.println(p1.hashCode());
+System.err.println(p1.toString());
+System.err.println(p1.equals(p1));
+System.err.println(p1.equals(p2));

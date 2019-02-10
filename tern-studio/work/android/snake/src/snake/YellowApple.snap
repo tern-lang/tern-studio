@@ -1,0 +1,13 @@
+
+import android.graphics.Color;
+import android.graphics.Point;
+import android.util.Log;
+
+class YellowApple extends Apple {
+   static const SCORE = 50;
+
+   new(fieldDimensions, snake, radius) :super(fieldDimensions, snake, radius, SCORE, Color.YELLOW){
+         println("Yellow apple created");
+   }
+}
+

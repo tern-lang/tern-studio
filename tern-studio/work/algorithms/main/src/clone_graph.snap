@@ -1,0 +1,36 @@
+//https://leetcode.com/problems/clone-graph/
+
+class UndirectedGraphNode {
+   let label;
+   let neighbours;
+   
+   new(label){
+      this.label = label;
+      this.neighbours = [];
+   }
+}
+
+func cloneGraph(graph: UndirectedGraphNode) {
+   return cloneGraph(graph, {:});   
+}
+
+func cloneGraph(graph: UndirectedGraphNode, done: {:}) {
+   let prev = done.get(graph.label);
+   
+   if(prev == null) {
+      let node = new UndirectedGraphNode(graph.label);
+      
+      done.put(graph.label, node);
+      
+      for(node in node.neighbours) {
+         if(node) {
+            let next = cloneGraph(node, done);
+            node.neighbours.add(next);
+         } else {
+            node.neighbours.add(null);
+         }
+      }
+      return node;
+   }
+   return prev;
+}

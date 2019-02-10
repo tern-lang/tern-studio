@@ -1,0 +1,12 @@
+
+class Depth {
+   const text;
+   
+   new(text){
+      this.text = text;
+   }
+   
+   toString(){
+      return text;
+   }
+}

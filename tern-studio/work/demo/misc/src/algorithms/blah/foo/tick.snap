@@ -1,0 +1,10 @@
+var time = System.currentTimeMillis();
+for(var i in 0..100000){
+   println("${time}: ${i}");
+   sleep(2000);
+}
+time = System.currentTimeMillis();
+for(var i in 0..100000){
+   println("${time}: ${i}");
+   sleep(2000);
+}

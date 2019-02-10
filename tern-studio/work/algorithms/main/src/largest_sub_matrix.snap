@@ -1,0 +1,5 @@
+// Suppose you have an NxN matrix of positive and negative integers. Write some 
+// code that finds the sub-matrix with the maximum sum of its elements.
+
+func maxSubMatrix(matrix) {
+}

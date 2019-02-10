@@ -1,0 +1,13 @@
+module Singleton{
+   
+   var map = new HashMap();
+   for(var i in 0..9){
+      map.put(i, "value-${i}");
+      println(i);
+   }
+   
+   dump(){
+      var x = "text";
+      println("dump="+map+" x="+x);
+   }
+}

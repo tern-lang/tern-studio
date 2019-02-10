@@ -1,0 +1,45 @@
+import test.TestCase;
+
+class ConditionalTest with TestCase {
+
+   testConditions() {
+      var x = null;
+      var y = 11;
+      var z = 20;
+      
+      assert true;
+      assert (2**8) == 256; 
+      assert 2==2;
+      assert 2===2;
+      assert (2!==2)==false;
+      assert 2!==3;
+      //assert 2**8!==256; // not identity due to boxing
+      assert 2**8==256;
+      assert null==x; 
+      assert null===x; 
+      assert (null===x??y) == false; 
+      assert 11===x??y; 
+      assert 8%2 == 0;
+      assert 7%2 == 1;
+      assert x??y==11;
+      assert x ?? z == z;
+      assert x ?? z === z;
+      assert "test" == "test";
+      assert "test" === "test";
+      assert "\r".length() == 1;
+      assert "\r\n".length() == 2;
+      
+      var a = "a";
+      var b = "b";
+      
+      assert (a > b) == false;
+      assert a < b;
+      assert (a >= b) == false;
+      assert a <= b;
+      assert ("a" > "b") == false;
+      assert "a" < "b";
+      assert ("a" >= "b") == false;
+      assert "a" <= "b";
+      assert "a" <= "a";
+   }
+}

@@ -1,0 +1,33 @@
+class StaticVar {
+   static const PI = 3.14;
+   static const circle = new Circle(PI);
+   static var count = 0;
+   static inc(){
+      return count++;
+   }
+}
+class Circle {
+   static const X = 11;
+   static const Y = 334;
+   const point = new Point(X, Y);
+   var pi;
+   new(pi){
+      this.pi = pi;
+      System.err.println("pi="+pi);
+   }
+}
+class Point {
+   var x;
+   var y;
+   new(x, y){
+      System.err.println("Point("+x+", "+y+")");
+     this.x=x;
+     this.y=y;
+   }
+}
+System.err.println("static="+StaticVar.circle);
+System.err.println("static="+StaticVar.PI);
+System.err.println(StaticVar.inc());
+System.err.println(StaticVar.inc());
+System.err.println(StaticVar.inc());
+

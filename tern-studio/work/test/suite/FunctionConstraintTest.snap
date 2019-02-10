@@ -1,0 +1,74 @@
+import test.TestCase;
+
+class Foo{
+   const x;
+   new(x){
+      this.x=x;
+   }
+}
+
+class Caller{
+   blah(a:Foo, b){
+      return "Caller.blah(a:Foo,b:Integer)";
+   }
+}
+
+class Funcs{
+   
+   static func(a, b: (a)){
+      return "func(a,b:(a))";
+   }
+ 
+   static func(a, b: (a,b)){
+      return "func(a,b:(a,b))";
+   }
+   
+   static func(a, b:(a:Integer,b:Double)){
+      return "func(a,b:(a:Integer,b:Double))";
+   }
+
+   static func(a, b, c:(a:Foo,b)) {
+      return c(new Foo(2), 11);
+   }
+   
+   static func(a: {:}) {
+      return "func(a:{:})";
+   }
+   
+   static func(a: {}) {
+      return "func(a:{})";
+   }
+   
+   static func(a: []) {
+      return "func(a:[])";
+   }   
+   
+   static func(a:Foo) {
+      return "func(a:Foo)";
+   }  
+   
+   static func(a:Foo[]) {
+      return "func(a:Foo[])";
+   }  
+   
+   static func(a:Foo[][]) {
+      return "func(a:Foo[][])";
+   }    
+}
+
+class FunctionConstraintTest with TestCase {
+
+   testFunctionConstraints(){
+      assert func("d", (a, b)->"${a},${b}") == "func(a,b:(a,b))";
+      assert func("d", (a:Integer, b:Double)->"${a},${b}") == "func(a,b:(a:Integer,b:Double))";
+      assert func("d", (a:Integer)->"${a}") == "func(a,b:(a))";
+      // TODO this should work
+      //assert func("d", "e", new Caller()) == "Caller.blah(a:Foo,b:Integer)";
+      assert func({a: 11, b:2}) == "func(a:{:})";
+      assert func({"a",11,2, new Foo(3)}) == "func(a:{})";   
+      assert func(["a",11,2, new Foo(3)]) == "func(a:[])";   
+      assert func(new Foo(3)) == "func(a:Foo)";   
+      assert func(new Foo[1]) == "func(a:Foo[])"; 
+      assert func(new Foo[3][2]) == "func(a:Foo[][])";    
+   }
+}

@@ -1,0 +1,43 @@
+import util.concurrent.CountDownLatch as L;
+import util.concurrent.CountDownLatch;
+import test.TestCase;
+
+module Mod {
+   import util.concurrent.ConcurrentHashMap as M;
+   import util.concurrent.CopyOnWriteArrayList as L;
+   getM(){
+      println(M.class);
+      return new M(1);
+   }
+   getL(){
+      println(L.class);
+      return new L();
+   }
+}
+
+class ModuleImportTest with TestCase {
+
+   testModuleImport(){
+      println("Before Mod.getM()");
+      var m = Mod.getM();
+      println("After Mod.getM()");
+      m.put("x", "y");
+      m.put("a", "b");
+      println(m);
+   
+      assert m.size() == 2;
+      assert m.getClass().simpleName == 'ConcurrentHashMap';
+      assert m.x == 'y';
+      assert m.a == 'b';
+      
+      var l = Mod.getL();
+      
+      l.add("x");
+      l.add("a");
+      println(l);
+      
+      assert l.size() == 2;
+      assert l.getClass().simpleName == 'CopyOnWriteArrayList';
+      assert L.class.name == 'CountDownLatch';
+   }
+}

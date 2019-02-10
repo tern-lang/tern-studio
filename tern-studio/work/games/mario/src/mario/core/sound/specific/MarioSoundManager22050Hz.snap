@@ -1,0 +1,67 @@
+import sound.sampled.AudioFormat;
+
+import mario.core.sound.Sound;
+import mario.core.sound.SoundManager;
+
+
+class MarioSoundManager22050Hz extends SoundManager {
+   
+   private var bump;
+   private var kick;
+   private var coin;
+   private var jump;
+   private var pause;
+   private var itemSprout;
+   private var bonusPoints;
+   private var healthUp;
+   private var healthDown;
+
+   public new(format): super(format) {
+       bump = getSound("/mario/sounds/bump.wav");
+       kick = getSound("/mario/sounds/kick.wav");
+       coin = getSound("/mario/sounds/coin.wav");
+       jump = getSound("/mario/sounds/jump.wav");
+       pause = getSound("/mario/sounds/pause.wav");
+       itemSprout = getSound("/mario/sounds/item_sprout.wav");
+       bonusPoints = getSound("/mario/sounds/veggie_throw.wav");
+       healthUp = getSound("/mario/sounds/power_up.wav");
+       healthDown = getSound("/mario/sounds/power_down.wav");
+   }
+   
+   public playHealthUp() {
+      play(healthUp);
+   }
+   
+   public playHealthDown() {
+      play(healthDown);
+   }
+   
+   public playBonusPoints() {
+      play(bonusPoints);
+   }
+   
+   public playItemSprout() {
+      play(itemSprout);
+   }
+   
+   public playCoin() {
+      play(coin);
+   }
+   
+   public playKick() {
+      play(kick);
+   }
+   
+   public playBump() {
+      play(bump);
+   }
+   
+   public playJump() {
+      play(jump);
+   }
+   
+   public playPause() {
+      play(pause);
+   }
+}
+

@@ -1,0 +1,134 @@
+import mario.core.MarioResourceManager;
+import mario.core.animation.Animation;
+import mario.core.tile.TileMap;
+import mario.objects.base.Creature;
+import android.graphics.Bitmap;
+
+
+class Platform extends Creature {
+   
+   public var move;
+   public var turn = 0;
+   public var isVertical = false;
+   public var isHorizontal = false;
+   public var switchedVertical = false;
+   public var switchedHorizontal = false;
+   public var canJumpThrough = false;
+   public var oldX = 0f;
+   public var oldY = 0f;
+   public var oldDx = 0f;
+   public var oldDy = 0f;
+   
+   public new(pixelX, pixelY): super(pixelX, pixelY) {
+      setIsAlwaysRelevant(true);
+      setIsPlatform(true);
+      turn = 1;
+      dx = 0;
+      dy = 0;
+      var red_platform = MarioResourceManager.Red_Platform_2;
+      move = new Animation(2000).addFrame(red_platform);
+      setAnimation(move);
+   }
+   
+   /**
+    * @return the oldX
+    */
+   public getOldX() {
+      return oldX;
+   }
+
+   /**
+    * @param oldX the oldX to set
+    */
+   public setOldX(oldX) {
+      this.oldX = oldX;
+   }
+
+   /**
+    * @return the oldY
+    */
+   public getOldY() {
+      return oldY;
+   }
+
+   /**
+    * @param oldY the oldY to set
+    */
+   public setOldY(oldY) {
+      this.oldY = oldY;
+   }
+
+   public canJumpThrough() {
+      return canJumpThrough;
+   }
+   public isHorizontal() {
+      return isHorizontal;
+   }
+   
+   public isVertical() {
+      return isVertical;
+   }
+   
+   public getLastdX() {
+      return oldDx;
+   }
+   
+   public getLastdY() {
+      return oldDy;
+   }
+   
+   public switchedVertical() {
+      return switchedVertical;
+   }
+   
+   public switchedHorizontal() {
+      return switchedHorizontal;
+   }
+   
+   public updateCreature(map, time) {
+
+      
+      if(dx != 0) {
+         isHorizontal = true;
+      }
+      if(dy != 0) {
+         isVertical = true;
+      }
+      if(turn == 801) {
+         turn = 1;
+      }
+      if(turn <= 400) {
+         oldDx = dx;
+         oldDy = dy;
+         dx = 0.05f;
+         dy = 0.025f;
+      } else if(turn > 400) {
+         oldDy = dy;
+         oldDx = dx;
+         dx = -0.05f;
+         dy = -0.025f;
+      } 
+      turn = turn + 1;
+      oldX = x;
+      oldY = y;
+      x = x + time*dx;
+      y = y + time*dy;
+      
+      if((oldDx > 0 && dx < 0) || (oldDx < 0 && dx > 0)) {
+         this.switchedHorizontal = true;
+      } else {
+         this.switchedHorizontal = false;
+      }
+      
+      if((oldDy > 0 && dy < 0) || (oldDy < 0 && dy > 0)) {
+         this.switchedVertical = true;
+      } else {
+         this.switchedVertical = false;
+      }
+      //dx = 0;
+      //dy = 0;
+      
+   }
+
+}
+

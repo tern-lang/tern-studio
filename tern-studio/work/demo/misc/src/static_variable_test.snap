@@ -1,0 +1,35 @@
+class Test{
+   private static const LIST = [1,2,3,4];
+   static var count = 0;
+   static inc(){
+      return count++;
+   }
+   static at(index){
+      return LIST[index];
+   }
+   private var x;
+   private var y;
+   new(x,y){
+      this.x=x;
+      this.y=y;
+   }
+   dump(){
+      System.out.println(x);
+   }
+}
+for(var i = 0; i < 10; i++) {
+   System.out.println(Test.inc());
+   System.out.println(Test.inc());
+   System.out.println(Test.at(0));
+   System.out.println(Test.at(1));
+   System.out.println(Test.at(2));
+
+   var t = new Test(33,44);
+
+   System.out.println(t);
+   //System.out.println(t.dump()); returns null
+
+   System.out.println(Test.inc());
+   System.out.println(Test.inc());
+   System.out.println(Test.inc());
+}

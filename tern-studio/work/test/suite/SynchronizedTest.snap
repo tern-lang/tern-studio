@@ -1,0 +1,74 @@
+import test.TestCase;
+
+class Blah{
+   var count=0;
+   toString(){
+      return 'blah';
+   }
+}
+
+class SynchronizedTest with TestCase {
+
+   testSynchronized() {
+      var blah = new Blah();
+   
+      synchronized(blah){
+         println(blah);
+         blah.wait(12); // wait might not work for proxied objects via ScopeProxyHandler
+         println("done");
+      }
+   }
+   
+   testNotify() {
+      var blah = new Blah();
+      var thread = new Thread(->{
+         loop{
+            synchronized(blah){
+               if(blah.count > 0){
+                  println("Notifier.notify");
+                  blah.notify();
+                  break;
+               } else {
+                  println("Notifier.wait");
+                  blah.wait(10);
+               }
+            }
+         }
+      });
+      thread.start();
+      
+      synchronized(blah){
+         println("Waiter.wait");
+         blah.count = 2;
+         blah.wait(); // wait might not work for proxied objects via ScopeProxyHandler
+         println("Waiter.done");
+      }
+   }
+   
+   testWaitOutsideSynchronized() {
+      var blah = new Blah();
+      var failure = false;
+      
+      try {
+         blah.wait(12);
+      }catch(e){
+         e.printStackTrace();
+         failure =true;
+      }
+      assert failure;
+   }
+   
+   testSynchronizeOnNull() {
+      var failure = false;
+      
+      try {
+         synchronized(null){
+            println("never");
+         }
+      }catch(e){
+         e.printStackTrace();
+         failure =true;
+      }
+      assert failure;
+   }
+}

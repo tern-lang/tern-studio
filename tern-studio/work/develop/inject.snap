@@ -1,0 +1,83 @@
+
+module DependencyInjection{
+   const configs = {:};
+   const registry = {:};
+   
+   public process(source) {
+      var context = DependencyInjection.getContext();
+      var manager = context.getManager();
+      var source = manager.getString(source);
+      var map = eval(source);
+      
+      for(var entry in map){
+         configs[entry.key] = entry.value;
+      }
+      for(var entry in map){
+         create(entry.key);
+      }
+      return registry;
+   }
+   
+   private create(name) {
+      var object = registry[name];
+      
+      if(object == null) {
+         var def = configs[name];
+         
+         if(def != null) {
+            var type = def['class'];
+            var args = def['constructor-args'];
+            var func = def['init-method'];
+            var list = [];
+            
+            for(var i = 0; i < args.length; i++){
+               list[i] = create(args[i]);
+            }
+            registry[name] = load(type, name, list);
+            
+            if(func != null) {
+               eval("registry[name].${func}()");
+            }
+            return registry[name];
+         }
+         return name;
+      }
+      return object;
+   }
+   
+   private load(type, name, args){
+      var context = DependencyInjection.getContext();
+      var manager = DependencyInjection.getManager();
+      var loader = context.getLoader();
+      var index = type.lastIndexOf('.');
+      var package = type.substring(0,index);
+      
+      load(package); // load <type> in the system
+      manager.addImport(type, name); // import <type> as <name>
+      
+      return create(name, args);
+   }
+   
+   private create(name, args){
+      var expr = "new ${name}(";
+   
+      for(var i = 0; i < args.length;i++){
+         var def = configs[args[i]];
+         
+         if(i > 0){
+            expr+= ",";
+         }
+         if(def == null){
+            expr += '"' + args[i] + '"';
+         }else {
+            expr += args[i];
+         }
+      }
+      expr += ")";
+      return eval(expr); // new <name>(<args>)
+   }
+}
+
+var context = DependencyInjection.process("/spring/inject.json");
+
+println(context);

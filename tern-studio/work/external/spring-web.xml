@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+  <bean id="AutowireProcessor" class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+  <bean id="ContentTypeResolver" class="com.zuooh.http.resource.ContentTypeResolver">
+    <constructor-arg>
+      <map>
+        <entry key=".*.vm" value="text/html" />
+        <entry key=".*.html" value="text/html" />
+        <entry key=".*.png" value="image/png" />
+        <entry key=".*.gif" value="image/gif" />
+        <entry key=".*.css" value="text/css" />
+        <entry key=".*.js" value="text/javascript" />
+      </map>
+    </constructor-arg>
+  </bean>
+
+  <bean id="FileManager" class="com.zuooh.http.resource.FileManager">
+    <constructor-arg value="${server.resourcePath}" />
+  </bean>
+
+  <bean id="FileResolver" class="com.zuooh.http.resource.FileResolver">
+    <constructor-arg ref="FileManager" />
+    <constructor-arg value="index.html" />
+  </bean>
+
+  <bean id="MethodScanner" class="com.zuooh.http.framework.build.MethodScanner">
+    <constructor-arg>
+      <list>
+        <bean class="com.zuooh.http.framework.extract.RequestExtractor" />
+        <bean class="com.zuooh.http.framework.extract.ResponseExtractor" />
+        <bean class="com.zuooh.http.framework.extract.ContextExtractor" />
+        <bean class="com.zuooh.http.framework.extract.ModelExtractor" />
+        <bean class="com.zuooh.http.framework.extract.ValidationExtractor" />
+        <bean class="com.zuooh.http.framework.extract.ErrorExtractor" />
+        <bean class="com.zuooh.http.framework.extract.ParameterExtractor" />
+        <bean class="com.zuooh.http.framework.extract.CookieExtractor" />
+        <bean class="com.zuooh.http.framework.extract.PartExtractor" />
+        <bean class="com.zuooh.http.sso.extract.IdentityExtractor">
+          <constructor-arg ref="IdentityResolver" />
+          <constructor-arg value="SSOID" />
+        </bean>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="ServiceMethodResolver" class="com.zuooh.http.framework.build.MethodScannerResolver">
+    <constructor-arg ref="MethodScanner" />
+    <constructor-arg ref="ServiceFinder" />
+  </bean>
+
+  <bean id="InterceptorMethodResolver" class="com.zuooh.http.framework.build.MethodScannerResolver">
+    <constructor-arg ref="MethodScanner" />
+    <constructor-arg ref="InterceptorFinder" />
+  </bean>
+
+  <bean id="ActionResolver" class="com.zuooh.http.framework.build.ActionBuilder">
+    <constructor-arg ref="ServiceMethodResolver" />
+    <constructor-arg ref="InterceptorMethodResolver" />
+  </bean>
+
+  <bean id="ResponseRouter" class="com.zuooh.http.framework.route.ResponseRouter">
+    <constructor-arg>
+      <list>
+        <bean class="com.zuooh.http.framework.route.ExceptionBuilder">
+          <constructor-arg ref="ViewResolver" />
+          <constructor-arg value="java.lang.Throwable" />
+          <constructor-arg value="exception" />
+        </bean>
+        <bean class="com.zuooh.http.framework.route.ByteArrayBuilder" />
+        <bean class="com.zuooh.http.framework.route.CharacterArrayBuilder" />
+        <bean class="com.zuooh.http.framework.route.RedirectionBuilder" />
+        <bean class="com.zuooh.http.framework.route.ViewBuilder">
+          <constructor-arg ref="ViewResolver" />
+        </bean>
+        <bean class="com.zuooh.http.json.rpc.ResponseBuilder"/>        
+      </list>
+    </constructor-arg>
+    <constructor-arg>
+      <bean class="com.zuooh.http.framework.route.StringMessageBuilder">
+        <constructor-arg value="Resource could not be written!" />
+      </bean>
+    </constructor-arg>
+  </bean>
+
+  <bean id="ContextBuilder" class="com.zuooh.http.framework.context.ContextBuilder">
+    <constructor-arg>
+      <list>
+        <value>REQUEST</value>
+        <value>RESPONSE</value>
+        <value>PARAMETERS</value>
+        <value>ATTRIBUTES</value>
+        <value>VALIDATION</value>
+        <value>ERROR</value>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="TemplateResolver" class="com.zuooh.http.resource.FileResolver">
+    <constructor-arg ref="FileManager" />
+    <constructor-arg value="index.xml" />
+  </bean>
+
+  <bean id="VelocityEngine" class="org.apache.velocity.app.VelocityEngine" init-method="init">
+    <constructor-arg>
+      <props>
+        <prop key="runtime.log.logsystem.class">org.apache.velocity.runtime.log.Log4JLogChute</prop>
+        <prop key="runtime.log.logsystem.log4j.logger">root</prop>
+        <prop key="parser.pool.size">5</prop>
+      </props>
+    </constructor-arg>
+  </bean>
+
+  <bean id="VelocityTemplateEngine" class="com.zuooh.http.framework.view.template.velocity.VelocityTemplateEngine">
+    <constructor-arg ref="VelocityEngine" />
+    <constructor-arg ref="TemplateResolver" />
+    <constructor-arg value="${server.contextPath}/" />
+    <constructor-arg value=".vm" />
+  </bean>
+
+  <bean id="StaticTemplateEngine" class="com.zuooh.cms.template.text.StaticTemplateEngine">
+    <constructor-arg ref="TemplateResolver" />
+    <constructor-arg value="${server.contextPath}/" />
+    <constructor-arg value=".html" />
+  </bean>
+
+  <bean id="ContentSelector" class="com.zuooh.cms.template.edit.CombinationContentSelector">
+    <constructor-arg>
+      <list>
+        <bean class="com.zuooh.cms.template.edit.PredicateContentSelector">
+          <constructor-arg value="attribute[request].cookie[SSOSESSION] != 'null'" />
+        </bean>
+        <bean class="com.zuooh.cms.template.edit.PathContentSelector">
+          <constructor-arg value=".*.(wiki|html|txt|vm)" />
+        </bean>
+        <bean class="com.zuooh.cms.template.edit.StartsWithContentSelector">
+          <constructor-arg value="editable" />
+          <constructor-arg value=".*.vm" />
+        </bean>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="ContentFragmentBuilder" class="com.zuooh.cms.template.edit.ContentFragmentBuilder">
+    <constructor-arg ref="TemplateResolver" />
+    <constructor-arg value="${server.contextPath}/" />
+  </bean>
+
+  <bean id="ContentEditor" class="com.zuooh.cms.template.edit.ContentEditor">
+    <constructor-arg ref="ContentFragmentBuilder" />
+    <constructor-arg ref="VelocityTemplateEngine" />
+    <constructor-arg value="fragment" />
+    <constructor-arg value="editor.vm" />
+  </bean>
+
+  <bean id="ContentTemplateProcessor" class="com.zuooh.cms.template.edit.ContentEditorProcessor">
+    <constructor-arg ref="ContentEditor" />
+    <constructor-arg ref="ContentSelector" />
+  </bean>
+
+  <bean id="ContentTemplateEngine" class="com.zuooh.cms.template.ContentTemplateEngine">
+    <constructor-arg>
+      <list>
+        <ref bean="VelocityTemplateEngine" />
+        <ref bean="StaticTemplateEngine" />
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="ContentManagementEngine" class="com.zuooh.cms.template.ContentManagementEngine">
+    <constructor-arg ref="ContentTemplateEngine" />
+    <constructor-arg ref="ContentTemplateProcessor" />
+  </bean>
+
+  <bean id="TemplateEngine" class="com.zuooh.http.framework.view.template.tile.TileTemplateEngine">
+    <constructor-arg ref="ContentManagementEngine" />
+    <constructor-arg ref="TemplateResolver" />
+    <constructor-arg value="${server.contextPath}/" />
+    <constructor-arg value=".xml" />
+  </bean>
+
+  <bean id="ViewResolver" class="com.zuooh.http.framework.view.template.TemplateViewResolver">
+    <constructor-arg ref="TemplateEngine" />
+    <constructor-arg value="error.xml" />
+    <constructor-arg value="text/html; charset=UTF-8" />
+  </bean>
+
+  <bean id="NotFoundResource" class="com.zuooh.http.resource.StringResource">
+    <constructor-arg value="Resource could not be found!!" />
+    <constructor-arg value="text/plain; charset=UTF-8" />
+    <constructor-arg value="UTF-8" />
+    <constructor-arg value="NOT_FOUND" />
+  </bean>
+
+  <bean id="StatusResource" class="com.zuooh.http.resource.StringResource">
+    <constructor-arg value="Everything is fine!!" />
+    <constructor-arg value="text/plain; charset=UTF-8" />
+    <constructor-arg value="UTF-8" />
+  </bean>
+
+  <bean id="ActionMatcher" class="com.zuooh.http.framework.ActionMatcher">
+    <constructor-arg ref="ActionResolver" />
+    <constructor-arg ref="ContextBuilder" />
+    <constructor-arg ref="ResponseRouter" />
+  </bean>
+
+  <bean id="FileMatcher" class="com.zuooh.http.resource.FileMatcher">
+    <constructor-arg ref="FileResolver" />
+    <constructor-arg ref="ContentTypeResolver" />
+  </bean>
+
+  <bean id="ResourceMatcher" class="com.zuooh.http.resource.RegularExpressionMatcher">
+    <constructor-arg>
+      <map>
+        <entry key=".*favicon.ico" value-ref="NotFoundResource" />
+        <entry key="/status" value-ref="StatusResource" />
+      </map>
+    </constructor-arg>
+  </bean>
+
+  <bean id="CombinationMatcher" class="com.zuooh.http.resource.CombinationMatcher">
+    <constructor-arg>
+      <list>
+        <ref bean="ActionMatcher" />
+        <ref bean="ResourceMatcher" />
+        <ref bean="FileMatcher" />
+      </list>
+    </constructor-arg>
+    <constructor-arg ref="NotFoundResource" />
+  </bean>
+
+  <bean id="ResourceContainer" class="com.zuooh.http.resource.ResourceContainer">
+    <constructor-arg ref="CombinationMatcher" />
+  </bean>
+
+  <bean id="WebContainer" class="com.zuooh.http.WebContainer">
+    <constructor-arg ref="ResourceContainer" />
+    <constructor-arg value="Directory/1.0" />
+  </bean>
+
+  <bean id="WebServer" class="com.zuooh.http.WebServer" init-method="start">
+    <constructor-arg ref="WebContainer" />
+    <constructor-arg value="${server.listenPort}" />
+  </bean>
+
+</beans>
+

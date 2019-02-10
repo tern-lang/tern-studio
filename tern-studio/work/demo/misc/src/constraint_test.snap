@@ -1,0 +1,69 @@
+var xx: []=[2,33,33];
+var yy = {22,22,1,1};
+var zz = {a: 'A', b: 'B', c: 'C'};
+
+println(xx);
+println(yy);
+println(zz);
+
+function fun(x: []){
+   println(x);
+}
+
+function fun(x: {}){
+   println(x);
+}
+
+function fun(x: {:}){
+   println(x);
+}
+
+fun((a,b)->println("${a},${b}"));
+fun((a:String,b:String)->println("a=${a} b=${b}"));
+
+function fun(x: (a,b)) {
+   x(11,22);
+}
+
+println(["a", "b", "c"]);
+
+function fun(x: Byte[]){
+   println(x);
+}
+
+function fun(x: Byte[][]){
+   println(x);
+}
+
+const b = new Byte[10];
+const bb = new Byte[10][10];
+
+fun(b);
+fun(bb);
+
+module Shape {
+   class Point{
+      var x;
+      var y;
+      new(x,y){
+         this.x=x;
+         this.y=y;
+      }
+      toString(){
+         return "${x},${y}";
+      }
+   }
+}
+
+var p1 = new Shape.Point[1];
+var p2: Shape.Point[] = new Shape.Point[1];
+
+p1[0] = new Shape.Point(22,345);
+p2[0] = new Shape.Point(44,55);
+
+fun(p1);
+fun(p2);
+
+function fun(x: Shape.Point[]){
+   println(x[0]);
+}

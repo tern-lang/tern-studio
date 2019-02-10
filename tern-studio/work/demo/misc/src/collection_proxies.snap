@@ -1,0 +1,16 @@
+class X{
+   var x;
+   new(x){
+      this.x=x;
+   }
+}
+var a = new X('a');
+var b = new X('b');
+var c = new X('c');
+
+var map = {a:'a',b:'b',c:'c'};
+
+for(var entry in map){
+   System.err.println(entry.key.x);
+   System.err.println(entry.value);
+}

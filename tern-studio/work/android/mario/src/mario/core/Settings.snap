@@ -1,0 +1,109 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+import org.snapscript.game.framework.FileIO;
+
+class Settings {
+   public static var soundEnabled = true;
+   public static var musicEnabled = true;
+
+   public static var highscores = [ 100, 80, 50, 30, 10 ];
+   public static var file = ".supermario";
+
+   private static var score = 0;
+   private static var lives = 0;
+
+   public static const COIN_BONUS = 100;
+   public static const GOOMBA_BONUS = 300;
+   public static const KOOPA_BONUS = 500;
+   public static const LIFE_BONUS = 1000;
+
+   public static load(files) {
+      var input = null;
+      try {
+         input = new BufferedReader(new InputStreamReader(files.readFile(file)));
+         soundEnabled = Boolean.parseBoolean(input.readLine());
+         musicEnabled = Boolean.parseBoolean(input.readLine());
+
+         for (var i = 0; i < 5; i++) {
+            highscores[i] = Integer.parseInt(input.readLine());
+         }
+      } catch (e) {
+         e.printStackTrace();
+         // :( It's ok we have defaults
+      } catch (e) {
+         e.printStackTrace();
+         // :/ It's ok, defaults save our day
+      } finally {
+         try {
+            if (input != null)
+               input.close();
+         } catch (e) {
+         }
+      }
+   }
+
+   public static save(files) {
+      var out = null;
+      try {
+         out = new BufferedWriter(new OutputStreamWriter(files.writeFile(file)));
+         out.write(Boolean.toString(soundEnabled));
+         out.write("\n");
+         out.write(Boolean.toString(musicEnabled));
+         out.write("\n");
+
+         for (var i = 0; i < 5; i++) {
+            out.write(Integer.toString(highscores[i]));
+            out.write("\n");
+         }
+
+      } catch (e) {
+      } finally {
+         try {
+            if (out != null)
+               out.close();
+         } catch (e) {
+         }
+      }
+   }
+
+   public static getLives() {
+      return lives;
+   }
+
+   public static getScore() {
+      return score;
+   }
+
+   public static addScore(newScore) {
+      score += newScore;
+   }
+
+   public static addLife() {
+      if (lives < 3)
+         lives++;
+   }
+
+   public static subtractLife() {
+      if (lives > 0)
+         lives--;
+   }
+
+   public static addHighScore(newHighScore) {
+
+      for (var i = 0; i < 5; i++) {
+         if (highscores[i] < score) {
+            for (var j = 4; j > i; j--)
+               highscores[j] = highscores[j - 1];
+            highscores[i] = score;
+            break;
+         }
+      }
+
+   }
+
+}
+

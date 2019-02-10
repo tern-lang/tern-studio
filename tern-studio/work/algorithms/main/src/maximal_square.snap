@@ -1,0 +1,50 @@
+// https://leetcode.com/problems/maximal-square/
+
+let area = maximalSquare(
+   [[1, 0, 1, 0, 0],
+   [1, 0, 1, 1, 1],
+   [1, 1, 1, 1, 1],
+   [1, 0, 0, 1, 0]]
+
+);
+
+println(area);
+
+func maximalSquare(matrix) {
+   let size = 0;
+   
+   for(i in 0 .. matrix.length -1) {
+      for(j in 0 .. matrix.length -1) {
+         if(matrix[i][j] == 1){
+            let result = containsSquare(matrix, i, j, size);
+         
+            if(result > size) {
+               size = result;
+            }
+         }
+      }
+   }
+   return size * size;
+}
+
+func containsSquare(matrix, top, left, size) {
+   let bottom = top + 1;
+   let right = left + 1;
+   
+   while(matrix.length > bottom && matrix[top].length > right) {
+      for(vertical in top .. bottom) {
+         if(matrix[vertical][right] != 1) {
+            return size;
+         }
+      }
+      for(horizontal in left .. right) {
+         if(matrix[bottom][horizontal] != 1) {
+            return size;
+         }
+      }
+      bottom++;
+      right++;
+      size++;
+   }
+   return size;
+}

@@ -1,0 +1,22 @@
+
+basicPermutation("red");
+
+func basicPermutation(text){
+   basicPermutation(text, "", {});
+}
+
+func basicPermutation(text, prefix, done){
+   if(text.length == prefix.length) {
+      println(prefix);
+   } else {
+      for(i in 0 to text.length -1) {
+         if(!done.contains(i)) {
+            let c = text.charAt(i);
+            
+            done.add(i);
+            basicPermutation(text, prefix + c, done);
+            done.remove(i);
+         }
+      }
+   }
+}

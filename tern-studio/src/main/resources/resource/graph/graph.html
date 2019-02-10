@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Force Layout with labels on edges</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<style type="text/css">
+.nodelabel {
+  pointer-events: none;
+  font-family: monospace;
+  font-size: 13px;
+  font-weight: normal;
+}
+.graph {
+	background-color: #ffffff;
+	border: black solid 1px;
+	margin: 100px;
+}
+</style>
+</head>
+<body bgcolor='#ffffff'>
+<div id="graph" class="graph">
+</div>
+<script src="/graph/graph.js"></script>
+<script>
+$.get("/graph/graph.json", function(response) {
+   var data = convertData(response);
+   console.log(JSON.stringify(data, null, 4));
+   drawGraph('graph', data, 1000, 600);
+});
+
+</script>
+</body>
+</html>

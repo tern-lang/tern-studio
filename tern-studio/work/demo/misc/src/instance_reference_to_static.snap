@@ -1,0 +1,13 @@
+class Dumper {
+   static const VALUES = [1, 2, 3, 4, 5];
+
+   dump(index){
+      System.err.println(VALUES[index]);
+      return VALUES[index];
+   }
+}
+var d = new Dumper();
+
+System.err.println(d.dump(2));
+System.err.println(d.dump(3));
+System.err.println(d.dump(4));

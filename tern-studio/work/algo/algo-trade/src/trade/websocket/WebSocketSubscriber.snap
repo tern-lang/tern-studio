@@ -1,0 +1,22 @@
+
+
+import org.java_websocket.handshake.ServerHandshake;
+import org.java_websocket.client.WebSocketClient;
+
+class WebSocketSubscriber extends WebSocketClient {
+
+   new(u: URI): super(u){
+   }
+
+	override onOpen(h: ServerHandshake) {
+      println(h);
+	}
+
+	override onClose(code: Integer, msg: String, remote: Boolean) {
+      println(msg);
+	}
+
+	override onError(e: Exception) {
+      e.printStackTrace();
+	}
+}

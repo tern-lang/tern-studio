@@ -1,0 +1,326 @@
+
+#runScript {
+	background-image: url('${IMAGE_FOLDER}/run.png');
+	background-size: 16px 16px;		
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+#runScript:active {
+	background-image: url('${IMAGE_FOLDER}/run.png');
+	background-size: 10px 10px;		
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+#debugScript {
+	background-image: url('${IMAGE_FOLDER}/debug.png');
+	background-size: 16px 16px;		
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+#debugScript:active {
+	background-image: url('${IMAGE_FOLDER}/debug.png');
+	background-size: 10px 10px;		
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+#resumeScript {
+	background-image: url('${IMAGE_FOLDER}/resume.png');	
+	background-size: 16px 16px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+#resumeScript:active {
+	background-image: url('${IMAGE_FOLDER}/resume.png');	
+	background-size: 10px 10px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+#stepInScript {
+	background-image: url('${IMAGE_FOLDER}/step_in.png');	
+	background-size: 16px 16px;
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+#stepInScript:active {
+	background-image: url('${IMAGE_FOLDER}/step_in.png');	
+	background-size: 10px 10px;
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+#stepOutScript {
+	background-image: url('${IMAGE_FOLDER}/step_out.png');
+	background-size: 16px 16px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+#stepOutScript:active {
+	background-image: url('${IMAGE_FOLDER}/step_out.png');
+	background-size: 10px 10px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+#stepOverScript {
+	background-image: url('${IMAGE_FOLDER}/step_over.png');
+	background-size: 16px 16px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;   
+}
+#stepOverScript:active {
+	background-image: url('${IMAGE_FOLDER}/step_over.png');
+	background-size: 10px 10px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;   
+}
+#stopScript {
+	background-image: url('${IMAGE_FOLDER}/stop.png');	
+	background-size: 16px 16px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px; 
+}
+#stopScript:active {
+	background-image: url('${IMAGE_FOLDER}/stop.png');	
+	background-size: 10px 10px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px; 
+}
+#saveFile {
+	background-image: url('${IMAGE_FOLDER}/save.png');
+	background-size: 16px 16px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px; 
+}
+#saveFile:active {
+	background-image: url('${IMAGE_FOLDER}/save.png');
+	background-size: 10px 10px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px; 
+}
+#deleteFile {
+	background-image: url('${IMAGE_FOLDER}/trash.png');
+	background-size: 16px 16px;		
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+#deleteFile:active {
+	background-image: url('${IMAGE_FOLDER}/trash.png');
+	background-size: 10px 10px;		
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+#newFile {
+	background-image: url('${IMAGE_FOLDER}/new_file.png');
+	background-size: 16px 16px;		
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;  
+}
+#newFile:active {
+	background-image: url('${IMAGE_FOLDER}/new_file.png');
+	background-size: 10px 10px;		
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;  
+}
+#searchTypes {
+	background-image: url('${IMAGE_FOLDER}/search_glass.png');	
+	background-size: 16px 16px;		
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px; 
+}
+#searchTypes:active {
+	background-image: url('${IMAGE_FOLDER}/search_glass.png');	
+	background-size: 10px 10px;		
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px; 
+}
+#evaluateExpression {
+	background-image: url('${IMAGE_FOLDER}/evaluate.png');	
+	background-size: 16px 16px;
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px; 
+}
+#evaluateExpression:active {
+	background-image: url('${IMAGE_FOLDER}/evaluate.png');	
+	background-size: 10px 10px;
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px; 
+}
+
+#projectRoot {
+	background-image: url('${IMAGE_FOLDER}/project_index.png');	
+	background-size: 16px 16px;
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px; 
+}
+
+#leftProjectRoot {
+	background-image: url('${IMAGE_FOLDER}/project_index.png');	
+	background-size: 16px 16px;
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px; 
+}
+
+#leftDirectory {
+	background-image: url('${IMAGE_FOLDER}/file_directory.png');	
+	background-size: 16px 16px;
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px; 
+}
+
+.toolbarTop {
+	padding: 8px;
+	height: 45px;
+    /*background-image: -webkit-linear-gradient(#f0f0f0, #dfdfdf);
+    background-image: -moz-linear-gradient(#f0f0f0, #dfdfdf);
+    background-image: -ms-linear-gradient(#f0f0f0, #dfdfdf);
+    background-image: -o-linear-gradient(#f0f0f0, #dfdfdf);
+    background-image: linear-gradient(#f0f0f0, #dfdfdf);
+    filter: progid: dximagetransform.microsoft.gradient(startColorstr='#fff0f0f0', endColorstr='#ffdfdfdf', GradientType=0);  */
+}
+.toolbarSeparator {
+    border-left: 1px dotted #888888;
+    height: 18px;
+}
+.toolbarCheveron {
+	background-image: url('/img/chevron-rounded-outline-grey.png');	
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 15px;
+	height: 45px;
+    padding: 12px; 
+}
+#toolbarDebug {
+	opacity: 0.4;
+    filter: alpha(opacity=40); /* msie */
+}
+#toolbarLogoContainer {
+	height: 100%;
+	width: 150px;
+	z-index: 1000;
+}
+#toolbarLogo {
+	background-image: url('/img/logo.png');	
+	background-position: center;
+	background-repeat: no-repeat;	
+	max-width:100%;
+	max-height:100%;
+}
+#toolbarResize {
+	background-image: url('${IMAGE_FOLDER}/max_screen.png');	
+	background-size: 16px 16px;
+	background-position: right center;
+	background-repeat: no-repeat;
+    padding: 12px;   
+}
+#toolbarResize:active {
+	background-image: url('${IMAGE_FOLDER}/max_screen.png');	
+	background-size: 10px 10px;
+	background-position: right center;
+	background-repeat: no-repeat;
+    padding: 12px;   
+}
+#toolbarSwitchProject {
+	background-image: url('${IMAGE_FOLDER}/switch_project.png');	
+	background-size: 16px 16px;
+	background-position: right center;
+	background-repeat: no-repeat;
+    padding: 12px;   
+}
+#toolbarSwitchProject:active {
+	background-image: url('${IMAGE_FOLDER}/switch_project.png');	
+	background-size: 10px 10px;
+	background-position: right center;
+	background-repeat: no-repeat;
+    padding: 12px;   
+}
+#toolbarSwitchLayout {
+	background-image: url('${IMAGE_FOLDER}/switch_perspective.png');
+	background-size: 16px 16px;	
+	background-position: right center;
+	background-repeat: no-repeat;
+    padding: 12px;   
+}
+#toolbarSwitchLayout:active {
+	background-image: url('${IMAGE_FOLDER}/switch_perspective.png');
+	background-size: 10px 10px;	
+	background-position: right center;
+	background-repeat: no-repeat;
+    padding: 12px;   
+}
+
+#toolbarNavigateBack {
+	background-image: url('${IMAGE_FOLDER}/arrow_nav_back.png');
+	background-size: 16px 16px;	
+	background-position: right center;
+	background-repeat: no-repeat;
+    padding: 12px;   
+}
+
+#toolbarNavigateBack:active {
+	background-image: url('${IMAGE_FOLDER}/arrow_nav_back.png');
+	background-size: 10px 10px;	
+	background-position: right center;
+	background-repeat: no-repeat;
+    padding: 12px;   
+}
+
+#toolbarNavigateForward {
+	background-image: url('${IMAGE_FOLDER}/arrow_nav_forward.png');
+	background-size: 16px 16px;	
+	background-position: right center;
+	background-repeat: no-repeat;
+    padding: 12px;   
+}
+
+#toolbarNavigateForward:active {
+	background-image: url('${IMAGE_FOLDER}/arrow_nav_forward.png');
+	background-size: 10px 10px;	
+	background-position: right center;
+	background-repeat: no-repeat;
+    padding: 12px;   
+}
+
+#toolbarTabOverflow {
+	z-index: 5000;
+    position:relative;
+    background-image: url('${IMAGE_FOLDER}/down_arrow.png');
+	background-size: 10px 10px;	
+	background-position: right center;
+	background-repeat: no-repeat;
+	background-color: ${PROJECT_BACKGROUND_COLOR};
+    border: 1px solid #c0c0c0;
+    float:right;
+    height: 30px;
+    width: 20px;
+	margin-top: 45px;
+	margin-right: -1px;
+}​
+
+.styledSelect{
+    border-radius: 0px !important;
+}

@@ -1,0 +1,13 @@
+
+/**
+ * This class is used to make the spatial coordinates more transparent.
+ */
+class Coord {
+    /**
+    * X represents the horizontal dimension which is measured from LHS of
+    * GUI. Y represents the vertical dimension which is measured from top of
+    * GUI (i.e. Y increases as you go down).
+    */
+    static const X = 1;
+    static const Y = 0;
+}

@@ -1,0 +1,75 @@
+/**
+    A abstract class designed to filter sound samples.
+    Since SoundFilters may use internal buffering of samples,
+    a new SoundFilter object should be created for every sound
+    played. However, SoundFilters can be reused after they are
+    finished by called the reset() method.
+    <p>Assumes all samples are 16-bit, signed, little-endian
+    format.
+    @see FilteredSoundStream
+*/
+abstract class SoundFilter{
+
+    /**
+        Resets this SoundFilter. Does nothing by default.
+    */
+    public reset() {
+        // do nothing
+    }
+
+
+    /**
+        Gets the remaining size, in bytes, that this filter
+        plays after the sound is finished. An example would
+        be an echo that plays longer than it's original sound.
+        This method returns 0 by default.
+    */
+    public getRemainingSize() {
+        return 0;
+    }
+
+
+    /**
+        Filters an array of samples. Samples should be in
+        16-bit, signed, little-endian format.
+    */
+    public filter(samples) {
+        filter(samples, 0, samples.length);
+    }
+
+
+    /**
+        Filters an array of samples. Samples should be in
+        16-bit, signed, little-endian format. This method
+        should be implemented by subclasses.
+    */
+    public abstract filter(
+      samples, offset, length);
+
+
+    /**
+        Convenience method for getting a 16-bit sample from a
+        Byte array. Samples should be in 16-bit, signed,
+        little-endian format.
+    */
+    public static getSample(buffer, position) {
+        return 
+            ((buffer[position+1] & 0xff) << 8) |
+            (buffer[position] & 0xff);
+    }
+
+
+    /**
+        Convenience method for setting a 16-bit sample in a
+        Byte array. Samples should be in 16-bit, signed,
+        little-endian format.
+    */
+    public static setSample(buffer, position,
+        sample)
+    {
+        buffer[position] = sample & 0xff;
+        buffer[position+1] = (sample >> 8) & 0xff;
+    }
+
+}
+

@@ -1,0 +1,20 @@
+import test.TestCase;
+
+class MultipleDeclarationTest with TestCase {
+
+   testVariables(){
+      var x:String='x',y:Integer,z=1;
+      
+      assert x=='x';
+      assert y == null;
+      assert z==1;
+   }
+   
+   testConstants(){
+      const x:String='x',y:Integer=2.0,z=1;
+      
+      assert x=='x';
+      assert y == 2;
+      assert z==1;
+   }
+}

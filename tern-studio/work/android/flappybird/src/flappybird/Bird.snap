@@ -1,0 +1,34 @@
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+class Bird {
+
+   const resources = ["/flappybird/bird0_0.png",
+         "/flappybird/bird0_1.png",
+         "/flappybird/bird0_2.png"];
+
+   const birdBitmaps = [];
+   const context;
+   
+   new(context){
+      this.context = context;
+   }
+   
+   get(value) {
+      if(birdBitmaps.isEmpty()) {
+         for(var resource in resources){
+            var bitmap = ImageStore.loadImage(resource);
+            birdBitmaps.add(bitmap);
+         }
+      }
+      return birdBitmaps.get(value);
+   }
+   
+   recycle(){
+      for (var bitmap in birdBitmaps) {
+         bitmap.recycle();
+      }
+   }
+}

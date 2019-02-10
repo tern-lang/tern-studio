@@ -1,0 +1,172 @@
+import util.LinkedList;
+
+/**
+    A thread pool is a group of a limited number of threads that
+    are used to execute tasks.
+    
+    Forrest's comments: still a little unclear about how this whole thing works,
+    basically my understanding is that it is a group of threads that run through a
+    linked list of tasks sent to the object, the threads execute each task as the threads
+    finish up with other tasks. 
+*/
+class ThreadPool extends ThreadGroup {
+
+    private var isAlive: Boolean; // tracks if this ThreadPool is still running
+    private var taskQueue: LinkedList;
+    private var threadID: Integer; // give a number to each thread in a ThreadPool
+    private static var threadPoolID: Integer = 0; // give a number to seperate ThreadPool
+    /**
+        Creates a new ThreadPool.
+        @param numThreads The number of threads in the pool.
+    */
+    public new(numThreads: Integer): super("ThreadPool-" + threadPoolID++) {
+        this.setDaemon(true); // ??
+
+        isAlive = true;
+
+        taskQueue = new LinkedList();
+        for (var i=0; i< numThreads; i++) {
+            new PooledThread(this).start();
+        }
+    }
+
+    /**
+        Requests a new task to run. This method returns
+        immediately, and the task executes on the next available
+        idle thread in this ThreadPool.
+        <p>Tasks start execution in the order they are received.
+        @param task The task to run. If null, no action is taken.
+        @throws IllegalStateException if this ThreadPool is
+        already closed.
+    */
+    public runTask(task: Runnable) {
+      synchronized(this){
+        if (!isAlive) {
+            throw new IllegalStateException();
+        }
+        if (task != null) {
+            taskQueue.add(task);
+            notify();
+        }
+      }
+    }
+
+    public getTask(): Runnable
+    {
+         synchronized(this){
+             // if there are no tasks to run, just wait
+           while (taskQueue.size() == 0) {
+               if (!isAlive) {
+                   return null;
+               }
+               wait();
+           }
+           return taskQueue.removeFirst();
+        }
+    }
+
+
+    /**
+        Closes this ThreadPool and returns immediately. All
+        threads are stopped, and any waiting tasks are not
+        executed. Once a ThreadPool is closed, no more tasks can
+        be run on this ThreadPool.
+    */
+    public close() {
+      synchronized(this){
+        if (isAlive) {
+            isAlive = false;
+            taskQueue.clear();
+            interrupt();
+        }
+       }
+    }
+
+    /**
+        Closes this ThreadPool and waits for all running threads
+        to finish. Any waiting tasks are executed.
+    */
+    public join() {
+        // notify all waiting threads that this ThreadPool is no longer alive
+        synchronized (this) {
+            isAlive = false;
+            notifyAll();
+        }
+
+        // wait for all threads to finish
+        var threads: Thread[] = new Thread[activeCount()];
+        var count: Integer = enumerate(threads);
+        for (var i=0; i<count; i++) {
+            try {
+                threads[i].join();
+            }
+            catch (e: InterruptedException) { }
+        }
+    }
+    
+   /**
+    * Signals that a PooledThread has started. This method does nothing by
+    * default; subclasses should override to do any thread-specific startup
+    * tasks.
+    */
+   public threadStarted() {
+      // do nothing
+   }
+
+   /**
+    * Signals that a PooledThread has stopped. This method does nothing by
+    * default; subclasses should override to do any thread-specific cleanup
+    * tasks.
+    */
+   public threadStopped() {
+      // do nothing
+   }
+
+    /**
+        A PooledThread is a Thread in a ThreadPool group, designed
+        to run tasks (Runnables).
+    */
+    class PooledThread with Runnable {
+         const pool: ThreadPool;
+         const thread: Thread;
+        public new(pool) {
+            this.thread = new Thread(pool, this /*, "PooledThread-" + (pool.threadID++)*/);
+            this.pool = pool;
+        }
+        
+        public start(){
+           thread.start();
+        }
+
+        public run() {
+              pool.threadStarted();
+            while (!thread.isInterrupted()) {
+
+                // get a task to run
+                var task: Runnable = null;
+                try {
+                    task = pool.getTask();
+                }
+                catch (e: InterruptedException) { }
+
+                // if getTask() returned null or was interrupted,
+                // close this thread by returning.
+                // if null, there are no tasks to run, so kill this thread.
+                if (task == null) {
+                    return;
+                }
+
+                // run the task, and eat any exceptions it throws
+                try {
+                    task.run();
+                }
+                catch (t: Throwable) {
+                     t.printStackTrace();
+                    pool.uncaughtException(thread, t);
+                }
+            }
+            pool.threadStopped();
+        }
+    }
+}
+

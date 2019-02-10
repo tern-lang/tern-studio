@@ -1,0 +1,38 @@
+
+func fib(n) {
+   if (n<2) {
+      return 1;
+   }
+   return fib(n-1) + fib(n-2);
+}
+
+for(var x in 0..4){
+   var s = System.currentTimeMillis();
+   var r = fib(30);
+   var f = System.currentTimeMillis();
+   println(f-s);
+   println(r);
+}
+
+time(() -> fib(30));
+
+// for(var x in 0..3){
+//    time(->fib(30));
+//    time(->similar());
+// }
+
+// function empty(x){
+// }
+// function similar(){
+//    for(var x in 0..2692537){
+//       empty(x);
+//    }
+// }
+
+
+func time(f: ()) {
+   var start = new Date().getTime();
+   f();
+   var stop =new Date().getTime();
+   System.out.println("${f.name} time="+ (stop-start));
+}

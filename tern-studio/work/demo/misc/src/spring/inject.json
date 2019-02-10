@@ -1,0 +1,17 @@
+{
+   "Workspace": {
+      "class": "spring.example.Workspace",
+      "init-method": "create",
+      "constructor-args": [
+         "Project",
+         "true"
+      ]
+   },
+   "Project": {
+      "class": "spring.example.Project",
+      "constructor-args": [
+         "blah",
+         "/foo/blah"
+      ]
+   }
+}

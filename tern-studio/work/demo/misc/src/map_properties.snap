@@ -1,0 +1,55 @@
+var id = 123;
+var date = new Date();
+var map1 = {'id': id, 'date': date};
+var map2 = {'id': 'id', 'date': 'date'};
+var map3 = {id: 'id', date: 'date'};
+var map4 = {x: id, y: date};
+var map5 = {id: id, date: date};
+
+println(map1);
+println(map2);
+println(map3);
+println(map4);
+println(map5);
+
+class T {
+   var a;
+   var b;
+   
+   new(m){
+      this.a = m.a;
+      this.b = m.b;
+   }
+   
+   toString(){
+      return "${a} ${b}";
+   }
+}
+
+var t = new T({a:11, b:"str"});
+
+
+println(t);
+
+var m = {a:11, b:"str"};
+
+println(m);
+
+m.a = 33;
+m.c = "foo";
+
+println(m);
+
+m.a = null;
+
+println(m);
+
+function max(a, b) {
+   return a > b ? a : b;
+}
+
+function max(a, b, c) { // function overloading
+   return a > b ? max(a, c) : max(b, c);
+}
+
+println(max(2,33,4));

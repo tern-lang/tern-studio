@@ -1,0 +1,79 @@
+import util.concurrent.ScheduledThreadPoolExecutor;
+import util.concurrent.ConcurrentHashMap;
+import util.concurrent.CopyOnWriteArraySet;
+import util.concurrent.LinkedBlockingQueue;
+import util.function.Predicate;
+import common.store.FileStore;
+import compile.StoreContext;
+import compile.ResourceCompiler;
+import core.module.FilePathConverter;
+import core.scope.EmptyModel;
+
+class TestCaseRunner {
+
+   const directory;
+   
+   new(directory){
+      this.directory = directory;
+   }
+   
+   runTests() {
+      runTests(name -> true);
+   }
+   
+   runTests(predicate: Predicate) {
+      const scanner = new TestCaseCollector(directory);
+      const scripts = scanner.scan("**/*Test.snap");
+      const converter = new FilePathConverter();
+      const root = new File(directory);
+      const store = new FileStore(root);
+      const executor = new ScheduledThreadPoolExecutor(20);
+      const failures = new ConcurrentHashMap();
+      const complete = new CopyOnWriteArraySet();
+      const tasks = new LinkedBlockingQueue();
+      const model = new EmptyModel();
+      
+      for(var script in scripts) {
+         if(predicate.test(script)) {
+            const context = new StoreContext(store, executor);
+            const compiler = new ResourceCompiler(context);
+            const file = new File(directory, script);
+            
+            if(file.exists()) {
+               //const task = executor.submit(-> {
+                  const evaluator = context.getEvaluator();
+                  const registry = context.getRegistry();
+                  const package = converter.createModule(script);
+                  const executable = compiler.compile(script);
+                  
+                  try {
+                     const name = file.getName().replace(".snap", "");
+                     
+                     executable.execute();
+                     evaluator.evaluate(model, "new ${name}().runTests()", package)
+                        .stream()
+                        .forEach(test -> complete.add(test));
+                  }catch(e){
+                     println("Failure for ${script}");
+                     failures.put(script, e);
+                  }
+               // }, null);
+               
+               // if(tasks.size > 10){
+               //    tasks.take().get();
+               // }
+               // tasks.offer(task);
+            }
+         }
+      }
+      // while(!tasks.isEmpty()) {
+      //    tasks.take().get();
+      // }
+      for(var failure in failures) {
+         println("FAIL: ${failure.key}");
+         failure.value.printStackTrace();
+      }
+      println("TESTS ${scripts.size} PASS ${scripts.size - failures.size} FAILURES ${failures.size}");
+      return failures.isEmpty();
+   }
+}

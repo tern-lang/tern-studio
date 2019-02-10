@@ -1,0 +1,60 @@
+import mario.core.MarioSoundManager;
+import mario.core.tile.GameTile;
+import mario.core.tile.TileMap;
+import mario.objects.creatures.Coin;
+import mario.objects.creatures.Mushroom;
+import mario.objects.creatures.Score;
+import mario.particles.ParticleSystem;
+import android.graphics.Bitmap;
+
+
+
+class Brick extends GameTile {
+
+   private var soundManager;
+   private var map;
+   
+   private var numCoins = 0;
+   private var hasMushroom = false;
+   
+   public new(pixelX, pixelY, map, img, soundManager, numCoins,
+          hasMushroom): super(pixelX, pixelY, null,img) {
+      // Integer pixelX, pixelY, anim, Image img
+   
+      setIsSloped(false);
+      this.numCoins = numCoins;
+      this.hasMushroom = hasMushroom;
+      this.soundManager = soundManager;
+      this.map = map;
+   }
+   
+   public override update(time) {
+      //super.update(time);
+      if(getOffsetY() != 0) { setOffsetY(getOffsetY() + 2); }
+   }
+   
+   public override doAction() {
+
+      if (numCoins > 0) {
+         numCoins--;
+         setOffsetY(-10);
+         soundManager.playCoin();
+         var newCoin = new Coin(getPixelX(), getPixelY());
+         var score = new Score(getPixelX(), getPixelY());
+         map.creaturesToAdd().add(newCoin);
+         map.creaturesToAdd().add(score);
+         newCoin.shoot();
+      } else if (hasMushroom) {
+         setOffsetY(-10);
+         soundManager.playItemSprout();
+         var shroom = new Mushroom(getPixelX(), getPixelY() - 26);
+         map.creaturesToAdd().add(shroom);
+      } else {// (((Mario)map.getPlayer()).){
+         soundManager.playBrickShatter();
+         map.particleSystem = new ParticleSystem(getPixelX(), getPixelY(), 8);
+         map.getTiles()[getPixelX() >> 4][getPixelY() >> 4] = null;
+      }
+
+   }
+}
+

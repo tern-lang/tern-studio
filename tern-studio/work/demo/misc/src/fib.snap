@@ -1,0 +1,23 @@
+class Fibber {
+  var old=1l;
+  var fib=1l;
+  var current=1l;
+
+  next() {
+    var newFib=fib+old;
+    old=fib;
+    fib=newFib;
+    current++;
+  }
+}
+
+function fib(n) {
+   var fibber = new Fibber();
+   while(fibber.current < n) fibber.next();
+   return fibber.fib;
+}
+var start = new Date().getTime();
+var result = fib(30); // =1346269 (0.013 seconds)
+System.out.println("fib(30)="+result);
+var stop =new Date().getTime();
+print((stop -start)); 

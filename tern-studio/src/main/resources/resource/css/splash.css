@@ -1,0 +1,118 @@
+#overlay {
+	visibility: visible;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	z-index: 1000;
+	background: rgba(54, 54, 54, 0.5);
+}
+
+#splash-image {
+	background: url("/img/splash.png");
+	background-position: top;
+	background-repeat: no-repeat;
+	background-size: cover;
+	margin-top: 15%;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid #ffffff;
+	opacity: 0.9;
+	filter: alpha(opacity = 90);
+	height: 400px;
+	width: 600px;
+}
+
+#splash-square {
+	background-image: url("/img/splash.png");
+	background-position: top;
+	background-repeat: no-repeat;
+	background-size: cover;
+	margin-top: 15%;
+	margin-left: auto;
+	margin-right: auto;
+	background: #ffffff;	
+	border: 1px solid #000000;
+	height: 400px;
+	width: 600px;
+}
+
+.logo {
+	position: relative;
+	height: 200px;
+}
+
+.product-header {
+	text-align: center;
+	font-size: 50px;
+	font-family: Source Sans Pro, Helvetica, Arial, Geneva, sans-serif;
+	font-weight: bold;
+	padding-top: 80px;
+}
+
+.please-wait {
+	font-family: Source Sans Pro, Helvetica, Arial, Geneva, sans-serif;
+	text-align: center;
+	padding: 10px;
+}
+
+.meter {
+	height: 20px; /* Can be anything */
+	position: relative;
+	margin-top: 165px;
+	margin-left: 20px;
+	margin-right: 20px;
+	background: #555;
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 25px;
+	border-radius: 25px;
+	padding: 5px;
+	-webkit-box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.3);
+	-moz-box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.3);
+	box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.progress {
+	height: 10px;
+	display: block;
+	-webkit-border-top-right-radius: 8px;
+	-webkit-border-bottom-right-radius: 8px;
+	-moz-border-radius-topright: 8px;
+	-moz-border-radius-bottomright: 8px;
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+	-webkit-border-top-left-radius: 20px;
+	-webkit-border-bottom-left-radius: 20px;
+	-moz-border-radius-topleft: 20px;
+	-moz-border-radius-bottomleft: 20px;
+	border-top-left-radius: 20px;
+	border-bottom-left-radius: 20px;
+	background-color: rgb(43, 194, 83);
+	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(43,
+		194, 83)), color-stop(1, rgb(84, 240, 84)));
+	background-image: -moz-linear-gradient(center bottom, rgb(43, 194, 83)
+		37%, rgb(84, 240, 84) 69%);
+	-webkit-box-shadow: inset 0 2px 9px rgba(255, 255, 255, 0.3), inset 0
+		-2px 6px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: inset 0 2px 9px rgba(255, 255, 255, 0.3), inset 0 -2px
+		6px rgba(0, 0, 0, 0.4);
+	box-shadow: inset 0 2px 9px rgba(255, 255, 255, 0.3), inset 0 -2px 6px
+		rgba(0, 0, 0, 0.4);
+	position: relative;
+	overflow: hidden;
+}
+
+.red>span {
+	background-color: #f0a3a3;
+	background-image: -moz-linear-gradient(top, #f0a3a3, #f42323);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #f0a3a3),
+		color-stop(1, #f42323));
+	background-image: -webkit-linear-gradient(#f0a3a3, #f42323);
+}
+
+.nostripes>span>span, .nostripes>span:after {
+	-webkit-animation: none;
+	-moz-animation: none;
+	background-image: none;
+}

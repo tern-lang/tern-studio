@@ -1,0 +1,66 @@
+import test.TestCase;
+
+class Task with Runnable{
+   run(){}
+}
+
+class PrintTask extends Task{
+   override run(){
+      println();
+   }
+}
+
+
+module Blah{
+   class Foo extends Task{
+      override run(){
+         println("Blah.run()");
+      }
+   }
+}
+
+class InstanceOfTest with TestCase {
+
+   testInstanceOf(){
+      assert ""instanceof String;
+      assert {:} instanceof Map;
+      assert new Task() instanceof Runnable;
+      assert new PrintTask() instanceof Runnable;
+      assert {} instanceof Set;
+      assert []instanceof List;
+      assert []instanceof Collection;
+      assert []!instanceof Map;
+      assert ""!instanceof null;
+      assert null!instanceof null;   
+      assert null!instanceof String;   
+      assert new Blah.Foo()instanceof Blah.Foo;
+      assert new Blah.Foo() instanceof Runnable;
+   }
+   
+   testInstanceOfWithClass(){
+      assert new Task() instanceof Object;
+      assert new Task() !instanceof String.class;
+      assert new Task() !instanceof String;
+      assert "" instanceof String.class;
+      assert {:} instanceof Map.class;
+      assert new Task() instanceof Runnable.class;
+      assert new PrintTask() instanceof Runnable.class;
+      assert new PrintTask() instanceof new Task().class;   
+      assert {} instanceof Set.class;
+      assert []instanceof List.class;
+      assert []instanceof Collection.class;
+      assert []!instanceof Map.class;
+      assert []!instanceof null;
+   }   
+  
+   testInstanceOfWithArray(){
+      var a = new Task[1];
+      var b = new Integer[1];
+      var c = new String[1][2];
+      assert a instanceof Task[];
+      assert b instanceof Integer[];
+      assert c instanceof String[][];
+      assert a !instanceof null;
+      assert null!instanceof Integer.class;
+   }
+}

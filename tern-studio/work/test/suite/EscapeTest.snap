@@ -1,0 +1,13 @@
+import test.TestCase;
+
+class EscapeTest with TestCase {
+
+   testEscape() {
+      var bytes = "\r\n\f\b\'".getBytes();
+      
+      assert bytes[0] == 13;
+      assert bytes[1] == 10;
+      assert bytes[2] == 12;
+      assert bytes[3] == 8;
+   }
+}

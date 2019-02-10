@@ -1,0 +1,15 @@
+
+
+class GenerateTestEntry{
+   const source;
+   const name;
+   const success;
+   const test;
+   
+   new(source, success, name, test){
+      this.source = source;
+      this.name = name;
+      this.success = success;
+      this.test = test;
+   }
+}

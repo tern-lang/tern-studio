@@ -1,0 +1,50 @@
+import test.TestCase;
+
+@Mod(name: "blah")
+module Module{
+
+   @Class
+   class InnerClass{
+      var b;
+      new(b){
+         this.b = b;
+      }
+      
+      @Override
+      foo(){
+         return "foo";
+      }
+   }  
+
+   @Func
+   f(){
+      return "func";
+   }
+}
+
+class ReflectionTest with TestCase {
+
+   testReflection(){ 
+      Module.getAnnotations()
+         .stream()
+         .forEach(annotation -> {
+            println(annotation);
+            assert annotation.getName().equals("Mod");
+            assert annotation.getAttribute("description") == null;
+            assert annotation.getAttribute("name") == "blah";
+            
+         });
+      Module.getFunctions()
+         .stream()
+         .forEach(f -> {
+            println(f);
+            f.getAnnotations()
+               .stream()
+               .forEach(annotation -> {
+                  println(annotation);
+                  assert annotation.getName().equals("Func");
+                  assert annotation.name.equals("Func");
+               });
+         });
+   }
+}

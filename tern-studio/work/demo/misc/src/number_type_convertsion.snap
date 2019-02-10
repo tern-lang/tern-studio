@@ -1,0 +1,21 @@
+import util.concurrent.atomic.AtomicInteger;
+
+var x = new AtomicInteger();
+var y = new BigDecimal("11.2");
+var z = new BigInteger("22");
+
+f(x);
+f(y);
+f(z);
+
+function f(x: Integer) {
+   System.err.println("int="+x);
+}
+
+function f(x: Double) {
+   System.err.println("double="+x);
+}
+
+function f(x: BigInteger) {
+   System.err.println("big-int="+x);
+}

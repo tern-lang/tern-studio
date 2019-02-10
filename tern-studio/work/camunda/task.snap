@@ -1,0 +1,23 @@
+
+
+var request = new ProcessRequest(execution); // suspend
+request.process();
+
+println("Finished");
+
+class ProcessRequest {
+   const execution;
+   
+   new(execution){
+      this.execution = execution;
+   }
+   
+   process(){
+      try {
+         var processInstanceId = execution.getProcessInstanceId(); // suspend
+         println("id=${processInstanceId}");
+      }catch(e) {
+         e.printStackTrace();
+      }
+   }
+}

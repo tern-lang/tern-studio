@@ -1,0 +1,17 @@
+import awt.geom.Ellipse2D;
+import awt.geom.Line2D;
+import test.TestCase;
+
+class ImportInnerClassTest with TestCase {
+
+   testImportInnerClass() {
+      println(new Ellipse2D.Double(1.0,2.0,3,3.8));
+      println(new Line2D.Double(1,2,3,4));
+      println(new Line2D.Float(3,4,5,6));
+      
+      assert new Line2D.Float(2,3,4,5).getX1() == 2;
+      assert new Line2D.Float(2,3,4,5).getY1() == 3;
+      assert new Line2D.Float(2,3,4,5).getX2() == 4;
+      assert new Line2D.Float(2,3,4,5).getY2() == 5;   
+   }
+}

@@ -1,0 +1,9 @@
+var x = "this is dangerous";
+// new File("C:\\Work\\development\\snapscript")
+//    .findFiles(f -> f.name.endsWith(".java") && f.canonicalPath.contains("\\src\\main\\java"))
+//    .forEach(f -> {
+//       var text = f.readText();
+//       text = text.trim();
+//       f.writeText(text);
+//       println(f);
+//    });

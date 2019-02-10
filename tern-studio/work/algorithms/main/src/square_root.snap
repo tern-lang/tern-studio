@@ -1,0 +1,19 @@
+
+let x = sqrt(100);
+println(x);
+
+func sqrt(n) {
+   let v = n / 2; // smallest square
+   
+   loop {
+      let val = v * v;
+      
+      if(val > n) {
+         v /= 2; // go down fast
+      } else if(val < n){
+         v++; // go up slow
+      } else {
+         return v;
+      }
+   }
+}

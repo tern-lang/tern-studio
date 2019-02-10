@@ -1,0 +1,282 @@
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Random;
+
+import org.snapscript.game.framework.Game;
+
+import mario.util.SpriteMap;
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
+import android.util.Log;
+
+
+/**
+ * @author Mahesh Kurmi
+ * this class will be responsible for loading/unloading our game resources (art, fonts, audio) 
+ * this class will use singleton holder, which means we will be able to access this class from the global level.
+ */
+class MarioResourceManager
+{
+    //---------------------------------------------
+    // VARIABLES
+    //---------------------------------------------
+    public static var activity: Activity;
+    public static var inputStream: InputStream;
+    public static var options: Options;
+    
+   private static var firstTimeCreate: Boolean = true;
+
+   //left mario
+   public static var Mario_Big_Left_Still: Bitmap; 
+   public static var Mario_Big_Left_1: Bitmap; 
+   public static var Mario_Big_Left_2: Bitmap; 
+   public static var Mario_Big_Left_Run_1: Bitmap; 
+   public static var Mario_Big_Left_Run_2: Bitmap; 
+   public static var Mario_Big_Crouch_Left: Bitmap; 
+   public static var Mario_Big_Jump_Left: Bitmap; 
+   public static var Mario_Big_Change_Direction_Left: Bitmap; 
+   //Right mario
+   public static var Mario_Big_Right_Still: Bitmap; 
+   public static var Mario_Big_Right_1: Bitmap;
+   public static var Mario_Big_Right_2: Bitmap;
+   public static var Mario_Big_Right_Run_1: Bitmap;
+   public static var Mario_Big_Right_Run_2: Bitmap;
+   public static var Mario_Big_Crouch_Right: Bitmap;
+   public static var Mario_Big_Jump_Right: Bitmap;
+   public static var Mario_Big_Change_Direction_Right: Bitmap;
+    //coin
+   public static var Coin_1: Bitmap;
+   public static var Coin_2: Bitmap;
+   public static var Coin_3: Bitmap;
+   public static var Coin_4: Bitmap;
+   public static var Coin_5: Bitmap;
+   public static var Coin_6: Bitmap;
+   public static var Coin_7: Bitmap;
+   public static var Coin_8: Bitmap;
+   //goomba
+   public static var Goomba_Normal_1: Bitmap;
+   public static var Goomba_Normal_2: Bitmap;
+   public static var Goomba_Dead: Bitmap;
+   public static var Goomba_Flip: Bitmap;
+   //mushroom
+   public static var Mushroom: Bitmap;
+   //platform
+   public static var Red_Platform_2: Bitmap;
+   //redKoopa
+   public static var  Koopa_Red_Left_1: Bitmap;
+   public static var Koopa_Red_Left_2: Bitmap;
+   public static var Koopa_Red_Right_1: Bitmap;
+   public static var Koopa_Red_Right_2: Bitmap;
+   //redShell
+   public static var Red_Shell_1: Bitmap;
+   public static var Red_Shell_2: Bitmap;
+   public static var Red_Shell_3: Bitmap;
+   public static var Red_Shell_4: Bitmap;
+   public static var Red_Shell_Flip: Bitmap;
+   //Thorny
+   public static var Thorny: Bitmap[];
+   //Score
+   public static var Score_100_New6: Bitmap;
+   //tree
+   public static var Tree_1: Bitmap;
+   public static var Tree_2: Bitmap;
+   //QuestionBlock
+   public static var Question_Block_0: Bitmap;
+   public static var Question_Block_1: Bitmap;
+   public static var Question_Block_2: Bitmap;
+   public static var Question_Block_3: Bitmap;
+   public static var Question_Block_Dead: Bitmap;
+   //RotatingBlock
+   public static var Rotating_Block_Hit_1: Bitmap;
+   public static var Rotating_Block_Hit_2: Bitmap;
+   public static var Rotating_Block_Hit_3: Bitmap;
+   public static var Rotating_Block_Still: Bitmap;
+   //PlainTileMap
+   public static var Plain_Tiles: Bitmap;
+   //Background
+   public static var Background: Bitmap;
+   //splash
+   public static var Splash: Bitmap;
+   //menu
+   public static var menu: Bitmap;
+   //grass
+   public static var Sloped_Tile: Bitmap;
+   public static var Grass_Edge: Bitmap;
+   public static var Grass_Center: Bitmap;
+   //bricks shatter
+   public static var brick_particle: Bitmap;
+   //fireball
+   public static var fb_1: Bitmap;
+   public static var fb_2: Bitmap;
+   public static var fb_3: Bitmap;
+   public static var fb_4: Bitmap;
+   public static var fb_5: Bitmap;
+   public static var fb_6: Bitmap;
+   //piranha
+   public static var Piranha_1: Bitmap;
+   public static var Piranha_2: Bitmap;
+   //Hud
+   public static var digits: Bitmap[];
+   
+   
+   public  new(game: Game)
+    {
+       activity=game.getContext();
+       options=new BitmapFactory.Options();
+       options.inPreferredConfig = Config.RGB_565;
+    }
+    
+    /**
+    * loads resources in memory if resources are not already loaded
+    */
+   public  loadResouces(){
+      if (firstTimeCreate==true){
+         options.inPreferredConfig = Config.ARGB_4444;
+         // left mario
+         Mario_Big_Left_Still = loadImage("mario/Mario_Big_Left_Still.png");
+         Mario_Big_Left_1 = loadImage("mario/Mario_Big_Left_1.png");
+         Mario_Big_Left_2 = loadImage("mario/Mario_Big_Left_2.png");
+         Mario_Big_Left_Run_1 = loadImage("mario/Mario_Big_Left_Run_1.png");
+         Mario_Big_Left_Run_2 = loadImage("mario/Mario_Big_Left_Run_2.png");
+         Mario_Big_Crouch_Left = loadImage("mario/Mario_Big_Crouch_Left.png");
+         Mario_Big_Jump_Left = loadImage("mario/Mario_Big_Jump_Left.png");
+         Mario_Big_Change_Direction_Left = loadImage("mario/Mario_Big_Change_Direction_Left.png");
+         // Right mario
+         Mario_Big_Right_Still = loadImage("mario/Mario_Big_Right_Still.png");
+         Mario_Big_Right_1 = loadImage("mario/Mario_Big_Right_1.png");
+         Mario_Big_Right_2 = loadImage("mario/Mario_Big_Right_2.png");
+         Mario_Big_Right_Run_1 = loadImage("mario/Mario_Big_Right_Run_1.png");
+         Mario_Big_Right_Run_2 = loadImage("mario/Mario_Big_Right_Run_2.png");
+         Mario_Big_Crouch_Right = loadImage("mario/Mario_Big_Crouch_Right.png");
+         Mario_Big_Jump_Right = loadImage("mario/Mario_Big_Jump_Right.png");
+         Mario_Big_Change_Direction_Right = loadImage("mario/Mario_Big_Change_Direction_Right.png");
+         // coin
+         Coin_1 = loadImage("items/Coin_1.png");
+         Coin_2 = loadImage("items/Coin_2.png");
+         Coin_3 = loadImage("items/Coin_3.png");
+         Coin_4 = loadImage("items/Coin_4.png");
+         Coin_5 = loadImage("items/Coin_5.png");
+         Coin_6 = loadImage("items/Coin_6.png");
+         Coin_7 = loadImage("items/Coin_7.png");
+         Coin_8 = loadImage("items/Coin_8.png");
+         // goomba
+         Goomba_Normal_1 = loadImage("baddies/Goomba_Normal_1.png");
+         Goomba_Normal_2 = loadImage("baddies/Goomba_Normal_2.png");
+         Goomba_Dead = loadImage("baddies/Goomba_Dead.png");
+         Goomba_Flip = loadImage("baddies/Goomba_Flip.png");
+         // mushroom
+         Mushroom = loadImage("items/Mushroom.png");
+         // Platform
+         Red_Platform_2 = loadImage("items/Red_Platform_2.png");
+         // redKoopa
+         Koopa_Red_Left_1 = loadImage("baddies/Koopa_Red_Left_1.png");
+         Koopa_Red_Left_2 = loadImage("baddies/Koopa_Red_Left_2.png");
+         Koopa_Red_Right_1 = loadImage("baddies/Koopa_Red_Right_1.png");
+         Koopa_Red_Right_2 = loadImage("baddies/Koopa_Red_Right_2.png");
+         // redshell
+         Red_Shell_1 = loadImage("baddies/Red_Shell_1.png");
+         Red_Shell_2 = loadImage("baddies/Red_Shell_2.png");
+         Red_Shell_3 = loadImage("baddies/Red_Shell_3.png");
+         Red_Shell_4 = loadImage("baddies/Red_Shell_4.png");
+         Red_Shell_Flip = loadImage("baddies/Red_Shell_Flip.png");
+         //Thorny
+         Thorny = new SpriteMap( loadImage("baddies/thorny.png"), 5, 1).getSprites();
+
+         // Score
+         Score_100_New6 = loadImage("items/Score_100_New6.png");
+         // Tree
+         Tree_1 = loadImage("items/Tree_1.png");
+         Tree_2 = loadImage("items/Tree_2.png");
+         // QuwestionBlock
+         Question_Block_0 = loadImage("items/Question_Block_0.png");
+         Question_Block_1 = loadImage("items/Question_Block_1.png");
+         Question_Block_2 = loadImage("items/Question_Block_2.png");
+         Question_Block_3 = loadImage("items/Question_Block_3.png");
+         Question_Block_Dead = loadImage("items/Question_Block_Dead.png");
+         //rotatingBlock
+         Rotating_Block_Hit_1 = loadImage("items/Rotating_Block_Hit_1.png");
+         Rotating_Block_Hit_2 = loadImage("items/Rotating_Block_Hit_2.png");
+         Rotating_Block_Hit_3 = loadImage("items/Rotating_Block_Hit_3.png");
+         Rotating_Block_Still = loadImage("items/Rotating_Block_Still.png");
+         options.inPreferredConfig = Config.RGB_565;
+         //plainTiles
+         Plain_Tiles=loadImage("tiles/Plain_Tiles.png");
+         //grass
+         Sloped_Tile = loadImage("items/Sloped_Tile.png");
+         Grass_Edge = loadImage("items/Grass_Edge.png");
+         Grass_Center = loadImage("items/Grass_Center.png");
+         
+         brick_particle=loadImage("items/particle_brick.png");
+         
+         // fireball
+         fb_1 = loadImage("baddies/Fireball_1.png");
+         fb_2 = loadImage("baddies/Fireball_2.png");
+         fb_3 = loadImage("baddies/Fireball_3.png");
+         fb_4 = loadImage("baddies/Fireball_4.png");
+         fb_5 = loadImage("baddies/Fireball_5.png");
+         fb_6 = loadImage("baddies/Fireball_6.png");
+         
+         //Piranha
+         Piranha_1=loadImage("baddies/Piranha_1.png");
+         Piranha_2=loadImage("baddies/Piranha_2.png");
+         
+         
+         //background
+         loadBackground();
+         
+         //hud
+         digits = new SpriteMap( loadImage("menu/digits.png"), 11, 1).getSprites();
+         
+      }
+      firstTimeCreate=false;
+   }
+   
+   //loads random background
+   private loadBackground(){
+      var r: Random = new Random();
+      var rNum: Integer = r.nextInt(4);
+      if(rNum == 0) {
+         Background=loadImage("backgrounds/Icy_Background.png");
+      } else if(rNum == 1) {
+         Background=loadImage("backgrounds/NeoHillsBGnew.png");
+      } else if(rNum == 2) {
+         Background=loadImage("backgrounds/background2.png");
+      } else  {
+         Background=loadImage("backgrounds/NeoHillsBGnew.png");
+      }
+   }
+   
+   
+    public static loadImage(fileName: String): Bitmap
+    {
+       try {
+          Log.i("resource",fileName);
+         inputStream = activity.getAssets().open(fileName);   
+         
+         return BitmapFactory.decodeStream(inputStream, null, new BitmapFactory.Options());
+      
+      } catch (e: IOException) {
+         // TODO Auto-generated catch block
+         //e.printStackTrace();
+         Log.e("resource",e.getMessage()+fileName);
+      }
+      return null;
+    }
+    
+   /** Horizontally flips img. */
+   public static horizontalFlip(img: Bitmap): Bitmap {   
+        /*
+      int w = img.getWidth();   
+        var h: Integer = img.getHeight();   
+        var dimg: Bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);     
+        var g: Canvas = new Canvas(dimg); 
+        g.drawBitmap(img, new Rect(w, 0, 0, h),new Rect(0, 0, w, h), null);   
+        */
+        return img;   
+    }  
+ 
+}
+

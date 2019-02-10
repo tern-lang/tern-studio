@@ -1,0 +1,4 @@
+
+trait DepthListener {
+   onDepth(depth: Depth);
+}

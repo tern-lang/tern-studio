@@ -1,0 +1,11 @@
+
+
+function installPlatform(){
+   var file = new File("foo");
+   
+   for(var i in 1..100){
+      
+   }
+}
+
+installPlatform();

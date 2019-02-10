@@ -1,0 +1,19 @@
+
+@Reusable
+class CoffeeScooper {
+  
+  @Inject 
+  new() {}
+}
+
+@Module
+class CashRegisterModule {
+  
+  @Provides
+  @Reusable 
+  static badIdeaCashRegister(): CashRegister {
+    return new CashRegister();
+  }
+}
+
+class CashRegister{}

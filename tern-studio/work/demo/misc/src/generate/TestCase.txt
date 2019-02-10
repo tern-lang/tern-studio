@@ -1,0 +1,8 @@
+package org.snapscript.compile;
+
+%imports%
+
+public class %name%Test extends TestCase {
+   %sources%
+   %tests%
+}

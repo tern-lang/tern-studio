@@ -1,0 +1,16 @@
+
+var x = 10;
+var y = 12;
+
+println(x > 2 ? "x > 2" : "x < 2");
+println(x > 24 ? "x > 24" : "x < 24");
+
+function max(a, b) { 
+   return a >b?a:b;
+}
+
+var max = max(44,55);
+
+println(max);
+   
+// this is a comment

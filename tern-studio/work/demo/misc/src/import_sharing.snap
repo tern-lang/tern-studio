@@ -1,0 +1,24 @@
+import security.SecureRandom;
+import io.Goo as Splat;
+
+var s = new SecureRandom();
+var i = s.nextInt();
+
+println(i);
+
+module Child{
+
+   testImportInheritance() {
+      var s = new SecureRandom();
+      var i = s.nextInt();
+      
+      println("Child.testImportInheritance="+i);
+      var r = Splat.fun("Child.testImportInheritance");
+      println(r);
+   }
+
+}
+Child.testImportInheritance();
+
+Child.testImportInheritance();
+

@@ -1,0 +1,16 @@
+import test.TestCase;
+
+class EvalTest with TestCase {
+
+   testEvalCalc(){
+      assert eval("1+22") == 23;
+      assert eval("'hello'.substring(1)") == 'ello';
+   }
+   
+   testEvalInModule(){
+      assert eval("new Foo('xx')", "suite.example").text == 'xx';
+      assert eval("new Shape.Point(1,2)", "suite.example").x == 1;
+      assert eval("new Shape.Point(1,2)", "suite.example").y == 2;
+      assert eval("new Shape.Point(1,2**2)", "suite.example").y == 4;
+   }
+}

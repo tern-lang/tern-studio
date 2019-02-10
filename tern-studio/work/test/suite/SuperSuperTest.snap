@@ -1,0 +1,49 @@
+import test.TestCase;
+
+class One {
+   var x;
+   new(x){
+      this.x=x;   
+   }
+   dump(){
+      return "One.dump(${x})";
+   }
+   nuh(){
+      return "One.nuh(${x})";
+   }
+}
+
+class Two extends One{
+   new(x) :super(x){}
+   dump(){
+      return super.dump();
+   }
+   foo() {
+      (this as Three).blah();
+   }
+}
+
+class Three extends Two{
+   new(x):super(x){}
+   dump(){
+      return super.dump();
+   }
+   blah(){
+      return super.nuh();
+   }
+}
+
+class SuperSuperTest with TestCase {
+
+   testSuperSuper() {
+      var t = new Three(456);
+      var v = t.dump();
+      var x = t.foo();
+      
+      println(v);
+      println(x);
+   
+      assert v == "One.dump(456)";
+      assert x == "One.nuh(456)";
+   }
+}

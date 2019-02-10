@@ -1,0 +1,47 @@
+
+let triangle = Triangle(
+   Point(-2.0, 3.0),
+   Point(-3.0, -1.0),
+   Point(3.0, -2.0));
+
+let origin = Point(0, 0);
+   
+assert areaOfTriangle(triangle) == 12.5;
+assert withinTriangle(triangle, origin);
+
+class Point {
+   const x, y;
+   
+   new(x, y) {
+      this.x = x;
+      this.y = y;
+   }
+}
+
+class Triangle {
+   const p1, p2, p3;
+   
+   new(p1, p2, p3) {
+      this.p1 = p1;
+      this.p2 = p2;
+      this.p3 = p3;
+   }
+}
+
+func withinTriangle(t: Triangle, p: Point) {
+   let t1 = Triangle(p, t.p2, t.p3);
+   let t2 = Triangle(t.p1, p, t.p3);
+   let t3 = Triangle(t.p1, t.p2, p);
+   let a1 = areaOfTriangle(t1);
+   let a2 = areaOfTriangle(t2);
+   let a3 = areaOfTriangle(t3);
+   let a = areaOfTriangle(t);
+   
+   return a1 + a2 + a3 == a;
+}
+
+func areaOfTriangle(t: Triangle) {
+   return ((t.p1.x * (t.p2.y - t.p3.y)) + 
+           (t.p2.x * (t.p3.y - t.p1.y)) + 
+           (t.p3.x * (t.p1.y - t.p2.y))) / 2;
+}

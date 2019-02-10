@@ -1,0 +1,29 @@
+// https://www.geeksforgeeks.org/divide-two-integers-without-using-multiplication-division-mod-operator/
+
+assert divide(4, 2) == 2;
+assert divide(35, 7) == 5;
+
+func divide(num, divisor) {
+   let count = 0;
+   
+   while(num > 0) {
+      num -= divisor;
+      count++; // count the subtractions
+   }
+   return count;
+}
+
+/*
+func divide(num, divisor) {
+   for(i in 1 to num) {
+      let answer = 0;
+   
+      for(j in 1 to i) {
+         answer += divisor;
+      }
+      if(answer == num) {
+         return i;
+      }
+   }
+}
+*/

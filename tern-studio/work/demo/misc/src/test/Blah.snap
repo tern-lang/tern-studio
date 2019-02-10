@@ -1,0 +1,17 @@
+
+class Blah{
+   class Bar{
+      const f;
+      new(f){
+         this.f=f;
+      }
+   }
+   const x,y;
+   new(x,y){
+      this.x=x;
+      this.y=y;
+   }
+   toString(){
+      "${x},${y}";
+   }
+}

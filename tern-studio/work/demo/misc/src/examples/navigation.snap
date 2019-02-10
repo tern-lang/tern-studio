@@ -1,0 +1,19 @@
+
+class Point{
+   var x,y;
+   new(x,y){
+      this.x = x;
+      this.y = y;
+   }
+   override toString(){
+      "${x},${y}"; // last expression evaluated returned
+   }
+}
+
+var point = new Point(null, 1);
+
+println(point);
+println(point.x);
+println(point.y);
+println(point.x?.toString()); // safe reference
+println(point.y?.toString());

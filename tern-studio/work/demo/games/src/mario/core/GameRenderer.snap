@@ -1,0 +1,269 @@
+import awt.Color;
+import awt.Graphics2D;
+import awt.Image;
+import awt.Point;
+import awt.image.BufferedImage;
+import text.DecimalFormat;
+import util.ArrayList;
+
+import mario.core.animation.Sprite;
+import mario.core.tile.GameTile;
+import mario.core.tile.Tile;
+import mario.core.tile.TileMap;
+import mario.objects.base.Creature;
+import mario.objects.creatures.Platform;
+import mario.objects.mario.Mario;
+
+
+// The TileMapRenderer class is responsible for all the drawing onto the screen.
+// Also contains useful static methods for converting tiles->pixels, pixels->tiles
+// and a method for locating which tile a sprite has collided with.
+
+class GameRenderer {
+   
+   // AdjustYScroll is used to record the previous value of player.getY(). This way I can 
+   // continue to draw on the same y level if there is no significant change in Y. I use 
+   // the player jumping as a measure of significant change. Hides errors in my animations, 
+   // keeping the screen from bobbing when there is a change in height of the player animation. 
+   private var AdjustYScroll: Integer = 0;
+   private var maps: List = [];
+   private var lastLife: Integer = -5;
+   private var df2: DecimalFormat = new DecimalFormat("#,###,###,##0.00");
+
+   // the size in bits of the tile
+    private static const TILE_SIZE: Integer = 16;
+    // Math.pow(2, TILE_SIZE_BITS) == TILE_SIZE
+    private static const TILE_SIZE_BITS: Integer = 4;
+
+    private var background: Image;
+
+    // Converts a pixel position to a tile position.
+    public static pixelsToTiles(pixels: Float): Integer {
+        return pixelsToTiles(pixels.round());
+    }
+
+    // Converts a pixel position to a tile position.
+    public static pixelsToTiles(pixels: Integer): Integer {
+        // use shifting to get correct values for negative pixels
+        return pixels >> TILE_SIZE_BITS;
+        // or, for tile sizes that aren't a power of two,
+        // use the floor function: return (int)Math.floor((float)pixels / TILE_SIZE);
+    }
+
+    // Converts a tile position to a pixel position.
+    public static tilesToPixels(numTiles: Integer): Integer {
+        // no real reason to use shifting here. it's slighty faster, but doesn't add up to much
+        // on modern processors.
+        return numTiles << TILE_SIZE_BITS;
+        // use this if the tile size isn't a power of 2:
+        //return numTiles * TILE_SIZE;
+    }
+
+    // Sets the background to draw.
+    public setBackground(background: BufferedImage) {
+        this.background = background;
+    } 
+    
+   // Returns the tile that a Sprite has collided with. Returns null if no 
+   // collision was detected. The last parameter, right, is used to check if multiple blocks
+   // are hit when a sprite jumps.
+   public static getTileCollision(map: TileMap, sprite: Sprite, currX: Float, currY: Float, newX: Float, newY: Float): Point {
+
+       var fromX: Float = Math.min(currX, newX);
+       var fromY: Float = Math.min(currY, newY);
+       var toX: Float = Math.max(currX, newX);
+       var toY: Float = Math.max(currY, newY);
+   
+       // get the tile locations
+       var fromTileX: Integer = GameRenderer.pixelsToTiles(fromX);
+       var fromTileY: Integer = GameRenderer.pixelsToTiles(fromY);
+       var toTileX: Integer = GameRenderer.pixelsToTiles(toX + sprite.getWidth() - 1);
+       var toTileY: Integer = GameRenderer.pixelsToTiles(toY + sprite.getHeight() - 1);
+   
+       // check each tile for a collision
+       for (var x=fromTileX; x<=toTileX; x++) {
+           for (var y=fromTileY; y<=toTileY; y++) {
+               if (x < 0 || x >= map.getWidth() || map.getImage(x, y) != null) {
+                  var tile: Tile = map.getTile(x,y);
+                  if(tile != null && tile!.isCollidable()) {
+                   // collision found and the tile is collidable, return the tile
+                     return new Point(x,y);
+                  } 
+               }
+           }
+       }
+       // no collision found, return null
+       return null;
+   }
+   
+   /**
+    * @return A List of Points, where each Point corresponds to the location of a tile the sprite is 
+    * colliding with in map.tiles().
+    */
+   public static getTileCollisionAll(map: TileMap, sprite: Sprite, currX: Float, currY: Float, newX: Float, newY: Float): List {
+      
+      var collisionPoints: List = []; 
+       var fromX: Float = Math.min(currX, newX);
+       var fromY: Float = Math.min(currY, newY);
+       var toX: Float = Math.max(currX, newX);
+       var toY: Float = Math.max(currY, newY);
+   
+       // get the tile locations
+       var fromTileX: Integer = GameRenderer.pixelsToTiles(fromX);
+       var fromTileY: Integer = GameRenderer.pixelsToTiles(fromY);
+       var toTileX: Integer = GameRenderer.pixelsToTiles(toX + sprite.getWidth() - 1);
+       var toTileY: Integer = GameRenderer.pixelsToTiles(toY + sprite.getHeight() - 1);
+   
+       // check each tile for a collision
+       for (var x=fromTileX; x<=toTileX; x++) {
+           for (var y=fromTileY; y<=toTileY; y++) {
+               if (x < 0 || x >= map.getWidth() || map.getImage(x, y) != null) {
+                  var tile: Tile = map.getTile(x,y);
+                  if(tile != null && tile!.isCollidable()) {
+                   // collision found and the tile is collidable, return the tile
+                     collisionPoints.add(new Point(x,y));
+                  } 
+               }
+           }
+       }
+       // no collision found, return null
+       return collisionPoints;
+   }
+    
+    /**
+     * Draws all game elements. I did the best I can to seperate all updating from drawing. However, it 
+     * seems its much more efficient to do some updating here where I have all the information I need
+     * to make important decisions. So calling draw() DOES change the game state.
+     */
+    public draw(g: Graphics2D, mainMap: TileMap, backgroundMap: TileMap, foregroundMap: TileMap, screenWidth: Integer, screenHeight: Integer) {
+       
+       // add the three maps to the list of maps to draw, only mainMap is interactive
+       maps.add(backgroundMap);
+       maps.add(mainMap);
+       maps.add(foregroundMap);
+        var player: Mario = mainMap.getPlayer();
+        var mapWidth: Integer = tilesToPixels(mainMap.getWidth());
+        var mapHeight: Integer = tilesToPixels(mainMap.getHeight());
+        
+        // get the scrolling position of the map based on player's position...
+        
+        var offsetX: Integer = screenWidth/2 - player.getX().round() - TILE_SIZE;
+        offsetX = Math.min(offsetX, 0); // if this gets set to 0, player is within a screen width
+        offsetX = Math.max(offsetX, screenWidth - mapWidth);
+        
+        var round: Integer = player.getY().round();
+        
+        // initialize AdjustYScroll
+        if (AdjustYScroll == 0) {
+           AdjustYScroll = round;
+        }
+        
+        // if the player is jumping, change the level at which the screen is drawn.
+        if(player.isJumping() || player.isAbovePlatform() || player.isOnSlopedTile()) {
+           AdjustYScroll = round;
+        }
+        
+        var offsetY: Integer = screenHeight/2 - AdjustYScroll - TILE_SIZE;
+        offsetY = Math.min(offsetY, 0);
+        offsetY = Math.max(offsetY, screenHeight - mapHeight - 25); // 25 fixs the JPanel height error
+
+        // draw parallax background image
+        if (background != null) {
+           // x and y are responsible for fitting the background image to the size of the map
+            var x: Integer = offsetX * (screenWidth - background.getWidth(null)) / (screenWidth - mapWidth);
+            var y: Integer = offsetY * (screenHeight - background.getHeight(null)) / (screenHeight - mapHeight);
+            g.drawImage(background, x, y, null);
+        }
+
+
+        var firstTileX: Integer = pixelsToTiles(-offsetX);
+        var lastTileX: Integer = firstTileX + pixelsToTiles(screenWidth) + 1;
+        var firstTileY: Integer = pixelsToTiles(-offsetY);
+        var lastTileY: Integer = firstTileY + pixelsToTiles(screenHeight) + 1;
+      
+        
+        for(var map in maps) {
+            // draw the visible tiles
+           if(map != null) {
+              for (var y=firstTileY; y<= lastTileY; y++) {
+                    for (var x=firstTileX; x <= lastTileX; x++) {
+                       var tile: GameTile = map.getTile(x, y);
+                       if(tile != null) {
+                          tile.draw(g, tilesToPixels(x), tilesToPixels(y), 
+                                tile.getOffsetX() + offsetX, tile.getOffsetY() + offsetY);
+                        }
+                    }
+                }
+           }
+           
+          if(map === mainMap) {
+                
+             for(var i = 0; i < map.creatures().size(); i++) { 
+                  
+                var c: Creature = map.creatures().get(i);
+                   var x: Integer = c.getX().round() + offsetX;
+                   var y: Integer = c.getY().round() + offsetY;
+                   var tileX: Integer = pixelsToTiles(x);
+                   var tileY: Integer = pixelsToTiles(y); 
+                   
+                   if(!c.isAlive()) {
+                      map.creatures().remove(i);
+                      i--;
+                   } else {
+                      if(Creature.WAKE_UP_VALUE_UP_LEFT <= tileX && Creature.WAKE_UP_VALUE_DOWN_RIGHT >= tileX && 
+                            Creature.WAKE_UP_VALUE_UP_LEFT <= tileY && Creature.WAKE_UP_VALUE_DOWN_RIGHT >= tileY ) {
+                         
+                         // Only want to deal with platforms that are awake.
+                         if(c instanceof Platform) { map.platforms().add(c); }
+                           // Wake up the creature the first time the sprite is in view.
+                         if(c.isSleeping()) { c.wakeUp(); }
+                         
+                         c.setIsOnScreen(true);
+                         if(!c.isInvisible()) {
+                            c.draw(g, x, y); // draw the creature
+                         }
+                         map.relevantCreatures().add(c);
+                         
+                      } else {
+                         if(c.isAlwaysRelevant()) { map.relevantCreatures().add(c); }
+                         c.setIsOnScreen(false);
+                      }
+                   }
+                              
+                   // Draw the player.
+                   if(!player.isInvisible()) {
+                   player.draw(g, player.getX().round() + offsetX, player.getY().round() + offsetY,
+                         player.getOffsetX(), player.getOffsetY());
+                   }
+               }
+          }
+        }
+        
+//        var dd2dec: Float = new Float(df2.format(player.getdX())).floatValue();
+//
+//        g.drawString("dx: " + dd2dec, 300, 17);
+//       
+//        //if(lastLife != player.getHealth()); {
+//           lastLife = player.getHealth();
+//           var myColor: Color = new Color(50, 50, 50, 50);
+//           g.setColor(myColor);
+//           g.draw3DRect(2, 2, screenWidth - 10, 18, true);
+//           g.fill3DRect(2, 2, screenWidth - 10, 18, true);
+//           g.setColor(Color.BLACK);
+//           var hbStart: Integer = 4;
+//           var hbWidth: Integer = 35;
+//           g.draw3DRect(hbStart, 4, hbWidth, 13, true);
+//           g.draw3DRect(hbStart + hbWidth, 4, hbWidth, 13, true);
+//           g.draw3DRect(hbStart + 2*hbWidth, 4, hbWidth, 13, true);
+//           
+//           //Color myColor2 = new Color(200, 60, 60, 50);
+//           g.setColor(Color.RED);
+//           for(var i=0; i < player.getHealth(); i++) {
+//              g.fill3DRect(hbStart + i*hbWidth, 4, hbWidth, 13, true);
+//           } 
+//        //}
+        
+        maps.clear(); 
+    }
+}
+

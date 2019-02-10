@@ -1,0 +1,288 @@
+.ace_gutter-cell.ace_breakpoint {
+	border-radius: 20px 20px 20px 20px;
+	box-shadow: 0px 0px 1px 1px orange inset;
+	background: rgba(255, 215, 0, 0.3)
+}
+
+.ace_editor.ace_autocomplete {
+	width: 400px !important;
+	/*resize: both !important;*/
+}
+
+#editor {
+	font-family: "Consolas", Monaco, "Andale Mono", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+	font-size: 1em;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #c0c0c0;
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	bottom: 8px;
+	left: 8px;
+}
+
+#help {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 1em;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #c0c0c0;
+	background-color: ${HELP_BACKGROUND_COLOR};
+	color: ${HELP_FONT_COLOR};
+	position: absolute;
+	overflow: hidden;
+	text-align: center;
+	padding: 60px;
+	top: 8px;
+	right: 8px;
+	bottom: 8px;
+	left: 8px;
+}
+
+#keyBindings {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 1000px;
+	display: inline-block;
+	text-align: center;
+	float: none;
+}
+
+#editParent {
+	height: 100%;
+	width: 100%;
+}
+
+.findHighlight {
+  position:absolute;
+  background:rgba(10,10,250,0.3);
+  color: #ffffff;
+  z-index:20
+}
+
+#select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+#edit {
+	overflow: hidden !important;
+}
+
+.editTab {	
+	background-image: url('${IMAGE_FOLDER}/pencil.png');	
+	background-size: contain;
+	background-position: left bottom;
+	background-repeat: no-repeat;
+	padding-top: 3px;
+	padding-bottom: 2px;
+	padding-left: 22px; /* Or size of icon + spacing */
+	margin-left: -10px;
+	z-index: 1009;
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+	/* Rules below not implemented in browsers yet */
+	-o-user-select: none;
+	user-select: none;
+}
+
+.helpTab {	
+	background-image: url('${IMAGE_FOLDER}/help.png');	
+	background-size: contain;
+	background-position: left bottom;
+	background-repeat: no-repeat;
+	padding-top: 3px;
+	padding-bottom: 2px;
+	padding-left: 22px; /* Or size of icon + spacing */
+	margin-left: -10px;
+	z-index: 1009;
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+	/* Rules below not implemented in browsers yet */
+	-o-user-select: none;
+	user-select: none;
+}
+
+.helpBullet {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #757575;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+}
+
+.typeNode {
+	/*font-family: "Lucida Console", sans-serif; 
+    font-size: 1.2em;*/
+	font-size: 1.1em;
+	background-image: url('${IMAGE_FOLDER}/green_circle.png');
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.moduleNode {
+	/*font-family: "Lucida Console", sans-serif; 
+    font-size: 1.2em;*/
+	font-size: 1.1em;
+	background-image: url('${IMAGE_FOLDER}/grey_circle.png');
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.functionNode {
+	/*font-family: "Lucida Console", sans-serif; 
+    font-size: 1.2em;*/
+	font-size: 1.1em;
+	background-image: url('${IMAGE_FOLDER}/green_circle.png');
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.propertyNode {
+	/*font-family: "Lucida Console", sans-serif; 
+    font-size: 1.2em;*/
+	font-size: 1.1em;
+	background-image: url('${IMAGE_FOLDER}/grey_circle.png');
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.resourceNode {
+	/*font-family: "Lucida Console", sans-serif; 
+    font-size: 1.2em;*/
+	font-size: 1.1em;
+	white-space: nowrap;
+	background-image: url('${IMAGE_FOLDER}/file_code.png');
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.textNode {
+	/*font-family: "Lucida Console", sans-serif; 
+    font-size: 1.2em;*/
+	font-size: 1.1em;
+	font-family: monospace;
+    white-space: pre;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.typeTable {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.typeTable tr:hover {
+	background-color: #eff9fe;
+	border: #70c0e7 1px solid;
+}
+
+.ace_autocomplete_highlight {
+	/* right now e do nothing */
+}
+
+.ace_autocomplete_class {
+	/*font-family: "Lucida Console", sans-serif;*/
+    font-size: 1.0em;
+	background-image: url('${IMAGE_FOLDER}/green_circle.png');	
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.ace_autocomplete_enum {
+	/*font-family: "Lucida Console", sans-serif;*/
+    font-size: 1.0em;
+	background-image: url('${IMAGE_FOLDER}/green_circle.png');	
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.ace_autocomplete_trait {
+	/*font-family: "Lucida Console", sans-serif;*/
+    font-size: 1.0em;
+	background-image: url('${IMAGE_FOLDER}/green_circle.png');	
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.ace_autocomplete_module {
+	/*font-family: "Lucida Console", sans-serif;*/
+    font-size: 1.0em;
+	background-image: url('${IMAGE_FOLDER}/green_circle.png');	
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.ace_autocomplete_function {
+	/*font-family: "Lucida Console", sans-serif;*/
+    font-size: 1.0em;
+	background-image: url('${IMAGE_FOLDER}/green_circle.png');	
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.ace_autocomplete_property {
+	/*font-family: "Lucida Console", sans-serif;*/
+    font-size: 1.0em;
+	background-image: url('${IMAGE_FOLDER}/green_circle.png');	
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.ace_autocomplete_variable {
+	/*font-family: "Lucida Console", sans-serif;*/
+    font-size: 1.0em;
+	background-image: url('${IMAGE_FOLDER}/grey_circle.png');	
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.ace_autocomplete_parameter {
+	/*font-family: "Lucida Console", sans-serif;*/
+    font-size: 1.0em;
+	background-image: url('${IMAGE_FOLDER}/grey_circle.png');	
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}
+
+.ace_autocomplete_constructor {
+	/*font-family: "Lucida Console", sans-serif;*/
+    font-size: 1.0em;
+	background-image: url('${IMAGE_FOLDER}/green_circle.png');	
+	background-size: contain;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px; /* Or size of icon + spacing */
+}

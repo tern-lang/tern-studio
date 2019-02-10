@@ -1,0 +1,28 @@
+// DO NOT DELETE THIS FILE!!!
+
+// import test.Blah.Bar;
+// import test.Blah;
+// import test.Foo;
+import test.*;
+
+println("hello".substring(0,1));
+println("xX");
+
+var list =[];
+
+for(x in 1..10)
+   list.add(Thread(->{
+      for(var i in 0..9){
+         println(new Foo("xx")); // BUG DEFINING CONSTRUCTOR
+         println(new Blah(1,2));
+         println(new Blah.Bar("X")+": "+Thread.currentThread());
+      }
+   }));
+
+
+for(var thread in list){
+   thread.start();
+}
+for(var thread in list){
+   thread.join();
+}

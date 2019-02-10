@@ -1,0 +1,8 @@
+
+var suite = new TestSuite();
+var collector = new TestCollector(suite);
+var tests = collector.collectTests();
+
+for(var test in tests){
+   test();
+}

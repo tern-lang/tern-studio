@@ -1,0 +1,20 @@
+//https://leetcode.com/problems/powx-n/
+
+assert pow(2.0, 10).round(0) == 1024;
+assert pow(2.1, 3).round(3) == 9.261;
+assert pow(2.0, -2).round(2) == 0.25;
+
+func pow(n, x) { // we can memoize this
+   let r = 1.0;
+   
+   if(x > 0) {
+      for(i in 1 to x) {
+         r *= n;
+      }
+   } else {
+      for(i in 1 to x.abs) {
+         r /= n;
+      }
+   }
+   return r;
+}

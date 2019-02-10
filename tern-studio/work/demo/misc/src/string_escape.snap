@@ -1,0 +1,9 @@
+var p="c:\\temp\\log.txt";
+var x=p.replace('\\', '/');
+println(x);
+
+
+
+// var (x,_,y) = (2,3,3);
+// var x = [1,2,3];
+// var (a,_,b) = x;

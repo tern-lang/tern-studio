@@ -1,0 +1,40 @@
+
+assert oneEditDistance("cat", "dog") == false;
+assert oneEditDistance("cat", "cats") == true;
+assert oneEditDistance("cat", "cut") == true;
+assert oneEditDistance("cat", "cast") == true;
+assert oneEditDistance("cat", "at") == true;
+assert oneEditDistance("cat", "act") == false;
+
+func oneEditDistance(s1, s2) {
+   let diff = Math.abs(s1.length - s2.length);
+   
+   if(diff <= 1) {
+      let p1 = 0;
+      let p2 = 0;
+      
+      while(p1 < s1.length && p2 < s2.length) {
+         let c1 = s1.charAt(p1);
+         let c2 = s2.charAt(p2);
+         
+         if(c1 != c2) {
+            if(s1.length == s2.length) {
+               p1++;
+               p2++;
+            } else if(s1.length < s2.length) {
+               p2++;
+            } else {
+               p1++;
+            }
+            let sub1 = s1.substring(p1);
+            let sub2 = s2.substring(p2);
+         
+            return sub1 == sub2; // remainder is equal
+         }
+         p1++;
+         p2++;
+      }
+      return true;
+   }
+   return false;
+}

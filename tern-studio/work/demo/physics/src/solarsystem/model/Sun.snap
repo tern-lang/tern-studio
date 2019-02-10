@@ -1,0 +1,105 @@
+
+import awt.BasicStroke;
+import awt.BorderLayout;
+import awt.Color;
+import awt.Container;
+import awt.Graphics;
+import awt.Graphics2D;
+import awt.event.ActionEvent;
+import awt.event.ActionListener;
+import awt.geom.AffineTransform;
+import awt.geom.Area;
+import awt.geom.Ellipse2D;
+import awt.geom.GeneralPath;
+import awt.geom.Line2D;
+import awt.geom.Rectangle2D;
+import util.Vector;
+
+import solarsystem.display.SkyPanel;
+import solarsystem.display.SkyFrame;
+import solarsystem.display.Coord;
+
+/**
+ * The class Sun extends Satellite
+ * 
+ * @see Satellite and defines the origin about which all planets orbit in the
+ *      solar system. It is yellow and has rays of random length eminatting from
+ *      it.
+ */
+class Sun extends Satellite {
+    /**
+     * Constructor.
+     * 
+     * @param mDiameter The Diameter of the sun in pixels.
+     * @param mMass The mass of the sun in arbitrary units.
+     * @param mXPos The position of the sun on the horizontal axis.
+     * @param mYPos  The position of the sun on the vertical axis.
+     */
+    new(mDiameter, mMass, mXPos, mYPos) :
+        super(1.0d, mDiameter, 0.0d, Color.yellow, mMass, null) {
+
+        xPos = mXPos;
+        yPos = mYPos;
+    }
+    /**
+     * The method getAbsPos returns the absolute position of the Sun in
+     * pixels.
+     * 
+     * @param mAxis
+     *           The cartesian axis of interest.
+     * @return double The absolute positon of the Sun in pixels.
+     */
+    getAbsPos(mAxis) {
+        if (mAxis == Coord.X)
+            return xPos;
+        else
+            return yPos;
+    }
+    /**
+     * The methos setMass allows the user to set the mass of the sun in order
+     * to observe the effects on planetary motion. The mass is measured in
+     * arbitray units.
+     * 
+     * @param newMass The new mass of the sun in arbitrary units.
+     */
+    setMass(newMass) {
+        diameter*=newMass/mass;
+        mass = newMass;
+    }
+    /**
+     * The method draw displays the Sun in scaled units of pixels.
+     * 
+     * @param comp2D The Graphics2D object in which to display the Sun.
+     * @see Graphics2D
+     */
+    draw(comp2D) {
+        super.draw(comp2D);
+
+        var pen = new BasicStroke(2F);
+        comp2D.setStroke(pen);
+
+        var xf;
+        var yf;
+
+        var zoomedDiameter = diameter/SkyFrame.getScaleFactor();
+        //
+        // Draw rays of sun.
+        //
+        for (var i = 0; i < 20; ++i) {
+           if (probOneHalf())
+               xf = xPos+ Math.random()*zoomedDiameter*0.5;
+           else
+               xf = xPos - Math.random()*zoomedDiameter*0.5;
+   
+           if (probOneHalf())
+               yf = yPos + Math.random()*zoomedDiameter*0.5;
+           else
+               yf = yPos - Math.random()*zoomedDiameter*0.5;
+   
+           var ray = new Line2D.Double(xPos, yPos, xf, yf);
+           comp2D.draw(ray);
+        }
+    }
+    
+    translate() {} // Sun does not move.
+}

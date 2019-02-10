@@ -1,0 +1,66 @@
+import java.util.Random;
+
+import org.snapscript.game.framework.Image;
+import org.snapscript.game.framework.Music;
+import org.snapscript.game.framework.Sound;
+
+class Assets {
+    
+      public static var menu; 
+      public static var splash;
+      public static var background;
+      public static var character;
+      public static var character2;
+      public static var character3;
+      public static var heliboy;
+      public static var heliboy2;
+      public static var heliboy3;
+      public static var heliboy4;
+      public static var heliboy5;
+       public static var tiledirt;
+       public static var tilegrassTop; 
+       public static var tilegrassBot;
+       public static var tilegrassLeft;
+       public static var tilegrassRight;
+       public static var characterJump;
+       public static var characterDown;
+       public static var button;
+       public static var click; 
+       public static var bump; 
+       public static var kick;
+       public static var coin;
+       public static var jump;
+       public static var pause;
+       public static var itemSprout;
+       public static var bonusPoints;
+       public static var healthUp;
+       public static var healthDown;
+       public static var hurt1;
+       public static var hurt2; 
+       public static var yahoo1;
+       public static var yahoo2;
+
+       public static var music;
+
+       
+       public static load(game) {
+           //Play random background mUsic
+         var r = new Random();
+         var rNum = r.nextInt(4);
+         if(rNum == 0) {
+            music =game.getAudio().createMusic("sounds/smwovr2.mid");
+         } else if(rNum == 1) {
+            music =game.getAudio().createMusic("sounds/smwovr2.mid");
+         } else if(rNum == 2) {
+            music =game.getAudio().createMusic("music/smb_hammerbros.mid");
+         } else  {
+            music =game.getAudio().createMusic("music/smrpg_nimbus1.mid");
+         }
+          music.setLooping(true);
+          music.setVolume(0.85f);
+          music.play();
+       }
+       
+}
+ 
+

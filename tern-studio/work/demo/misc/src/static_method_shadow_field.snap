@@ -1,0 +1,16 @@
+
+class BoardCell {
+
+    var pieceType;
+
+    new(type) {
+        pieceType = type;
+    }
+
+    static getCell(pieceType) {
+        return new BoardCell(pieceType);
+    }
+
+}
+var x = BoardCell.getCell("xx");
+System.err.println(x.pieceType);

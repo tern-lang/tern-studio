@@ -1,0 +1,470 @@
+
+import awt.BasicStroke;
+import awt.Color;
+import awt.Dimension;
+import awt.EventQueue;
+import awt.Graphics;
+import awt.Graphics2D;
+import awt.Image;
+import util.Date;
+import util.concurrent.ScheduledThreadPoolExecutor;
+import util.concurrent.TimeUnit;
+
+import swing.JPanel;
+import swing.JFrame;
+import swing.JPanel;
+import swing.SwingUtilities;
+import awt.Color;
+import awt.Graphics;
+import util.ArrayList;
+import util.List;
+import util.Random;
+
+/**
+ * Description: Swing application, plot points for physics simulation.
+ * 
+ * @author berlin brown
+ * 
+ */
+class Tuple {
+    var i = 0.0;
+    var j = 0.0;
+    var k = 0.0;
+
+    toString() {
+       return "{i=" + i + " j=" + j + " k=" + k + "}";
+    }
+}
+
+class CannonLogic {
+
+    var graphics;
+
+    var data = [];
+    var renderData = [];
+
+    var scaleX = 1.0;
+    var scaleY = 1.0;
+
+    var moreOffsetY = 6.0;
+
+    // vm 50, 54
+    // alpha 25, 40, 55
+    
+    var Vm    = 60.0;  // m/s
+    var Alpha = 50.0;  // degrees
+    var Gamma = 0.0;   // along x-axis
+    var L  = 12.0;     // m
+    var Yb = 10.0;     // on x-z plane
+
+    var time = 0.0;    // seconds
+    var tInc = 0.05; // seconds
+    var g = 9.8;     // m /(s*s)
+
+    var lastTimeHitGround = 0.0;
+    var lastXhitGround = 0.0;
+    
+    var maxHeightCannon = 150.0;
+
+    var s = new Tuple();
+
+    var points = [];
+
+    /**
+     * Constructor.
+     * 
+     * @param graphics
+     */
+    new(graphics) {
+        this.graphics = graphics;
+    }
+
+    /**
+     * Set scale to convert data point values to values for rendering to screen.
+     */
+    setScale() {
+        const x = graphics.getRenderGridWidth() * 0.8;
+        const y = maxHeightCannon;
+        this.scaleX = (graphics.getRenderGridWidth() - 10.0) / x;
+        this.scaleY = (graphics.getRenderGridHeight() - 10.0) / y;
+        println("INFO : ScaleX : " + this.scaleX);
+    }
+
+    loadForRender() {
+        this.setScale();
+        this.renderData = [];
+        for (var arr in this.data) {
+            const a = Math.round(arr[0] * this.scaleX) + this.graphics.getOffX();
+            const forReverseY = Math.round((arr[1] + moreOffsetY) * this.scaleY);
+            const b = (this.graphics.getRenderGridHeight() - forReverseY) + this.graphics.getOffY();
+            const d = [ a, b ];
+            renderData.add(d);
+        } // End of the for //
+    }
+
+    render(g) {
+        g.setColor(Color.RED);
+        const a = Math.round (s.i * this.scaleX) + this.graphics.getOffX();
+        const forReverseY = Math.round((s.j + moreOffsetY) * this.scaleY);
+        const b = (this.graphics.getRenderGridHeight() - forReverseY) + this.graphics.getOffY();
+        const d = [ a, b ];
+        g.fillRect(d[0], d[1], 6, 6);
+        points.add(d);
+        if (points.size() > 2) {
+            var lastPt = points.get(0);
+            for (var pt in points) {
+                g.fillRect(pt[0], pt[1], 4, 4);
+                g.drawLine(pt[0], pt[1], lastPt[0], lastPt[1]);
+                lastPt = pt;
+            }
+        }
+    }
+
+    doSimulation() {
+        var cosX;
+        var cosY;
+        var cosZ;
+        var xe;
+        var ze;
+        var b;
+        var Lx;
+        var Ly;
+        var Lz;
+
+        // Check for collision with ground (x-z plane)
+        
+        if (s.j != 0 && s.j <= 6) {
+            this.lastTimeHitGround = this.time;
+            this.lastXhitGround = s.i;
+            
+            // Now, restart //
+            var rand = new Random(System.currentTimeMillis());            
+            s = new Tuple();            
+            this.Vm += (3.5 - (9.0 * rand.nextDouble()));
+            this.Alpha += (3.5 - (9.0 * rand.nextDouble()));            
+            this.time = 0;
+            return 2;
+        }
+        
+        // Step to the next time in the simulation
+        this.time += tInc;
+
+        const degreeToRadianConv = 3.14 / 180.0;
+        // First calculate the direction cosines for the cannon orientation.
+        // Projection b of cannon length L,
+        // b = L times cos (90 degrees - alpha)
+        b = L * Math.cos((90.0 - Alpha) * degreeToRadianConv); // projection of barrel
+                                                               // onto x-z plane      
+        // Cannon length, xyz.  Lx = b * cos(gamma)
+        Lx = b * Math.cos(Gamma * degreeToRadianConv); // x-component of barrel length
+        Ly = L * Math.cos(Alpha * degreeToRadianConv); // y-component of barrel length
+        Lz = b * Math.sin(Gamma * degreeToRadianConv); // z-component of barrel length
+
+        cosX = Lx / L;
+        cosY = Ly / L;
+        cosZ = Lz / L;
+
+        // These are the x and z coordinates of the very end of the cannon
+        // barrel
+        // we'll use these as the initial x and z displacements
+        xe = L * Math.cos((90 - Alpha) * degreeToRadianConv) * Math.cos(Gamma * degreeToRadianConv);
+        ze = L * Math.cos((90 - Alpha) * degreeToRadianConv) * Math.sin(Gamma * degreeToRadianConv);
+
+        // Now we can calculate the position vector at this time
+        // x = vxt = (vm times cos(theta x) * t
+        s.i = Vm * cosX * time + xe;
+        s.j = (Yb + (L * Math.cos(Alpha * degreeToRadianConv))) + (Vm * cosY * time) - (0.5 * g * (time * time));
+        s.k = Vm * cosZ * time + ze;
+        // Cutoff the simulation if it's taking too long
+        // This is so the program does not get stuck in the while loop
+        if (time > 3600) {
+            return 3;
+        }
+        println("Position Projectile : ${s} time=${time}");
+        return 0;
+    } // End of the method, do simulation //
+
+    infoDuringSimulation() {
+        const buf = new StringBuffer(100);
+        buf.append("Time=");
+        buf.append(Math.round(this.time));
+        buf.append("s");
+        
+        buf.append(" X=");
+        buf.append(Math.round(s.i));
+        buf.append("m");
+        
+        buf.append(" Y=");
+        buf.append(Math.round(s.j));
+        buf.append("m");
+        
+        buf.append(" lastTimeHit=");
+        buf.append(Math.round(this.lastTimeHitGround));
+        buf.append("s");
+        
+        buf.append(" lastXhit=");
+        buf.append(Math.round(this.lastXhitGround));
+        buf.append("m");
+        return buf.toString();
+    }
+    
+}
+
+class PhysicsCannon {
+
+    const w = 790;
+    const h = 820;
+
+    var frame;
+    var counter = 0;
+    var canvas;
+
+    var maxGridRows = 32;
+    var maxGridCols = 32;
+    var sizeCell = 20;
+
+    const offX = 30;
+    const offY = 30;
+
+    const perCellOffset = 2;
+
+    var renderGridWidth = 0;
+    var renderGridHeight = 0;
+
+    var timeInMsForRenderUpdate = 40;
+
+    var data:CannonLogic = new CannonLogic(this);
+
+   
+    /**
+     * Launch the 2D frame window.
+     */
+    invokeLater() {
+        SwingUtilities.invokeLater(new InitializerTask(this));
+    }
+
+    getMaxGridRows() {
+        return maxGridRows;
+    }
+
+    getMaxGridCols() {
+        return maxGridCols;
+    }
+
+    getOffX() {
+        return offX;
+    }
+
+    getOffY() {
+        return offY;
+    }
+
+    getRenderGridWidth() {
+        return renderGridWidth;
+    }
+
+    getRenderGridHeight() {
+        return renderGridHeight;
+    }
+
+ 
+    /**
+     * Create application. Do not extend the JFrame class.
+     */
+    initializeApplication() {
+
+        const szrows = (maxGridRows * (sizeCell + perCellOffset));
+        const szcols = (maxGridCols * (sizeCell + perCellOffset));
+
+        this.frame = new JFrame("Simple Physics Cannon Test - " + new Date());
+        frame.setLocation(200, 200);
+        frame.setPreferredSize(new Dimension(w, h));
+        frame.setSize(new Dimension(w, h));
+        frame.pack();
+        frame.setResizable(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+
+        /*
+         * Add default panel.
+         */
+        const panel = new JPanel();
+        canvas = new UpdatableCanvas(this);
+        panel.setVisible(true);
+        panel.setPreferredSize(new Dimension(w, h));
+        panel.setFocusable(true);
+        panel.setBackground(Color.BLACK);
+
+        /*
+         * Add default canvas.
+         */
+        canvas.setPreferredSize(new Dimension(w, h));
+        canvas.setSize(new Dimension(w, h));
+        canvas.setBackground(Color.BLACK);
+        panel.add(canvas);
+
+        // Panel setup, toggle visibility on frame, set visible
+        frame.add(panel);
+        frame.pack();
+        frame.setVisible(true);
+
+        this.renderGridWidth = szcols;
+        this.renderGridHeight = szrows;
+
+        data.setScale();
+        data.loadForRender();
+        this.startServerWait();
+    }
+
+    startServerWait() {
+        try {
+            const waitOnApprTimerTask = new TimerCounterTask(this);
+            const waitOnApprTimer = new ScheduledThreadPoolExecutor(2);
+            
+            waitOnApprTimer.scheduleAtFixedRate(waitOnApprTimerTask, 0, 2 * 1000, TimeUnit.MILLISECONDS);
+        } catch (e) {
+            e.printStackTrace();
+        }
+    }
+
+} 
+
+class InitializerTask with Runnable {
+   var cannon;
+   new(cannon) {
+      this.cannon = cannon;
+   }
+   run() {
+      cannon.initializeApplication();
+  }
+}
+
+class TimerCounterTask with Runnable {
+   var cannon;
+   new(cannon){
+      this.cannon = cannon;
+   }
+   run() {
+      println("Still waiting ... " + cannon.counter);
+      cannon.counter++;
+  }
+}
+/**
+ * Canvas.
+ */
+class UpdatableCanvas extends JPanel {
+
+    var offScreenImage = null;
+    var offScreenGraphics = null;
+    var offScreenImageDrawed = null;
+    var offScreenGraphicsDrawed = null;
+
+    var timer = new ScheduledThreadPoolExecutor(2);
+
+    var canvasCounter = 0;
+    var cannon;
+    
+    new(cannon) {
+       this.cannon = cannon;
+        timer.scheduleAtFixedRate(new UpdatableCanvasTask(this), 0, cannon.timeInMsForRenderUpdate, TimeUnit.MILLISECONDS);
+    }
+
+
+    /**
+     * Render the cell line grid.
+     */
+    renderCellLineGrid(g) {
+
+        g.setStroke(new BasicStroke(1));
+
+        const szrows = (cannon.maxGridRows * (cannon.sizeCell + cannon.perCellOffset));
+        const szcols = (cannon.maxGridCols * (cannon.sizeCell + cannon.perCellOffset));
+        g.setColor(Color.GREEN);
+        for (var i = 0; i < cannon.maxGridRows + 1; i++) {
+            g.drawLine(cannon.offX + (i * (cannon.sizeCell + cannon.perCellOffset)), cannon.offY + 0, cannon.offX + (i * (cannon.sizeCell + cannon.perCellOffset)), cannon.offY
+                    + szrows);
+        } // End of the For //
+        for (var j = 0; j < cannon.maxGridCols + 1; j++) {
+            g.drawLine(cannon.offX + 0, cannon.offY + (j * (cannon.sizeCell + cannon.perCellOffset)), cannon.offX + szcols, cannon.offY
+                    + (j * (cannon.sizeCell + cannon.perCellOffset)));
+        }
+        const xEndLow = cannon.offX + szcols;
+        const yEndLow = cannon.offY + szrows;
+        g.setColor(Color.MAGENTA);
+        g.drawString("X", cannon.offX, cannon.offY);
+        g.drawString("Z" + xEndLow, xEndLow, cannon.offY);
+        g.drawString("A" + yEndLow, cannon.offX, yEndLow);
+    }
+
+    /**
+     * Use double buffering.
+     * 
+     * @see awt.Component#update(awt.Graphics)
+     */
+    override update(g: Graphics) {
+        const d = cannon.canvas.panel.getSize();
+        if (offScreenImage == null) {
+            offScreenImage = cannon.canvas.panel.createImage(d.width, d.height);
+            offScreenGraphics = offScreenImage.getGraphics();
+        }
+        cannon.canvas.panel.paint(offScreenGraphics);
+        g.drawImage(offScreenImage, 0, 0, null);
+    }
+
+    /**
+     * Draw this generation.
+     * 
+     * @see awt.Component#paint(awt.Graphics)
+     */
+    override paint(g: Graphics) {
+        // Draw grid on background image, which is faster
+        if (offScreenImageDrawed == null) {
+            const d = getSize();
+            offScreenImageDrawed = createImage(d.width, d.height);
+            offScreenGraphicsDrawed = offScreenImageDrawed.getGraphics();
+            offScreenGraphicsDrawed.setColor(Color.BLACK);                
+            offScreenGraphicsDrawed.fillRect(0, 0, d.width, d.height);
+            renderCellLineGrid(offScreenGraphicsDrawed);
+        }
+        g.drawImage(offScreenImageDrawed, 0, 0, null);
+        cannon.data.render(g);
+        g.setColor(Color.GREEN);
+        g.drawString("UpdatableCanvas:" + canvasCounter, 6, 14);            
+        
+        g.drawString(cannon.data.infoDuringSimulation(), 200, 14);
+        
+        canvasCounter++;
+        cannon.data.doSimulation();
+        cannon.data.render(g);
+    }
+
+}
+
+
+/**
+ * Timer task, refresh canvas.
+ */
+class UpdatableCanvasTask with Runnable {
+    
+    var canvas;
+    
+    new(canvas) {
+       this.canvas = canvas;
+    }
+
+    override run() {
+        if (!EventQueue.isDispatchThread()) {
+            EventQueue.invokeLater(this);
+        } else {
+           canvas.repaint();
+        }
+    }
+}
+
+
+println("Running");
+var o = new PhysicsCannon();
+o.invokeLater();
+println("Done");
+Thread.sleep(100000000);
+

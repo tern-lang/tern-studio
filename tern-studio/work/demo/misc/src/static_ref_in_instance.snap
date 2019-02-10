@@ -1,0 +1,14 @@
+class B {
+   static const ARR = ["a","b","c"];
+   var x;
+   new(index){
+      this.x=ARR[index];
+   } 
+   dump(){
+      System.err.println(x);
+   }
+}
+var b = new B(1);
+b.dump();
+System.err.println(b.x);
+System.err.println(B.ARR);

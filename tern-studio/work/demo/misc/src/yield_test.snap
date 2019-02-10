@@ -1,0 +1,11 @@
+
+function foo(){
+   for(var x in 0..199){
+      yield x;
+   }
+   yield 'done';
+}
+var it = foo();
+for(var x in it){
+   println(x);
+}

@@ -1,0 +1,31 @@
+import security.MessageDigest;
+
+class Digest {
+
+   static digest(stream: InputStream): String{
+      var buffer: ByteArrayOutputStream = new ByteArrayOutputStream();
+      var count: Integer = 0;
+      
+      while((count = stream.read()) != -1) {
+         buffer.write(count);
+      }
+      return digest(buffer.toByteArray());
+   }
+
+   static digest(buffer: Byte[]): String{
+      return digest(buffer, 0, buffer.length);
+   }
+
+   static digest(buffer: Byte[], off: Integer, len: Integer): String {
+      var md: MessageDigest = MessageDigest.getInstance("MD5");
+      md.update(buffer, off, len);
+
+      var bytes: Byte[] = md.digest();
+      var builder: StringBuffer = new StringBuffer();
+
+      for (var i = 0; i < bytes.length; i++) {
+          builder.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+      }
+      return builder.toString(); 
+   }   
+}

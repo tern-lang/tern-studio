@@ -1,0 +1,22 @@
+import test.TestCase;
+
+class Fun{
+   var t;
+   var g;
+   new(x){
+      this.g=x+2;
+      t=make(x);
+   }
+   make(x){
+      return "g=${g},x=${x}";
+   }
+}
+
+class ConstructorCallTest with TestCase {
+
+   testConstructorCall(){
+      var f = new Fun(11);
+      println(f.t);
+      assert f.t == 'g=13,x=11';
+   }
+}

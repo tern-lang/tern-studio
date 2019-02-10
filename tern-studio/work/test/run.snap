@@ -1,0 +1,23 @@
+import test.TestCaseRunner;
+
+const project = System.getenv("PROJECT_ROOT"); // .project file
+const directory = "${project}\\test";
+
+function main(directory) {
+   const time = System.currentTimeMillis();
+   const runner = new TestCaseRunner(directory);
+   
+   try {
+      if(!runner.runTests()) {
+         println("FAILURE");
+      } else {
+         println("SUCCESS");
+      }
+   }finally {
+      const finish = System.currentTimeMillis();
+      const duration = finish - time;
+      
+      println("TIME ${duration} ms");
+   }
+}
+main(directory);    

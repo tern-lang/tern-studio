@@ -1,0 +1,30 @@
+class Blah {
+   static dump(){
+      println('dump');
+   }
+}
+var b = new Blah();
+Blah.dump();
+
+class A{
+   boo(){
+      foo();
+   }
+}
+
+class B extends A{
+   
+   var x;
+   new(x){
+      this.x=x;
+   }
+   boo(){
+      super.boo();
+   }
+   foo(){
+      println('B.foo()');
+      println(x); // ERROR in super calls!!
+   }
+}
+var x = new B(11);
+x.boo();

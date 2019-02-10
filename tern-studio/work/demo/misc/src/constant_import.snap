@@ -1,0 +1,8 @@
+import constants.Constants;
+import constant_value.Singleton;
+
+println(Constants.x);
+println(Constants.y);
+println(Singleton.map);
+
+Singleton.dump();

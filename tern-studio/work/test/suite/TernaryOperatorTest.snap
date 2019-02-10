@@ -1,0 +1,31 @@
+import test.TestCase;
+
+class Foo{
+   var flag;
+   new(flag){
+      this.flag = flag;
+   }
+   isTrue(){
+      return flag;
+   }
+}
+class TernaryOperatorTest with TestCase {
+
+   testTernaryOperator(){
+      var fooFalse = new Foo(false);
+      var fooTrue = new Foo(true);
+      var result1 = 1 > 2 ? "1>2" : "1<=2";
+      var result2 = true ? "true" : "false";
+      var result3 = false ? "true" : "false";
+      var result4 = fooFalse.isTrue() ? "true" : "false";
+      var result5 = fooTrue.isTrue() ? "true" : "false";
+      var result6 = !fooFalse.isTrue() ? "true" : "false";
+      
+      assert result1 == "1<=2";
+      assert result2 == "true";
+      assert result3 == "false";
+      assert result4 == "false";
+      assert result5 == "true";   
+      assert result6 == "true";  
+   }
+}

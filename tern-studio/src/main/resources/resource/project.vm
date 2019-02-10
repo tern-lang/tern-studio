@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Snap Studio ${version} - ${project}</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link href="/css/main.css" rel="stylesheet" />
+<script data-main="/js/main.js" src="/js/external/require.js"></script>
+</head>
+<body style="height: 100%; margin: 0; background-color: ${PROJECT_BACKGROUND_COLOR}; color: ${PROJECT_FONT_COLOR};">
+  <div id="mainLayout" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px;"></div>
+  <div id="overlay">
+    <!--div id="splash-square"><img src="/img/splash.png"></div-->
+    <div id="spin"></div>
+  </div>
+  <div id='editParentHidden' style='display: none;'><div id='editor'></div></div>
+  <div id='browseParentHidden' style='display: none;'><div id='explorer'></div></div>
+</body>
+</html>
+

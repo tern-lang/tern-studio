@@ -1,0 +1,82 @@
+import static awt.Image.*;
+
+import util.concurrent.ConcurrentHashMap;
+import awt.Graphics;
+import awt.Graphics2D;
+import awt.Image;
+import awt.image.BufferedImage;
+import io.File;
+import io.IOException;
+
+import imageio.ImageIO;
+
+/**
+ * ImageManipulator.java
+ * @author Forrest
+ * 
+ * Provides a set of methods used to modify a BufferedImage.
+ * 
+ */
+module ImageManipulator {
+
+   const cache = new ConcurrentHashMap();
+   
+   /** Reads in a BufferedImage using the standard ImageIO.read() */
+   public loadImage(filename) {
+      var img = cache.get(filename);
+      try {
+         if(img == null) {
+            img = ImageIO.read(loadResource(filename));
+            cache.put(filename, img);
+          }
+      } catch (e) { 
+         e.printStackTrace();
+      }
+      return img;
+   } 
+   
+   private loadResource(filename) {
+      return ImageManipulator
+               .getContext().getManager().getInputStream(filename);
+    }
+   
+   public scaleImage(img, factor) {
+      if(factor.compareTo(1) != 0) {
+         var w = img.getWidth();   
+         var h = img.getHeight();  
+         var scaled = img.getScaledInstance(-1, h * factor, 4 /*BufferedImage.SCALE_SMOOTH*/);
+         var dimg = new BufferedImage(w * factor, h * factor, img.getColorModel().getTransparency());    
+         var g = dimg.getGraphics();
+   
+         g.drawImage(scaled, 0, 0, null);
+         g.dispose();
+         return dimg;
+      }
+      return img;
+      
+   }
+
+   /** Horizontally flips img. */
+   public horizontalFlip(img) {   
+        var w = img.getWidth();   
+        var h = img.getHeight();   
+        var dimg = new BufferedImage(w, h, img.getColorModel().getTransparency());     
+        var g = dimg.createGraphics();   
+        g.drawImage(img, 0, 0, w, h, w, 0, 0, h, null);   
+        g.dispose();   
+        return dimg;   
+    }  
+   
+   /** Vertically flips img. */
+   public verticalFlip(img) {   
+        var w = img.getWidth();   
+        var h = img.getHeight();   
+        var dimg = new BufferedImage(w, h, img.getColorModel().getTransparency());   
+        var g = dimg.createGraphics();   
+        g.drawImage(img, 0, 0, w, h, 0, h, w, 0, null);   
+        g.dispose();   
+        return dimg;   
+    }  
+
+}
+

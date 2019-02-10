@@ -1,0 +1,278 @@
+.dialogButton {
+	border-radius: 0px !important;
+}
+#dialogContainer {
+    padding: 5px;
+    position: absolute;
+    float: left;
+    display: block;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 72px;
+}
+
+#dialogContainerSmall {
+    padding: 5px;
+    position: absolute;
+    float: left;
+    display: block;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 108px;
+}
+
+#dialogContainerBig {
+    padding: 5px;
+    position: absolute;
+    float: left;
+    display: block;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 36px;
+}
+
+.dialog {
+    /*font-family: "Lucida Console", sans-serif;*/ 
+    font-size: 0.9em;
+    background-color: ${DIALOG_PANEL_COLOR};   
+ 	border-style: solid;
+    border-width: 1px;
+    border-color: #c0c0c0;
+    /*border-color: red;*/
+    padding: 5px;
+    position: absolute;
+    padding: 2px;
+    overflow-y: scroll;
+    top: 8px;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+}
+
+.dialogTree {
+    /*font-family: "Lucida Console", sans-serif;*/ 
+    font-size: 0.9em;
+    background-color: ${TREE_BACKGROUND_COLOR};   
+ 	border-style: solid;
+    border-width: 1px;
+    border-color: #c0c0c0;
+    padding: 5px;
+    position: absolute;
+    padding: 2px;
+    overflow-y: scroll;
+    top: 8px;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+}
+
+#dialogFile {
+	/*font-family: "Lucida Console", sans-serif;*/ 
+    font-size: 0.9em;
+    background-color: ${DIALOG_BACKGROUND_COLOR};
+    color: ${DIALOG_FONT_COLOR};   
+ 	border-style: solid;
+    border-width: 1px;
+    border-color: #c0c0c0;
+    padding: 5px;
+    position: absolute;
+    white-space: nowrap;
+    overflow: hidden;
+    height: 28px;
+	float: left;
+    display: block;
+    right: 8px;
+    left: 8px;
+    bottom: 8px;
+}
+
+#dialogFolder {
+	/*font-family: "Lucida Console", sans-serif;*/
+    font-size: 0.9em;
+    background-color: ${DIALOG_BACKGROUND_COLOR};
+    color: ${DIALOG_FONT_COLOR};      
+ 	border-style: solid;
+    border-width: 1px;
+    border-color: #c0c0c0;
+    padding: 5px;
+    position: absolute;
+    white-space: nowrap;
+    overflow: hidden;
+    height: 28px;
+	float: left;
+    float: left;
+    display: block;
+    right: 8px;
+    left: 8px;
+    bottom: 44px;
+}
+
+#dialogPath {
+	/*font-family: "Lucida Console", sans-serif;*/ 
+    font-size: 0.9em;
+    background-color: ${DIALOG_BACKGROUND_COLOR};
+    color: ${DIALOG_FONT_COLOR};        
+ 	border-style: solid;
+    border-width: 1px;
+    border-color: #c0c0c0;
+    padding: 5px;
+    position: absolute;
+    white-space: nowrap;
+    overflow: hidden;    
+    height: 28px;
+	float: left;
+    float: left;
+    display: block;
+    right: 8px;
+    left: 8px;
+    bottom: 8px;
+}
+
+.searchFileFilterInputBox {
+	/*font-family: "Lucida Console", sans-serif;*/ 
+    font-size: 0.9em;
+    background-color: ${DIALOG_BACKGROUND_COLOR};
+    color: ${DIALOG_FONT_COLOR};        
+ 	border-style: solid;
+    border-width: 1px;
+    border-color: #c0c0c0;
+    padding: 5px;
+    position: absolute;
+    height: 28px;
+	float: left;
+    display: block;
+    right: 176px;
+    left: 8px;
+    bottom: 44px;
+}
+
+.searchValueInputBox {
+	/*font-family: "Lucida Console", sans-serif;*/ 
+    font-size: 0.9em;
+    background-color: ${DIALOG_BACKGROUND_COLOR};
+    color: ${DIALOG_FONT_COLOR};   
+ 	border-style: solid;
+    border-width: 1px;
+    border-color: #c0c0c0;
+    padding: 5px;
+    position: absolute;
+    height: 28px;
+	float: left;
+    display: block;
+    right: 176px;
+    left: 8px;
+    bottom: 8px;
+}
+
+.searchCheckBoxPanel {
+	/*font-family: "Lucida Console", sans-serif;*/ 
+    font-size: 0.9em;   
+    padding: 5px;
+    position: absolute;
+    height: 66px;
+    width: 160px;
+	float: left;
+    display: block;
+    right: 8px;
+    bottom: 8px;
+}
+
+/*------------------------------------------------*/
+
+.searchAndReplaceFileFilterInputBox {
+	/*font-family: "Lucida Console", sans-serif;*/ 
+    font-size: 0.9em;
+    background-color: ${DIALOG_BACKGROUND_COLOR};
+    color: ${DIALOG_FONT_COLOR};        
+ 	border-style: solid;
+    border-width: 1px;
+    border-color: #c0c0c0;
+    padding: 5px;
+    position: absolute;
+    height: 28px;
+	float: left;
+    display: block;
+    right: 176px;
+    left: 8px;
+    bottom: 80px;
+}
+
+.searchAndReplaceValueInputBox {
+	/*font-family: "Lucida Console", sans-serif;*/ 
+    font-size: 0.9em;
+    background-color: ${DIALOG_BACKGROUND_COLOR};
+    color: ${DIALOG_FONT_COLOR};   
+ 	border-style: solid;
+    border-width: 1px;
+    border-color: #c0c0c0;
+    padding: 5px;
+    position: absolute;
+    height: 28px;
+	float: left;
+    display: block;
+    right: 176px;
+    left: 8px;
+    bottom: 44px;
+}
+
+.searchAndReplaceInputBox {
+	/*font-family: "Lucida Console", sans-serif;*/ 
+    font-size: 0.9em;
+    background-color: ${DIALOG_BACKGROUND_COLOR};
+    color: ${DIALOG_FONT_COLOR};        
+ 	border-style: solid;
+    border-width: 1px;
+    border-color: #c0c0c0;
+    padding: 5px;
+    position: absolute;
+    height: 28px;
+	float: left;
+    display: block;
+    right: 176px;
+    left: 8px;
+    bottom: 8px;
+}
+
+.searchAndReplaceCheckBoxPanel {
+	/*font-family: "Lucida Console", sans-serif;*/ 
+    font-size: 0.9em;   
+    padding: 5px;
+    position: absolute;
+    height: 100px;
+    width: 160px;
+	float: left;
+    display: block;
+    right: 8px;
+    bottom: 8px;
+}
+/*------------------------------------------------*/
+
+.dialogCheckboxFive {
+	width: 15px;
+	height: 15px;
+	padding: 0px;
+	border-radius: 10px;
+	position: relative;
+}
+
+.dialogListTable {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+/*.dialogListTable tr:hover {
+    background-color: ${DIALOG_ENTRY_HIGHLIGHT_COLOR};
+    border-color: ${DIALOG_ENTRY_BORDER_COLOR};
+    color: ${DIALOG_FONT_COLOR}; 
+	cursor: pointer;
+}*/
+
+.dialogListTableRowSelected {
+    background-color: ${DIALOG_ENTRY_HIGHLIGHT_COLOR};
+    border-color: ${DIALOG_ENTRY_BORDER_COLOR};
+    color: ${DIALOG_FONT_COLOR}; 
+	cursor: pointer;
+}

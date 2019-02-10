@@ -1,0 +1,51 @@
+import java.util.Random;
+
+import mario.core.MarioResourceManager;
+import mario.core.MarioSoundManager;
+import mario.core.animation.Animation;
+import mario.objects.base.Creature;
+import android.graphics.Bitmap;
+
+
+class Goomba extends Creature {
+   
+   private var waddle: Animation, dead, flip;
+   private static var w1: Bitmap,w2,smashed,flipped;
+   private static var initialised: Boolean=false;
+   
+   public new(x: Integer, y: Integer, soundManager: MarioSoundManager): super(x, y, soundManager) {
+      if (!initialised){
+          w1 = MarioResourceManager.Goomba_Normal_1;
+          w2 = MarioResourceManager.Goomba_Normal_2;
+          smashed = MarioResourceManager.Goomba_Dead;
+          flipped = MarioResourceManager.Goomba_Flip;
+          initialised=true;
+      }
+
+      waddle = new Animation(150).addFrame(w1).addFrame(w2);
+      dead = new Animation(-> kill()).setDAL(100).addFrame(smashed).setDAL(20).addFrame(smashed);
+      flip = new Animation().addFrame(flipped).addFrame(flipped);
+      setAnimation(waddle);
+   }
+   
+   public wakeUp() {
+      var r: Random = new Random();
+      super.wakeUp();
+      dx = (r.nextInt(3) == 0) ? -0.03f : 0.03f;
+   }
+   
+   public jumpedOn() {
+      setAnimation(dead);
+      setIsCollidable(false);
+      dx = 0;
+   }
+   
+   public flip() {
+      setAnimation(flip);
+      setIsFlipped(true);
+      setIsCollidable(false);
+      dy = -0.2f;
+      dx = 0;
+   }
+}
+

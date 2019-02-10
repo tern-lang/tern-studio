@@ -1,0 +1,85 @@
+import test.TestCase;
+
+class A {
+   static create(name): B{
+      return new B(name);
+   }
+
+   class B with Runnable{
+      var name;
+      new(name){
+         this.name=name;
+      }
+      override run(){
+         println(name);
+      }
+      trait Foo{
+         func(){
+            //return "foo=${this}"; causes error
+            return "foo=${toString()}";
+         }
+         
+      }
+      class C {
+         const a;
+         const b;
+         new(a,b:Word){
+            this.a=a;
+            this.b =b;
+         }
+         fun(){
+            return "a=${a} b=${b}";
+         }
+         enum Word with Foo{
+            X,
+            Y,
+            Z;
+            toString(){
+               return name;
+            }
+         }
+      }
+   }
+}
+
+class InnerInnerClassTest with TestCase {
+
+   testInnerInnerClass(){
+      println(A.B.C.Word.X.name);
+      
+      assert A.B.C.Word.X instanceof A.B.C.Word;
+      
+      println("A=" + A);
+      println("A.B=" + A.B);
+      println("A.B.C=" + A.B.C);
+      println("A.B.C.Word=" + A.B.C.Word);
+      println("A.B.C.Word.X=" + A.B.C.Word.X);
+      println("A.B.C.Word.X.name=" + A.B.C.Word.X.name);
+      
+      assert A.B.C.Word.X.name == 'X';
+      
+      var c = new A.B.C('a', A.B.C.Word.Z);
+      var res = c.fun();
+      
+      println(res);
+      
+      assert c instanceof A.B.C;
+      assert A.B.C.Word.X instanceof A.B.Foo;
+      assert A.B.C.Word.Y instanceof A.B.Foo;
+      assert A.B.C.Word.Z instanceof A.B.Foo;
+      assert res == "a=a b=Z";
+      
+      var foo = A.B.C.Word.Z.func();
+      println(foo);
+      
+      assert foo == 'foo=Z';
+      
+      var b = A.create('some name');
+      println(b.name);
+      b.run();
+      
+      assert b instanceof A.B;
+      assert b instanceof Runnable;
+      assert b.name == 'some name';
+   }
+}

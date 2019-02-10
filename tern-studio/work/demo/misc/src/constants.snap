@@ -1,0 +1,8 @@
+import org.simpleframework.common.KeyMap;
+import org.objectweb.asm.ClassVisitor;
+
+module Constants{
+   const x = 11;
+   const y = 12;
+}
+

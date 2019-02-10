@@ -1,0 +1,28 @@
+class Entry with Comparable{
+   var text;
+   var id;
+   new(id, text){
+      this.id = id;
+      this.text = text;
+   }
+
+   compareTo(other) {
+      return id.compareTo(other.id);
+   }
+   toString(){
+      return "id=${id} text=${text}";
+   }
+}
+var set = new TreeSet();
+
+set.add(new Entry(1, "first"));
+set.add(new Entry(33, "second"));
+set.add(new Entry(14, "third"));
+set.add(new Entry(7, "fourth"));
+set.add(new Entry(7, "fifth"));
+set.add(new Entry(88, "sixth"));
+set.add(new Entry(0, "seventh"));
+
+for(var e in set){
+   println(e);
+}

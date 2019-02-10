@@ -1,0 +1,7 @@
+var start = new Date().getTime();
+
+for (var i in 0..1000000000) {
+   assert i > -2;
+}
+var stop =new Date().getTime();
+print(stop -start);

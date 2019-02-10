@@ -1,0 +1,6 @@
+
+enum GameElementType {
+  APPLE, 
+  CLOCK, 
+  SHIELD
+}

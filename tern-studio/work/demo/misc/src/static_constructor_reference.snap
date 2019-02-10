@@ -1,0 +1,30 @@
+class X{
+   static const BLAH = "ss";
+   var a;
+   var b;
+   var c;
+   new(a,b):this(a,b,BLAH){
+   }
+   new(a,b,c){
+      this.a=a;
+      this.b=b;
+      this.c=c;
+   }
+   
+   dump(){
+      println("a=${a} b=${b}");
+   }
+}
+
+class Y extends X {
+   static const DEFAULT_SIZE = 10;
+   var a;
+   new(a,b) : super(a, DEFAULT_SIZE){
+      this.a=b;
+   }
+   toString(){
+      return "${a}, ${b}";
+   }
+}
+var y = new Y(1, 2);
+println(y);

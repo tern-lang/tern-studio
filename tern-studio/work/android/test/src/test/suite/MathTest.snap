@@ -1,0 +1,65 @@
+
+
+class MathTest {
+
+   @Test
+   testSquareRoot(){
+      assert Math.sqrt(42) == 6.48074069840786;
+      assert Calc.sqrt(42) == 6.48074069840786;
+   }
+   
+   @Test
+   testSort() {
+      assert Calc.sort([33,2,4,22,5,345,1])[0] == 1;
+      assert Calc.sort([33,2,4,22,5,345,1])[1] == 2;
+      assert Calc.sort([33,2,4,22,5,345,1])[2] == 4;
+      assert Calc.sort([33,2,4,22,5,345,1])[3] == 5;
+      assert Calc.sort([33,2,4,22,5,345,1])[4] == 22;
+   }
+   
+}
+
+module Calc {
+
+   sqrt(n) {
+      return sqrt(n,null);
+   }
+   
+   sqrt(n, g) {
+      if (g==null) {
+            // Take an initial guess at the square root
+            g = n / 2.0;
+      }
+      var d = n / g;              // Divide our guess into the number
+      var ng = (d + g) / 2.0;     // Use average of g and d as our new guess
+      if (g == ng) {          
+            // The new guess is the same as the old guess; further guesses
+            // can get no more accurate so we return this guess
+            return g;
+      }
+      // Recursively solve for closer and closer approximations of the square root
+      return sqrt(n, ng);
+   }
+   
+   sort (a) {//shellsort
+      var inc = a.size() / 2;
+      
+      while (inc > 0) {
+         for (var i = inc; i < a.size(); i++) {
+            var j = i;
+            var temp = a[i];
+            while (j >= inc && a[j - inc] > temp) {
+               a[j] = a[j - inc];
+               j = j - inc;
+            }
+            a[j] = temp;
+         }
+         if (inc == 2) {
+            inc = 1;
+         } else {
+            inc = Math.floor(inc * (5.0 / 11));
+         }
+      }
+      return a;
+   }
+}

@@ -1,0 +1,54 @@
+
+import org.java_websocket.handshake.ServerHandshake;
+import org.java_websocket.client.WebSocketClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.PrettyPrinter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import trade.websocket.WebSocketSubscriber;
+import util.stream.Collectors;
+import trade.DepthListener;
+import trade.Depth;
+
+class BinanceDepthSubscriber extends WebSocketSubscriber {
+
+   const printer: PrettyPrinter;
+   const mapper: ObjectMapper;
+   const listener: DepthListener;
+
+   new(listener: DepthListener, u: URI): super(u){
+      this.printer = new DefaultPrettyPrinter();
+      this.mapper = new ObjectMapper();
+      this.listener = listener;
+   }
+
+	override onMessage(msg: String) {
+	   try {
+   	   const data = mapper.readValue(msg, Object.class.type);
+   	   const asks = data.a.stream()
+   	      //.filter(entry -> entry[1] > 0)
+   	      .map(entry -> { 'price': entry[0], 'quantity': entry[1] })
+   	      .collect(Collectors.toList());
+   	   const bids = data.b.stream()
+   	      //.filter(entry -> entry[1] > 0)
+   	      .map(entry -> { 'price': entry[0], 'quantity': entry[1] })
+   	      .collect(Collectors.toList());   
+   	   const message = {
+   	      'eventType': data.e,
+   	      'eventTime': new Date(data.E).toString(),
+   	      'symbol': data.s,
+   	      'id': data.u,
+   	      'bid': bids,
+   	      'ask': asks
+   	   };
+   	   
+   	   const writer = mapper.writer(printer);
+   	   const text = writer.writeValueAsString(message);
+   	   const depth = new Depth(text);
+   	   
+   	   listener.onDepth(depth);
+         //println(text);
+      }catch(e:Exception){
+         e.printStackTrace();
+      }
+	}
+}

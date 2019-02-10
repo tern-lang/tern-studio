@@ -1,0 +1,361 @@
+import text.SimpleDateFormat;
+
+const INVOICE_PATH = "C:/Work/docs/zuooh/lab49/invoices";
+
+generateInvoices();
+
+function generateInvoices() {
+   var file = new File("${INVOICE_PATH}/timesheets.csv");
+   var company = readCompanyInfo();
+   
+   file.readLines().stream().forEach(line -> processInvoice(company, line));
+}
+ 
+/*
+{
+   "bankAccount": {
+      "accountName": "Account Name",
+      "accountNumber": "Account Number",
+      "sortCode": "11-22-33"
+   }, 
+   "agent": {
+      "agentAddress": "Agent\nAddress\nGoes\nHere",
+      "emailAddress": "agent@adress.com"
+   }, 
+   "accounts": {
+      "dailyRate": 111,
+      "vat": 0.20
+   },
+   "companyName": "Company Name",
+   "companyAddress": "Company\nAddress\nGoes\nHere", 
+   "phoneNumber": "11111",
+   "registrationNumber": "1111",
+   "vatNumber": "1111"
+}
+ */
+function readCompanyInfo() {
+   var file = new File("${INVOICE_PATH}/company.json");
+   
+   try {
+      var text = file.readText();
+      var map = eval(text);
+      var bankAccount = new BankAccount(
+         map.bankAccount.accountName,
+         map.bankAccount.accountNumber,
+         map.bankAccount.sortCode);
+      
+      var agent = new Agent(
+         map.agent.agentAddress,
+         map.agent.emailAddress);
+         
+      var account = new Account(
+         map.accounts.dailyRate,
+         map.accounts.vat);
+         
+      return new Company(
+         map.companyName,
+         map.companyAddress,
+         map.phoneNumber,
+         map.registrationNumber, 
+         map.vatNumber,
+         bankAccount,
+         agent,
+         account);
+   }catch(e) {
+      e.printStackTrace();
+      throw new IllegalStateException("Could not read company info", e);
+   }
+}
+
+/*
+13/01/2017,8,8,8,8,8,40.00
+20/01/2017,8,8,8,8,8,40.00
+27/01/2017,8,8,8,8,8,40.00
+03/02/2017,8,8,8,0,8,32.00
+10/02/2017,8,8,8,8,8,40.00
+17/02/2017,8,8,8,8,8,40.00
+24/02/2017,8,8,8,8,0,32.00
+*/
+function processInvoice(company: Company, row: String){
+   if(!row.isEmpty()) {
+      try {
+         const format = new SimpleDateFormat("dd/MM/yyyy");
+         const list = row.split(",");
+         const hours = {:};
+         
+         hours["Monday"] = Integer.parseInt(list[1]);
+         hours["Tuesday"] = Integer.parseInt(list[2]);
+         hours["Wednesday"] = Integer.parseInt(list[3]);
+         hours["Thursday"] = Integer.parseInt(list[4]);
+         hours["Friday"] = Integer.parseInt(list[5]);
+         
+         println(list[0]);
+         const date = format.parse(list[0]); // format is being accepted from a scope outside of this function
+         const totalHours = Double.parseDouble(list[list.length -1]);
+         const timesheet = new Timesheet(date, totalHours, hours);
+         
+         createInvoiceDocument(company, timesheet);
+      }catch(e) {
+         e.printStackTrace();
+         throw new IllegalStateException("Parse error", e);
+      }
+   }
+}
+
+function createInvoiceDocument(company: Company, timesheet: Timesheet) {
+   try {
+      var timStampFormat = new SimpleDateFormat("yyyyMMdd");
+      var invoiceFormat = new SimpleDateFormat("MMM d, yyyy");
+      var currentDate = new Date();
+      var totalDays = timesheet.calculateDays();
+      var vatPercentage = company.account.formatVat();
+      var gross = company.account.calculateGross(totalDays);
+      var net = company.account.calculateNet(totalDays);
+      var vat = company.account.calculateVat(totalDays);
+      println(timesheet.date);
+      var timesheetDate = invoiceFormat.format(timesheet.date);
+      var invoiceDate = invoiceFormat.format(currentDate);
+      var timeStamp = timStampFormat.format(timesheet.date);
+      var file = new File("${INVOICE_PATH}/invoice_${timeStamp}_${timesheet.totalHours}.html");
+      var template = "<html>
+      <head>
+          <script type='text/javascript'>
+              (function() {
+                  var link_element = document.createElement('link'),
+                      s = document.getElementsByTagName('script')[0];
+                  if (window.location.protocol !== 'http:' && window.location.protocol !== 'https:') {
+                      link_element.href = 'http:';
+                  }
+                  link_element.href += '//fonts.googleapis.com/css?family=Droid+Sans:400,700';
+                  link_element.rel = 'stylesheet';
+                  link_element.type = 'text/css';
+                  s.parentNode.insertBefore(link_element, s);
+              })();
+          </script>
+          <script type='text/javascript'>
+              (function() {
+                  var link_element = document.createElement('link'),
+                      s = document.getElementsByTagName('script')[0];
+                  if (window.location.protocol !== 'http:' && window.location.protocol !== 'https:') {
+                      link_element.href = 'http:';
+                  }
+                  link_element.href += '//fonts.googleapis.com/css?family=Asap:400italic,400,700italic,700';
+                  link_element.rel = 'stylesheet';
+                  link_element.type = 'text/css';
+                  s.parentNode.insertBefore(link_element, s);
+              })();
+          </script>
+          <style>
+            body {
+            	font-family: 'Droid Sans', sans-serif;
+            	font-weight: 400;
+            	font-size: 14px;
+            	color: #666;
+            }
+            
+            h1, h2, h3, h4, h5, h6 {
+            	font-family: 'Asap', sans-serif !important;
+            	font-weight: 700 !important;
+            	color: #666;
+            	margin: 0;
+            	padding: 0;
+            }
+          </style>
+      </head>
+      <body style='width: 800px;'>
+      <div style='padding: 40px;'>
+         <img src='./logo.png'>
+         <center>
+            <h1>Invoice</h1>
+         </center>
+         <br>
+         <br>
+         <table width='100%'>
+            <tr>
+               <td valign='top'>
+                  <p>
+                     ${formatAddress(company.companyAddress)}<br>
+                  </p>   
+               </td>
+               <td valign='top' align='right'>
+                  <table>
+                     <tr>
+                        <td><b>Invoice Number:</b></td>
+                        <td align='right'>${timeStamp}</td>
+                     </tr>
+                     <tr>
+                        <td><b>Invoice Date:</b></td>
+                        <td align='right'>${invoiceDate}</td>
+                     </tr>
+                  </table>
+               </td>
+            </tr>
+         </table>
+         <hr>
+         <table cellpadding='10'>
+            <tr valign='top'>
+               <td><b>Invoice to:</b></td>
+               <td>${formatAddress(company.agent.agentAddress)}</td>
+            </tr>
+            <tr valign='top'>
+               <td><b>Terms:</b></td>
+               <td>Payment is due within 30 days of receipt of this invoice</td>
+            </tr>
+            <tr valign='top'>
+               <td><b>Description:</b></td>
+               <td>For Consultancy Services provided by: ${company.companyName}</td>
+            </tr>
+         </table>
+         <hr>
+         <table cellpadding='10'>
+            <tr>
+               <td><b>Description</b></td>
+               <td><b>Units</b></td>
+               <td><b>Rate</b></td>
+               <td><b>Net</b></td>    
+               <td><b>VAT (${company.account.formatVat()})</b></td> 
+               <td><b>Gross</b></td>
+            </tr>
+            <tr>
+               <td><b>${timesheetDate}</b></td>
+               <td>${totalDays}</td>
+               <td>${company.account.dailyRate}</td>
+               <td>${net}</td>
+               <td>${vat}</td>
+               <td>${gross}</td>
+            </tr>
+         </table>
+         <hr>
+         <table cellpadding='10'>
+            <tr>
+               <td><b>Payment options:</b></td>
+               <td>Please transfer funds directly to the account listed below</td>
+            </tr>
+            <tr>
+               <td><b>Account name:</b></td>
+               <td>${company.bankAccount.accountName}</td>
+            </tr>
+            <tr>
+               <td><b>Account number:</b></td>
+               <td>${company.bankAccount.accountNumber}</td>
+            </tr>
+            <tr>
+               <td><b>Sort code:</b></td>
+               <td>${company.bankAccount.sortCode}</td>
+            </tr>     
+         </table>
+         <p style='text-align: center;'>
+            ${company.companyName} registered in the United Kingdom No: ${company.registrationNumber}<br>
+            VAT Regstriation No: ${company.vatNumber}
+         </p>
+      </div>
+      </body>";
+      println("Generated ${file}");
+      file.writeText(template);
+   }catch(e){
+      e.printStackTrace();
+      throw new IllegalStateException("Generate error", e);
+   }
+}
+
+function formatAddress(address) {
+   var formattedAddress = address.replace("\n", "<br>");
+   return formattedAddress;
+}
+
+class BankAccount {
+   const accountName;
+   const accountNumber;
+   const sortCode;
+   
+   new(accountName, accountNumber, sortCode){
+      this.accountName = accountName;
+      this.accountNumber = accountNumber;
+      this.sortCode = sortCode;
+   }
+}
+
+class Company {
+   const companyName;
+   const companyAddress;
+   const phoneNumber;
+   const registrationNumber;
+   const vatNumber;
+   const bankAccount;
+   const agent;
+   const account;
+   
+   new(companyName, companyAddress, phoneNumber, registrationNumber, vatNumber, bankAccount, agent, account){
+      this.companyName = companyName;
+      this.registrationNumber = registrationNumber;
+      this.vatNumber = vatNumber;
+      this.bankAccount = bankAccount;
+      this.phoneNumber = phoneNumber;
+      this.companyAddress = companyAddress;
+      this.agent = agent;
+      this.account = account;
+   }
+}
+
+class Agent {
+   const agentAddress;
+   const emailAddress;
+   
+   new(agentAddress, emailAddress){
+      this.agentAddress = agentAddress;
+      this.emailAddress = emailAddress;
+   }
+}
+
+class Account{
+   const dailyRate;
+   const vat;
+   
+   new(dailyRate, vat) {
+      this.dailyRate = dailyRate;
+      this.vat = vat;
+   }
+   
+   formatVat() {
+      return Math.round(100* vat) + "%";
+   }
+   
+   calculateGross(daysWorked) {
+      return calculateNet(daysWorked) + calculateVat(daysWorked);
+   }
+   
+   calculateNet(daysWorked) {
+      return daysWorked * dailyRate;
+   }
+   
+   calculateVat(daysWorked) {
+      return calculateNet(daysWorked) * vat;
+   }
+}
+
+class Timesheet {
+   const date;
+   const totalHours;
+   const hours;
+   
+   new(date, totalHours, hours) {
+      this.date = date;
+      this.totalHours = totalHours;
+      this.hours = hours;
+   }
+   
+   calculateDays() {
+      var count = 0;
+      
+      for(var entry in hours) {
+         if(entry.value > 0) {
+            count++;
+         }
+      }
+      return count;
+   }
+   
+   toString() {
+      return "${date}: ${total}";
+   }
+}

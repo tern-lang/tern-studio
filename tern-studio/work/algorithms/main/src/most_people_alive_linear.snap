@@ -1,0 +1,54 @@
+
+let people = [
+   new Person(1910, 1915),
+   new Person(1890, 1950),
+   new Person(1991, 1997), // 1991 // 1990
+   new Person(1990, 2018), // 1991 // 1990
+   new Person(1991, 2018), // 1991 // 1990
+   new Person(1940, 1991) // 1991 // 1990
+];
+
+let highest = findHighestPopulation(people);
+
+println(highest);
+
+class Person {
+   const birth;
+   const death;
+   
+   new(birth, death){
+      this.birth = birth;
+      this.death = death;
+   }
+}
+
+func findHighestPopulation(people: Person[]) {
+   let first = Integer.MAX_VALUE;
+   let last = Integer.MIN_VALUE;
+   
+   for(person in people){
+      first = Math.min(first, person.birth);
+      last = Math.max(last, person.death);
+   }
+   let births = new Integer[(last - first) + 1];
+   let deaths = new Integer[(last - first) + 1];
+   
+   for(person in people){
+      births[person.birth - first]++;
+      deaths[person.death - first]++;
+   }   
+   let largest = Integer.MIN_VALUE;
+   let population = 0;
+   let result = 0;
+   
+   for(year in first .. last -1) {
+      population += births[year - first];
+      population -= deaths[year - first];
+      
+      if(population > largest) {
+         largest = population;
+         result = year;
+      }
+   }
+   return result;
+}

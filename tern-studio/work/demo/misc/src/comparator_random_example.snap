@@ -1,0 +1,30 @@
+import security.SecureRandom;
+
+const ONE_MILLION = 1000000;
+const ONE_HUNDRED_THOUSAND = 100000;
+
+class DoubleComparator with Comparator{
+
+   override compare(a,b){
+      return Double.compare(a,b);
+   }
+}
+
+var comparator = new DoubleComparator();
+var set = new TreeSet(comparator);
+var random = new SecureRandom();
+var start = System.currentTimeMillis();
+
+for(var i = 0; i < ONE_HUNDRED_THOUSAND; i++) {
+   var num = random.nextInt(ONE_HUNDRED_THOUSAND);
+   set.add(num);
+}
+var finish = System.currentTimeMillis();
+var duration = finish - start;
+
+for(var entry in set){
+   println(entry);
+}
+
+println("Time taken was " + duration + " which is " + (duration / ONE_HUNDRED_THOUSAND) + " ms per entry");
+

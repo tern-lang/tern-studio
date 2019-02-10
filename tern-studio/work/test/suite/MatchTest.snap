@@ -1,0 +1,22 @@
+import test.TestCase;
+
+module MatchMod {
+
+   resolve(x){
+      match(x){
+      case 1: "ONE";
+      case 2: "TWO";
+      case 3: "THREE";
+      }
+   }
+}
+
+class MatchTest with TestCase {
+
+   testMatch(){
+      assert MatchMod.resolve(1) == "ONE";
+      assert MatchMod.resolve(2) == "TWO";
+      assert MatchMod.resolve(3) == "THREE";
+      assert MatchMod.resolve(4) == null;
+   }
+}

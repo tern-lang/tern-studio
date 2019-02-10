@@ -1,0 +1,49 @@
+import awt.image.BufferedImage;
+import util.Random;
+
+import mario.core.animation.Animation;
+import mario.core.sound.specific.MarioSoundManager22050Hz;
+import mario.objects.base.Creature;
+import mario.util.ImageManipulator;
+
+
+class Goomba extends Creature {
+   
+   private var waddle: Animation;
+   private var dead: Animation;
+   private var flip: Animation;
+   
+   public new(x: Integer, y: Integer, soundManager: MarioSoundManager22050Hz): super(x, y, soundManager) {
+      
+      var w1: BufferedImage = ImageManipulator.loadImage("/mario/baddies/Goomba_Normal_1.png");
+      var w2: BufferedImage = ImageManipulator.loadImage("/mario/baddies/Goomba_Normal_2.png");
+      var smashed: BufferedImage = ImageManipulator.loadImage("/mario/baddies/Goomba_Dead.png");
+      var flipped: BufferedImage = ImageManipulator.loadImage("/mario/baddies/Goomba_Flip.png");
+
+      waddle = new Animation(150).addFrame(w1).addFrame(w2);
+      dead = new Animation(-> kill()).setDAL(100).addFrame(smashed).setDAL(20).addFrame(smashed);
+      flip = new Animation().addFrame(flipped).addFrame(flipped);
+      setAnimation(waddle);
+   }
+   
+   public wakeUp() {
+      var r: Random = new Random();
+      super.wakeUp();
+      dx = r.nextInt(3) == 0 ? -0.03f : 0.03f;
+   }
+   
+   public jumpedOn() {
+      setAnimation(dead);
+      setIsCollidable(false);
+      dx = 0;
+   }
+   
+   public flip() {
+      setAnimation(flip);
+      setIsFlipped(true);
+      setIsCollidable(false);
+      dy = -0.2f;
+      dx = 0;
+   }
+}
+

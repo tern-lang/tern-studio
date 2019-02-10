@@ -1,0 +1,16 @@
+import test.suite.DeviceTest;
+import test.suite.MathTest;
+import test.suite.ThreadTest;
+/*import test.suite.ExtendClassTest;
+*/
+class TestSuite {
+
+   static suite() {
+      return [
+         DeviceTest.class,
+         MathTest.class,
+         ThreadTest.class/*,
+         ExtendClassTest.class*/
+      ];
+   }
+}

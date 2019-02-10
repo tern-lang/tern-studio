@@ -1,0 +1,32 @@
+// An object used to bridge the gap between keyboard input and a basic sprite
+// Attach this object to the panel and pass a sprite in to call the sprites
+// keyboard methods. Each sprite which extends BasicSprite gains a set of methods
+// such that this object is compatible with any sprite that is a BasicSprite.
+
+import awt.event.KeyAdapter;
+import awt.event.KeyEvent;
+
+class SpriteListener extends KeyAdapter {
+   
+   private var sprite: Sprite;
+   
+   public new(sprite: Sprite) {
+      this.sprite = sprite;
+   }
+   
+   // do while key is released
+    public keyReleased(e: KeyEvent) {
+        sprite.keyReleased(e);
+    }
+
+    // do while key is pressed down
+    public keyPressed(e: KeyEvent) {
+        sprite.keyPressed(e);
+    } 
+    
+    public keyTyped(e: KeyEvent) {
+        sprite.keyTyped(e);
+    } 
+
+}
+

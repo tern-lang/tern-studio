@@ -1,0 +1,56 @@
+
+// introductory program to demonstrate Monte Carlo simulation
+
+// simulates the tossing of a coin 10 times, calculating various
+// probabilistic quantities:
+
+//    P(6 heads)
+//    P(2 heads in the first 4 tosses | 6 heads total)
+//    E(square of the total number of heads)
+
+
+const NREPS = 100000;  // number of times the 10-toss
+                       // experiment is to be repeated 
+
+function simulate() {  
+   var n6 = 0.0;  // # of repetitions in which there are 6 heads
+   var n246 = 0.0;  // # of reps in which the 1st 4 tosses yield 2 heads,
+                     // among reps in which there are 6 heads total
+   var sumH2 = 0.0;  // sum of the squares of heads counts
+   var heads;
+   var outcome;
+   var rep;
+   var event24;
+
+   for (rep=0; rep < NREPS; rep++)  {
+      heads = 0;
+      event24 = false;
+      
+      for (var toss=0; toss < 10; toss++)  {
+         outcome = Math.round(2 * random());
+         if (outcome == 1)  {  // heads
+            heads++;
+         }
+         if (toss == 3 && heads == 2) {
+            event24 = true;
+         }   
+      }
+      if (heads == 6)  {
+         n6++;
+
+         if (event24) n246++;
+      }
+      sumH2 += heads*heads;
+   }
+
+   System.out.println("P(6 heads) = "+ n6/NREPS);
+   System.out.println("P(2 of 1st 4 | 6 heads) = "+ n246/n6);
+   System.out.println("E(heads squared) = "+ sumH2/NREPS);
+}
+
+// U(0,1) random variable generator
+function random() {  
+   return Math.random(); 
+}
+
+simulate();

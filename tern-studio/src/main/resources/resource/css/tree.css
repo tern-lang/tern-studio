@@ -1,0 +1,186 @@
+#explorer {
+	font-family: "Lucida Console", sans-serif;
+	overflow: hidden;
+	font-size: 0.9em;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+#explorerParent {
+	font-family: "Lucida Console", sans-serif;
+	overflow: scroll;
+	font-size: 0.9em;
+	background-color: ${TREE_BACKGROUND_COLOR};
+	border-style: solid;
+	border-width: 1px;
+	border-color: #c0c0c0;
+	padding: 5px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 8px;
+	left: 8px;
+}
+
+#explorerTree {
+	background-color: ${TREE_BACKGROUND_COLOR};
+}
+
+#browseParent { 
+	font-family: "Lucida Console", sans-serif;	
+    font-size: 0.9em;  
+    overflow-y: scroll;
+	overflow-x: hidden; 
+    background-color: ${TREE_BACKGROUND_COLOR};
+    border-radius: 0px;    
+ 	border-style: solid;
+    border-width: 1px;
+    border-color: #c0c0c0;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    padding: 5px;
+}
+
+.browseTab {	
+	background-image: url('${IMAGE_FOLDER}/file_directory.png');	
+	background-size: contain;
+	background-position: left bottom;
+	background-repeat: no-repeat;
+	padding-top: 3px;
+	padding-bottom: 2px;
+	padding-left: 22px; /* Or size of icon + spacing */
+	margin-left: -10px;
+	z-index: 1009;
+}
+
+.ui-menu {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 12px;
+	color: ${MENU_FONT_COLOR};
+	background-color: ${MENU_BACKGROUND_COLOR};
+	-webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4);
+	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4);
+	padding: 1px;
+	width: 150px;
+	z-index: 3; /* over ext-wide titles */
+}
+
+.ui-widget-header .ui-state-active {
+	color: ${MENU_FONT_COLOR} !important;
+}
+
+.ui-widget-header .ui-state-focus {
+	color: ${MENU_FONT_COLOR} !important;
+}
+
+.dropdown-menu {
+	display: block;
+}
+
+.treeFolderDragOver {
+	font-size: 30px !important;
+}
+
+.treeFolderDragDestination {
+	
+}
+
+.treeIndexFolder {
+	background-image: url('${IMAGE_FOLDER}/project_index.png');
+	background-size: 16px 16px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+
+.treeFileFolder {
+	background-image: url('${IMAGE_FOLDER}/file_directory.png');
+	background-size: 16px 16px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+
+.treeFile {
+	background-image: url('${IMAGE_FOLDER}/file_text.png');
+	background-size: 16px 16px;	
+	background-position: center;
+	background-repeat: no-repeat;
+    padding: 12px;
+}
+
+.menu-explore {
+	background-image: url('${IMAGE_FOLDER}/file_directory.png') !important;
+	background-size: 16px 16px !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+}
+
+.menu-terminal {
+	background-image: url('${IMAGE_FOLDER}/terminal.png') !important;
+	background-size: 16px 16px !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+}
+
+.menu-run {
+	background-image: url('${IMAGE_FOLDER}/run.png') !important;
+	background-size: 16px 16px !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+}
+
+.menu-debug {
+	background-image: url('${IMAGE_FOLDER}/debug.png') !important;
+	background-size: 16px 16px !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+}
+
+.menu-stop {
+	background-image: url('${IMAGE_FOLDER}/stop.png') !important;
+	background-size: 16px 16px !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+}
+
+.menu-archive {
+	background-image: url('${IMAGE_FOLDER}/archive.png') !important;
+	background-size: 16px 16px !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+}
+
+.menu-save {
+	background-image: url('${IMAGE_FOLDER}/save.png') !important;
+	background-size: 16px 16px !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+}
+
+.menu-rename {
+	background-image: url('${IMAGE_FOLDER}/swap.png') !important;
+	background-size: 16px 16px !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+}
+
+.menu-trash {
+	background-image: url('${IMAGE_FOLDER}/trash.png') !important;
+	background-size: 16px 16px !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+}
+
+.menu-new {
+	background-image: url('${IMAGE_FOLDER}/new_file.png') !important;
+	background-size: 16px 16px !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+}

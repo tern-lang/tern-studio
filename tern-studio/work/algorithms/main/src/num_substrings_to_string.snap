@@ -1,0 +1,19 @@
+/*
+Create String A out of substrings of String B. Return the minimum number of copies that you need to do this.
+
+Example:
+
+A="zaza", B="baz"
+
+copy1="z"
+copy2="az"
+copy3="a
+A=copy1+copy2+copy3
+
+Returns 3
+
+Not sure what the most efficient way is in python, but would appreciate a solution.
+*/
+
+func numCopies() {
+}

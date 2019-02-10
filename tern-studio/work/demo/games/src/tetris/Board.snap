@@ -1,0 +1,211 @@
+import awt.Point;
+import awt.Point;
+import awt.Point;
+import awt.event.KeyEvent;
+import awt.event.KeyListener;
+import awt.Canvas;
+import awt.Color;
+import awt.Dimension;
+import awt.Font;
+import awt.Graphics;
+import awt.Graphics2D;
+import awt.Point;
+import awt.event.WindowAdapter;
+import awt.event.WindowEvent;
+import awt.image.BufferStrategy;
+import swing.JFrame;
+import swing.JPanel;
+import util.Arrays;
+import util.Map;
+import util.concurrent.ConcurrentHashMap;
+import util.Random;
+
+/**
+ * 20 [ ][ ][ ][X][X][X][X][ ][ ][ ]
+ * 19 [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 18 [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 17 [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 16 [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 15 [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 14 [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 13 [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 12 [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 11 [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 10 [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 9  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 8  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 7  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 6  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 5  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 4  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 3  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 2  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ * 1  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+ *     1  2  3  4  5  6  7  8  9 10
+ */
+class Board {
+
+    static const DROP_X = 5;
+    static const DROP_Y = 19;
+
+    static const WIDTH = 10;
+    static const HEIGHT = 20;
+
+    var pieceCenter = new Point(DROP_X, DROP_Y);
+
+    var currentPiece;
+
+    var board = new BoardCell[WIDTH][HEIGHT];
+
+    var fullLines = 0;
+
+    new() {
+        board = createEmptyBoard();
+    }
+
+    getWidth() {
+        return WIDTH;
+    }
+
+    getHeight() {
+        return HEIGHT;
+    }
+
+    getFullLines() {
+        return fullLines;
+    }
+
+    getBoardAt(x, y) {
+        return board[x][y];
+    }
+
+    isRowFull(y) {
+        for (var x = 0; x < WIDTH; x++) {
+            if (getBoardAt(x, y).isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    removeFullRows() {
+        var boardX = createEmptyBoard();
+
+        var full = 0;
+        for (var y = 0; y < HEIGHT; y++) {
+            if (isRowFull(y)) {
+                full++;
+            } else {
+                copyRow(boardX, y, y-full);
+            }
+        }
+
+        fullLines += full;
+        board = boardX;
+    }
+
+    copyRow(row, y, toy) {
+        for (var x = 0; x < WIDTH; x++) {
+            row[x][toy] = board[x][y];
+        }
+    }
+
+    createEmptyBoard() {
+        var boardX = new BoardCell[WIDTH][HEIGHT];
+
+        for (var x = 0; x < WIDTH; x++) {
+            boardX[x] = BoardCell.getEmptyArray(HEIGHT);
+        }
+        return boardX;
+    }
+
+    rotate() {
+        var rot = currentPiece.rotate();
+        if (fit(rot.getPoints(), 0, 0)) {
+
+            currentPiece = rot;
+        }
+    }
+
+    moveLeft() {
+        if (fit(currentPiece.getPoints(), -1, 0)) {
+            mv( -1, 0);
+        }
+    }
+
+    moveRight() {
+        if (fit(currentPiece.getPoints(), 1, 0)) {
+            mv(1, 0);
+        }
+    }
+
+    canCurrentPieceMoveDown() {
+        return fit(currentPiece.getPoints(), 0, -1);
+    }
+
+    moveDown() {
+        if (canCurrentPieceMoveDown()) {
+            mv(0, -1);
+            removeFullRows();
+        }
+    }
+
+    fit(points, moveX, moveY) {
+        for (var point in points) {
+            var x = pieceCenter.x + point.x + moveX;
+            var y = pieceCenter.y + point.y + moveY;
+
+            if (x < 0 || x >= getWidth() || y >= getHeight() || y < 0) {
+                return false;
+            }
+
+            if (!board[x][y].isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    getBoardWithPiece() {
+        var dest = new BoardCell[WIDTH][HEIGHT];
+
+        for (var y = 0; y < WIDTH; y++) {
+            System.arraycopy(board[y], 0, dest[y], 0, board[0].size());
+        }
+
+        // add piece
+        for (var point in currentPiece.getPoints()) {
+            var x = point.x + pieceCenter.x;
+            var y = point.y + pieceCenter.y;
+            dest[x][y] = BoardCell.getCell(currentPiece.getType());
+        }
+        return dest;
+    }
+
+    addPieceToBoard() {
+        for (var point in currentPiece.getPoints()) {
+            var x = pieceCenter.x + point.x;
+            var y = pieceCenter.y + point.y;
+            board[x][y] = BoardCell.getCell(currentPiece.getType());
+        }
+    }
+
+    mv(moveX, moveY) {
+        pieceCenter = new Point(pieceCenter.x + moveX, pieceCenter.y + moveY);
+    }
+
+    setCurrentPiece(piece) {
+        if (currentPiece != null) {
+            addPieceToBoard();
+        }
+        currentPiece = piece;
+        resetPieceCenter();
+    }
+
+    resetPieceCenter() {
+        pieceCenter.x = DROP_X;
+        pieceCenter.y = DROP_Y;
+    }
+
+}

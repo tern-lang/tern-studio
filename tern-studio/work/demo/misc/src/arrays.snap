@@ -1,0 +1,35 @@
+#!snap
+
+var x = new String[3][4];
+
+x[1][1]="x";
+
+if(x[1].indexOf("x") != 1){
+   throw "Not working";
+}
+System.err.println(x[1][1]);
+
+var y = new String[4][6][7]; 
+
+System.err.println(y.size());
+System.err.println(y[0].size());
+System.err.println(y[0][0].size());
+
+var array = new String[10];
+
+for(var i = 0; i < array.size(); i++){
+   array[i] = "entry-1";
+}
+
+var multi = new String[10][6];
+ 
+for(var i = 0; i < multi.size(); i++) {   
+   var inner = multi[i];
+   
+   for(var j = 0; j < inner.size(); j++){
+      if(j % 2 == 0) {
+         inner[j] = "value_" + i + "_" + j;
+      }
+   }
+}
+System.err.println(multi[2][4]);

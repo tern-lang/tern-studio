@@ -1,0 +1,15 @@
+import test.TestCase;
+
+class NullCoalesceTest with TestCase {
+
+   testNullCoalesce(){
+      var x=null;
+      var y=10;
+      var z =11;
+      
+      assert x??y == 10;
+      assert x??y == y;
+      assert y+x??z == 21;
+      assert y+x??z == y+z;
+   }
+}

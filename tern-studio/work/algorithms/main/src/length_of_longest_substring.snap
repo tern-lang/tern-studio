@@ -1,0 +1,22 @@
+
+let result = lengthOfLongestSubstring("abcabcbb");
+
+func lengthOfLongestSubstring(str) {
+   let letters = new Integer[26];
+   let max = 0;
+   
+   for(i in 0 .. str.length -1){
+      let next = str.charAt(i);
+      
+      
+   }
+}
+
+func sumLetters(leters) {
+   let sum = 0;
+   
+   for(i in 0 .. letters.length) {
+      sum += letters[i];
+   }
+   return sum;
+}

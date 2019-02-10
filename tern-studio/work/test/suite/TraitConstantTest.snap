@@ -1,0 +1,42 @@
+import test.TestCase;
+
+trait X{
+   const A=1;
+   const B=A+2;
+   const C=B+1;
+   getB(){
+      return B;
+   }
+}
+
+class Y with X{
+   static const I = A+3;
+   static const THE_J=33+I+B;
+   getJ(){
+      return THE_J;
+   }
+}
+class Z extends Y with X{
+   var v = AN_R+2; // non-static reference to static
+   static const AN_R=THE_J-2;
+   getR(){
+      return AN_R;
+   }
+   getV(){
+      return v;
+   }
+}
+
+class TraitConstantTest with TestCase {
+
+   testTraitConstants(){
+      var y = new Y();
+      var z = new Z();
+      assert y.getJ() == 33+4+3;
+      assert y.getB() ==3;
+      assert z.getJ() == 33+4+3;
+      assert z.getB() ==3;
+      assert z.getR()==33+4+3-2;
+      assert z.getV()==33+4+3;   
+   }
+}

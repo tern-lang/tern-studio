@@ -1,0 +1,33 @@
+import test.TestCase;
+
+module Functions {
+
+   function(s: String[][]){
+      return "String[][]";
+   }
+   
+   function(s: String[]){
+      return "String[]";
+   }
+   
+   function(s: Float[][]){
+      return "Float[][]";
+   }
+   
+   function(s: Float[]){
+      return "Float[]";
+   }
+}
+
+class FunctionConstraintBindingTest with TestCase {
+
+   testFunctionBinding() {
+      var strings: String[][] = [['a','b'],[]];
+      var multi : Integer[][] = [['1','2', 3.0d, 11L],[2]];
+      var int: Integer[] =[2];
+      
+      assert Functions.function(int) == "Float[]";
+      assert Functions.function(strings) == "String[][]";
+      assert Functions.function(multi) == "Float[][]";
+   }
+}

@@ -1,0 +1,59 @@
+// foo 
+
+@Component
+class Mod{
+  
+ 
+
+   @Inject
+   fun(@Inject x: Foo){
+   }
+}
+
+class Foo{
+   @Value(name: "${port}")
+   var x;
+   @Value(name: "${host}")
+   var y;
+   
+   create(){
+      return new Point(x,y);
+   }
+
+}
+
+module Injection{
+   var objects = {:};
+   var factories = {:};
+   
+   class Factory{
+      const fn;
+      const args;
+      const name;
+      
+      new(name, fn, args){
+         this.name = name;
+         this.fn = fn;
+         this.args = args;
+      }
+      
+      create(registry){
+         return "func()";
+      }
+   }
+   
+   process(type){
+      var funcs = type.getFunctions();
+      for(var fn in funcs){
+         var annotations = fn.getAnnotations()
+            .stream()
+            .filter(annotation -> annotation.name == 'Bean')
+            .collect(Collectors.toString());
+         
+         if(!annotations.isEmpty()){
+            var fn = eval("${type}::${func.name}");
+         }
+         
+      }
+   }
+}

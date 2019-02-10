@@ -1,0 +1,19 @@
+import mario.core.MarioGame;
+
+/**
+ * The entry point into the game. We'll simply create an
+ * instance of class which will start the display and game
+ * loop.
+ */
+function start() {
+   var g = new MarioGame(context, width, height, landscape);
+
+   // Start the game at 20 frames per second
+   try {
+      launcher.start(g);
+   } catch(e) {
+      e.printStackTrace();
+   }
+}
+   
+start();

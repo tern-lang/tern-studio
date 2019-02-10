@@ -1,0 +1,32 @@
+class Key{
+   var key;
+   new(key){
+      this.key = key;
+   }
+   equals(other){
+      println("Key.equals");
+      return key.equals(other.key);
+   }
+   hashCode(){
+      println("Key.hashCode");
+      return key.hashCode();
+   }
+   toString(){
+      println("toString");
+      return key.toString();
+   }
+}
+var set = new HashSet();
+var a = new Key("a");
+var b = new Key("b");
+var c = new Key("c");
+
+println(a.toString());
+println(b.toString());
+set.add(a);
+set.add(b);
+
+println(set.contains(a));
+println(set.contains(b));
+println(set.contains(c));
+

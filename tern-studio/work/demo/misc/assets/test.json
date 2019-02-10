@@ -1,0 +1,185 @@
+{
+  "attributes": {
+    "root": "${gateway.resources}",
+    "domain": "${gateway.domain}"
+  },
+  "hosts": [
+    {
+      "name": "zuooh",
+      "address": [
+        "http://${domain}/",
+        "https://${domain}/"
+      ],
+      "static-resources": {
+      	"directory": "${root}",
+      	"path": "/static/.*"
+      },
+      "access-log": {
+        "file": "c:/temp/access.log",
+        "format": "%T [%P] %h [%t] '%r' %s %b %{Host} '%{User-Agent}' %{Content-Type} @{Content-Type} @{Content-Encoding} %X @{X-Time} ms %d ms",
+        "threshold": 1000000
+      },
+      "key-store": {
+        "type": "PKCS12",
+        "path": "${root}/certificate/${domain}/${domain}.pfx",
+        "password": "password12",
+        "protocols": [],
+        "cipher-suites": [
+          "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
+          "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+          "TLS_RSA_WITH_AES_128_CBC_SHA256",
+          "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256",
+          "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256",
+          "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",
+          "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+          "TLS_RSA_WITH_AES_128_CBC_SHA",
+          "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA",
+          "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA",
+          "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",
+          "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",
+          "TLS_ECDHE_RSA_WITH_RC4_128_SHA",
+          "SSL_RSA_WITH_RC4_128_SHA",
+          "TLS_ECDH_ECDSA_WITH_RC4_128_SHA",
+          "TLS_ECDH_RSA_WITH_RC4_128_SHA",
+          "TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",
+          "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+          "SSL_RSA_WITH_3DES_EDE_CBC_SHA",
+          "TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA",
+          "TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA",
+          "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA",
+          "SSL_RSA_WITH_RC4_128_MD5",
+          "TLS_EMPTY_RENEGOTIATION_INFO_SCSV"
+        ]
+      },
+      "redirects": [
+        {
+          "match-pattern": "http://${domain}/(.*)",
+          "template": "https://${domain}/%{1}"
+        },
+        {
+          "match-pattern": "https://${domain}/",
+          "template": "https://${domain}/index"
+        },
+        {
+          "match-pattern": "https://${domain}/(directory|directory/)",
+          "template": "https://${domain}/directory/listPeople"
+        },        
+        {
+          "header-rule": {
+            "header-pattern": ".*SSOID=([a-zA-Z0-9-]*).*",
+            "header-name": "Cookie",
+            "header-present": false,
+            "validation": {
+              "validation-services": [
+                "http://localhost:7070/verify/user?SSOID=%{1}",
+                "http://localhost:7070/verify/user?SSOID=%{1}"
+              ],
+              "expiry": 20000
+            }
+          },
+          "match-pattern": "https://${domain}/(directory/.*|hub/.*)",
+          "ignore-pattern": "https://${domain}/login/.*",
+          "template": "https://${domain}/login/%{1}"
+        }
+      ],
+      "routes": [
+        {
+          "route-patterns": [
+            "http.*://orthrus.io/login/.*",
+            "http.*://www.orthrus.io/login/.*"
+          ],
+          "server-group": {
+            "buffer": 8192,
+            "ping-path": "/status",
+            "ping-frequency": 5000,
+            "servers": [
+              "http://prodapp1:7070/",
+              "http://prodapp2:7070/"
+            ]
+          }
+        },
+        {
+          "route-patterns": [
+            "http.*://orthrus.io/hub/.*",
+            "http.*://www.orthrus.io/hub/.*"
+          ],
+          "server-group": {
+            "buffer": 8192,
+            "ping-path": "/status",
+            "ping-frequency": 5000,
+            "servers": [
+              "http://prodapp1:3334/",
+              "http://prodapp2:3334/"
+            ]
+          }
+        },        
+        {
+          "route-patterns": [
+            "http.*://orthrus.io/directory/.*",
+            "http.*://www.orthrus.io/directory/.*"
+          ],
+          "server-group": {
+            "buffer": 8192,
+            "ping-path": "/status",
+            "ping-frequency": 5000,
+            "servers": [
+              "http://prodapp1:8383/",
+              "http://prodapp2:8383/"
+            ]
+          }
+        },   
+        {
+          "route-patterns": [
+            "http.*://orthrus.io/admin/.*",
+            "http.*://www.orthrus.io/admin/.*"
+          ],
+          "route-rules": [
+            {
+              "pattern": "/admin/(.*)",
+              "template": "/%{1}"
+            }
+          ],
+          "server-group": {
+            "buffer": 8192,
+            "ping-path": "/",
+            "ping-frequency": 5000,
+            "servers": [
+              "http://prodapp1:7979/",
+              "http://prodapp2:7979/"
+            ]
+          }
+        },     
+        {
+          "route-patterns": [
+            "http.*://orthrus.io/.*",
+            "http.*://www.orthrus.io/.*"
+          ],
+          "route-rules": [
+            {
+              "pattern": "/index.html",
+              "template": "/index"
+            },
+            {
+              "pattern": "/about.html",
+              "template": "/about"
+            },
+            {
+              "pattern": "/contact.html",
+              "template": "/contact"
+            }
+          ],
+          "server-group": {
+            "buffer": 8192,
+            "ping-path": "/status",
+            "ping-frequency": 5000,
+            "servers": [
+              "http://prodapp1:4321/",
+              "http://prodapp2:4321/"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

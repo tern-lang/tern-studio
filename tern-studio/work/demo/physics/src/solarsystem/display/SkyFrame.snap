@@ -1,0 +1,310 @@
+
+import awt.BasicStroke;
+import awt.BorderLayout;
+import awt.Color;
+import awt.Container;
+import awt.Graphics;
+import awt.Graphics2D;
+import awt.event.ActionEvent;
+import awt.event.ActionListener;
+import awt.geom.AffineTransform;
+import awt.geom.Area;
+import awt.geom.Ellipse2D;
+import awt.geom.GeneralPath;
+import awt.geom.Line2D;
+import awt.geom.Rectangle2D;
+import util.Vector;
+
+import swing.JButton;
+import swing.JFrame;
+import swing.JPanel;
+import swing.JSlider;
+import swing.event.ChangeEvent;
+import swing.event.ChangeListener;
+
+import solarsystem.model.Host;
+import solarsystem.model.Satellite;
+import solarsystem.model.Planet;
+import solarsystem.model.Moon;
+import solarsystem.model.Stars;
+import solarsystem.model.Sun;
+
+/**
+ * This class provides the frame that contains the GUI interface and the
+ * display.
+ */
+class SkyFrame with ChangeListener with ActionListener {
+    /**
+     * The panel that displays the solar system.
+     */
+    var skyPanel;
+    /**
+     * The range within which the user may modify the sun's mass.
+     */
+    static var maxSunMassMultiplier = 1.5d;
+    static var minSunMassMultiplier = 0.5d;
+    /**
+     * The initial mass of the sun (arbitrary units).
+     */
+    static var massOfSun = 1200;
+    /**
+     * The initial size of the frame in pixels.
+     */
+    static var xPixels = 1000;
+    static var yPixels = 1000;
+    /**
+     * The scale factor used to zoom in and out.
+     */
+    static var lengthScaleFactor = 1;
+    /**
+     * The maximum scale factor allowed for zooming out.
+     */
+    static var maxScaleFactor = 5;
+    /**
+     * The sun for the solar system.
+     * 
+     * @see Sun
+     */
+    var sun;
+    /**
+     * The slider that allows the user to modify the sun's mass.
+     * 
+     * @see JSlider
+     */
+    var slider;
+    /**
+     * Button that allows the user to zoom in (i.e. view the solar system in
+     * more detail).
+     */
+    var zoomIn;
+    /**
+     * Button that allows the user to zoom out (i.e. view the solar system in
+     * less detail.
+     */
+    var zoomOut;
+    /**
+     * Button that allows the user to display the acceleration vectors of each
+     * planet in the solar system.
+     */
+    var accButton;
+    /**
+     * Button that allows the user to display the velocity vectors of each
+     * planet in the solar system.
+     */
+    var velButton;
+    /**
+     * Button that allows the user to display the energy of each planet in the
+     * solar system.
+     */
+    var energyButton;
+    /**
+     * Button that allows the user to display the previous positions of each
+     * planet in the solar system.
+     */
+    var positionButton;
+    /**
+     * Button that allows the user to freeze the display of the solar system
+     * (i.e. stop the motion of the planets).
+     */
+    var freezeButton;
+    /**
+     * String to label button.
+     */
+    const zoomInString = "Zoom In";
+    const zoomOutString = "Zoom Out";
+    /**
+     * String to label button.
+     */
+    const showAcc = "Show Acceleration";
+    const hideAcc = "Hide Acceleration";
+    const showVel = "Show Velocity";
+    const hideVel = "Hide Velocity";
+    /**
+     * String to label button.
+     */
+    const showEnergy = "Show Energy";
+    const hideEnergy = "Hide Energy";
+    const showPos = "Trace Position";
+    const hidePos = "Hide Trace";
+    const freeze = "Freeze";
+    const unFreeze = "Unfreeze";
+    /**
+     * Panel in which to put the buttons.
+     * 
+     * @see JPanel
+     */
+    var buttonPanel;
+    var frame;
+    /**
+     * Constructs a frame containing the specified number of planets.
+     * 
+     * @param mNumberOfPlanets The number of planets in the solar system.
+     * @param dt The time differential for integrating the equations of
+     *            motion.
+     */
+    new(mNumberOfPlanets, dt) {
+       frame = new JFrame("Solar System");
+        sun = new Sun(75, 2000, xPixels/2, yPixels/2);
+
+        frame.setSize(xPixels, yPixels);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        skyPanel = new SkyPanel(dt, xPixels, yPixels, mNumberOfPlanets, sun);
+        skyPanel.setBackground(Color.black);
+
+        var masterPanelLayout = new BorderLayout();
+        var pane = frame.getContentPane();
+        pane.setLayout(masterPanelLayout);
+        pane.add(skyPanel, masterPanelLayout.CENTER);
+
+        slider = new JSlider(JSlider.VERTICAL,
+           (sun.getMass()*minSunMassMultiplier),
+           (sun.getMass()*maxSunMassMultiplier),
+           sun.getMass());
+        slider.setMajorTickSpacing((sun.getMass()*
+            (maxSunMassMultiplier -
+            minSunMassMultiplier)/20));
+        slider.setMinorTickSpacing((sun.getMass()*
+            (maxSunMassMultiplier -
+            minSunMassMultiplier)/40));
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+        slider.addChangeListener(this);
+        pane.add(slider, masterPanelLayout.EAST);
+
+        buttonPanel = new JPanel();
+        zoomIn = new JButton(zoomInString);
+        zoomIn.addActionListener(this);
+        zoomIn.setEnabled(false);
+        buttonPanel.add(zoomIn);
+
+        zoomOut = new JButton(zoomOutString);
+        zoomOut.addActionListener(this);
+        zoomOut.setEnabled(true);
+        buttonPanel.add(zoomOut);
+
+        accButton = new JButton(showAcc);
+        accButton.addActionListener(this);
+        buttonPanel.add(accButton);
+
+        velButton = new JButton(showVel);
+        velButton.addActionListener(this);
+        buttonPanel.add(velButton);
+
+        energyButton = new JButton(showEnergy);
+        energyButton.addActionListener(this);
+        buttonPanel.add(energyButton);
+
+        positionButton = new JButton(showPos);
+        positionButton.addActionListener(this);
+        buttonPanel.add(positionButton);
+
+        freezeButton = new JButton(freeze);
+        freezeButton.addActionListener(this);
+        buttonPanel.add(freezeButton);
+
+        pane.add(buttonPanel, masterPanelLayout.NORTH);
+
+        frame.setContentPane(pane);
+        frame.setVisible(true);
+        frame.setResizable(false);
+    }
+    /**
+     * The method actionPerformed implements the action called for by the
+     * user.
+     * 
+     * @param event An ActionEvent.
+     * @see ActionEvent
+     */
+    actionPerformed(event) {
+        var command = event.getActionCommand();
+
+        if (command.equals(zoomOutString)) {
+            zoomIn.setEnabled(true);
+            ++lengthScaleFactor;
+            energyButton.setEnabled(false);
+            skyPanel.displayEnergy(false);
+            skyPanel.populateStarGroup(lengthScaleFactor);
+            if (lengthScaleFactor > maxScaleFactor)
+                zoomOut.setEnabled(false);
+        }
+        else if (command.equals(zoomInString)) {
+            --lengthScaleFactor;
+            if (lengthScaleFactor == 1) {
+                zoomIn.setEnabled(false);
+                energyButton.setEnabled(true);
+                if (energyButton.getText().equals(hideEnergy))
+                   skyPanel.displayEnergy(true);
+            }
+            zoomOut.setEnabled(true);
+        }
+        else if (command.equals(showAcc)) {
+            skyPanel.displayAcc(true);
+            accButton.setText(hideAcc);
+        }
+        else if (command.equals(showVel)) {
+            skyPanel.displayVel(true);
+            velButton.setText(hideVel);
+        }
+        else if (command.equals(showEnergy)) {
+            skyPanel.displayEnergy(true);
+            energyButton.setText(hideEnergy);
+        }
+        else if (command.equals(showPos)) {
+            skyPanel.displayPos(true);
+            positionButton.setText(hidePos);
+        }
+        else if (command.equals(freeze)) {
+            skyPanel.setFreeze(true);
+            freezeButton.setText(unFreeze);
+        }
+        else if (command.equals(hideAcc)) {
+            skyPanel.displayAcc(false);
+            accButton.setText(showAcc);
+        }
+        else if (command.equals(hideVel)) {
+            skyPanel.displayVel(false);
+            velButton.setText(showVel);
+        }
+        else if (command.equals(hideEnergy)) {
+            skyPanel.displayEnergy(false);
+            energyButton.setText(showEnergy);
+        }
+        else if (command.equals(hidePos)) {
+            skyPanel.displayPos(false);
+            skyPanel.resetPos();
+            positionButton.setText(showPos);
+        }
+        else if (command.equals(unFreeze)) {
+            skyPanel.setFreeze(false);
+            freezeButton.setText(freeze);
+        }
+    }
+    /**
+     * Gets the current value of lengthScaleFactor used to calculate position
+     * of planets within the display.
+     */
+    static getScaleFactor() {
+        return lengthScaleFactor;
+    }
+    /**
+     * Gets the SkyPanel that displays the solar system.
+     * 
+     * @see SkyPanel
+     */
+    getPanel() {
+        return skyPanel;
+    }
+    /**
+     * Changes the sun's mass according to the input from the slider.
+     * 
+     * @param event
+     *           ChangeEvent
+     * @see ChangeEvent
+     */
+    stateChanged(event) {
+        var source = event.getSource();
+        if (source.getValueIsAdjusting() != true)
+            sun.setMass(slider.getValue());
+    }
+}

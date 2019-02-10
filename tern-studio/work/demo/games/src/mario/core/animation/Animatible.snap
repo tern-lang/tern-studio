@@ -1,0 +1,47 @@
+import awt.Graphics;
+
+/**
+ * Animatible is an abstract class that a class should extend if it wants to be drawn using
+ * an Animation. 
+ */
+
+abstract class Animatible {
+   
+   private var currAnim: Animation;
+   private var offsetX: Integer = 0;
+   private var offsetY: Integer = 0;
+
+   public abstract draw(g: Graphics, pixelX: Integer, pixelY: Integer);
+   public abstract draw(g: Graphics, pixelX: Integer, pixelY: Integer, offsetX: Integer, offsetY: Integer);
+   public abstract getHeight(): Integer;
+   public abstract getWidth(): Integer;
+
+   public currentAnimation(): Animation {
+      return currAnim;
+   }
+   
+   public setAnimation(currAnim: Animation) {
+      this.currAnim = currAnim;
+   }
+   
+   public update(time: Integer) {
+      currAnim.update(time);
+   }
+   
+   public setOffsetX(offsetX: Integer) {
+      this.offsetX = offsetX;
+   }
+   
+   public setOffsetY(offsetY: Integer) {
+      this.offsetY = offsetY;
+   }
+   
+   public getOffsetX(): Integer {
+      return offsetX;
+   }
+   
+   public getOffsetY(): Integer {
+      return offsetY;
+   }
+}
+

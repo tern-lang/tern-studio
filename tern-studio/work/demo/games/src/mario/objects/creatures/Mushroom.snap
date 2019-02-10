@@ -1,0 +1,46 @@
+import awt.image.BufferedImage;
+
+import mario.core.animation.Animation;
+import mario.core.tile.TileMap;
+import mario.objects.base.Creature;
+import mario.util.ImageManipulator;
+
+
+class Mushroom extends Creature {
+   
+   private var redMushroom: Animation;
+   private var updateNum: Integer;
+   
+   public new(pixelX: Integer, pixelY: Integer): super(pixelX, pixelY) {
+      setIsItem(true);
+      setIsAlwaysRelevant(true);
+      var shroom: BufferedImage = ImageManipulator.loadImage("/mario/items/Mushroom.png");
+      redMushroom = new Animation();
+      redMushroom.addFrame(shroom, 1000);
+      redMushroom.addFrame(shroom, 1000);
+      setAnimation(redMushroom);
+      updateNum = 0;
+      dy = -0.15f;
+      dx = 0.07f;
+   }
+   
+   public updateCreature(map: TileMap, time: Integer) {
+      if(updateNum < 10) {
+         setX(getX() + getdX()*time);
+         setY(getY() + getdY()*time);
+      } else if(updateNum < 200){
+         super.updateCreature(map, time);
+      } else if(updateNum < 300) {
+         if(updateNum % 4 == 0 || updateNum % 4 == 1) {
+            setIsInvisible(true);
+         } else {
+            setIsInvisible(false);
+         }
+         super.updateCreature(map, time);
+      } else {
+         kill();
+      }
+      updateNum += 1;
+   }
+}
+

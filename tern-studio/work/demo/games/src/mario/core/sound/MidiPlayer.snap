@@ -1,0 +1,171 @@
+
+/**
+ * MidiPlayer.java
+ * See MidiTest2.java to easily see how to use this object
+ * See MidiTest1.java for a more complex application using a meta event
+ * 
+ * The Java Sound API provides MIDI sound capabilities. To play MIDI music, you need two
+ * objects: Sequence and Sequencer. A Sequence object contains the MIDI data, and a
+ * Sequencer sends a Sequence to the MIDI synthesizer.
+ * 
+ * Generally, playing a MIDI file looks something like this:
+ * var sequence: Sequence = MidiSystem.getSequence(new File(filename));
+ * var sequencer: Sequencer = MidiSystem.getSequencer();
+ * sequencer.open();
+ * sequencer.setSequence(sequence);
+ * sequencer.start();
+ * 
+ * By default, the Sequencer plays a Sequence once and then stops. To loop a 
+ * Sequence, you need to be notified when the music is done playing and start over.
+ * This is done with a MetaEventListener.
+ * 
+ */
+
+import io.BufferedInputStream;
+import io.FileInputStream;
+import io.IOException;
+import io.InputStream;
+
+import sound.midi.InvalidMidiDataException;
+import sound.midi.MetaEventListener;
+import sound.midi.MetaMessage;
+import sound.midi.MidiSystem;
+import sound.midi.MidiUnavailableException;
+import sound.midi.Sequence;
+import sound.midi.Sequencer;
+
+class MidiPlayer with MetaEventListener {
+
+    // Midi meta event integer for a track ending
+    public static const END_OF_TRACK_MESSAGE: Integer = 47;
+
+    private var sequencer: Sequencer; // play through this sequencer
+    private var loopFlag: Boolean;
+    private var paused: Boolean;
+
+    // Creates a new MidiPlayer object.
+    // Gets the sequencer to play a sequence
+    public new() {
+        try {
+           // MidiSystem is a lot like AudioSystem, in that it allows you to
+           // get the proper materials needed to begin.
+            sequencer = MidiSystem.getSequencer();
+            sequencer.open();
+            sequencer.addMetaEventListener(this);
+        }
+        catch (e: MidiUnavailableException) {
+            sequencer = null;
+        }
+    }
+    
+    // Loads a sequence from the file system. Returns null if an error occurs.
+    public getSequence(filename: String): Sequence {
+        try {
+            return this.getSequence(getResource(filename));
+        }
+        catch (e: IOException) {
+            //e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Loads a sequence from an input stream. Returns null if an error occurs.
+    public getSequence(is: InputStream): Sequence {
+        try {
+            if (!is.markSupported()) {
+                is = new BufferedInputStream(is);
+            }
+            // get the sequence
+            var s: Sequence = MidiSystem.getSequence(is);
+            // close the stream and return the sequence to play!
+            is.close();
+            return s;
+        }
+        catch (e: InvalidMidiDataException) {
+            //ex.printStackTrace();
+            return null;
+        }
+        catch (e: IOException) {
+            //ex.printStackTrace();
+            return null;
+        }
+    }
+    
+    private getResource(filename: String) {
+       return SoundManager.class.getModule()
+                .getContext().getManager().getInputStream(filename);
+     }
+
+    // Plays a sequence, optionally looping. This method returns
+    // immediately. The sequence is not played if it is invalid.
+    public play(sequence: Sequence, loopFlag: Boolean) {
+       // must have a sequencer, sequence, and sequencer must be open
+        if (sequencer != null && sequence != null && sequencer.isOpen()) {
+            try {
+                sequencer.setSequence(sequence);
+                sequencer.start();
+                sequencer.setTempoFactor(1f);
+                this.loopFlag = loopFlag;
+            }
+            catch (e: InvalidMidiDataException) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // This method is called by the sound system when a meta
+    // event occurs. In this case, when the end-of-track meta
+    // event is received, the sequence is restarted if
+    // looping is on.
+    public meta(event: MetaMessage) {
+        if (event.getType() == END_OF_TRACK_MESSAGE) {
+            if (sequencer != null && sequencer.isOpen() && loopFlag) {
+               // tick postion required to reset the sequencer
+               sequencer.setTickPosition(0);
+                sequencer.start();
+            } else {
+               System.exit(0);
+            }
+        }
+    }
+
+    // Stops the sequencer and resets its position to 0.
+    public stop() {
+         if (sequencer != null && sequencer.isOpen()) {
+             sequencer.stop();
+             sequencer.setMicrosecondPosition(0);
+         }
+    }
+
+    // Closes the sequencer
+    public close() {
+         if (sequencer != null && sequencer.isOpen()) {
+             sequencer.close();
+         }
+    }
+
+    // Gets the sequencer
+    public getSequencer(): Sequencer {
+        return sequencer;
+    }
+
+    // Sets the paused state. Music may not imediately pause
+    public setPaused(paused: Boolean) {
+        if (this.paused != paused && sequencer != null && sequencer.isOpen()) {
+            this.paused = paused;
+            if (paused) {
+                sequencer.stop();
+            }
+            else {
+                sequencer.start();
+            }
+        }
+    }
+
+    // Returns the paused state
+    public isPaused(): Boolean {
+        return paused;
+    }
+
+}
+

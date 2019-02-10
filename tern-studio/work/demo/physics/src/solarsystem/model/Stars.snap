@@ -1,0 +1,104 @@
+
+import awt.BasicStroke;
+import awt.BorderLayout;
+import awt.Color;
+import awt.Container;
+import awt.Graphics;
+import awt.Graphics2D;
+import awt.event.ActionEvent;
+import awt.event.ActionListener;
+import awt.geom.AffineTransform;
+import awt.geom.Area;
+import awt.geom.Ellipse2D;
+import awt.geom.GeneralPath;
+import awt.geom.Line2D;
+import awt.geom.Rectangle2D;
+import util.Vector;
+
+import solarsystem.display.SkyPanel;
+import solarsystem.display.SkyFrame;
+import solarsystem.display.Coord;
+
+/**
+ * Class Stars defines a group of stars that are displayed at random locations.
+ * The stars are yellow circles that change diameter to simulate twinlking.
+ * 
+ */
+class Stars {
+    /**
+     * Coordinates of the stars relative to the Sun's position.
+     */
+    var xPos;
+    var yPos;
+    /**
+     * Initial diameter of the stars.
+     */
+    var diameter = 5.0d;
+    /**
+     * Number of stars.
+     */
+    var numOfStars;
+    /**
+     * The Sun at the center of the solar system.
+     */
+    var sun;
+    /**
+     * Constructor for creating a group of stars.
+     * 
+     * @param mNumOfStars The number of stars to create.
+     * @param maxRadius The maximum distance from the sun that a star may be
+     *                   positioned.
+     * @param minRadius The minimum distance from the sun that a star may be
+     *                   positioned.
+     * @param mSun The Sun object which defines the center of the solar system.
+     */
+    new(mNumOfStars, maxRadius, minRadius, mSun) {
+        numOfStars = Math.floor(mNumOfStars);
+        xPos = new Double[numOfStars];
+        yPos = new Double[numOfStars];
+        maxRadius = Math.abs(maxRadius);
+        minRadius = Math.abs(minRadius);
+        sun = mSun;
+
+        if (minRadius == 0)
+            minRadius += sun.getDiameter();
+        //
+        // Chose positions for each star at random between max and min radius.
+        //
+        for (var i = 0; i < numOfStars; ++i) {
+            xPos[i] = Math.random()*maxRadius;
+            var yMin = xPos[i] > minRadius ? 0 : Math.sqrt(minRadius*minRadius - xPos[i]*xPos[i]);
+            var yMax = Math.sqrt(maxRadius*maxRadius -
+            xPos[i]*xPos[i]);
+            yPos[i] = Math.random()*(yMax - yMin) + yMin;
+            if (Math.random() > 0.5)
+                xPos[i]*= -1;
+            if (Math.random() > 0.5)
+                yPos[i]*= -1;
+        }
+    }
+    /**
+     * The method draw displays the stars.
+     * 
+     * @param comp2D The Graphics2D object in which to display the stars.
+     */
+    draw(comp2D) {
+        comp2D.setColor(Color.yellow);
+
+        //
+        // Make stars twinkle by chosing random diameter for each star.
+        //
+
+        for (var i = 0; i < numOfStars; ++i) {
+            var actualDia = diameter*Math.random();
+            var starShape = new Ellipse2D.Double(xPos[i]/
+                                SkyFrame.getScaleFactor() +
+                                sun.getAbsPos(Coord.X),
+                                yPos[i]/SkyFrame.getScaleFactor() +
+                                sun.getAbsPos(Coord.Y),
+                                actualDia,
+                                actualDia);
+            comp2D.fill(starShape);
+        }
+    }
+}

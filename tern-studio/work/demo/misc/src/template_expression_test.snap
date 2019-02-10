@@ -1,0 +1,11 @@
+var list = [33,44,55];
+var name = "blah";
+println("list[1]=${list[1]+1}");
+println("list[1]=$${list[1]}");
+println("list[1]=$$${list[1]}");
+println("blah=${name}");
+println("blah=$${name}");
+println("blah=${name}");
+println("blah=$name");
+println("blah=$$name");
+println("blah=${$name");

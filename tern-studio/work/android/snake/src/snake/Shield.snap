@@ -1,0 +1,16 @@
+
+import android.graphics.Point;
+import android.util.Log;
+
+class Shield extends SpecialElement {
+
+   // maximum duration to display shield in snake moves
+   static const MAX_DURATION = 30;
+
+   new(fieldDimensions, snake, radius) :super(fieldDimensions, snake, radius, MAX_DURATION){
+      this.type = GameElementType.SHIELD;
+
+      println("Shield created");
+   }
+}
+

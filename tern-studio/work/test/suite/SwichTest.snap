@@ -1,0 +1,141 @@
+import test.TestCase;
+
+module FindColor {
+
+   find(i){
+      switch(i){
+      case 0:
+         return "red";
+      case 1:
+         return "blue";
+      case 2:
+         return "green";
+      case 3:
+         return "yellow";
+      default:
+         return "white";
+      }
+   }
+}
+
+class SwichTest with TestCase {
+
+   testSwitch() {
+      var x ="test";
+      var r = [];
+      switch(x){
+      case "blah":
+         r.add("blah");
+         break;
+      case "test":
+         r.add("test");
+      case "foo":
+         r.add("foo");
+         break;
+      default:
+         r.add("default");
+      }
+      assert r.contains("test");
+      assert r.contains("foo");
+      assert !r.contains("default");
+      assert !r.contains("blah");
+   }
+   
+   testSwitchDefault() {
+      var x ="huh";
+      var r = [];
+      switch(x){
+      case "blah":
+         r.add("blah");
+         break;
+      case "test":
+         r.add("test");
+      case "foo":
+         r.add("foo");
+         break;
+      default:
+         r.add("default");       
+      }
+      assert !r.contains("test");
+      assert !r.contains("foo");
+      assert r.contains("default");
+      assert !r.contains("blah");
+   }
+   
+   testSwitchCalculation() {
+      var x ="huh";
+      var r = [];
+      switch(4){
+      case 3:
+         r.add("case 3");
+         break;
+      case 1:
+         r.add("case 1");
+      case "foo":
+         r.add("case foo");
+         break;
+      case 4:
+         r.add("case 4");
+      default:
+         r.add("default");
+      }
+      assert !r.contains("case 3");
+      assert !r.contains("case 1");
+      assert !r.contains("case foo");
+      assert r.contains("case 4");
+      assert r.contains("default");
+   }
+   
+   testSwitchReturn() {
+      assert FindColor.find(0) == "red";
+      assert FindColor.find(1) == "blue";
+      assert FindColor.find(2) == "green";
+      assert FindColor.find(3) == "yellow";
+      assert FindColor.find(4) == "white"; 
+      assert FindColor.find(5) == "white";      
+   }
+   
+   testSwitchType() {
+      var x = new String();
+      var r = null;
+      switch(x.class){
+      case Integer:
+         println("Integer");
+         r = "Integer";
+         break;
+      case Double:
+         println("Double");
+         r = "Double";
+         break;
+      case String:
+         println("String");
+         r = "String";
+         break;
+      default:
+         println("none");
+      }
+      assert r == "String";
+   }
+   
+   testSwitchList() {
+      var x = [1, 2, 3];
+      var r = null;
+      switch(x){
+      case Integer:
+         println("Integer");
+         r = "Integer";
+         break;
+      case [3, 2]:
+         println("[3, 2]");
+         r = "[3, 2]";
+         break;
+      case [1, 2, 3]:
+         println("[1, 2, 3]");
+         r = "[1, 2, 3]";
+         break;
+      default:
+         println("none");
+      }
+      assert r == "[1, 2, 3]";
+   }
+}

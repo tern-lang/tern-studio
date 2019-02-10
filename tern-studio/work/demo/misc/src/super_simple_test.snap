@@ -1,0 +1,19 @@
+
+class X{
+  f(){
+       println("X.f");
+   }
+}
+class Y extends X{
+   f(){
+      println("Y.f");
+   }
+   t(){
+      super.f();
+   }
+}
+var x = new X();
+x.f();
+var y = new Y();
+y.f();
+y.t();

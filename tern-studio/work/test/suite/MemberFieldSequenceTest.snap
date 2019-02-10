@@ -1,0 +1,92 @@
+import test.TestCase;
+
+class Point{
+   const x,y;
+   new(x,y){
+      this.x=x;
+      this.y=y;
+   }
+   override toString(){
+      return "${x},${y}";
+   }
+}
+class Line{
+   @RandomAnnotation(name: 'points', description: 'start and end')
+   private const a:Point,b:Point;
+   @RandomAnnotation(name: 'color', description: 'the color of the line')
+   const color;
+   new(a: Point,b: Point, color){
+      this.color = color;
+      this.a=a;
+      this.b=b;
+   }
+   override toString(){
+      return "${a}->${b}";
+   }
+}
+
+class Stuff {
+   var x=1,y=2,z:String;
+   new(x,y,z){
+      this.x=x;
+      this.y=y;
+      this.z=z;
+   }
+   get(){
+      return "${x},${y},${z}";
+   }
+}
+
+class MemberFieldSequenceTest with TestCase {
+
+   testFieldSequence(){
+      var p1 = new Point(1,2);
+      var p2 = new Point(3,4);
+      var line = new Line(p1,p2,"red");
+      
+      println(line);
+      
+      assert p1.toString() == "1,2";
+      assert p2.toString() == "3,4";
+      assert line.toString() == "1,2->3,4";
+      
+      var s = new Stuff(1,2,3);
+      
+      println(s.z.class);
+      
+      assert s.z.class == String.class;
+      assert s.y.class == Integer.class;
+      assert s.x.class == Integer.class;
+      assert s.get() == "1,2,3";
+      
+      s.z="blah";
+      s.y="22";
+      s.x="11";
+      
+      assert s.z.class == String.class;
+      assert s.y.class == String.class;
+      assert s.x.class == String.class;
+      assert s.get() == "11,22,blah";
+   }
+   
+   testFieldSequenceAnnotations() {
+      var map = {:};
+      Line.class.getProperties()
+                  .stream()
+                  .forEach(x -> map.put(x.name, x.annotations));
+      println(map);
+      println(map.a[0]);
+      
+      assert map.a[0].name == "RandomAnnotation";
+      assert map.a[0].getAttribute("name") == "points";
+      assert map.a[0].getAttribute("description") == "start and end";   
+      
+      assert map.b[0].name == "RandomAnnotation";
+      assert map.b[0].getAttribute("name") == "points";
+      assert map.b[0].getAttribute("description") == "start and end";
+      
+      assert map.color[0].name == "RandomAnnotation";
+      assert map.color[0].getAttribute("name") == "color";
+      assert map.color[0].getAttribute("description") == "the color of the line";
+   }
+}

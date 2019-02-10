@@ -1,0 +1,65 @@
+
+
+module GeneratePage {
+
+   create(result: GenerateResult, all: Map<String, GenerateTestEntry>) {
+      var text = new File("C:/Work/development/snapscript/snap-develop/snap-studio/work/demo/misc/src/generate/index.html").readText();
+      var java = GenerateTestRenderer.createCompileTestCase(result.request.name);
+      
+      text = text.replace("<!-- error -->", result.message);
+      text = text.replace("<!-- content -->", result.request.source);
+      text = text.replace("<!-- result -->", java); 
+      
+      if(result.request.name != "" && result.request.name != null) {
+         text = text.replace('name="name" value=""', `name="name" value="${result.request.name}"`); 
+      }
+      if(result.request.message != "" && result.request.message != null) {
+         text = text.replace('name="message" value=""', `name="message" value="${result.request.message}"`); 
+      }
+      if(result.request.success != true) {
+         text = text.replace('checked>', `>`); 
+      }
+      var removals = "";
+      
+      for(entry in all){
+         removals = removals + createRemoveForm(result, entry.value);
+      }
+      text = text.replace("<!-- history -->", removals);
+      
+      if(result.request.action == 'save'){
+         var file: File = new File("C:/Work/development/snapscript/snap/snap-compile/src/test/java/org/snapscript/compile/staticanalysis", result.request.name + "Test.java"); 
+         
+         if(!all.isEmpty()) {
+            if(file.exists()) {
+               var backup: File = new File("C:/Work/development/snapscript/snap/snap-compile/src/test/java/org/snapscript/compile/staticanalysis", result.request.name + "Test.java.bak_"+System.currentTimeMillis()); 
+               file.renameTo(backup);
+            }
+            file.writeText(java);
+         }
+      }
+      return text;
+   }
+   
+   createRemoveForm(result: GenerateResult, entry: GenerateTestEntry) {
+      return `<!-- test entry -->
+      <table border='1'>
+         <tr>
+            <td valign='top' colspan='2'><pre>${entry.test}</pre></td> 
+         </tr>
+         <tr>
+            <td valign='top'><pre>${entry.source}</pre></td>
+            <td valign='top'>
+               <form action='/generate' method='POST'>
+                  <input type='hidden' name='name' value='${result.request.name}'>               
+                  <input type='hidden' name='key' value='${entry.name}'>
+                  <input type='hidden' name='action' value='remove'>
+                  <input type='hidden' name='source' value=''>                  
+                  <input type='hidden' name='message' value=''>
+                  <input type='submit' value='Delete'>
+               </form>
+            </td>
+         </tr>
+      </table>`;
+   }
+   
+}

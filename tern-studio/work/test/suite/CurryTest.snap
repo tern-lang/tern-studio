@@ -1,0 +1,63 @@
+import test.TestCase;
+
+module Curry {
+
+   class Foo{
+      var x;
+      new(x){
+         this.x=x;
+      }
+      next(){
+         return (y) -> x+y;
+      }
+   }
+
+   func(x){
+      println("func(${x})");
+      return (y) -> x+y;
+   }
+   
+   funcArr(x){
+      return [
+         (y) -> x+y,
+         (y) -> x+y
+      ];
+   }
+   
+   funcFoo(x){
+      return new Foo(x);
+   }
+   
+   arr(x...){
+      return x;
+   }
+}
+
+class CurryTest with TestCase {
+
+   testCurry() {
+      var f = Curry.func(1);
+      f(2);
+      var list = [f];
+      var add1 = Curry.func(1)(2);
+      var add2 = Curry.funcArr(5)[1](2);
+      var add3 = Curry.funcFoo(2).next()(2); // this does not step in !!!
+      var add4 = list[0](4); // call array reference
+      var val = Curry.arr(1,2,3,4)[1];
+      
+      assert val == 2;
+      assert add1 == 3;
+      assert add2 == 7;
+      assert add3 == 4;
+      assert add4 == 5;
+      
+      var fail = false;
+      try {
+         Curry.arr(1,2,3)(2); // this did not return a closure
+      }catch(e){
+         e.printStackTrace();
+         fail = true;
+      }
+      assert fail;
+   }
+}
