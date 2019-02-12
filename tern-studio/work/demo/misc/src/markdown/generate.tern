@@ -1,0 +1,285 @@
+import util.regex.Pattern;
+
+let lines = File("C:\\Work\\development\\tern-lang\\tern\\README.md").readLines();
+let source = LinkedList<String>(lines);
+
+process(lines).stream().forEach(e -> {
+   e.render(System.out);
+});
+   
+func process(source: List<String>): List<HtmlElement> {
+   let elements: List<HtmlElement> = [];
+   
+   while(!source.isEmpty()) {
+      let next = source.get(0);
+      
+      if(next.startsWith("![")) {
+         processImage(source, elements);
+      } else if(next.startsWith("#")) {
+         processHeader(source, elements);
+      } else if(next.trim().startsWith("```")) {
+         processCode(source, elements);
+      } else if(next.trim().startsWith("*")) {
+         processBulletList(source, elements);
+      } else if(next.trim().isEmpty()) {
+         processParagraph(source, elements);
+      } else {
+         source.remove(0);
+      }
+   }
+   return elements;
+}   
+
+func processParagraph(text: List<String>, elements: List<HtmlElement>) {
+   text.remove(0);
+}
+
+func processBulletList(source: List<String>, elements: List<HtmlElement>) {
+   let stack = Stack();
+   let current = null;
+   
+   while(!source.isEmpty()) {
+      let next = source.get(0);
+      
+      if(next.trim().startsWith("*")) {
+         let pattern = Pattern.compile("^(\\s*)\\*\\s*\\[(.*)\\]\\(#(.*)\\)\\s*");
+         let matcher = pattern.matcher(next);    
+         
+         if(!matcher.matches()) {
+            throw new IllegalStateException("Could not match list ${next}");
+         }
+         let indent = matcher.group(1);
+         let title = matcher.group(2).trim();
+         let anchor = matcher.group(3).trim();
+         
+         if(current == null) {
+            let element = BulletListElement([]);
+            
+            stack.push(element);
+            current = indent;
+         }
+         if(indent.length == current.length) {
+            let element = BulletEntryElement(title, anchor);
+            let entries = stack.peek();
+            
+            entries.add(element);
+         } else if(indent.length < current.length) {
+            let entries = stack.pop();
+            
+            if(stack.isEmpty()) {
+               throw new IllegalStateException("Element list already finished");
+            }
+            stack.peek().add(entries);
+            current = indent;
+         } else {
+            let element = BulletListElement([]);
+            let entry = BulletEntryElement(title, anchor);
+            
+            stack.push(element);
+            element.add(entry);
+            current = indent;
+         }
+      } else {
+         break;
+      }
+      source.remove(0);
+   }
+   let element = stack.pop();
+   
+   while(!stack.isEmpty()) {
+      let next = stack.pop();
+      
+      next.add(element);
+      element = next;
+   }
+   elements.add(element);
+}
+
+func processImage(source: List<String>, elements: List<HtmlElement>) {
+   let line = source.remove(0);
+   let pattern = Pattern.compile("!\\[(.*)\\]\\((.*)\\)");
+   let matcher = pattern.matcher(line);
+   
+   if(!matcher.matches()) {
+      throw new IllegalStateException("Invalid image '${line}'");
+   }
+   let text = matcher.group(1);
+   let link = matcher.group(2);
+   let element = ImageElement(text, link);
+   
+   elements.add(element);
+}
+
+func processHeader(source: List<String>, elements: List<HtmlElement>) {
+   let line = source.remove(0);
+   let pattern = Pattern.compile("(#+)\\s+(.+)");
+   let matcher = pattern.matcher(line);
+   
+   if(!matcher.matches()) {
+      throw new IllegalStateException("Invalid header '${line}'");
+   }
+   let size = matcher.group(1).length();
+   let text = matcher.group(2).trim();
+   let element = HeaderElement(text, size);
+   
+   elements.add(element);
+}
+
+func processCode(source: List<String>, elements: List<HtmlElement>) {
+   let line = source.remove(0);
+   let pattern = Pattern.compile("```(.*)");
+   let matcher = pattern.matcher(line);
+   
+   if(!matcher.matches()) {
+      throw new IllegalStateException("Invalid header '${line}'");
+   }
+   let lang = matcher.group(1);
+   let builder = StringBuilder();
+   
+   while(!source.isEmpty()) {
+      let next = source.remove(0);
+      
+      if(next.startsWith("```")) {
+         break;
+      }
+      builder.append(next);
+      builder.append("\n");
+   }
+   let code = builder.toString();
+   let element = CodeElement(code, lang);
+   
+   elements.add(element);
+}
+   
+   
+trait HtmlElement {
+   render(b: PrintStream);
+}
+
+class TextElement with HtmlElement {
+
+   const text;
+   
+   new(text) {
+      this.text = text;
+   }
+   
+   override render(b: PrintStream){
+      b.append(text);
+   }
+}
+
+class BulletEntryElement with HtmlElement {
+
+   const text;
+   const anchor;
+   
+   new(text, anchor) {
+      this.text = text;
+      this.anchor = anchor;
+   }
+   
+   override render(b: PrintStream) {
+      b.println("<li><a href='#${anchor}'>${text}</a></li>");
+   }
+}
+
+class BulletListElement with HtmlElement {
+
+   const list;
+   
+   new(list) {
+      this.list = list;
+   }
+   
+   add(element) {
+      list.add(element);
+   }
+   
+   override render(b: PrintStream) {
+      b.println("<ul>");
+      
+      for(entry in list) {
+         entry.render(b);
+      }
+      b.println("</ul>");
+   }
+}
+
+class LinkElement with HtmlElement {
+   
+   const text;
+   const link;
+   
+   new(text, link) {
+      this.text = text;
+      this.link = link;
+   }
+   
+   override render(b: PrintStream) {
+      b.print("<a href='${link}'>${text}</a>");
+   }
+}
+
+class ImageElement with HtmlElement {
+   
+   const text;
+   const link;
+   
+   new(text, link) {
+      this.text = text;
+      this.link = link;
+   }
+   
+   override render(b: PrintStream) {
+      b.println("<img src='${link}' alt='${text}'>");
+   }
+}
+
+class HeaderElement with HtmlElement {
+
+   const size;
+   const text;
+   
+   new(text, size) {
+      this.text = text;
+      this.size = size;
+   }
+   
+   override render(b: PrintStream) {
+      b.println("<h${size}><a id='${text.toLowerCase().replace(' ', '-')}'></a>${text}</h${size}>");
+   }
+}
+
+class CodeElement with HtmlElement {
+
+   const lang;
+   const code;
+   
+   new(code, lang) {
+      this.code = code;
+      this.lang = lang;
+   }
+   
+   override render(b: PrintStream) {
+      b.print("<pre>${code}</pre>");
+   }
+}
+   
+class ParagraphElement with HtmlElement {
+
+   const elements;
+   
+   new(elements) {
+      this.elements = elements;
+   }
+   
+   override render(b: PrintStream) {
+      b.print("<p>");
+      
+      for(element in elements) {
+         element.render(b);
+      }
+      b.println("</p>");
+   }
+}
