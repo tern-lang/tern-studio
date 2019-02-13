@@ -2,10 +2,20 @@ import util.regex.Pattern;
 
 let lines = File("C:\\Work\\development\\tern-lang\\tern\\README.md").readLines();
 let source = LinkedList<String>(lines);
+let out = File("C:\\Work\\temp\\tern-lang\\test.html");
+let file = FileOutputStream(out);
+let stream = PrintStream(file);
+
+stream.println("<html>");
+stream.println("<body>");
 
 process(lines).stream().forEach(e -> {
-   e.render(System.out);
+   e.render("", stream);
 });
+
+stream.println("</body>");
+stream.println("</html>");
+stream.close();
    
 func process(source: List<String>): List<HtmlElement> {
    let elements: List<HtmlElement> = [];
@@ -13,14 +23,20 @@ func process(source: List<String>): List<HtmlElement> {
    while(!source.isEmpty()) {
       let next = source.get(0);
       
-      if(next.startsWith("![")) {
+      if(next.trim().startsWith("![")) {
          processImage(source, elements);
+      } else if(next.trim().startsWith("[![")) {
+         processVideo(source, elements);         
+      } else if(next.trim().startsWith("[")) {
+         processLink(source, elements);   
       } else if(next.startsWith("#")) {
          processHeader(source, elements);
       } else if(next.trim().startsWith("```")) {
          processCode(source, elements);
       } else if(next.trim().startsWith("*")) {
          processBulletList(source, elements);
+      } else if(next.trim().startsWith("|")) {
+         processTable(source, elements);   
       } else if(next.trim().isEmpty()) {
          processParagraph(source, elements);
       } else {
@@ -31,12 +47,57 @@ func process(source: List<String>): List<HtmlElement> {
 }   
 
 func processParagraph(text: List<String>, elements: List<HtmlElement>) {
+   let paragraph = ParagraphElement();
+   
    text.remove(0);
+   
+   while(!text.isEmpty()) {
+      let line = text.get(0);
+      
+      if(line.trim().isEmpty()) {
+         break;
+      }
+      let char = line.trim().charAt(0).toString();
+      
+      if("*[`!#|".contains(char)) {
+         break;
+      }
+      let element = TextElement(line);
+      
+      paragraph.addElement(element);
+      text.remove(0);
+   }
+   elements.add(paragraph);
+}
+
+func processTable(text: List<String>, elements: List<HtmlElement>) {
+   let paragraph = ParagraphElement();
+   let columns = text.remove(0).trim().substring(1).split("\\s*\\|\\s*");
+   let table = TableElement(columns);
+   
+   text.remove(0); // remove the +----------+
+   
+   while(!text.isEmpty()) {
+      let line = text.get(0);
+      
+      if(!line.trim().startsWith("|")) {
+         break;
+      }
+      let values = line.trim().substring(1).split("\\s*\\|\\s*");
+      let element = TableRowElement(values);
+      
+      table.addElement(element);
+      text.remove(0);
+   }
+   elements.add(table);
 }
 
 func processBulletList(source: List<String>, elements: List<HtmlElement>) {
+   let previous = BulletElement(null, null, "");
    let stack = Stack();
-   let current = null;
+   let root = previous;
+   
+   stack.push(previous);
    
    while(!source.isEmpty()) {
       let next = source.get(0);
@@ -52,46 +113,51 @@ func processBulletList(source: List<String>, elements: List<HtmlElement>) {
          let title = matcher.group(2).trim();
          let anchor = matcher.group(3).trim();
          
-         if(current == null) {
-            let element = BulletListElement([]);
+         if(indent.length == previous.indent.length) {
+            // we are working on the same list
+            let element = BulletElement(title, anchor, indent);
+            let parent = stack.peek();
             
-            stack.push(element);
-            current = indent;
-         }
-         if(indent.length == current.length) {
-            let element = BulletEntryElement(title, anchor);
-            let entries = stack.peek();
+            parent.addElement(element);
+            previous = element;
+         } else if(indent.length < previous.indent.length) {
+            // we go back to the parent
+            let element = BulletElement(title, anchor, indent);
+            let current = stack.pop();
+            let parent = stack.peek();
             
-            entries.add(element);
-         } else if(indent.length < current.length) {
-            let entries = stack.pop();
-            
-            if(stack.isEmpty()) {
-               throw new IllegalStateException("Element list already finished");
-            }
-            stack.peek().add(entries);
-            current = indent;
+            parent.addElement(element);
+            previous = element;
          } else {
-            let element = BulletListElement([]);
-            let entry = BulletEntryElement(title, anchor);
+            // why does this not become the current???
+            // create a new child by indenting
+            let element = BulletElement(title, anchor, indent);
             
-            stack.push(element);
-            element.add(entry);
-            current = indent;
+            stack.push(previous);
+            previous.addElement(element);
+            previous = element;
          }
       } else {
          break;
       }
       source.remove(0);
    }
-   let element = stack.pop();
+   elements.add(root);
+}
+
+func processVideo(source: List<String>, elements: List<HtmlElement>) {
+   let line = source.remove(0);
+   let pattern = Pattern.compile("\\[!\\[(.*)\\]\\((.*)\\)\\]\\((.*)\\)");
+   let matcher = pattern.matcher(line);
    
-   while(!stack.isEmpty()) {
-      let next = stack.pop();
-      
-      next.add(element);
-      element = next;
+   if(!matcher.matches()) {
+      throw new IllegalStateException("Invalid video '${line}'");
    }
+   let title = matcher.group(1);
+   let image = matcher.group(2);
+   let video = matcher.group(3);
+   let element = VideoElement(video, image, title);
+   
    elements.add(element);
 }
 
@@ -106,6 +172,21 @@ func processImage(source: List<String>, elements: List<HtmlElement>) {
    let text = matcher.group(1);
    let link = matcher.group(2);
    let element = ImageElement(text, link);
+   
+   elements.add(element);
+}
+
+func processLink(source: List<String>, elements: List<HtmlElement>) {
+   let line = source.remove(0);
+   let pattern = Pattern.compile("\\[(.*)\\]\\((.*)\\)");
+   let matcher = pattern.matcher(line);
+   
+   if(!matcher.matches()) {
+      throw new IllegalStateException("Invalid link '${line}'");
+   }
+   let text = matcher.group(1);
+   let link = matcher.group(2);
+   let element = LinkElement(text, link);
    
    elements.add(element);
 }
@@ -152,11 +233,23 @@ func processCode(source: List<String>, elements: List<HtmlElement>) {
 }
    
    
-trait HtmlElement {
-   render(b: PrintStream);
+abstract class HtmlElement {
+   const elements;
+   
+   new() {
+      this.elements = [];
+   }
+   
+   addElement(e: HtmlElement) {
+      if(e) {
+         elements.add(e);
+      }
+   }
+   
+   abstract render(indent: String, b: PrintStream);
 }
 
-class TextElement with HtmlElement {
+class TextElement extends HtmlElement {
 
    const text;
    
@@ -164,49 +257,106 @@ class TextElement with HtmlElement {
       this.text = text;
    }
    
-   override render(b: PrintStream){
-      b.append(text);
+   override render(indent: String, b: PrintStream){
+      b.print("${indent}${text}");
    }
 }
 
-class BulletEntryElement with HtmlElement {
+class VideoElement extends HtmlElement {
+
+   const video;
+   const image;
+   const title;
+   
+   new(video, image, title) {
+      this.video = video;
+      this.image = image;
+      this.title = title;
+   }
+
+   override render(indent: String, b: PrintStream) {
+      b.print("${indent}<p>");
+      b.print("<a href='${video}' rel='nofollow'>");
+      b.print("<img alt='${title}' src='${image}' style='max-width:100%;'>");
+      b.print("</a>");
+      b.print("</p>");
+
+   }
+}
+
+class TableElement extends HtmlElement {
+
+   const titles;
+   
+   new(titles) {
+      this.titles = titles;
+   }
+   
+   override render(indent: String, b: PrintStream) {
+      b.println("${indent}<table border='1'>");
+      
+      for(title in titles) {
+         b.println("${indent}    <th>${title}</th>");
+      }
+      for(element in elements) {
+         element.render("${indent}   ", b);
+      }
+      b.println("${indent}</table>");
+   }
+}
+
+class TableRowElement extends HtmlElement {
+
+   const values;
+   
+   new(values) {
+      this.values = values;
+   }
+   
+   override render(indent: String, b: PrintStream) {
+      b.println("${indent}<tr>");
+      
+      for(value in values){
+         b.println("${indent}   <td>${value}</td>");
+      }
+      b.println("${indent}</tr>");
+   }
+}
+
+class BulletElement extends HtmlElement {
 
    const text;
    const anchor;
+   const indent;
    
-   new(text, anchor) {
+   new(text, anchor, indent) {
       this.text = text;
       this.anchor = anchor;
+      this.indent = indent;
    }
    
-   override render(b: PrintStream) {
-      b.println("<li><a href='#${anchor}'>${text}</a></li>");
-   }
-}
-
-class BulletListElement with HtmlElement {
-
-   const list;
-   
-   new(list) {
-      this.list = list;
-   }
-   
-   add(element) {
-      list.add(element);
-   }
-   
-   override render(b: PrintStream) {
-      b.println("<ul>");
-      
-      for(entry in list) {
-         entry.render(b);
+   override render(i: String, b: PrintStream) {
+      if(text) {
+         b.print("${i}${indent}<li><a href='#${anchor}'>${text}</a>");
       }
-      b.println("</ul>");
+      if(!elements.isEmpty()) {
+         b.println();
+         b.println("${i}${indent}<ul>");
+      
+         for(entry in elements) {
+            entry.render("${i}${indent}", b);
+         }
+         b.println("${i}${indent}</ul>");
+         b.println("${i}${indent}</li>");
+      } else {
+         if(text) {
+            b.println("</li>");
+         }
+      }
    }
 }
 
-class LinkElement with HtmlElement {
+class LinkElement extends HtmlElement {
    
    const text;
    const link;
@@ -216,12 +366,12 @@ class LinkElement with HtmlElement {
       this.link = link;
    }
    
-   override render(b: PrintStream) {
-      b.print("<a href='${link}'>${text}</a>");
+   override render(indent: String, b: PrintStream) {
+      b.print("${indent}<a href='${link}'>${text}</a>");
    }
 }
 
-class ImageElement with HtmlElement {
+class ImageElement extends HtmlElement {
    
    const text;
    const link;
@@ -231,12 +381,12 @@ class ImageElement with HtmlElement {
       this.link = link;
    }
    
-   override render(b: PrintStream) {
-      b.println("<img src='${link}' alt='${text}'>");
+   override render(indent: String, b: PrintStream) {
+      b.println("${indent}<img src='${link}' alt='${text}'>");
    }
 }
 
-class HeaderElement with HtmlElement {
+class HeaderElement extends HtmlElement {
 
    const size;
    const text;
@@ -246,12 +396,12 @@ class HeaderElement with HtmlElement {
       this.size = size;
    }
    
-   override render(b: PrintStream) {
-      b.println("<h${size}><a id='${text.toLowerCase().replace(' ', '-')}'></a>${text}</h${size}>");
+   override render(indent: String, b: PrintStream) {
+      b.println("${indent}<h${size}><a id='${text.toLowerCase().replace(' ', '-')}'></a>${text}</h${size}>");
    }
 }
 
-class CodeElement with HtmlElement {
+class CodeElement extends HtmlElement {
 
    const lang;
    const code;
@@ -261,25 +411,19 @@ class CodeElement with HtmlElement {
       this.lang = lang;
    }
    
-   override render(b: PrintStream) {
-      b.print("<pre>${code}</pre>");
+   override render(indent: String, b: PrintStream) {
+      b.print("${indent}<pre>${code}</pre>");
    }
 }
    
-class ParagraphElement with HtmlElement {
-
-   const elements;
+class ParagraphElement extends HtmlElement {
    
-   new(elements) {
-      this.elements = elements;
-   }
-   
-   override render(b: PrintStream) {
-      b.print("<p>");
+   override render(indent: String, b: PrintStream) {
+      b.print("${indent}<p>");
       
       for(element in elements) {
-         element.render(b);
+         element.render(indent, b);
       }
-      b.println("</p>");
+      b.println("${indent}</p>");
    }
 }
