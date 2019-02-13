@@ -258,8 +258,64 @@ class TextElement extends HtmlElement {
    }
    
    override render(indent: String, b: PrintStream){
-      b.print("${indent}${text}");
+      let builder = StringBuilder();
+      let original = text;
+      
+      loop {
+         if(original.matches(".*\\[.*\\]\\(.*\\).*")) {
+            let length = original.length();
+            let start = original.indexOf("[");
+            let end = original.indexOf(")", start);
+            
+            while(end < length) {
+               let char = original.charAt(end);
+               
+               if(char != ')') {
+                  break;
+               }
+               end++;
+            }
+            let prefix = original.substring(0, start);
+            let link = original.substring(start, end);
+            let pattern = Pattern.compile("\\[(.*)\\]\\((.*)\\)");
+            let matcher = pattern.matcher(link);
+            
+            if(!matcher.matches()) {
+               throw new IllegalStateException("Invalid link ${link}");
+            }
+            let display = matcher.group(1);
+            let address = matcher.group(2);
+            
+            builder.append(prefix);
+            builder.append("<a href='${address}'>${display}</a>");
+            
+            original = original.substring(end, length);
+         } else if(original.matches(".*```.*```.*")) {
+            let length = original.length();
+            let start = original.indexOf("```");
+            let end = original.indexOf("```", start + 1);
+            let prefix = original.substring(0, start);
+            let code = original.substring(start, end + 3);
+            let pattern = Pattern.compile("```(.*)```");
+            let matcher = pattern.matcher(code);
+            
+            if(!matcher.matches()) {
+               throw new IllegalStateException("Invalid code ${code}");
+            }
+            let source = matcher.group(1);
+            
+            builder.append(prefix);
+            builder.append("<span style='font-family: monospace'>${source}</span>");
+            
+            original = original.substring(end + 3, length);
+         } else {
+            builder.append(original);
+            break;
+         }
+      }
+      b.print("${indent}${builder}");
    }
+   
 }
 
 class VideoElement extends HtmlElement {
