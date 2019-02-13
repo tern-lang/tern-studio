@@ -7,6 +7,9 @@ let file = FileOutputStream(out);
 let stream = PrintStream(file);
 
 stream.println("<html>");
+stream.println("<head>");
+stream.println("  <link rel='stylesheet' href='./test.css'>");
+stream.println("</head>");
 stream.println("<body>");
 
 process(lines).stream().forEach(e -> {
@@ -349,7 +352,7 @@ class TableElement extends HtmlElement {
    }
    
    override render(indent: String, b: PrintStream) {
-      b.println("${indent}<table border='1'>");
+      b.println("${indent}<table border='0'>");
       
       for(title in titles) {
          b.println("${indent}    <th>${title}</th>");
