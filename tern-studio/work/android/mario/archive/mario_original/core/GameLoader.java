@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import tern.android.game.framework.Game;
+import org.ternlang.android.game.framework.Game;
 
 import mario.core.tile.GameTile;
 import mario.core.tile.TileMap;

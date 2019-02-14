@@ -3,10 +3,10 @@ package mario.core;
 
 import java.util.Random;
 
-import tern.android.game.framework.Game;
-import tern.android.game.framework.Music;
-import tern.android.game.framework.Sound;
-import tern.android.game.framework.sfx.AndroidAudio;
+import org.ternlang.android.game.framework.Game;
+import org.ternlang.android.game.framework.Music;
+import org.ternlang.android.game.framework.Sound;
+import org.ternlang.android.game.framework.sfx.AndroidAudio;
 
 /**
  * Manages sound and musics for the game

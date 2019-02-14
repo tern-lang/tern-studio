@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
-import tern.android.game.framework.Game;
+import org.ternlang.android.game.framework.Game;
 
 import mario.util.SpriteMap;
 import android.app.Activity;

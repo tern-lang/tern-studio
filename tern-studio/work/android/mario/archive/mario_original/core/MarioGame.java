@@ -1,7 +1,7 @@
 package mario.core;
 
-import tern.android.game.framework.Screen;
-import tern.android.game.framework.gfx.AndroidGame;
+import org.ternlang.android.game.framework.Screen;
+import org.ternlang.android.game.framework.gfx.AndroidGame;
 
 import mario.screens.SplashLoadingScreen;
 import android.app.Activity;

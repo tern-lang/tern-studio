@@ -1,8 +1,8 @@
 
-import tern.develop.http.resource.StackTraceError;
+import org.ternlang.develop.http.resource.StackTraceError;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import tern.develop.http.resource.FileResolver;
+import org.ternlang.develop.http.resource.FileResolver;
 
 class VelocityConverter {
 

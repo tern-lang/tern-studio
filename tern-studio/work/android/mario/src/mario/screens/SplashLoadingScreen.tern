@@ -1,7 +1,7 @@
-import tern.game.framework.Game;
-import tern.game.framework.Graphics;
-import tern.game.framework.Screen;
-import tern.game.framework.Graphics.ImageFormat;
+import org.ternlang.game.framework.Game;
+import org.ternlang.game.framework.Graphics;
+import org.ternlang.game.framework.Screen;
+import org.ternlang.game.framework.Graphics.ImageFormat;
 
 import mario.core.Assets;
 

@@ -4,7 +4,7 @@ import sound.sampled.AudioSystem;
 import util.concurrent.atomic.AtomicInteger;
 
 
-var dir = "C:\\Work\\development\\snapscript\\snap-develop\\snap-develop\\work\\demo\\mario\\resources\\maps\\";
+var dir = "C:\\Work\\development\\ternlang\\snap-develop\\snap-develop\\work\\demo\\mario\\resources\\maps\\";
 var original = "map2.txt";
 var append = "map2.txt";
 var dest = "map4.txt";

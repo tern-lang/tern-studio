@@ -15,7 +15,7 @@ import util.stream.Collectors;
 
 Server.create(8911).register("/", (req, resp) -> 
    {
-      var text = new File("C:/Work/development/snapscript/snap-develop/snap-studio/work/demo/misc/src/generate/index.html").readText();
+      var text = new File("C:/Work/development/ternlang/snap-develop/snap-studio/work/demo/misc/src/generate/index.html").readText();
    
       resp.setContentType("text/html");
       resp.getPrintStream().println(text);

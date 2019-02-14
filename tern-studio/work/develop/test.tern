@@ -762,7 +762,7 @@ class ProcessLauncher {
       command.add(classes);
       command.add(target);
       command.add(dependencies);
-      command.add("tern.");
+      command.add("org.ternlang.");
       command.add(resources);
       command.add(name);
       command.add(port);

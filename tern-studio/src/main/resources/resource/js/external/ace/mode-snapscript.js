@@ -1,4 +1,4 @@
-define("ace/mode/snapscript_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/text_highlight_rules"], function(require, exports, module) {
+define("ace/mode/ternlang_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/text_highlight_rules"], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
@@ -251,12 +251,12 @@ oop.inherits(FoldMode, BaseFoldMode);
 
 });
 
-ace.define("ace/mode/snapscript",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/snapscript_highlight_rules","ace/mode/folding/cstyle"], function(require, exports, module) {
+ace.define("ace/mode/ternlang",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/ternlang_highlight_rules","ace/mode/folding/cstyle"], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
-var ActionScriptHighlightRules = require("./snapscript_highlight_rules").ActionScriptHighlightRules;
+var ActionScriptHighlightRules = require("./ternlang_highlight_rules").ActionScriptHighlightRules;
 var FoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
@@ -268,7 +268,7 @@ oop.inherits(Mode, TextMode);
 (function() {
     this.lineCommentStart = "//";
     this.blockComment = {start: "/*", end: "*/"};
-    this.$id = "ace/mode/snapscript";
+    this.$id = "ace/mode/ternlang";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;

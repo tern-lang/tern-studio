@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import tern.android.game.framework.FileIO;
+import org.ternlang.android.game.framework.FileIO;
 
 public class Settings {
    public static boolean soundEnabled = true;

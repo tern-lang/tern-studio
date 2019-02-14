@@ -1,4 +1,4 @@
-File("c:/Work/development/snapscript")
+File("c:/Work/development/ternlang")
    .findFiles(n -> n.name.equals("pom.xml"))
    .stream()
    .forEach(f -> {

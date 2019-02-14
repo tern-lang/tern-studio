@@ -1,4 +1,4 @@
-package tern.compile;
+package org.ternscript.compile;
 
 %imports%
 

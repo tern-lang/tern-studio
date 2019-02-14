@@ -2,9 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>tern-studio</artifactId>
   <packaging>jar</packaging>
-  <url>http://www.tern-lang.org</url>
+  <url>http://tern-lang.org</url>
   <parent>
-    <groupId>tern</groupId>
+    <groupId>org.ternlang</groupId>
     <artifactId>tern-studio-parent</artifactId>
     <version>1.4.6</version>
   </parent>
@@ -15,12 +15,12 @@
   </properties>
   <dependencies>
     <dependency>
-      <groupId>tern</groupId>
+      <groupId>org.ternlang</groupId>
       <artifactId>tern-studio-build</artifactId>
       <version>1.4.6</version>
     </dependency>
     <dependency>
-      <groupId>tern</groupId>
+      <groupId>org.ternlang</groupId>
       <artifactId>tern-studio-service</artifactId>
       <version>1.4.6</version>
     </dependency>
@@ -69,11 +69,11 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <mainClass>tern.studio.StudioApplication</mainClass>
-          <finalName>ternd</finalName>
+          <mainClass>org.ternlang.studio.StudioApplication</mainClass>
+          <finalName>snapd</finalName>
           <excludes>
             <exclude>
-              <groupId>tern</groupId>
+              <groupId>org.ternlang</groupId>
               <artifactId>tern-studio-build</artifactId> <!-- only needed for development -->
             </exclude>
             <exclude>

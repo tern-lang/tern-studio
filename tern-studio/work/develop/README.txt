@@ -1,6 +1,6 @@
 {
    "Workspace": {
-      "class": "tern.develop.Workspace",
+      "class": "org.ternscript.develop.Workspace",
       "init-method": "create",
       "constructor-arguments": [
          "${directory}"
@@ -8,7 +8,7 @@
    },
    
    "BackupManager": {
-      "class": "tern.develop.BackupManager",
+      "class": "org.ternscript.develop.BackupManager",
       "constructor-arguments": [
          "ConsoleLogger",
          "Workspace"

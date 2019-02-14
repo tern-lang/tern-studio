@@ -49,14 +49,14 @@ module GenerateTestRenderer {
    }
    
    createCompileTestCase(name: String){
-      var text = new File("C:/Work/development/snapscript/snap-develop/snap-studio/work/demo/misc/src/generate/CompileTestCase.txt").readText();
+      var text = new File("C:/Work/development/ternlang/snap-develop/snap-studio/work/demo/misc/src/generate/CompileTestCase.txt").readText();
       text = text.replace("%imports%", "
 import junit.framework.TestCase;
 
-import tern.compile.ClassPathCompilerBuilder;
-import tern.compile.Compiler;
-import tern.compile.verify.VerifyError;
-import tern.compile.verify.VerifyException;");
+import org.ternlang.compile.ClassPathCompilerBuilder;
+import org.ternlang.compile.Compiler;
+import org.ternlang.compile.verify.VerifyError;
+import org.ternlang.compile.verify.VerifyException;");
    
       text = text.replace("%name%",  name);
       

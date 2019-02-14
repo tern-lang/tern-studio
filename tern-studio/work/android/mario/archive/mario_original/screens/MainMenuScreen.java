@@ -2,10 +2,10 @@ package mario.screens;
 
 import java.util.List;
 
-import tern.android.game.framework.Game;
-import tern.android.game.framework.Graphics;
-import tern.android.game.framework.Screen;
-import tern.android.game.framework.Input.TouchEvent;
+import org.ternlang.android.game.framework.Game;
+import org.ternlang.android.game.framework.Graphics;
+import org.ternlang.android.game.framework.Screen;
+import org.ternlang.android.game.framework.Input.TouchEvent;
 
 import mario.core.Assets;
 import android.graphics.Rect;

@@ -1,9 +1,9 @@
 import java.util.List;
 
-import tern.game.framework.Game;
-import tern.game.framework.Graphics;
-import tern.game.framework.Screen;
-import tern.game.framework.Input.TouchEvent;
+import org.ternlang.game.framework.Game;
+import org.ternlang.game.framework.Graphics;
+import org.ternlang.game.framework.Screen;
+import org.ternlang.game.framework.Input.TouchEvent;
 
 import mario.core.Assets;
 import android.graphics.Rect;

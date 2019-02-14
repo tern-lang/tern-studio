@@ -1,7 +1,7 @@
 import util.stream.Collectors;
 import util.regex.Pattern;
 
-var src = new File("C:\\Work\\development\\snapscript\\snap-develop\\snap-develop\\src\\main\\java");
+var src = new File("C:\\Work\\development\\ternlang\\snap-develop\\snap-develop\\src\\main\\java");
 var dest = new File("c:\\Temp\\develop");
 
 dest.mkdirs();
@@ -29,11 +29,11 @@ function build(path, name, sources){
    println("${path}: ${name} -> ${sources}");
    
    for(var source in sources){
-      if(source.getAbsolutePath().indexOf("C:\\Work\\development\\snapscript\\snap-develop\\snap-develop\\src\\main\\java\\org\\snapscript") == -1){
+      if(source.getAbsolutePath().indexOf("C:\\Work\\development\\ternlang\\snap-develop\\snap-develop\\src\\main\\java\\org\\ternlang") == -1){
          throw "Invalid source";
       }
       var result = new File(source.getAbsolutePath()
-         .replace("C:\\Work\\development\\snapscript\\snap-develop\\snap-develop\\src\\main\\java\\org\\snapscript", "c:\\temp\\develop")
+         .replace("C:\\Work\\development\\ternlang\\snap-develop\\snap-develop\\src\\main\\java\\org\\ternlang", "c:\\temp\\develop")
          .replace(".java", ".tern"));
          
       result.getParentFile().mkdirs();

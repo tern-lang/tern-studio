@@ -1,4 +1,4 @@
-SnapScript
+ternlang
 ==============
 
 Snap is an open source, optionally typed, object oriented scripting language for the Java platform. 
@@ -10,7 +10,7 @@ The language is ideal for embedding in to an existing application, and is a frac
 similar languages for the Java platform. In addition to embedding it can be run as a standalone 
 interpreter and has an development environment which allows scripts to be debugged and profiled.
 
-[http://www.tern-lang.org/](http://www.tern-lang.org/)
+[http://tern-lang.org/](http://tern-lang.org/)
 
 #### Development Environment
 
@@ -18,7 +18,7 @@ Snap comes with a development environment that is available over HTTP on any web
 supports Web Sockets. To develop and debug scripts the devlopment environment can be started with 
 the command shown below. All that is required is a web browser and Java 1.5 or greater. The 
 development environment is a single JAR file that can be downloaded from 
-[here](https://github.com/snapscript/snap-release). In addition an embeddable version is available 
+[here](https://github.com/ternlang/snap-release). In addition an embeddable version is available
 which can be integrated in to any Java application.
 
 *java -jar snapd.jar --mode=develop --directory=work --port=4457*

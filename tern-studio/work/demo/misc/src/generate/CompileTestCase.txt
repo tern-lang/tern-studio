@@ -1,4 +1,4 @@
-package tern.compile.staticanalysis;
+package org.ternscript.compile.staticanalysis;
 
 %imports%
 

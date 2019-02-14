@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>tern</groupId>
+  <groupId>org.ternlang</groupId>
   <artifactId>tern-studio-parent</artifactId>
   <version>1.4.6</version>
   <packaging>pom</packaging>
@@ -15,7 +15,7 @@
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
     <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
-    <start-class>tern.studio.StudioApplication</start-class>
+    <start-class>org.ternlang.studio.StudioApplication</start-class>
   </properties>
 
   <dependencies>

@@ -1,8 +1,8 @@
 
-import tern.android.game.Frame;
-import tern.android.game.FrameThread;
-import tern.android.game.Panel;
-import tern.android.game.R;
+import org.ternlang.android.game.Frame;
+import org.ternlang.android.game.FrameThread;
+import org.ternlang.android.game.Panel;
+import org.ternlang.android.game.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;

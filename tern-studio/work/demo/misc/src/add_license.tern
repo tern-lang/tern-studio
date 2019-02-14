@@ -1,5 +1,5 @@
 var x = "this is dangerous";
-// new File("C:\\Work\\development\\snapscript")
+// new File("C:\\Work\\development\\ternlang")
 //    .findFiles(f -> f.name.endsWith(".java") && f.canonicalPath.contains("\\src\\main\\java"))
 //    .forEach(f -> {
 //       var text = f.readText();

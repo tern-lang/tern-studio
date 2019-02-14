@@ -1,9 +1,9 @@
 package mario.screens;
 
-import tern.android.game.framework.Game;
-import tern.android.game.framework.Graphics;
-import tern.android.game.framework.Screen;
-import tern.android.game.framework.Graphics.ImageFormat;
+import org.ternlang.android.game.framework.Game;
+import org.ternlang.android.game.framework.Graphics;
+import org.ternlang.android.game.framework.Screen;
+import org.ternlang.android.game.framework.Graphics.ImageFormat;
 
 import mario.core.Assets;
 

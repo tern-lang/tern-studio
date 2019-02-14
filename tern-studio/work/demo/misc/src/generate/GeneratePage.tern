@@ -3,7 +3,7 @@
 module GeneratePage {
 
    create(result: GenerateResult, all: Map<String, GenerateTestEntry>) {
-      var text = new File("C:/Work/development/snapscript/snap-develop/snap-studio/work/demo/misc/src/generate/index.html").readText();
+      var text = new File("C:/Work/development/ternlang/snap-develop/snap-studio/work/demo/misc/src/generate/index.html").readText();
       var java = GenerateTestRenderer.createCompileTestCase(result.request.name);
       
       text = text.replace("<!-- error -->", result.message);
@@ -27,11 +27,11 @@ module GeneratePage {
       text = text.replace("<!-- history -->", removals);
       
       if(result.request.action == 'save'){
-         var file: File = new File("C:/Work/development/snapscript/snap/snap-compile/src/test/java/org/snapscript/compile/staticanalysis", result.request.name + "Test.java"); 
+         var file: File = new File("C:/Work/development/ternlang/snap/snap-compile/src/test/java/org/ternlang/compile/staticanalysis", result.request.name + "Test.java");
          
          if(!all.isEmpty()) {
             if(file.exists()) {
-               var backup: File = new File("C:/Work/development/snapscript/snap/snap-compile/src/test/java/org/snapscript/compile/staticanalysis", result.request.name + "Test.java.bak_"+System.currentTimeMillis()); 
+               var backup: File = new File("C:/Work/development/ternlang/snap/snap-compile/src/test/java/org/ternlang/compile/staticanalysis", result.request.name + "Test.java.bak_"+System.currentTimeMillis());
                file.renameTo(backup);
             }
             file.writeText(java);

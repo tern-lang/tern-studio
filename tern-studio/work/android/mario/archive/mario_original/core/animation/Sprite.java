@@ -1,7 +1,7 @@
 package mario.core.animation;
 
 
-import tern.android.game.framework.Input.KeyEvent;
+import org.ternlang.android.game.framework.Input.KeyEvent;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

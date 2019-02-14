@@ -1,4 +1,4 @@
-import tern.game.framework.Input.KeyEvent;
+import org.ternlang.game.framework.Input.KeyEvent;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

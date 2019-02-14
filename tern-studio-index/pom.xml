@@ -2,25 +2,25 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>tern-studio-index</artifactId>
   <packaging>jar</packaging>
-  <url>http://www.tern-lang.org</url>
+  <url>http://tern-lang.org</url>
   <parent>
-    <groupId>tern</groupId>
+    <groupId>org.ternlang</groupId>
     <artifactId>tern-studio-parent</artifactId>
     <version>1.4.6</version>
   </parent>
   <dependencies>
     <dependency>
-      <groupId>tern</groupId>
+      <groupId>org.ternlang</groupId>
       <artifactId>tern-compile</artifactId>
       <version>1.4.6</version>
     </dependency>
     <dependency>
-      <groupId>tern</groupId>
+      <groupId>org.ternlang</groupId>
       <artifactId>tern-tree</artifactId>
       <version>1.4.6</version>
     </dependency>
     <dependency>
-      <groupId>tern</groupId>
+      <groupId>org.ternlang</groupId>
       <artifactId>tern-studio-common</artifactId>
       <version>1.4.6</version>
     </dependency>

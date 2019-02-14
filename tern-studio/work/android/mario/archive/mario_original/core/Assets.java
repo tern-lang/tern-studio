@@ -2,9 +2,9 @@ package mario.core;
 
 import java.util.Random;
 
-import tern.android.game.framework.Image;
-import tern.android.game.framework.Music;
-import tern.android.game.framework.Sound;
+import org.ternlang.android.game.framework.Image;
+import org.ternlang.android.game.framework.Music;
+import org.ternlang.android.game.framework.Sound;
 
 public class Assets {
     

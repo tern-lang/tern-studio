@@ -88,7 +88,11 @@ func renameDirs(directory, fromPackage, toPackage, test) {
    let toParts = toPackage.split("\\.");
    
    if(fromParts.length != toParts.length) {
-      throw new Exception("Lengths do not match");
+      if(toParts.length > fromParts.length) {
+         throw new Exception("Lengths do not match");
+      }
+      let src = "org." + toPackage;
+      toParts = src.split("\\.");
    }
    File(directory)
       .findFiles(f -> f.isDirectory())
@@ -114,9 +118,8 @@ func renameDirs(directory, fromPackage, toPackage, test) {
       });
 }
 
-
-performRefactor("C:\\Work\\development\\tern", 
-   "tern",
+performRefactor("C:\\Work\\development\\tern-lang", 
+   "org.ternlang",
    "tern",
    ["snap-"],
    "tern-",

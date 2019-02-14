@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import tern.game.framework.Game;
+import org.ternlang.game.framework.Game;
 
 import mario.core.tile.GameTile;
 import mario.core.tile.TileMap;

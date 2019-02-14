@@ -1,8 +1,8 @@
 import java.util.Random;
 
-import tern.game.framework.Image;
-import tern.game.framework.Music;
-import tern.game.framework.Sound;
+import org.ternlang.game.framework.Image;
+import org.ternlang.game.framework.Music;
+import org.ternlang.game.framework.Sound;
 
 class Assets {
     
