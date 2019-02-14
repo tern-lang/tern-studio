@@ -734,7 +734,7 @@ export module FileEditor {
       var token = resource.toLowerCase();
       
       if(Common.stringEndsWith(token, ".tern")) {
-         return "ace/mode/ternlang";
+         return "ace/mode/tern";
       }
       if(Common.stringEndsWith(token, ".policy")) {
          return "ace/mode/policy";
@@ -1106,7 +1106,7 @@ export module FileEditor {
       editor.completers = [autoComplete];
       // setEditorTheme("eclipse"); // set the default to eclipse
       
-      editor.getSession().setMode("ace/mode/ternlang");
+      editor.getSession().setMode("ace/mode/tern");
       editor.getSession().setTabSize(3);
       
       editor.setReadOnly(false);
