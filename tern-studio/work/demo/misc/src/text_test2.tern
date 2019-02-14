@@ -1,15 +1,15 @@
 
 
-let x = File("c://Work//development//tern-lang")
-   .findFiles(x -> x.name.equals("tern"))
-   .stream()
-   .forEach(x -> {
-      if(x.getParentFile().name.equals("org")) {
-         let newFile = new File(x.parentFile.parentFile, "tern");
-         let oldFile = new File(x.parentFile.canonicalPath);
-         if(x.renameTo(newFile)) {
-            println(oldFile.delete());
-         }
-         println("${x} -> ${newFile}");
-      }
-   });
+func fib() {
+   let a = 1l, b = 1l;
+   
+   loop {
+      (a, b) = (b, a + b);
+      yield a;
+      
+   }
+}
+
+for(a in fib()) {
+   println(a);
+}
