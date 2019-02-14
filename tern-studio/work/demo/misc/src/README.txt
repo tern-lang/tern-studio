@@ -21,10 +21,10 @@ development environment is a single JAR file that can be downloaded from
 [here](https://github.com/ternlang/snap-release). In addition an embeddable version is available
 which can be integrated in to any Java application.
 
-*java -jar snapd.jar --mode=develop --directory=work --port=4457*
+*java -jar ternd.jar --mode=develop --directory=work --port=4457*
 
 The development environment can use hot stand-by agents to improve responsiveness, the agent pool 
 can be configured on the command line. In addition an agent can connect through the HTTP port using 
 the HTTP CONNECT request and begin a debug session. An example configuration is shown below.
 
-*java -jar snapd.jar --mode=develop --directory=work --port=4457 --agent-pool=4 --server-only=true*
+*java -jar ternd.jar --mode=develop --directory=work --port=4457 --agent-pool=4 --server-only=true*

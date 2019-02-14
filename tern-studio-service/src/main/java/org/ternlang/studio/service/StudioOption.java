@@ -21,7 +21,7 @@ public enum StudioOption implements CommandOption {
    MODE("m", "mode", "Mode to start on", "(DEVELOP|DEBUG)", ProjectMode.class, ProjectMode.DEVELOP),
    DIRECTORY("d", "directory", "Directory used for sources", ".*", File.class, "work"),
    LOG_LEVEL("l", "log-level", "Level of logging", "(TRACE|DEBUG|INFO)", String.class, LogLevel.INFO),
-   LOG("f", "log-file", "Log file to use", ".+", File.class, "${user.home}/" + HomeDirectory.HOME_DIRECTORY + "/log/snapd.log"),
+   LOG("f", "log-file", "Log file to use", ".+", File.class, "${user.home}/" + HomeDirectory.HOME_DIRECTORY + "/log/ternd.log"),
    SCRIPT("s", "script", "Script to launch", ".*.tern", Path.class),
    SERVER_ONLY("o", "server-only", "Launch server only", "(true|false)", Boolean.class, false),
    BROWSER_ENGINE("e", "browser-engine", "Browser engine to use", "(JAVAFX|CEF)", String.class, ClientEngine.CEF),
