@@ -41,16 +41,16 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 public class ArchiveBuilder {
    
    private static final ArchivePath[] RUNTIME_PACKAGES = new ArchivePath[]{
-      new ArchivePath("org.ternlang/studio/agent", true),
-      new ArchivePath("org.ternlang/compile", true),
-      new ArchivePath("org.ternlang/common", true),
-      new ArchivePath("org.ternlang/platform", true),
-      new ArchivePath("org.ternlang/cglib", true),
-      new ArchivePath("org.ternlang/asm", true),
-      new ArchivePath("org.ternlang/dx", true),
-      new ArchivePath("org.ternlang/parse", true),
-      new ArchivePath("org.ternlang/core", true),
-      new ArchivePath("org.ternlang/tree", true),
+      new ArchivePath("org/ternlang/studio/agent", true),
+      new ArchivePath("org/ternlang/compile", true),
+      new ArchivePath("org/ternlang/common", true),
+      new ArchivePath("org/ternlang/platform", true),
+      new ArchivePath("org/ternlang/cglib", true),
+      new ArchivePath("org/ternlang/asm", true),
+      new ArchivePath("org/ternlang/dx", true),
+      new ArchivePath("org/ternlang/parse", true),
+      new ArchivePath("org/ternlang/core", true),
+      new ArchivePath("org/ternlang/tree", true),
       new ArchivePath("import.txt", false),
       new ArchivePath("grammar.txt", false)
    };

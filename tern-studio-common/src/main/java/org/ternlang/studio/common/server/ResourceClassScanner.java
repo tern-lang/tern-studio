@@ -21,7 +21,7 @@ public class ResourceClassScanner {
    
    private static final String RESOURCE_SUFFIX = "Resource";
    private static final String RESOURCE_PACKAGE = "org.ternlang.";
-   private static final String RESOURCE_PATH = "org.ternlang/";
+   private static final String RESOURCE_PATH = "org/ternlang/";
    
    private final PathMatchingResourcePatternResolver resolver;
    private final ClassLoader loader;

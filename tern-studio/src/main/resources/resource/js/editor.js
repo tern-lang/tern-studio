@@ -564,7 +564,7 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         function resolveEditorMode(resource) {
             var token = resource.toLowerCase();
             if (common_1.Common.stringEndsWith(token, ".tern")) {
-                return "ace/mode/ternlang";
+                return "ace/mode/tern";
             }
             if (common_1.Common.stringEndsWith(token, ".policy")) {
                 return "ace/mode/policy";
@@ -897,7 +897,7 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             var autoComplete = createEditorAutoComplete();
             editor.completers = [autoComplete];
             // setEditorTheme("eclipse"); // set the default to eclipse
-            editor.getSession().setMode("ace/mode/ternlang");
+            editor.getSession().setMode("ace/mode/tern");
             editor.getSession().setTabSize(3);
             editor.setReadOnly(false);
             editor.setAutoScrollEditorIntoView(true);
