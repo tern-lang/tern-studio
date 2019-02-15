@@ -1,0 +1,24 @@
+<displayDefinition>
+   <theme-name>eclipse</theme-name>
+   <console-capacity>50000</console-capacity>
+   <font>
+      <available-fonts>
+         <font style="Consolas">Consolas</font>
+         <font style="Courier">Courier</font>
+         <font style="Courier New">Courier New</font>
+         <font style="Deja Vu">Deja Vu</font>
+         <font style="Hack">Hack</font>
+         <font style="Lucida Console,Menlo">Lucida Console</font>
+         <font style="Menlo,Lucida Console">Menlo</font>
+         <font style="Monaco">Monaco</font>
+         <font style="Oxygen Mono">Oxygen Mono</font>
+         <font style="Roboto Mono">Roboto Mono</font>
+         <font style="Source Code Pro">Source Code Pro</font>
+         <font style="Ubuntu Mono">Ubuntu Mono</font>
+      </available-fonts>
+      <selected-font>
+         <font-family>Lucida Console,Menlo</font-family>
+         <font-size>16</font-size>
+      </selected-font>
+   </font>
+</displayDefinition>
