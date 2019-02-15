@@ -1219,13 +1219,29 @@ export module FileEditor {
    
    export function updateEditorFont(fontFamily, fontSize) {
       var autoComplete = createEditorAutoComplete();
-      
+      var actualFont = formatFont(fontFamily);
+
       editorView.getEditorPanel().completers = [autoComplete];
       editorView.getEditorPanel().setOptions({
          enableBasicAutocompletion: true,
-         fontFamily: "'"+fontFamily+"',monospace",
+         fontFamily: actualFont,
          fontSize: fontSize
       });
+   }
+
+   function formatFont(fontFamily) {
+     var fontList = fontFamily.split(",");
+     var actualFont = "";
+
+     for(var i = 0; i < fontList.length; i++) {
+       var fontEntry = fontList[i];
+
+       fontEntry = Common.stringReplaceText(fontEntry, "'", "");
+       fontEntry = Common.stringReplaceText(fontEntry, "\"", "");
+       fontEntry = "'" + fontEntry.trim() + "'";
+       actualFont += fontEntry + ",";
+     }
+     return actualFont +"monospace";
    }
 }
 

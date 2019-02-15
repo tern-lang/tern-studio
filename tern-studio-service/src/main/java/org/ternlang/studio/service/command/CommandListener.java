@@ -2,6 +2,7 @@ package org.ternlang.studio.service.command;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadFactory;
@@ -472,6 +473,7 @@ public class CommandListener {
       int fontSize = command.getFontSize();
       String fontName = command.getFontName();
       String themeName = command.getThemeName();
+      Map<String, String> availableFonts = command.getAvailableFonts();
       
       try {
          DisplayDefinition definition = displayPersister.readDefinition();
@@ -485,6 +487,9 @@ public class CommandListener {
             }
             if(themeName != null) {
                definition.setThemeName(themeName);
+            }
+            if(availableFonts != null) {
+               definition.setAvailableFonts(availableFonts);
             }
             displayPersister.saveDefinition(definition);
          }

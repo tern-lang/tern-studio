@@ -3,6 +3,7 @@
 <head>
 <title>Tern Studio ${version} - ${project}</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link href="/font/${project}.css" rel="stylesheet" />
 <link href="/css/main.css" rel="stylesheet" />
 <script data-main="/js/main.js" src="/js/external/require.js"></script>
 </head>

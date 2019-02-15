@@ -1001,14 +1001,27 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         //   }
         function updateEditorFont(fontFamily, fontSize) {
             var autoComplete = createEditorAutoComplete();
+            var actualFont = formatFont(fontFamily);
             editorView.getEditorPanel().completers = [autoComplete];
             editorView.getEditorPanel().setOptions({
                 enableBasicAutocompletion: true,
-                fontFamily: "'" + fontFamily + "',monospace",
+                fontFamily: actualFont,
                 fontSize: fontSize
             });
         }
         FileEditor.updateEditorFont = updateEditorFont;
+        function formatFont(fontFamily) {
+            var fontList = fontFamily.split(",");
+            var actualFont = "";
+            for (var i = 0; i < fontList.length; i++) {
+                var fontEntry = fontList[i];
+                fontEntry = common_1.Common.stringReplaceText(fontEntry, "'", "");
+                fontEntry = common_1.Common.stringReplaceText(fontEntry, "\"", "");
+                fontEntry = "'" + fontEntry.trim() + "'";
+                actualFont += fontEntry + ",";
+            }
+            return actualFont + "monospace";
+        }
     })(FileEditor = exports.FileEditor || (exports.FileEditor = {}));
 });
 //ModuleSystem.registerModule("editor", "Editor module: editor.js", null, FileEditor.createEditor, [ "common", "spinner", "tree" ]); 

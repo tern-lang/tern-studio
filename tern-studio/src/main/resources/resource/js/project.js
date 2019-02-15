@@ -226,11 +226,18 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
             var fontFamily = document.getElementById("fontFamily");
             var fontSize = document.getElementById("fontSize");
             var editorTheme = document.getElementById("editorTheme");
+            var availableFonts = {};
+            for (var i = 0; i < fontFamily.options.length; i++) {
+                var value = common_1.Common.clearHtml(fontFamily.options[i].text).trim(); // clear up values
+                var key = fontFamily.options[i].value;
+                availableFonts[key] = value;
+            }
             return {
                 consoleCapacity: 50000,
                 themeName: editorTheme.value.toLowerCase().trim(),
                 fontSize: fontSize.value.toLowerCase().replace("px", "").trim(),
-                fontName: fontFamily.value
+                fontName: fontFamily.value,
+                availableFonts: availableFonts
             };
         }
         function applyProjectTheme() {
@@ -244,6 +251,12 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                         fontSize.value = displayInfo.fontSize + "px";
                     }
                     if (fontFamily != null) {
+                        var orderedKeys = Object.keys(displayInfo.availableFonts).sort();
+                        for (var i = 0; i < orderedKeys.length; i++) {
+                            var name = orderedKeys[i];
+                            var text = " " + displayInfo.availableFonts[name];
+                            fontFamily.options[i] = new Option(text, name);
+                        }
                         fontFamily.value = displayInfo.fontName;
                     }
                     if (editorTheme != null && displayInfo.themeName != null) {
@@ -1200,11 +1213,6 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                             "   <td>" +
                             "        <select class='styledSelect' id='fontFamily' size='1'>\n" +
                             "          <option value='Consolas' selected='selected'>&nbsp;Consolas</option>\n" +
-                            "          <option value='Lucida Console'>&nbsp;Lucida Console</option>\n" +
-                            "          <option value='Courier New'>&nbsp;Courier New</option>\n" +
-                            "          <option value='Courier'>&nbsp;Courier</option>\n" +
-                            "          <option value='Menlo'>&nbsp;Menlo</option>\n" +
-                            "          <option value='Monaco'>&nbsp;Monaco</option>\n" +
                             "        </select>\n" +
                             "   </td>" +
                             "   <td>&nbsp;&nbsp;</td>" +
