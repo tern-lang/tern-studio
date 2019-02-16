@@ -726,7 +726,7 @@ export module Command {
                             delayFunction();
                         }
                     );
-                }     
+                }
             } else {
                 executeScriptWithArguments(debug, "");
                 functionToExecuteAfterSave();
