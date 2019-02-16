@@ -324,7 +324,7 @@ class TextElement extends HtmlElement {
             break;
          }
       }
-      b.print("${indent}${builder}");
+      b.print("${indent}${builder} ");
    }
    
 }
