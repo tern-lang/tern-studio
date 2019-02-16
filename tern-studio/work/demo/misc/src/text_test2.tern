@@ -1,15 +1,6 @@
+let l = [0 to 100];
+let i = l.iterator;
 
 
-let x = System.currentTimeMillis();
-
-func foo(i){
-   return i;
-}
-
-for(a in 0 to 1000000){
-   foo(a);
-}
-let y = System.currentTimeMillis();
-let z = y - x;
-println(z);
-
+for(x in l)
+   println(x);

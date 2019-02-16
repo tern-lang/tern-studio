@@ -919,11 +919,17 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             editor.on("click", function (e) {
                 var options = editor.getOptions();
                 var type = typeof options;
+                var optionsUpdate = {};
                 console.log("Focus editor on click: options=[" + type + "] -> ", options);
                 editor.focus();
-                var optionsClone = Object.assign({ readOnly: false }, options);
-                console.log("Options after click: ", optionsClone);
-                editor.setOptions(optionsClone);
+                for (var key in options) {
+                    if (options.hasOwnProperty(key)) {
+                        optionsUpdate[key] = options[key];
+                    }
+                }
+                optionsUpdate['readOnly'] = false;
+                console.log("Update after click: ", optionsUpdate);
+                editor.setOptions(optionsUpdate);
             });
             editor.on("guttermousedown", function (e) {
                 var target = e.domEvent.target;
