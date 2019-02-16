@@ -3,10 +3,10 @@
 import util.concurrent.LinkedBlockingQueue;
 
 let graph = [
-   [1],
-   [2,3],
-   [4,5,6],
-   [0],
+   [1], // 0
+   [2,3], // 1
+   [4,5,6], // 2
+   [0], // 3
    [],
    [],
    [0]
@@ -32,17 +32,17 @@ func shortestCycle(graph, n) {
       paths[i.intValue] = Path(i.intValue);
    }
    q.offer(paths[n]);
+   println(graph[n]);
    
    loop {
       let path = q.poll();
-   
-      println(path.nodes);
       let children = graph[path.nodes[path.nodes.length -1]]; // where do we go from here
       
       for(c in children) {
          let child = paths[c];
 
          if(path.nodes.contains(c)) {
+            path.nodes.add(c);
             return path.nodes; 
          }
          path.nodes.add(c);

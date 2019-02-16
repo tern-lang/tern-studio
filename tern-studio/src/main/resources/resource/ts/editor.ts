@@ -1130,9 +1130,16 @@ export module FileEditor {
          enableBasicAutocompletion: true
       });
       editor.on("click", function(e) {
-         console.log("Focus editor on click");
+         var options = editor.getOptions();    
+         var type = typeof options;
+
+         console.log("Focus editor on click: options=["+ type +"] -> ", options);
          editor.focus();
-         editor.setReadOnly(false);
+
+         const optionsClone = Object.assign({readOnly: false}, options);
+
+         console.log("Options after click: ", optionsClone);
+         editor.setOptions(optionsClone);
       });
       editor.on("guttermousedown", function(e) {
          var target = e.domEvent.target;
