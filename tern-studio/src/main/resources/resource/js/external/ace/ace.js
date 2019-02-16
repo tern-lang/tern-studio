@@ -12988,11 +12988,13 @@ Editor.$uid = 0;
     this.getPrintMarginColumn = function() {
         return this.renderer.getPrintMarginColumn();
     };
+    this.isReadOnly = false;
     this.setReadOnly = function(readOnly) {
         this.setOption("readOnly", readOnly);
+        this.isReadOnly = readOnly;
     };
     this.getReadOnly = function() {
-        return this.getOption("readOnly");
+        return this.isReadOnly;//this.getOption("readOnly");
     };
     this.setBehavioursEnabled = function (enabled) {
         this.setOption("behavioursEnabled", enabled);

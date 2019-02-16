@@ -1145,6 +1145,7 @@ export module FileEditor {
          optionsUpdate['readOnly'] = false;
          console.log("Update after click: ", optionsUpdate);
          editor.setOptions(optionsUpdate);
+         editor.setReadOnly(false);
       });
       editor.on("guttermousedown", function(e) {
          var target = e.domEvent.target;
