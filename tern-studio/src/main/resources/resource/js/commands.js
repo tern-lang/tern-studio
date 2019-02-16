@@ -520,8 +520,6 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
             }
             else {
                 if (editor_1.FileEditor.isEditorChanged()) {
-                    // XXX don't prompt
-                    //DialogBuilder.openTreeDialog(editorState.getResource(), true, function(resourceDetails: FilePath) {
                     var saveFunction = saveEditor(update);
                     saveCallback(saveFunction);
                 }
@@ -548,6 +546,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                     return function () {
                         var modificationTime = new Date().getTime();
                         var fileResource = new explorer_1.FileResource(editorPath, null, modificationTime, editorState.getSource(), null, false, false);
+                        console.log("Saving editor " + editorPath);
                         editor_1.FileEditor.updateEditor(fileResource);
                     };
                 }
@@ -629,8 +628,9 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                     var delayFunction = function () {
                         setTimeout(function () {
                             editor_1.FileEditor.focusEditor();
+                            editor_1.FileEditor.focusEditor();
                             functionToExecuteAfterSave();
-                        }, 1);
+                        }, 50);
                     };
                     if (debug) {
                         alert_1.Alerts.createDebugPromptAlert("Debug", "Enter arguments", "Debug", "Cancel", function (inputArguments) {

@@ -1,0 +1,63 @@
+// https://www.careercup.com/question?id=5705185389707264: 10 mins
+
+let countries1 = {
+   "UK": 10,
+   "France": 5,
+   "USA": 102,
+   "Russia": 5
+};
+
+let countries2 ={
+   "USA": 4,
+   "China": 6,
+   "India": 6,
+   "Brazil": 3,
+   "Australia": 2,
+   "Canada": 1
+};
+
+assert createTeams(countries1, 2) == 20;
+assert createTeams(countries2, 3) == 7;
+
+class Country {
+   let name;
+   let count;
+   
+   new(name, count) {
+      this.name = name;
+      this.count = count;
+   }
+   
+   override toString(){
+      return "${name}: ${count}";
+   }
+}
+
+func createTeams(countries, size) {
+   let count = 0;
+   let index = [];
+   
+   for(c in countries) {
+      let v = Country(c.key, c.value);
+      index.add(v);
+   }
+   Collections.sort(index, (a, b) -> -Integer.compare(a.count, b.count));
+   
+   loop {
+      let remain = size;
+      
+      for(j in 0 to index.length -1) {
+         if(index[j].count > 0) {
+            index[j].count--;
+                        
+            if(--remain ==0){
+               break;
+            }
+         }
+      }
+      if(remain > 0) {
+         return count;
+      }
+      count++;
+   }
+}

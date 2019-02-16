@@ -1,3 +1,4 @@
+
 import static lang.Integer.*; // static import
 
 import mario.core.GameFrame;

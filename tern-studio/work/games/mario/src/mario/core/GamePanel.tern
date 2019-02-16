@@ -44,7 +44,7 @@ class GamePanel extends JPanel with Runnable {
    
    private var averager;
    private var animator;
-   private var period = 20; 
+   private var period = 30; 
    private var frames = 0;
    
    private var mario;

@@ -576,11 +576,8 @@ export module Command {
          });
       } else {
          if (FileEditor.isEditorChanged()) {
-            // XXX don't prompt
-            //DialogBuilder.openTreeDialog(editorState.getResource(), true, function(resourceDetails: FilePath) {
-               var saveFunction = saveEditor(update);
-               saveCallback(saveFunction);
-            //});
+            var saveFunction = saveEditor(update);
+            saveCallback(saveFunction);
          } else {
             ProcessConsole.clearConsole();
             saveCallback(function(){});
@@ -608,6 +605,7 @@ export module Command {
                var modificationTime: number = new Date().getTime();
                var fileResource: FileResource = new FileResource(editorPath, null, modificationTime, editorState.getSource(), null, false, false);
                
+               console.log("Saving editor " + editorPath);
                FileEditor.updateEditor(fileResource);
             };
          }
@@ -687,7 +685,7 @@ export module Command {
    
    export function debugScript() {
       executeScript(true);
-   }
+   }  
    
    function executeScript(debug) {
       var saveFunction = function(functionToExecuteAfterSave) {
@@ -695,26 +693,27 @@ export module Command {
             var delayFunction = function() {
                setTimeout(function() {
                   FileEditor.focusEditor();
+                  FileEditor.focusEditor();
                   functionToExecuteAfterSave();
-               }, 1);
+               }, 50);
             }
             if(debug) {
                Alerts.createDebugPromptAlert("Debug", "Enter arguments", "Debug", "Cancel", 
-                  function(inputArguments) {
+                  function(inputArguments) { // yes callback
                      executeScriptWithArguments(true, inputArguments);
                      delayFunction();
                   },
-                  function(inputArguments) {
+                  function(inputArguments) { // no callback
                      delayFunction();
                   }
                );
             } else {
                Alerts.createRunPromptAlert("Run", "Enter arguments", "Run", "Cancel", 
-                  function(inputArguments) {
+                  function(inputArguments) { // yes callback
                      executeScriptWithArguments(false, inputArguments);
                      delayFunction();
                   },
-                  function(inputArguments) {
+                  function(inputArguments) { // no callback
                      delayFunction();
                   }
                );

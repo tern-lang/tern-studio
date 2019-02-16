@@ -935,6 +935,7 @@ export module FileEditor {
    
    export function focusEditor() {
       editorView.getEditorPanel().focus();
+      editorView.getEditorPanel().setReadOnly(false);
    }
    
    export function setReadOnly(isReadOnly) {
@@ -1127,6 +1128,11 @@ export module FileEditor {
       editor.setShowPrintMargin(false);
       editor.setOptions({
          enableBasicAutocompletion: true
+      });
+      editor.on("click", function(e) {
+         console.log("Focus editor on click");
+         editor.focus();
+         editor.setReadOnly(false);
       });
       editor.on("guttermousedown", function(e) {
          var target = e.domEvent.target;

@@ -1,0 +1,33 @@
+// glassdoor.co.uk: 9 mins
+
+import util.stream.Collectors;
+
+assert sortOrder("program", "grapo") == "grrapom";
+
+func sortOrder(s1, s2) {
+   let builder = StringBuilder();
+   let scores = {:};
+   let source = [];
+   
+   for(i in 0 to s2.length - 1) {
+      let key = s2.charAt(i);
+      scores.put(key, i);
+   }
+   for(i in 0 to s1.length - 1) {
+      let value = s1.charAt(i);
+      source.add(value);
+   }
+   let sorter = (a, b) -> {
+      let val1 = scores[a] ?? s2.length;
+      let val2 = scores[b] ?? s2.length;
+      
+      return Integer.compare(val1, val2);
+   };
+   Collections.sort(source, sorter);
+   
+   for(i in source) {
+      builder.append(i);
+   }
+   return builder.toString();
+
+}

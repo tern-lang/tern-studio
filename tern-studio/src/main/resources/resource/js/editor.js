@@ -742,6 +742,7 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         FileEditor.updateEditor = updateEditor;
         function focusEditor() {
             editorView.getEditorPanel().focus();
+            editorView.getEditorPanel().setReadOnly(false);
         }
         FileEditor.focusEditor = focusEditor;
         function setReadOnly(isReadOnly) {
@@ -914,6 +915,11 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             editor.setShowPrintMargin(false);
             editor.setOptions({
                 enableBasicAutocompletion: true
+            });
+            editor.on("click", function (e) {
+                console.log("Focus editor on click");
+                editor.focus();
+                editor.setReadOnly(false);
             });
             editor.on("guttermousedown", function (e) {
                 var target = e.domEvent.target;
