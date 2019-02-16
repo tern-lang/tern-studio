@@ -659,7 +659,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                         }
                     }
                     else {
-                        executeScriptWithArguments(true, "");
+                        executeScriptWithArguments(debug, "");
                         functionToExecuteAfterSave();
                     }
                 }, 1);

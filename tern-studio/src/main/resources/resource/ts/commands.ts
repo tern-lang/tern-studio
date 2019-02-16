@@ -726,9 +726,9 @@ export module Command {
                             delayFunction();
                         }
                     );
-                }
+                }     
             } else {
-                executeScriptWithArguments(true, "");
+                executeScriptWithArguments(debug, "");
                 functionToExecuteAfterSave();
             }
          }, 1);
