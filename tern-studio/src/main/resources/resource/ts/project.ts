@@ -33,6 +33,15 @@ export module Project {
             attachClickEvents();
             startFunction(); // start everything
          });
+      } else if(perspective == "dialog") {
+         createDialogLayout(function() {
+            console.log("Performing setup for dialog layout");
+            setupFunction(); // setup stuff
+            activateDialogLayout();
+            startResizePoller(); // dynamically resize the editor
+            attachClickEvents();
+            startFunction(); // start everything
+         });
       } else {
          createExploreLayout(function() {
             console.log("Performing setup for explore layout");
@@ -46,12 +55,52 @@ export module Project {
       $(window).trigger('resize'); // force a redraw after w2ui
 
    }
-   
+
+   export function openDialogWindow(name, tabs) {
+      var address = "/project/" + Common.getProjectName() + ";dialog?visible=" + name;
+      var title = document.title;
+      var dialog = window.open(address, name, "location=false,toolbar=false,scrollbars=yes,resizable=yes,width=400,height=400");
+
+      if(dialog) {
+         Command.addWindowHandle(name, dialog);
+         var tabList = w2ui[tabs].panels[0].tabs.tabs;
+
+         if(tabList.length <= 2) {
+            for(var i = 0; i < tabList.length; i++) {
+                var tab = tabList[i];
+
+                if(tab) {
+                    tab.closable = false;
+                }
+            }
+         }
+         for(var i = 0; i < tabList.length; i++) {
+            var tab = tabList[i];
+
+            if(!tab.hidden && !Common.stringStartsWith(tab.id, name)) {
+              var perspective = determineProjectLayout();
+
+              if (perspective != "dialog") {
+                  if (perspective == "debug") {
+                     w2ui['debugBottomTabLayout_main_tabs'].click(tab.id);
+                  } else {
+                     w2ui['exploreBottomTabLayout_main_tabs'].click(tab.id);
+                  }
+              }
+              break;
+            }
+         }
+      }
+      return dialog;
+   }
+
    export function showProblemsTab() {
       var perspective = determineProjectLayout();
       
       if (perspective == "debug") {
          w2ui['debugBottomTabLayout_main_tabs'].click('problemsTab');
+      } else if (perspective == "dialog") {
+         w2ui['dialogTabLayout_main_tabs'].click('problemsTab');
       } else {
          w2ui['exploreBottomTabLayout_main_tabs'].click('problemsTab');
       }
@@ -141,17 +190,22 @@ export module Project {
       $('#navigateToTreeArrow').on('click', function(e) {
          FileEditor.showEditorFileInTree();
          e.preventDefault();
-      });  
+      });
    }
    
    function determineProjectLayout() {
       var debugToggle = ";debug";
+      var dialogToggle = ";dialog";
       var locationPath = window.document.location.pathname;
       var locationHash = window.document.location.hash;
-      var debug = locationPath.indexOf(debugToggle, locationPath.length - debugToggle.length) !== -1;
-      
-      if(debug) {
+      var isDebug = locationPath.indexOf(debugToggle, locationPath.length - debugToggle.length) !== -1;
+      var isDialog = locationPath.indexOf(dialogToggle, locationPath.length - dialogToggle.length) !== -1;
+
+      if(isDebug) {
          return "debug";
+      }
+      if(isDialog) {
+        return "dialog";
       }
       return "explore";
    }
@@ -310,6 +364,7 @@ export module Project {
                toolbarRow.insertCell(0).innerHTML = "&nbsp;";
                toolbarRow.insertCell(0).innerHTML = "<div><img style='height: 25px; margin-top: -1px;' src='" + displayInfo.logoImage + "'></div>"; // /img/logo_grey_shade.png
             }
+            ProcessConsole.updateConsoleFont(displayInfo.fontName, displayInfo.fontSize + "px");
          }
          changeProjectFont();// update the fonts
          changeEditorTheme(); // change editor theme
@@ -676,8 +731,161 @@ export module Project {
             }
          }
       }
-   }   
-   
+   }
+
+  function createDialogLayout(startFunction) {
+        var layoutEvents = ["createDialogLayout"];
+        var layoutEventListener = Common.createSimpleStateMachineFunction("createDialogLayout", function() {
+           console.log("Dialog layout fully rendered");
+           startFunction();
+        }, layoutEvents, 200);
+
+        var pstyle = 'background-color: ${PROJECT_BACKGROUND_COLOR}; overflow: hidden;';
+        var leftStyle = pstyle + " margin-top: 32px; border-top: 1px solid ${PROJECT_BORDER_COLOR};";
+
+        createDialogMainLayout(pstyle, layoutEventListener, layoutEvents);
+        createDialogTabLayout(pstyle, layoutEventListener, layoutEvents);
+
+        validateLayout(layoutEvents, ["createDialogLayout"]);
+
+        createProblemsTab();
+        createVariablesTab();
+        createProfilerTab();
+        createBreakpointsTab();
+        createDebugTab();
+        createThreadsTab();
+        createHistoryTab();
+
+        w2ui['dialogMainLayout'].content('main', w2ui['dialogTabLayout']);
+        w2ui['dialogMainLayout'].refresh();
+        w2ui['dialogTabLayout'].refresh();
+
+        layoutEventListener("createDialogLayout"); // this allows the whole thing to initiate
+     }
+
+   function createDialogMainLayout(layoutStyle, layoutEventListener, layoutEvents) {
+      layoutEvents.push("dialogMainLayout");
+
+      $('#mainLayout').w2layout({
+         name : 'dialogMainLayout',
+         padding : 0,
+         panels : [ {
+            type : 'main',
+            size : '75%',
+            resizable : true,
+            style : layoutStyle
+         }],
+         onRender: function(event) {
+            layoutEventListener("dialogMainLayout");
+         }
+      });
+   }
+
+    function createDialogTabLayout(layoutStyle, layoutEventListener, layoutEvents) {
+       var selectedTab = Common.extractParameter('visible');
+       var tabTable = {
+            console: {
+                id: 'consoleTab',
+                caption: '<div class="consoleTab">Console</div>',
+                closable: false,
+                hide: true
+            },
+            problems: {
+                id: 'problemsTab',
+                caption: '<div class="problemsTab">Problems</div>',
+                closable: false
+            },
+            breakpoints: {
+                id: 'breakpointsTab',
+                caption: '<div class="breakpointsTab">Breakpoints</div>',
+                closable: false
+            },
+            threads: {
+                id: 'threadsTab',
+                caption: '<div class="threadTab">Threads</div>',
+                closable: false
+            },
+            variables: {
+                id: 'variablesTab',
+                caption: '<div class="variableTab">Variables</div>',
+                closable: false
+            },
+            profiler: {
+                id: 'profilerTab',
+                caption: '<div class="profilerTab">Profiler</div>',
+                closable: false
+            },
+            debug: {
+                id: 'debugTab',
+                caption: '<div class="debugTab">Debug  </div>',
+                closable: false
+            },
+            history: {
+                id: 'historyTab',
+                caption: '<div class="historyTab">History  </div>',
+                closable: false
+            }
+          };
+
+
+       layoutEvents.push("dialogTabLayout");
+       layoutEvents.push("dialogTabLayout#tabs");
+
+       $('').w2layout({
+          name : 'dialogTabLayout',
+          padding : 0,
+          panels : [ {
+             type : 'main',
+             size : '100%',
+             style : layoutStyle + 'border-top: 0px;',
+             resizable : false,
+             name : 'tabs',
+             tabs : {
+                active : 'consoleTab',
+                tabs : [
+                    tabTable[selectedTab]
+                ],
+                onClose: function(event) {
+                   console.log(event);
+                },
+                onClick : function(event) {
+                   activateTab(event.target, "dialogTabLayout", false, false, "style='right: 0px;'");
+                },
+                onRender: function(event) {
+                   layoutEventListener("dialogTabLayout#tabs");
+                }
+             }
+          } ],
+          onRender: function(event) {
+             layoutEventListener("dialogTabLayout");
+          }
+       });
+    }
+
+   function activateDialogLayout() {
+      var selectedTab = Common.extractParameter('visible');
+      var statusFocus = null;
+
+      applyProjectTheme();
+      watchParentStatusFocus();
+      activateTab(selectedTab + "Tab", "dialogTabLayout", false, false, "style='right: 0px;'");
+      w2ui['dialogTabLayout_main_tabs'].click(selectedTab + "Tab");
+   }
+
+   function watchParentStatusFocus() {
+       var statusFocus = null;
+
+       setInterval(function () {
+           if (window.opener) {
+               if(statusFocus != window.opener.statusFocus) {
+                  console.log("Attaching to " + statusFocus);
+                  statusFocus = window.opener.statusFocus;
+                  Command.attachProcess(statusFocus);
+               }
+           }
+       }, 500);
+   }
+
    function createExploreLayout(startFunction) {      
       var layoutEvents = ["createExploreLayout"];       
       var layoutEventListener = Common.createSimpleStateMachineFunction("createExploreLayout", function() {
@@ -879,39 +1087,39 @@ export module Project {
                active : 'consoleTab',
                tabs : [ {
                   id : 'consoleTab',
-                  caption : '<div class="consoleTab">Console</div>',
-                  closable: false
+                  caption : '<div class="consoleTab" id="consoleTabTitle">Console</div>',
+                  closable: true
                }, {
                   id : 'problemsTab',
-                  caption : '<div class="problemsTab">Problems</div>',
-                  closable: false
+                  caption : '<div class="problemsTab" id="problemsTabTitle">Problems</div>',
+                  closable: true
                }, {
                   id : 'breakpointsTab',
-                  caption : '<div class="breakpointsTab">Breakpoints</div>',
-                  closable: false
+                  caption : '<div class="breakpointsTab" id="breakpointsTabTitle">Breakpoints</div>',
+                  closable: true
                }, {
                   id : 'threadsTab',
-                  caption : '<div class="threadTab">Threads</div>',
-                  closable: false
+                  caption : '<div class="threadTab" id="threadTabTitle">Threads</div>',
+                  closable: true
                }, {
                   id : 'variablesTab',
-                  caption : '<div class="variableTab">Variables</div>',
-                  closable: false
+                  caption : '<div class="variableTab" id="variableTabTitle">Variables</div>',
+                  closable: true
                }, {
                   id : 'profilerTab',
-                  caption : '<div class="profilerTab">Profiler</div>',
-                  closable: false
+                  caption : '<div class="profilerTab" id="profilerTabTitle">Profiler</div>',
+                  closable: true
                }, {
                   id : 'debugTab',
-                  caption : '<div class="debugTab">Debug&nbsp;&nbsp;</div>',
-                  closable: false
+                  caption : '<div class="debugTab" id="debugTabTitle">Debug&nbsp;&nbsp;</div>',
+                  closable: true
                }, {
                   id : 'historyTab',
-                  caption : '<div class="historyTab">History&nbsp;&nbsp;</div>',
-                  closable: false
+                  caption : '<div class="historyTab" id="historyTabTitle">History&nbsp;&nbsp;</div>',
+                  closable: true
                } ],
                onClose: function(event) {
-                  console.log(event);
+                  openDialogWindow(event.target.replace("Tab", ""), "exploreBottomTabLayout");
                },
                onClick : function(event) {
                   activateTab(event.target, "exploreBottomTabLayout", false, false, "style='right: 0px;'");
@@ -933,8 +1141,7 @@ export module Project {
       activateTab("browseTab", "exploreLeftTabLayout", true, false, "style='right: 0px;'"); 
       activateTab("editTab", "exploreEditorTabLayout", false, true, "style='right: 0px;'"); 
    }
-    
-   
+
    function createDebugLayout(startFunction) {
       var layoutEvents = ["createDebugLayout"];      
       var layoutEventListener = Common.createSimpleStateMachineFunction("createDebugLayout", function() {
@@ -952,7 +1159,7 @@ export module Project {
       createDebugRightTabLayout(pstyle, layoutEventListener, layoutEvents);
       createDebugBottomTabLayout(pstyle, layoutEventListener, layoutEvents);
       
-      validateLayout(layoutEvents, ["createExploreLayout"]);
+      validateLayout(layoutEvents, ["createDebugLayout"]);
             
       createTopMenuBar(); // menu bar at top
       createProblemsTab();
@@ -1699,7 +1906,7 @@ export module Project {
          }
       });
    }
-   
+
    function activateTab(tabName, layoutName, containsBrowse, containsEditor, browseStyle) {
       hideBrowseTreeContent(containsBrowse); // hide tree
       hideEditorContent(containsEditor); // hide tree

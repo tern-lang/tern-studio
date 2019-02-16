@@ -1,15 +1,8 @@
 
 
-func fib() {
-   let a = 1l, b = 1l;
-   
-   loop {
-      (a, b) = (b, a + b);
-      yield a;
-      
-   }
+func foo() {
+   println("x");
+
 }
 
-for(a in fib()) {
-   println(a);
-}
+foo();

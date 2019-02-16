@@ -29,7 +29,9 @@ define(["require", "exports", "spinner"], function (require, exports, spinner_1)
         function sendEvent(type, message) {
             if (message) {
                 var payload = JSON.stringify(message);
-                socket.send(type + ":" + payload);
+                if (socket) {
+                    socket.send(type + ":" + payload);
+                }
             }
             else {
                 socket.send(type);

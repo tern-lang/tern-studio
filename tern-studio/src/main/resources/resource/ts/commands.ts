@@ -17,6 +17,17 @@ import {FileExplorer, FileResource} from "explorer"
 import {DebugManager} from "debug"
   
 export module Command {
+
+   var windowHandles = {};
+
+   export function addWindowHandle(name, windowHandle) {
+      var existing = windowHandles[name];
+
+      if(existing) {
+        existing.close();
+      }
+      windowHandles[name] = windowHandle;
+   }
    
    export function searchTypes() {
       DialogBuilder.createListDialog(function(text, ignoreMe, onComplete){

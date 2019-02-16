@@ -9,8 +9,16 @@ let stream = PrintStream(file);
 stream.println("<html>");
 stream.println("<head>");
 stream.println("  <link rel='stylesheet' href='css/style.css'>");
+stream.println("  <meta property='og:url' content='http://tern-lang.org/'/>");
+stream.println("  <meta property='og:type' content='website'/>");
+stream.println("  <meta property='og:description' content='Tern Programming Language' />");
+stream.println("  <meta property='og:site_name' content='Tern Programming Language' />");
+stream.println("  <meta property='og:image' content='http://tern-lang.org/img/tern.png' />");
+stream.println("  <title>Tern Programming Language</title>");
 stream.println("</head>");
 stream.println("<body>");
+// https://codepo8.github.io/css-fork-on-github-ribbon/
+stream.println(`<style>#forkongithub a{background:#666666;color:#fff;text-decoration:none;font-family:arial,sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:1rem;line-height:2rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#ffb600;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;top:0;right:0;width:200px;overflow:hidden;height:200px;z-index:9999;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);box-shadow:0px 0px 0px rgba(0,0,0,0.8);}}</style><span id="forkongithub"><a href="https://github.com/tern-lang/tern">Fork me on GitHub</a></span>`);
 
 process(lines).stream().forEach(e -> {
    e.render("", stream);

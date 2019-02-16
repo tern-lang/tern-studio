@@ -2,6 +2,15 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
     "use strict";
     var Command;
     (function (Command) {
+        var windowHandles = {};
+        function addWindowHandle(name, windowHandle) {
+            var existing = windowHandles[name];
+            if (existing) {
+                existing.close();
+            }
+            windowHandles[name] = windowHandle;
+        }
+        Command.addWindowHandle = addWindowHandle;
         function searchTypes() {
             dialog_1.DialogBuilder.createListDialog(function (text, ignoreMe, onComplete) {
                 findTypesMatching(text, function (typesFound, originalExpression) {

@@ -257,10 +257,12 @@ export module DebugManager {
       }
       ProcessConsole.updateConsoleFocus(process); // clear console if needed
       statusFocus = process;
+      window.statusFocus = process;
    }
    
    function clearStatusFocus(){ // clear up stuff
       statusFocus = null;
+      window.statusFocus = null;
       ThreadManager.clearThreads(); // race condition here
       VariableManager.clearVariables();
    //   clearProfiler();
@@ -273,6 +275,7 @@ export module DebugManager {
    function clearStatus() {
       statusProcesses = {};
       statusFocus = null;
+      window.statusFocus = process;
       w2ui['debug'].records = [];
       w2ui['debug'].refresh();
    }

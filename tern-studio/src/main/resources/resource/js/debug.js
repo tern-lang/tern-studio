@@ -189,9 +189,11 @@ define(["require", "exports", "jquery", "w2ui", "./common", "./socket", "./edito
             }
             console_1.ProcessConsole.updateConsoleFocus(process); // clear console if needed
             statusFocus = process;
+            window.statusFocus = process;
         }
         function clearStatusFocus() {
             statusFocus = null;
+            window.statusFocus = null;
             threads_1.ThreadManager.clearThreads(); // race condition here
             variables_1.VariableManager.clearVariables();
             //   clearProfiler();
@@ -203,6 +205,7 @@ define(["require", "exports", "jquery", "w2ui", "./common", "./socket", "./edito
         function clearStatus() {
             statusProcesses = {};
             statusFocus = null;
+            window.statusFocus = process;
             w2ui_1.w2ui['debug'].records = [];
             w2ui_1.w2ui['debug'].refresh();
         }

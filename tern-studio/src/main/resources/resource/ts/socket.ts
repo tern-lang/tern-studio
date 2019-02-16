@@ -31,7 +31,10 @@ export module EventBus {
    export function sendEvent(type, message) {
       if(message) {
          var payload = JSON.stringify(message);
-         socket.send(type + ":" + payload);
+
+         if(socket) {
+            socket.send(type + ":" + payload);
+         }
       } else {
          socket.send(type);
       }
