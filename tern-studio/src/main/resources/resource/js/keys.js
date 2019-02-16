@@ -105,10 +105,16 @@ define(["require", "exports", "jquery", "mousetrap", "common", "editor", "comman
             createKeyBinding("ctrl r", "Run Script", true, function () {
                 commands_1.Command.runScript();
             });
+            createKeyBinding("ctrl shift r", "Run Script With Arguments", true, function () {
+                commands_1.Command.runScriptWithArguments();
+            });
             createKeyBinding("ctrl b", "Debug Script", true, function () {
                 commands_1.Command.debugScript();
             });
-            createKeyBinding("ctrl shift b", "Debug Remote Script", true, function () {
+            createKeyBinding("ctrl shift b", "Debug Script With Arguments", true, function () {
+                commands_1.Command.debugScriptWithArguments();
+            });
+            createKeyBinding("ctrl k", "Debug Remote Script", true, function () {
                 commands_1.Command.attachRemoteDebugger();
             });
             createKeyBinding("f8", "Resume Script", true, function () {

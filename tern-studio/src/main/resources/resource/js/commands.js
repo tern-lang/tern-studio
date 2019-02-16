@@ -615,38 +615,52 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
         }
         Command.createArchive = createArchive;
         function runScript() {
-            executeScript(false);
+            executeScript(false, false);
         }
         Command.runScript = runScript;
+        function runScriptWithArguments() {
+            executeScript(false, true);
+        }
+        Command.runScriptWithArguments = runScriptWithArguments;
         function debugScript() {
-            executeScript(true);
+            executeScript(true, false);
         }
         Command.debugScript = debugScript;
-        function executeScript(debug) {
+        function debugScriptWithArguments() {
+            executeScript(true, true);
+        }
+        Command.debugScriptWithArguments = debugScriptWithArguments;
+        function executeScript(debug, requireArguments) {
             var saveFunction = function (functionToExecuteAfterSave) {
                 setTimeout(function () {
-                    var delayFunction = function () {
-                        setTimeout(function () {
-                            editor_1.FileEditor.focusEditor();
-                            editor_1.FileEditor.focusEditor();
-                            functionToExecuteAfterSave();
-                        }, 50);
-                    };
-                    if (debug) {
-                        alert_1.Alerts.createDebugPromptAlert("Debug", "Enter arguments", "Debug", "Cancel", function (inputArguments) {
-                            executeScriptWithArguments(true, inputArguments);
-                            delayFunction();
-                        }, function (inputArguments) {
-                            delayFunction();
-                        });
+                    if (requireArguments) {
+                        var delayFunction = function () {
+                            setTimeout(function () {
+                                editor_1.FileEditor.focusEditor();
+                                editor_1.FileEditor.focusEditor();
+                                functionToExecuteAfterSave();
+                            }, 50);
+                        };
+                        if (debug) {
+                            alert_1.Alerts.createDebugPromptAlert("Debug", "Enter arguments", "Debug", "Cancel", function (inputArguments) {
+                                executeScriptWithArguments(true, inputArguments);
+                                delayFunction();
+                            }, function (inputArguments) {
+                                delayFunction();
+                            });
+                        }
+                        else {
+                            alert_1.Alerts.createRunPromptAlert("Run", "Enter arguments", "Run", "Cancel", function (inputArguments) {
+                                executeScriptWithArguments(false, inputArguments);
+                                delayFunction();
+                            }, function (inputArguments) {
+                                delayFunction();
+                            });
+                        }
                     }
                     else {
-                        alert_1.Alerts.createRunPromptAlert("Run", "Enter arguments", "Run", "Cancel", function (inputArguments) {
-                            executeScriptWithArguments(false, inputArguments);
-                            delayFunction();
-                        }, function (inputArguments) {
-                            delayFunction();
-                        });
+                        executeScriptWithArguments(true, "");
+                        functionToExecuteAfterSave();
                     }
                 }, 1);
             };

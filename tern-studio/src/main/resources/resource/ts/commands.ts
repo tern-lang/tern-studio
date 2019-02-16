@@ -680,43 +680,56 @@ export module Command {
    }
          
    export function runScript() {
-      executeScript(false);
+      executeScript(false, false);
    }
-   
+ 
+   export function runScriptWithArguments() {
+      executeScript(false, true);
+   }
+
    export function debugScript() {
-      executeScript(true);
+      executeScript(true, false);
    }  
    
-   function executeScript(debug) {
+   export function debugScriptWithArguments() {
+      executeScript(true, true);
+   }  
+
+   function executeScript(debug, requireArguments) {
       var saveFunction = function(functionToExecuteAfterSave) {
          setTimeout(function() {
-            var delayFunction = function() {
-               setTimeout(function() {
-                  FileEditor.focusEditor();
-                  FileEditor.focusEditor();
-                  functionToExecuteAfterSave();
-               }, 50);
-            }
-            if(debug) {
-               Alerts.createDebugPromptAlert("Debug", "Enter arguments", "Debug", "Cancel", 
-                  function(inputArguments) { // yes callback
-                     executeScriptWithArguments(true, inputArguments);
-                     delayFunction();
-                  },
-                  function(inputArguments) { // no callback
-                     delayFunction();
-                  }
-               );
+            if(requireArguments) { // user input required
+                var delayFunction = function() {
+                    setTimeout(function() {
+                       FileEditor.focusEditor();
+                       FileEditor.focusEditor();
+                       functionToExecuteAfterSave();
+                    }, 50);
+                 }
+                if(debug) {
+                    Alerts.createDebugPromptAlert("Debug", "Enter arguments", "Debug", "Cancel", 
+                        function(inputArguments) { // yes callback
+                            executeScriptWithArguments(true, inputArguments);
+                            delayFunction();
+                        },
+                        function(inputArguments) { // no callback
+                            delayFunction();
+                        }
+                    );
+                } else {
+                    Alerts.createRunPromptAlert("Run", "Enter arguments", "Run", "Cancel", 
+                        function(inputArguments) { // yes callback
+                            executeScriptWithArguments(false, inputArguments);
+                            delayFunction();
+                        },
+                        function(inputArguments) { // no callback
+                            delayFunction();
+                        }
+                    );
+                }
             } else {
-               Alerts.createRunPromptAlert("Run", "Enter arguments", "Run", "Cancel", 
-                  function(inputArguments) { // yes callback
-                     executeScriptWithArguments(false, inputArguments);
-                     delayFunction();
-                  },
-                  function(inputArguments) { // no callback
-                     delayFunction();
-                  }
-               );
+                executeScriptWithArguments(true, "");
+                functionToExecuteAfterSave();
             }
          }, 1);
       };

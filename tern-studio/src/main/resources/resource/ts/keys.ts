@@ -116,10 +116,16 @@ export module KeyBinder {
       createKeyBinding("ctrl r", "Run Script", true, function() {
          Command.runScript();
       });
+      createKeyBinding("ctrl shift r", "Run Script With Arguments", true, function() {
+         Command.runScriptWithArguments();
+      });
       createKeyBinding("ctrl b", "Debug Script", true, function() {
          Command.debugScript();
       });
-      createKeyBinding("ctrl shift b", "Debug Remote Script", true, function() {
+      createKeyBinding("ctrl shift b", "Debug Script With Arguments", true, function() {
+         Command.debugScriptWithArguments();
+      });     
+      createKeyBinding("ctrl k", "Debug Remote Script", true, function() {
          Command.attachRemoteDebugger();
       });
       createKeyBinding("f8", "Resume Script", true, function() {
