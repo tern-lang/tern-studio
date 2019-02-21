@@ -1,6 +1,12 @@
-let l = [0 to 100];
-let i = l.iterator;
+import static lang.annotation.ElementType.*;
+import lang.annotation.ElementType;
 
+module F {
 
-for(x in l)
-   println(x);
+   @Target(values:  [TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR])
+   @Retention(value: ANNOTATION_TYPE)
+   async call() {
+      return await 11;
+   }
+}
+F.call().success(this::println);

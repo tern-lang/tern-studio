@@ -1,0 +1,5 @@
+
+import security.SecureRandom;
+
+let x = SecureRandom().nextInt(647);
+println(x);

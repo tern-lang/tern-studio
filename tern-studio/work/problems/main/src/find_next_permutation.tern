@@ -1,0 +1,11 @@
+
+
+
+
+func nextPermutation(nums){
+   // 1) find longest non-incressing suffix
+   // 2) set the pivot to be to the left of this
+   // 3) find the next number bigger
+   // 4) swap
+   // 5) reverse
+}

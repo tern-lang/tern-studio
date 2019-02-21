@@ -1,0 +1,51 @@
+
+import security.SecureRandom;
+
+let rand = SecureRandom();
+let list = [];
+
+for(i in 0 to 6){
+   let v = rand.nextInt(100);
+   list.add(v);
+}
+
+let sort = quicksort(list);
+println(sort);
+
+func quicksort(list) {
+   quicksort(list, 0, list.length -1);
+}
+
+func quicksort(list: List, low, high) {
+   let length = (high - low);
+   let pivot = low + (length /2);
+   let value = list[pivot];
+   
+   list[pivot] = list[high]; // move pivot to the end
+   list[high] = value;
+   
+   let left = low;
+   let right = high;
+   
+   while(left < right) {
+      if(list[right] > value) {
+         right--;
+      } else if(list[left] < value) {
+         left++;
+      } else {
+         let curr = list[left];
+         list[left] = list[right];
+         list[right] = curr;
+         left++;
+         right--;
+      }
+   }
+   if(low - left > 1) {
+      quicksort(list, low, left);
+   }
+   if(high - right > 1) {
+      quicksort(list, right, high);
+   }
+   return list;
+}
+

@@ -41,6 +41,7 @@ public class CompletionResource implements Resource {
 
    @Override
    public void handle(Request request, Response response) throws Throwable {
+      long start = System.currentTimeMillis();
       PrintStream out = response.getPrintStream();
       String content = request.getContent();
       Path path = request.getPath();
@@ -68,7 +69,10 @@ public class CompletionResource implements Resource {
       out.close();
       
       if(log.isInfoEnabled()) {
+         long finish = System.currentTimeMillis();
+
          log.info("Expression: " + expression);
+         log.info("Duration: " + (finish - start) + "ms");
          log.info("Tree: \n" + details);
       }
    }

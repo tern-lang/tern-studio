@@ -1,0 +1,15 @@
+// http://www.java67.com/2018/05/top-75-programming-interview-questions-answers.html
+
+
+assert duplicateNum([1, 2, 3, 4, 2, 5, 7, 8, 9]);
+
+func duplicateNum(nums) {
+   Collections.sort(nums);
+   
+   for(i in 1 to nums.length -1){
+      if(nums[i -1] == nums[i]){
+         nums[i] = 0;
+      }
+   }
+   println(nums);
+}

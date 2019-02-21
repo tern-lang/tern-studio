@@ -1,0 +1,8 @@
+
+
+func numIslands(grid) {
+   // a) scan for a 1
+   // b) when I find a 1 then search from it down and across
+   // c) when mapped out +1
+   // d) convert island to water
+}

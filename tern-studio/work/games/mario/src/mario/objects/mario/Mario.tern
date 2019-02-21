@@ -20,9 +20,6 @@ import mario.objects.creatures.{ Coin, Goomba, Mushroom, Platform, RedKoopa, Red
 import mario.util.ImageManipulator;
 
 
-
-
-
 /**
  * Mario is the main object in the game and is the center of the screen and attention at all
  * time. As a result, he is also the most complicated object in terms of animation, collision detection,
