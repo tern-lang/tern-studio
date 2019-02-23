@@ -1,12 +1,4 @@
-import static lang.annotation.ElementType.*;
-import lang.annotation.ElementType;
 
-module F {
-
-   @Target(values:  [TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR])
-   @Retention(value: ANNOTATION_TYPE)
-   async call() {
-      return await 11;
-   }
-}
-F.call().success(this::println);
+let x = "1234567";
+let y = x[2];
+println(y);

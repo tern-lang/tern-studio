@@ -1,11 +1,36 @@
+// https://www.nayuki.io/page/next-lexicographical-permutation-algorithm
 
-
+assert nextPermutation("123") == "132";
+assert nextPermutation("0125330") == "0130235";
 
 
 func nextPermutation(nums){
-   // 1) find longest non-incressing suffix
-   // 2) set the pivot to be to the left of this
-   // 3) find the next number bigger
-   // 4) swap
-   // 5) reverse
+   let chars = nums.toCharArray();
+   let pivot = 0;
+   
+   for(i in 0 from chars.length -2) {
+      if(chars[i + 1] > chars[i]) {
+         pivot = i + 1;
+         break;
+      }
+   }
+   let right = chars[pivot -1];
+   
+   for(i in pivot from chars.length -1) {
+      if(chars[i] > right) {
+         chars[pivot-1] = chars[i];
+         chars[i] = right;
+         break;
+      }
+   }
+   let last = nums.length -1;
+   
+   while(pivot < last) {
+      let char = chars[pivot];
+      
+      chars[pivot++] = chars[last];
+      chars[last--] = char;
+   }
+   println(String(chars));
+   return String(chars);
 }

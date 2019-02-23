@@ -26,7 +26,7 @@ class Line{
 }
 
 class Stuff {
-   var x=1,y=2,z:String;
+   var x=1,y=2,z:Double;
    new(x,y,z){
       this.x=x;
       this.y=y;
@@ -54,19 +54,19 @@ class MemberFieldSequenceTest with TestCase {
       
       println(s.z.class);
       
-      assert s.z.class == String.class;
+      assert s.z.class == Double.class;
       assert s.y.class == Integer.class;
       assert s.x.class == Integer.class;
-      assert s.get() == "1,2,3";
+      assert s.get() == "1,2,3.0";
       
-      s.z="blah";
+      s.z=44.3;
       s.y="22";
       s.x="11";
       
-      assert s.z.class == String.class;
+      assert s.z.class == Double.class;
       assert s.y.class == String.class;
       assert s.x.class == String.class;
-      assert s.get() == "11,22,blah";
+      assert s.get() == "11,22,44.3";
    }
    
    testFieldSequenceAnnotations() {

@@ -1,14 +1,14 @@
 class Test{
    private static const LIST = [1,2,3,4];
-   static var count = 0;
+   static let count = 0;
    static inc(){
       return count++;
    }
    static at(index){
       return LIST[index];
    }
-   private var x;
-   private var y;
+   private let x;
+   private let y;
    new(x,y){
       this.x=x;
       this.y=y;
@@ -27,6 +27,7 @@ for(var i = 0; i < 10; i++) {
    var t = new Test(33,44);
 
    System.out.println(t);
+   System.out.println(t);   
    //System.out.println(t.dump()); returns null
 
    System.out.println(Test.inc());

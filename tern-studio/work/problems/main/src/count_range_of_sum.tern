@@ -1,0 +1,16 @@
+// https://leetcode.com/problems/count-of-range-sum/
+
+assert countRangeSum([-2, 5, -1], -2, 2) == 3;
+
+func countRangeSum(nums, lower, upper) {
+   let accept = (a) -> a >= lower && a <= upper;
+   
+   // sort with remembered index
+   // narrow down to the values
+   
+}
+
+class Bag {
+   let val;
+   let index;
+}

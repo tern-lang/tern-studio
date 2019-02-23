@@ -23,7 +23,7 @@ class FunctionConstraintBindingTest with TestCase {
 
    testFunctionBinding() {
       var strings: String[][] = [['a','b'],[]];
-      var multi : Integer[][] = [['1','2', 3.0d, 11L],[2]];
+      var multi : Integer[][] = [[1,2, 3.0d, 11L],[2]];
       var int: Integer[] =[2];
       
       assert Functions.function(int) == "Float[]";
