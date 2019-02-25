@@ -1,5 +1,5 @@
 <displayDefinition>
-   <theme-name>chrome</theme-name>
+   <theme-name>eclipse</theme-name>
    <console-capacity>50000</console-capacity>
    <font>
       <available-fonts>
@@ -18,7 +18,7 @@
       </available-fonts>
       <selected-font>
          <font-family>Lucida Console,Menlo</font-family>
-         <font-size>16</font-size>
+         <font-size>12</font-size>
       </selected-font>
    </font>
 </displayDefinition>

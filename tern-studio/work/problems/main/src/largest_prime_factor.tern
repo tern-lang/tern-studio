@@ -1,0 +1,35 @@
+
+let result1 = largestPrimeFactor(13195);
+println(result1);
+
+let result2 = largestPrimeFactor(600851475143);
+println(result2);
+
+func isPrime(num) {  
+   let last = (num / 2) +1;
+
+   for(i in 2 to last) {
+      if(num % i == 0) {
+         return false;
+      }
+   }
+   return true;
+}
+
+func largestPrimeFactor(num) {
+   let limit = (num / 2) + 1;
+   let lowFactor = 2;
+
+   while(lowFactor < limit) {
+      if(num % lowFactor == 0) { // divisible
+         let highFactor = num / lowFactor;
+         
+         if(isPrime(highFactor)) {
+            println(lowFactor * highFactor);
+            println("lowFactor=${lowFactor} highFactor=${highFactor}");
+            return highFactor;
+         }
+      }
+      lowFactor++;
+   }
+}

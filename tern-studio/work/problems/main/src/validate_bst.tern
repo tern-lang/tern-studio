@@ -1,0 +1,28 @@
+
+
+class Node {
+   let left: Node;
+   let right: Node;
+   let val;
+   
+   new(val) {
+      this.val = val;
+   }
+}
+
+func validate(root: Node) {
+   if(root.left > root.val) {
+      return false;
+   }
+   if(root.right < root.val) {
+      return false;
+   }
+   if(!validate(root.left)) {
+      return false;
+   }
+   if(!validate(root.right)) {
+      return false;
+   }
+   return true;
+   
+}

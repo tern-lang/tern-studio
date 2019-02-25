@@ -1,0 +1,48 @@
+
+maxNumber([6,7],[6,0,4], 5);
+maxNumber([3,4,6,5], [9,1,2,5,8,3], 5);
+
+func maxNumber(nums1, nums2, k) {
+   for(len1 in 0 to k) {
+      let len2 = k - len1;
+      
+      if(len1 > nums1.length) {
+         len2 += nums1.length - len1;
+      } else if(len2 > nums2.length) {
+         len1 += nums2.length - len2; 
+      }
+      // arr1.length + arr2.length == k
+      let arr1 = maxArr(nums1, i);
+      let arr2 = maxArr(nums2, j);
+      let arr3 = merge(arr1, arr2);
+      
+      
+   }
+}
+
+func maxArray(nums, len){  
+   let max = 0;
+   let index = 0;
+   
+   for(i in 0 to nums.length -len){
+      if(nums[i] > max) {
+         max = nums[i];
+         index = i;
+      }
+   }
+   let arr = [];
+   
+   for(i in index to len -1){
+      arr[i] = nums[i];
+   }
+   return arr;
+}
+
+func merge(nums1, nums2) {
+   
+}
+
+func compare(nums1, index1, nums2, index2) {
+   
+}
+

@@ -1,0 +1,79 @@
+
+let routes = [[1,2,7],[3,6,7]];
+
+assert numBusesToDestination(routes, 1, 6) == 2;
+
+class Node {
+   let nodes: List<Node> = [];
+   let value;
+   
+   new(value) {
+      this.value = value;
+   }
+   override toString(){
+      return value;
+   }
+}
+
+class Path {
+   let nodes: List<Node> = [];
+}
+
+func getNode(i, map: Map<Integer, Node>) {
+   let node: Node = map[i];
+   
+   if(node == null) {
+      node = Node(i);
+      map[i] = node;
+   }  
+   return node;
+}
+
+func numBusesToDestination(routes, start, dest) {
+   let map: Map<Integer, Node> = {:};
+   
+   for(route in routes) {
+      for(i in 0 to route.length -1){
+         let node = getNode(route[i], map);
+         
+         for(j in 0 to route.length -1) {
+            if(route[i] != route[j]) {
+               let add = getNode(route[j], map);
+               node.nodes.add(add);
+            }
+         }
+      }
+   }
+   let queue = ArrayDeque();
+   let root = map[start];
+   let path = Path();   
+   let min = Integer.MAX_VALUE;
+   
+   path.nodes.add(root);
+   queue.offer(path);
+   println(path.nodes);
+   
+   while(!queue.isEmpty()) {
+      let next = queue.poll();
+      let source = next.nodes[next.nodes.length -1];
+      
+      for(child in source.nodes) {
+         let nextPath = Path();
+         
+         nextPath.nodes.addAll(next.nodes);
+         nextPath.nodes.add(child);
+         
+         if(child.value == dest) {
+            if(nextPath.nodes.length < min) {
+               println(nextPath.nodes);
+               min = nextPath.nodes.length;
+            }
+         }
+         if(nextPath.nodes.length < min) {
+            queue.offer(nextPath);
+         }
+      }
+   }
+   println(min);
+   return min;
+}

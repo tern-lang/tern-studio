@@ -1,0 +1,75 @@
+
+let dict = ["GEEKS", "FOR", "QUIZ", "GO"];
+let board = [
+   ['G','I','Z'],
+   ['U','E','K'],
+   ['Q','S','E']
+];
+
+let directions = [
+   [1, 0], // up
+   [-1, 0], // down
+   [0, -1], // left
+   [0, 1], // right
+   [1, 1],
+   [-1, -1],
+   [1, -1],
+   [-1, 1]
+];
+               
+
+let result = findWordsInBoggle(board, dict);
+
+println(result);
+
+func findWordsInBoggle(board, dict) {
+   let starts = {:};
+   let max = 0;
+   
+   for(word in dict) {
+      let list = starts.get(word[0]);
+      
+      if(list == null) {
+         list = [];
+         starts.put(word[0], list);
+      }
+      list.add(word);
+   }
+   for(i in 0 to board.length -1) {
+      for(j in 0 to board[i].length -1) {
+         let start = board[i][j];
+         let list = starts.get(start);
+         
+         if(list) {
+         
+            for(word in list) {
+               for(direction in directions) {
+                  if(findWordInBoggle(board, i + direction[0], j + direction[1], word.substring(0))) {
+                     return true;
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+
+func findWordInBoggle(board, i, j, word) {
+   if(word.length == 0) {
+      return true;
+   }
+   if(i > board.length || j > board[i].length) {
+      return false;
+   }
+   if(board[i][j] == word[0]) {
+      for(direction in directions) {
+         if(findWordInBoggle(board, i + direction[0], j + direction[j], word.substring(0))) {
+            return true;
+         }
+      }
+   }
+   return false;
+}
+
+
+

@@ -1,0 +1,102 @@
+import util.concurrent.LinkedBlockingQueue;
+
+let result = findLadders("hit", "cog",  ["hot","dot","dog","lot","log","cog"]);
+
+println(result);
+
+// we should use dijkstras algorithm here as a means of finding a path
+func findLadders(beginWord, endWord, wordList) {
+   let root = Node(beginWord);
+   let nodes = {:};
+   
+   wordList.add(beginWord);
+   nodes.put(beginWord, root);
+   
+   for(a in wordList) {
+      let nodeA = getNode(a, nodes);
+      
+      for(b in wordList) {
+         if(isNear(a, b)) {
+            let nodeB = getNode(b, nodes);
+            nodeA.nodes.add(nodeB);
+         }
+      }
+   }
+   for(entry in nodes) {
+      println("${entry.key} -> ${entry.value.nodes}");
+   }
+   return getPath(root, endWord);
+}
+
+func getPath(root: Node, dest: String) {
+   let queue = LinkedBlockingQueue();
+   let path = Path();
+   
+   path.path.add(root);
+   queue.offer(path);
+   
+   while(!queue.isEmpty()) {
+      let next = queue.poll();
+      let last = next.path.get(next.path.length -1); // get last node
+      let children = last.nodes;
+      
+      for(child in children) {
+         if(!next.path.contains(child) && next != child) {
+            let newPath = Path();
+            
+            newPath.path.addAll(next.path);
+            newPath.path.add(child);
+            queue.offer(newPath);
+            
+            if(child.word == dest) {
+               return newPath.path;
+            }
+         }
+      }
+   }
+   return [];
+   
+}
+
+func getNode(a, nodes) {
+   let node = nodes.get(a);
+   
+   if(node == null){
+      node = Node(a);
+      nodes.put(a, node);
+   }
+   return node;
+}
+
+func isNear(a, b) {
+   let distance = 0;
+   
+   for(i in 0 to a.length -1) {
+      if(a[i] != b[i]) {
+         if(distance++ > 0){
+            return false;
+         }
+      }
+   }
+   return distance == 1;
+}
+
+class Path {
+   let path: List<Node> = [];
+   let word;
+   
+   new() {
+      this.word = "";
+   }
+}
+class Node {
+   let nodes: List<Node> = [];
+   let word;
+   
+   new(word) {
+      this.word = word;
+   }
+   override toString(){
+      return word;
+   }
+}

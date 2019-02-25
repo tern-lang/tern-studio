@@ -3,9 +3,9 @@ import awt.image.BufferedImage;
 import imageio.ImageIO;
 
 class Vec {
-   var x;
-   var y;
-   var z;
+   const x;
+   const y;
+   const z;
    new(x, y, z) {
      this.x = x;
      this.y = y;
@@ -39,9 +39,9 @@ class Vec {
 }
 
 class Color {
-   var r;
-   var g;
-   var b;
+   const r;
+   const g;
+   const b;
    new(r, g, b) {
      this.r = r;
      this.g = g;

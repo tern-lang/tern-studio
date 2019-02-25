@@ -1,0 +1,25 @@
+
+
+let matrix = [
+   [1, 2, 3, 4],
+   [2, 3, 4, 5],
+   [3, 4, 5, 6]
+];
+
+rotateMatrix(matrix).stream().forEach(this::println);
+
+func rotateMatrix(matrix) {
+   let rotated = [];
+   
+   for(i in 0 to matrix.length -1){ // iterate over rows
+      for(j in 0 to matrix[i].length -1) {// iterate over columns
+         let val = matrix[i][j];
+         
+         if(rotated.length <= j) {
+            rotated.add([]);
+         }
+         rotated[j].add(val);
+      }
+   }
+   return rotated;
+}

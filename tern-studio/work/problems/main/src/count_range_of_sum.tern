@@ -1,16 +1,23 @@
 // https://leetcode.com/problems/count-of-range-sum/
 
-assert countRangeSum([-2, 5, -1], -2, 2) == 3;
+let result = countRangeSum([-2, 5, -1], -2, 2);
+
+println(result);
 
 func countRangeSum(nums, lower, upper) {
-   let accept = (a) -> a >= lower && a <= upper;
+   let count = 0;
    
-   // sort with remembered index
-   // narrow down to the values
-   
-}
-
-class Bag {
-   let val;
-   let index;
+   for(i in 0 to nums.length -1) {
+      for(j in i to nums.length -1) {
+         let val = 0;
+         
+         for(k in i to j) {
+            val += nums[k];
+         }
+         if(val >= lower && val <= upper) {
+            count++;
+         }
+      }
+   }
+   return count;
 }
