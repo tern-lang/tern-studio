@@ -66,26 +66,36 @@ public class ClassPathUpdater {
       }
       return null;
    }
-   
+
+   public static ClassLoader createClassLoader(List<File> dependencies, boolean debug) throws Exception {
+      URLClassLoader loader = new URLClassLoader(new URL[]{}, null);
+      updateClassLoader(dependencies, loader, debug);
+      return loader;
+   }
+
    public static void updateClassPath(List<File> dependencies, boolean debug) throws Exception {
       URLClassLoader loader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+      updateClassLoader(dependencies, loader, debug);
+   }
+
+   private static void updateClassLoader(List<File> dependencies, URLClassLoader loader, boolean debug) throws Exception {
       Method method = URLClassLoader.class.getDeclaredMethod(ADD_URL_METHOD, URL.class);
-      
+
       for(File dependency : dependencies) {
          String resource = dependency.getAbsolutePath();
-         
+
          if(dependency.isFile() && !resource.endsWith(JAR_EXTENSION)) {
             FileReader source = new FileReader(dependency);
             LineNumberReader reader = new LineNumberReader(source);
             List<File> files = new ArrayList<File>();
-            
+
             try {
                String line = reader.readLine();
-               
+
                while(line != null) {
                   String token = line.trim();
                   int length = token.length();
-                  
+
                   if(length > 0) {
                      File file = new File(token);
                      files.add(file);
@@ -93,13 +103,13 @@ public class ClassPathUpdater {
                   line = reader.readLine();
                }
                int size = files.size();
-               
+
                if(size > 0) {
                   for(int i = 0; i < size; i++){
                      File file = files.get(i).getCanonicalFile();
                      URI location = file.toURI();
                      URL path = location.toURL();
-                     
+
                      if(debug) {
                         String message = String.format(INCLUDE_MESSAGE , path);
                         System.err.println(message);
@@ -109,7 +119,7 @@ public class ClassPathUpdater {
                      }
                      method.setAccessible(true);
                      method.invoke(loader, path);
-                  } 
+                  }
                }
             } finally {
                reader.close();
@@ -118,7 +128,7 @@ public class ClassPathUpdater {
             File file = dependency.getCanonicalFile();
             URI location = file.toURI();
             URL path = location.toURL();
-            
+
             if(debug) {
                String message = String.format(INCLUDE_MESSAGE , path);
                System.err.println(message);

@@ -1,0 +1,115 @@
+import security.SecureRandom;
+
+let tree = makeTree();
+
+let inOrder = tree.inOrder();
+let preOrder = tree.preOrder(); 
+
+func rebuildTree(inOrder: List<Number>, preOrder: List<Number>) {
+   // here we must rebuild tree
+}
+
+func makeTree() {
+   let random = SecureRandom();
+   let tree = BinaryTree();
+   
+   for(i in 0 to 10){
+      let num = random.nextInt(100);
+      let node = Node(num);
+      
+      tree.add(node);
+   }
+   return tree;
+}
+
+class BinaryTree {
+
+   let root;
+   
+   preOrder() {
+      let list = [];
+      print("Preorder: ");
+      preOrder(root, list); 
+      println();
+      return list;
+   }
+   
+   preOrder(node: Node, list: List) {
+      if(node != null) {
+         print(node.val + ", ");  
+         list.add(node.val);      
+         preOrder(node.left, list);
+         preOrder(node.right, list);
+      }
+   }
+   
+   
+   postOrder() {
+      let list = [];
+      print("Postorder: ");
+      postOrder(root, list);
+      println();
+      return list;
+   }
+   
+   postOrder(node: Node, list: List) {
+      if(node != null) {
+         postOrder(node.left, list); // lowest left
+         postOrder(node.right, list); // lowest right
+         print(node.val + ", "); // parent
+         list.add(node.val);
+      }
+   }
+   
+   inOrder() {
+      let list = [];
+      print("Inorder: ");
+      inOrder(root, list);
+      println();
+      return list;
+   }
+   
+   inOrder(node: Node, list: List) {
+      if(node != null) {
+         inOrder(node.left, list); // left child
+         print(node.val + ", "); // parent
+         list.add(node.val);         
+         inOrder(node.right, list); // right child
+      }
+   }
+
+   add(node: Node) {
+      if(root == null) {
+         root = node;
+      } else {
+         add(root, node);
+      }
+   }
+   
+   add(root: Node, add: Node) {
+      if(root.val < add.val) {
+         if(root.left != null) {
+            add(root.left, add);
+         } else {
+            root.left = add;
+         }
+      } else {
+         if(root.right != null) {
+            add(root.right, add);
+         } else {
+            root.right = add;
+         }
+      }
+   }
+}
+
+
+class Node {
+   let left;
+   let right;
+   let val;
+   
+   new(val) {
+      this.val = val;
+   }
+}

@@ -1,0 +1,37 @@
+
+let result = fairCandySwap([1,2,5], [2,4]);
+//let result = fairCandySwap([1,1], [2,2]);
+
+println(result);
+
+func fairCandySwap(a, b){
+   let setA = HashSet(a);
+   let setB = HashSet(b);
+   let totalA = 0;
+   let totalB = 0;
+   
+   for(i in a) {
+      totalA += i;
+   }
+   for(i in b) {
+      totalB += i;
+   }
+   let diff = Math.abs(totalA - totalB);
+   let exchange = diff / 2;
+   
+   if(totalA < totalB) {
+      for(i in a) {
+         if(setB.contains(i + exchange)) {
+            return [i, i+exchange];
+         }
+      }
+   } else {
+      for(i in b) {
+         if(setA.contains(i + exchange)) {
+            return [i+exchange,i];
+         }
+      }
+   }
+   return [];
+   
+}

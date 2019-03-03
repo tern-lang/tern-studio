@@ -1,6 +1,3 @@
-let x = URL("https://gir-id-cluster-proxy-alb-1776869555.us-east-1.elb.amazonaws.com/")
-   .header("Host", "research.gs.com")
-   .get()
-   .response();
-   
-   println(x.inputStream.reader.readText);
+System.currentTimeMillis();
+
+import lang.StringBuilder;

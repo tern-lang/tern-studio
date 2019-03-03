@@ -1,24 +1,22 @@
 package org.ternlang.studio.index.classpath;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.ternlang.studio.index.IndexNode;
-import org.ternlang.studio.index.config.IndexConfigFile;
 
 public class ClassPathSearcher {
    
    private final Map<String, IndexNode> cache;
-   private final Set<IndexNode> nodes;
-   private final IndexConfigFile config;
+   private final List<IndexNode> nodes;
    
-   public ClassPathSearcher(IndexConfigFile config) {
+   public ClassPathSearcher(List<File> path) {
       this.cache = new ConcurrentHashMap<String, IndexNode>();
-      this.nodes = config.getAllProjectClasses();
-      this.config = config;
+      this.nodes = ProjectClassPath.getProjectClassPath(path);
    }
    
    public Map<String, IndexNode> getTypeNodesMatching(String expression) {
@@ -53,7 +51,7 @@ public class ClassPathSearcher {
       IndexNode node = nodes.get(fullName);
       
       if(node == null) {
-         node = config.getDefaultImportClasses().get(fullName);
+         node = SystemClassPath.getDefaultNodesByType().get(fullName);
       }
       return node;
    }

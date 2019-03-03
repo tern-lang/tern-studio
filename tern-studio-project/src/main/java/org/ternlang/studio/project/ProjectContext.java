@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +18,6 @@ import org.ternlang.core.type.extend.FileExtension;
 import org.ternlang.studio.agent.core.ClassPathUpdater;
 import org.ternlang.studio.index.IndexDatabase;
 import org.ternlang.studio.index.IndexScanner;
-import org.ternlang.studio.index.config.IndexConfigFile;
 import org.ternlang.studio.project.config.ConfigurationReader;
 import org.ternlang.studio.project.config.Dependency;
 import org.ternlang.studio.project.config.DependencyFile;
@@ -89,21 +90,27 @@ public class ProjectContext {
    }
    
    public synchronized IndexDatabase getIndexDatabase(){
-      ProjectConfiguration configuraton = getConfiguration();
-      IndexDatabase database = configuraton.getAttribute(INDEX_DATABASE_KEY);
-      
-      if(database == null) {
-         database = new IndexScanner(
-            (IndexConfigFile)source.getConfigFile(project, ProjectConfiguration.INDEX_FILE),
-            project.getProjectContext(), 
-            workspace.getExecutor(), 
-            project.getBasePath(), 
-            project.getName(), 
-            getLayout().getPrefixes());
+      ProjectConfiguration configuration = getConfiguration();
+      IndexScanner scanner = configuration.getAttribute(INDEX_DATABASE_KEY);
 
-         configuraton.setAttribute(INDEX_DATABASE_KEY, database);
+      if(scanner == null) {
+         List<File> dependencies = getDependencies()
+                 .stream()
+                 .filter(Objects::nonNull)
+                 .map(d -> d.getFile())
+                 .collect(Collectors.toList());
+
+         scanner = new IndexScanner(
+                 dependencies,
+                 project.getProjectContext(),
+                 workspace.getExecutor(),
+                 project.getBasePath(),
+                 project.getName(),
+                 getLayout().getPrefixes());
+
+         configuration.setAttribute(INDEX_DATABASE_KEY, scanner);
       }
-      return database;
+      return scanner;
    }
 
    public synchronized List<DependencyFile> getDependencies() {

@@ -1,0 +1,23 @@
+import util.stream.Collectors;
+
+assert nextGreaterElements([5,4,3,2,1]) == [-1,5,5,5,5];
+assert nextGreaterElements([1,2,1]) == [2,-1,2];
+assert nextGreaterElements([1,2,3,4,3]) == [2,3,4,-1,4];
+
+func nextGreaterElements(nums) {
+   let index = HashSet(nums);
+   let result = [];
+   let max = 0;
+   let high = 0;
+   
+   for(i in 1 from nums.length -1) {
+      let next = nums[i];
+      let prev = nums[i - 1];
+      
+      if(next > prev) {
+         result[i -1] = next;
+      } else {
+
+      }
+   }
+}

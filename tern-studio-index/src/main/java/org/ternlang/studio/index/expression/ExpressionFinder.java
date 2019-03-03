@@ -11,12 +11,12 @@ import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.ternlang.core.Bug;
 import org.ternlang.core.Reserved;
 import org.ternlang.core.type.Type;
 import org.ternlang.studio.index.IndexDatabase;
 import org.ternlang.studio.index.IndexNode;
 import org.ternlang.studio.index.IndexType;
-import org.ternlang.studio.index.classpath.ClassIndexProcessor;
 
 @Slf4j
 public class ExpressionFinder {
@@ -135,7 +135,8 @@ public class ExpressionFinder {
       }
       return match;
    }
-   
+
+   @Bug("fix this")
    private IndexNode findVariable(IndexNode node, ExpressionToken token) {
       String name = token.getName();
       
@@ -146,7 +147,8 @@ public class ExpressionFinder {
          return findEnclosingSuper(node);
       }
       if(name.equals(Reserved.TYPE_CLASS)) {
-         return ClassIndexProcessor.getIndexNode(Type.class);
+         throw new RuntimeException();
+         //   return ClassIndexProcessor.getIndexNode(Type.class);
       }
       IndexType type = node.getType();
       

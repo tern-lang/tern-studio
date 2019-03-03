@@ -1,15 +1,14 @@
 package org.ternlang.studio.index;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Map;
 
 import junit.framework.TestCase;
-
 import org.ternlang.common.store.ClassPathStore;
 import org.ternlang.common.thread.ThreadPool;
 import org.ternlang.compile.StoreContext;
 import org.ternlang.core.Context;
-import org.ternlang.studio.index.config.SystemIndexConfigFile;
 
 public class IndexSearcherTest extends TestCase {
 
@@ -18,7 +17,7 @@ public class IndexSearcherTest extends TestCase {
       Context context = new StoreContext(store);
       ThreadPool pool = new ThreadPool(2);
       File file = File.createTempFile("test", getClass().getSimpleName());
-      IndexDatabase database = new IndexScanner(SystemIndexConfigFile.getSystemClassPath(), context, pool, file, "test");
+      IndexDatabase database = new IndexScanner(Collections.EMPTY_LIST, context, pool, file, "test");
       SourceFile indexFile = database.getFile("/file.tern", "class X extends HashMap with Runnable {\nconst x = 0;\n}\n");
       IndexNode root = indexFile.getRootNode();
       String detail = IndexDumper.dump(root, root, "");

@@ -1,0 +1,13 @@
+import math.BigInteger;
+
+func fib(n) {
+   let a: BigInteger = BigInteger.valueOf(0);
+   let b: BigInteger = BigInteger.valueOf(1);
+
+   for(i in 0 to n) {
+      (a, b) = (b, a.add(b));
+      yield b;
+   }
+}
+
+fib(400).iterator().forEachRemaining(this::println);

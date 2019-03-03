@@ -1,16 +1,16 @@
-package org.ternlang.studio.index.classpath.node;
+package org.ternlang.studio.index.classpath;
 
 import java.util.Collections;
 import java.util.Set;
 
+import io.github.classgraph.ClassInfo;
 import org.ternlang.studio.index.IndexNode;
 import org.ternlang.studio.index.IndexType;
-import org.ternlang.studio.index.classpath.ClassFile;
 
 public class SuperIndexNode extends ClassIndexNode {
-   
-   public SuperIndexNode(ClassFile file) {
-      super(file);
+
+   public SuperIndexNode(ClassIndexNodePath path, ClassInfo info) {
+      super(path, info);
    }
 
    @Override
@@ -22,10 +22,9 @@ public class SuperIndexNode extends ClassIndexNode {
    public Set<IndexNode> getNodes() {
       return Collections.emptySet();
    }
-   
+
    @Override
    public String toString(){
       return getFullName();
    }
-   
 }

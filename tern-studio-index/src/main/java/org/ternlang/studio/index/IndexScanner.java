@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -23,7 +24,7 @@ import org.ternlang.studio.common.FileAction;
 import org.ternlang.studio.common.FileProcessor;
 import org.ternlang.studio.common.FileReader;
 import org.ternlang.studio.index.classpath.ClassPathSearcher;
-import org.ternlang.studio.index.config.IndexConfigFile;
+import org.ternlang.studio.index.classpath.SystemClassPath;
 
 @Slf4j
 public class IndexScanner implements IndexDatabase {
@@ -35,11 +36,10 @@ public class IndexScanner implements IndexDatabase {
    private final PathTranslator translator;
    private final ClassPathSearcher searcher;
    private final SourceIndexer indexer;
-   private final IndexConfigFile path;
    private final String project;
    private final File root;
    
-   public IndexScanner(IndexConfigFile path, Context context, Executor executor, File root, String project, String... prefixes) {
+   public IndexScanner(List<File> path, Context context, Executor executor, File root, String project, String... prefixes) {
       this.members = new ConcurrentHashMap<String, Map<String, IndexNode>>();
       this.reference = new AtomicReference<IndexFileCache>();
       this.searcher = new ClassPathSearcher(path);
@@ -49,7 +49,6 @@ public class IndexScanner implements IndexDatabase {
       this.processor = new FileProcessor<SourceFile>(action, executor);
       this.project = project;
       this.root = root;
-      this.path = path;
    }
 
    @Override
@@ -115,10 +114,7 @@ public class IndexScanner implements IndexDatabase {
          IndexNode node = nodes.get(typeName);
          
          if(node == null) {
-            node = path.getDefaultImportNames().get(typeName);
-         }
-         if(node == null) {
-            node = path.getDefaultImportClasses().get(typeName);
+            node = SystemClassPath.getDefaultNodesByType().get(typeName);
          }
          return node;
       }
@@ -175,7 +171,7 @@ public class IndexScanner implements IndexDatabase {
    
    @Override
    public Map<String, IndexNode> getImportsInScope(IndexNode node) throws Exception {
-      Map<String, IndexNode> defaultImports = path.getDefaultImportNames();
+      Map<String, IndexNode> defaultImports = SystemClassPath.getDefaultNodes();
       Map<String, IndexNode> scope = new HashMap<String, IndexNode>(defaultImports);
       
       while(node != null) {
@@ -195,7 +191,7 @@ public class IndexScanner implements IndexDatabase {
    }
 
    public Map<String, IndexNode> getNodesInScope(IndexNode node) throws Exception {
-      Map<String, IndexNode> defaultImports = path.getDefaultImportNames();
+      Map<String, IndexNode> defaultImports = SystemClassPath.getDefaultNodes();
       Map<String, IndexNode> scope = new HashMap<String, IndexNode>(defaultImports);
       Map<String, IndexNode> additional = new HashMap<String, IndexNode>();
       Set<IndexNode> enclosing = new HashSet<IndexNode>();

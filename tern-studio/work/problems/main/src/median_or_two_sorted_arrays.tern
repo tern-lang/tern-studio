@@ -1,0 +1,34 @@
+
+
+let median = findMedian([1,3,5,6,7,9], [2,2,2,3,4,5]);
+
+println(median);
+
+// median is middle value
+func findMedian(arr1, arr2) {
+   let total = arr1.length + arr2.length;
+   let average = total % 2 == 0;
+   let pos = total / 2;
+   let read1 = 0;
+   let read2 = 0;
+   let val1 = 0;
+   let val2 = 0;
+   
+   while(read1 + read2 <= pos) {
+      val1 = read1 >= arr1.length ? Integer.MAX_VALUE : arr1[read1];
+      val2 = read2 >= arr2.length ? Integer.MAX_VALUE : arr2[read2];
+      
+      if(val1 < val2) {
+         read1++;
+      } else if(val1 > val2){
+         read2++;
+      } else {
+         read1++;
+         read2++;
+      }
+   }
+   if(average) {
+      return (val1 + val2) / 2;
+   }
+   return val1;
+}
