@@ -43,7 +43,7 @@ public class SystemClassPath {
       buildSystemClassPath();
    }
 
-   public static Set<IndexNode> getSystemClassPath() {
+   public static Set<IndexNode> getSystemNodes() {
       return Collections.unmodifiableSet(SYSTEM_NODES);
    }
 
