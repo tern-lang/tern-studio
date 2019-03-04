@@ -27,12 +27,12 @@ public class ProjectClassPath {
            new LeastRecentlyUsedCache<String, List<IndexNode>>(50);
 
    public static List<IndexNode> getProjectClassPath(List<File> files){
-      String key = files.stream()
+      String libraryPath = files.stream()
               .filter(Objects::nonNull)
               .map(file -> file.getAbsolutePath())
               .sorted()
-              .collect(Collectors.joining(","));
-      List<IndexNode> nodes = PROJECT_CLASSPATHS.fetch(key);
+              .collect(Collectors.joining(File.pathSeparator));
+      List<IndexNode> nodes = PROJECT_CLASSPATHS.fetch(libraryPath);
 
       if(nodes == null) {
          try {
@@ -54,17 +54,21 @@ public class ProjectClassPath {
 
                if(info.isPublic()) {
                   ClassIndexNode node = new ClassIndexNode(path, info);
-                  String type = info.getName();
-                  String name = info.getSimpleName();
+                  String library = node.getResource();
 
-                  map.put(type, node);
-                  map.put(name, node);
-                  list.add(node);
+                  if(libraryPath.contains(library)) { // only include paths in the classpath
+                     String type = info.getName();
+                     String name = info.getSimpleName();
+
+                     map.put(type, node);
+                     map.put(name, node);
+                     list.add(node);
+                  }
                }
             }
             list.addAll(SystemClassPath.getDefaultNodesByName().values());
             nodes = Collections.unmodifiableList(list);
-            PROJECT_CLASSPATHS.cache(key, nodes);
+            PROJECT_CLASSPATHS.cache(libraryPath, nodes);
          } catch(Exception e) {
             log.info("Could not load classes", e);
          }
@@ -79,10 +83,11 @@ public class ProjectClassPath {
 
       @Override
       public IndexNode getNode(String name) {
-         IndexNode node = nodes.get(name);
+         String normal = name.replace('$', '.');
+         IndexNode node = nodes.get(normal);
 
          if(node == null) {
-            return SystemClassPath.getSystemNodesByType().get(name);
+            return SystemClassPath.getSystemNodesByType().get(normal);
          }
          return node;
       }

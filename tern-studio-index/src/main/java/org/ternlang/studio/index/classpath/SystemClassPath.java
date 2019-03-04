@@ -84,7 +84,7 @@ public class SystemClassPath {
 
          if(info.isPublic()) {
             ClassIndexNode node = new ClassIndexNode(path, info);
-            String type = info.getName();
+            String type = info.getName().replace("$", ".");
             String name = info.getSimpleName();
 
             map.put(type, node);
@@ -93,7 +93,7 @@ public class SystemClassPath {
          }
       }
       for(IndexNode node : nodes) {
-         String type = node.getTypeName();
+         String type = node.getTypeName().replace("$", ".");
          String alias = resolver.resolveName(type);
 
          if(alias != null && !type.equals(alias)) {
@@ -129,7 +129,8 @@ public class SystemClassPath {
 
       @Override
       public IndexNode getNode(String name) {
-         return nodes.get(name);
+         String normal = name.replace('$', '.');
+         return nodes.get(normal);
       }
    }
 }

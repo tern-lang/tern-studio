@@ -1,3 +1,6 @@
-System.currentTimeMillis();
+import util.LinkedHashMap;
 
-import lang.StringBuilder;
+
+let x: Map = {21:2};
+
+x.keySet().forEach(this::println);

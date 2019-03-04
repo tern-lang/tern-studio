@@ -78,17 +78,17 @@ public class ClassIndexNode implements IndexNode {
 
    @Override
    public String getName() {
-      return info.getSimpleName();
+      return info.getSimpleName().replace("$", ".");
    }
 
    @Override
    public String getTypeName() {
-      return info.getName();
+      return getFullName();
    }
 
    @Override
    public String getFullName() {
-      return info.getName();
+      return info.getName().replace("$", ".");
    }
 
    @Override
