@@ -17,6 +17,7 @@ import org.ternlang.core.type.Type;
 import org.ternlang.studio.index.IndexDatabase;
 import org.ternlang.studio.index.IndexNode;
 import org.ternlang.studio.index.IndexType;
+import org.ternlang.studio.index.classpath.SystemClassPath;
 
 @Slf4j
 public class ExpressionFinder {
@@ -147,8 +148,7 @@ public class ExpressionFinder {
          return findEnclosingSuper(node);
       }
       if(name.equals(Reserved.TYPE_CLASS)) {
-         throw new RuntimeException();
-         //   return ClassIndexProcessor.getIndexNode(Type.class);
+         return SystemClassPath.getSystemNodesByType().get(Type.class.getName());
       }
       IndexType type = node.getType();
       

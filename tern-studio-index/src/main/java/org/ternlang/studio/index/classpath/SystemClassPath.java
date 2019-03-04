@@ -15,6 +15,7 @@ import io.github.classgraph.ClassInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ternlang.core.Reserved;
+import org.ternlang.core.link.ImportPathResolver;
 import org.ternlang.core.link.ImportPathSource;
 import org.ternlang.studio.index.IndexNode;
 
@@ -65,6 +66,7 @@ public class SystemClassPath {
    private static void buildSystemClassPath() {
       List<IndexNode> nodes = new ArrayList<IndexNode>();
       Set<String> defaults = new ImportPathSource(Reserved.IMPORT_FILE).getPath().getDefaults();
+      ImportPathResolver resolver = new ImportPathResolver(Reserved.IMPORT_FILE);
       Map<String, IndexNode> map = new HashMap<String, IndexNode>();
       ClassIndexNodePath path = new MapIndexNodePath(map);
       Iterator<ClassInfo> iterator = new ClassGraph()
@@ -92,14 +94,15 @@ public class SystemClassPath {
       }
       for(IndexNode node : nodes) {
          String type = node.getTypeName();
+         String alias = resolver.resolveName(type);
 
-         for(String prefix : defaults) {
-            if(type.startsWith(prefix)) {
-               String name = node.getName();
+         if(alias != null && !type.equals(alias)) {
+            String name = node.getName();
 
-               DEFAULT_NODES_BY_NAME.put(name, node);
-               DEFAULT_NODES_BY_TYPE.put(type, node);
-            }
+            DEFAULT_NODES_BY_NAME.put(name, node);
+            DEFAULT_NODES_BY_TYPE.put(type, node);
+            DEFAULT_NODES_BY_TYPE.put(alias, node);
+            SYSTEM_NODES_BY_TYPE.put(alias, node);
          }
       }
       for(String[] pair : PRIMITIVE_TYPES) {

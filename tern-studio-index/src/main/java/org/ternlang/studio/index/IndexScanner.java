@@ -114,7 +114,7 @@ public class IndexScanner implements IndexDatabase {
          IndexNode node = nodes.get(typeName);
          
          if(node == null) {
-            node = SystemClassPath.getDefaultNodesByType().get(typeName);
+            node = SystemClassPath.getSystemNodesByType().get(typeName);
          }
          return node;
       }
@@ -171,7 +171,7 @@ public class IndexScanner implements IndexDatabase {
    
    @Override
    public Map<String, IndexNode> getImportsInScope(IndexNode node) throws Exception {
-      Map<String, IndexNode> defaultImports = SystemClassPath.getDefaultNodes();
+      Map<String, IndexNode> defaultImports = SystemClassPath.getDefaultNodesByName();
       Map<String, IndexNode> scope = new HashMap<String, IndexNode>(defaultImports);
       
       while(node != null) {
@@ -191,7 +191,7 @@ public class IndexScanner implements IndexDatabase {
    }
 
    public Map<String, IndexNode> getNodesInScope(IndexNode node) throws Exception {
-      Map<String, IndexNode> defaultImports = SystemClassPath.getDefaultNodes();
+      Map<String, IndexNode> defaultImports = SystemClassPath.getDefaultNodesByName();
       Map<String, IndexNode> scope = new HashMap<String, IndexNode>(defaultImports);
       Map<String, IndexNode> additional = new HashMap<String, IndexNode>();
       Set<IndexNode> enclosing = new HashSet<IndexNode>();

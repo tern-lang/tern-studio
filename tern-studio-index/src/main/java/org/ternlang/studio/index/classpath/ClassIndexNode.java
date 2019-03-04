@@ -2,7 +2,9 @@ package org.ternlang.studio.index.classpath;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -150,14 +152,37 @@ public class ClassIndexNode implements IndexNode {
    }
 
    private static Set<IndexNode> getSupers(ClassIndexNode node, ClassInfo info) {
-      Set<IndexNode> nodes = new HashSet<IndexNode>();
-      ClassInfoList list = info.getSuperclasses();
-      ClassIndexNodePath path = node.getPath();
+      Map<String, IndexNode> nodes = new HashMap<String, IndexNode>();
+      Set<IndexNode> set = new HashSet<IndexNode>();
 
-      for(ClassInfo entry : list) {
-         nodes.add(new ClassIndexNode(path, entry));
+      collectSupers(node, info, nodes);
+      set.addAll(nodes.values());
+      return set;
+   }
+
+   private static void collectSupers(ClassIndexNode node, ClassInfo info, Map<String, IndexNode> done) {
+      String name = info.getName();
+
+      if(!done.containsKey(name)) {
+         ClassInfoList supers = info.getSuperclasses();
+         ClassInfoList interfaces = info.getInterfaces();
+         ClassIndexNodePath path = node.getPath();
+
+         for (ClassInfo entry : supers) {
+            SuperIndexNode superNode = new SuperIndexNode(path, entry);
+            String type = entry.getName();
+
+            collectSupers(superNode, entry, done);
+            done.put(type, superNode);
+         }
+         for (ClassInfo entry : interfaces) {
+            SuperIndexNode superNode = new SuperIndexNode(path, entry);
+            String type = entry.getName();
+
+            collectSupers(superNode, entry, done);
+            done.put(type, superNode);
+         }
       }
-      return nodes;
    }
 
    private static Set<IndexNode> getConstructors(ClassIndexNode node, ClassInfo info) {
@@ -165,10 +190,8 @@ public class ClassIndexNode implements IndexNode {
       MethodInfoList list = info.getConstructorInfo();
 
       for(MethodInfo entry : list) {
-         String name = entry.getName();
-
-         if(entry.isPublic() && !name.startsWith("<")) {
-            nodes.add(new MethodIndexNode(node, entry));
+         if(entry.isPublic()) {
+            nodes.add(new ConstructorIndexNode(node, entry));
          }
       }
       return nodes;

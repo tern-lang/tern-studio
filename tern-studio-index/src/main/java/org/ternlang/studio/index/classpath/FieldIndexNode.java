@@ -65,8 +65,15 @@ public class FieldIndexNode implements IndexNode {
 
    @Override
    public IndexNode getConstraint() {
+      ClassIndexNodePath path = parent.getPath();
       String name = info.getTypeSignatureOrTypeDescriptor().toString();
-      return parent.getPath().getNode(name);
+      int index = name.indexOf("<");
+
+      if(index != -1) {
+         String type = name.substring(0, index);
+         return path.getNode(type);
+      }
+      return path.getNode(name);
    }
 
    @Override

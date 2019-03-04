@@ -62,7 +62,7 @@ public class ProjectClassPath {
                   list.add(node);
                }
             }
-            list.addAll(SystemClassPath.getDefaultNodesByType().values());
+            list.addAll(SystemClassPath.getDefaultNodesByName().values());
             nodes = Collections.unmodifiableList(list);
             PROJECT_CLASSPATHS.cache(key, nodes);
          } catch(Exception e) {
