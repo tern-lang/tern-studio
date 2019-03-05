@@ -53,12 +53,13 @@ public class ProjectClassPath {
                ClassInfo info = infos.next();
 
                if(info.isPublic()) {
-                  ClassIndexNode node = new ClassIndexNode(path, info);
+                  ClassIndexNode real = new ClassIndexNode(path, info);
+                  CacheIndexNode node = new CacheIndexNode(real);
                   String library = node.getResource();
 
                   if(libraryPath.contains(library)) { // only include paths in the classpath
-                     String type = info.getName();
-                     String name = info.getSimpleName();
+                     String type = node.getTypeName();
+                     String name = node.getName();
 
                      map.put(type, node);
                      map.put(name, node);

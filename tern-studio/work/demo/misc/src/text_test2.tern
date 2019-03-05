@@ -1,6 +1,10 @@
-import util.LinkedHashMap;
 
 
-let x: Map = {21:2};
+import util.stream.Collectors;
 
-x.keySet().forEach(this::println);
+[1,2,3].stream().forEach(this::println);
+
+func foo(){
+}
+
+foo();

@@ -3,7 +3,6 @@ package org.ternlang.studio.index.classpath;
 import java.util.Collections;
 import java.util.Set;
 
-import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
 import org.ternlang.studio.index.IndexNode;
 import org.ternlang.studio.index.IndexType;
