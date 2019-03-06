@@ -1,11 +1,10 @@
 package org.ternlang.studio.service;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
@@ -22,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.ternlang.studio.common.ClassPathReader;
 import org.ternlang.studio.common.ProgressManager;
+import org.ternlang.ui.WindowIcon;
+import org.ternlang.ui.WindowIconLoader;
 
 @Slf4j
 public class SplashScreen {
@@ -29,6 +30,7 @@ public class SplashScreen {
    private static final SplashPanel INSTANCE = createPanel(
            "Starting ...",
            "resource/img/logo.png",
+           "resource/img/icon-large.png",
            "0xffffff",
            "0x505050"
    );
@@ -37,7 +39,7 @@ public class SplashScreen {
       return INSTANCE;
    }
 
-   private static SplashPanel createPanel(final String resource, final String background, final String foreground, final String message) {
+   private static SplashPanel createPanel(final String resource, final String background, final String icon, final String foreground, final String message) {
       final CompletableFuture<SplashPanel> future = new CompletableFuture<SplashPanel>();
       final SplashPanelController controller = new SplashPanelController(future);
 
@@ -47,7 +49,7 @@ public class SplashScreen {
             @Override
             public void run() {
                try {
-                  SplashPanel panel = createSplashScreen(resource, background, foreground, message);
+                  SplashPanel panel = createSplashScreen(resource, background, icon, foreground, message);
 
                   future.complete(panel);
                   controller.start();
@@ -202,12 +204,16 @@ public class SplashScreen {
       }
    }
 
-   private static SplashPanel createSplashScreen(String message, String resource, String background, String foreground) throws Exception {
+   private static SplashPanel createSplashScreen(String message, String resource, String path, String background, String foreground) throws Exception {
       JFrame frame = new JFrame();
       BufferedImage image = createLogoImage(resource);
       JPanel panel = createPanel(image, background, foreground, 600, 400);
       JLabel label = createLabel(message, foreground);
+      WindowIcon icon = WindowIconLoader.loadIcon(path);
+      URL iconResource = icon.getResource();
+      Image iconImage = Toolkit.getDefaultToolkit().getImage(iconResource);
 
+      frame.setIconImage(iconImage);
       panel.add(label);
       frame.setUndecorated(true);
       frame.add(panel);
