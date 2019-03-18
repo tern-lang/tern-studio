@@ -242,6 +242,7 @@ public class SplashScreen {
 
       label.setSize(width, height);
       label.setLayout(layout);
+      label.setBorder(BorderFactory.createEmptyBorder(50, 20, 50, 20));
       spacer.setSize(10, 10);
       spacer.setBackground(Color.decode(background));
       panel.setBackground(Color.decode(background));
