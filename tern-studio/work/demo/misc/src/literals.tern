@@ -16,7 +16,7 @@ var array = new Byte[11]; // primitive byte[11]
 var byte = array[1];
 var matrix = new Long[10][22]; // multidimensional long[10][22];
 var typed: Integer = 22;
-var coercion: Double = "1.234e2"; // coercion to double
+var coercion: Double = 1.234e2; // coercion to double
 var instance = new HashMap(); // instantiate object
 var type = coercion.class; // reference type
 
