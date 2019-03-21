@@ -1,10 +1,12 @@
-import util.HashMap;
-
-import util.stream.Collectors;
-
-[1,2,3].stream().forEach(this::println);
-
-func foo(){
+class Foo{
+   test(n){
+      if(n >0) {
+         for(fn in this.class.functions){ 
+            println(fn);
+            if(fn.name == "test")
+               fn(n-1);
+         }
+      }
+   }
 }
-
-foo();
+Foo().test(10);

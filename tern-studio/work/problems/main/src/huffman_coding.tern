@@ -1,0 +1,5 @@
+// 1 implement a min heap
+// place the frequence of characters in the min heap
+// extract a pair of mins, left and right
+// create a new node with left/right
+// when there is one left then return it

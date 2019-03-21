@@ -41,8 +41,8 @@ class Base {
    
 }
 class SpecialSpecial extends Special{
-   var x;// XXX do something about these fields, they need to be shadowed
-   var y; // XXX do something about these!!
+   private var x;// XXX do something about these fields, they need to be shadowed
+   private var y; // XXX do something about these!!
    new(x:Number,y:Number):super(x+1,y+1){
       this.x=x;
       this.y=y;

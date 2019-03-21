@@ -7,8 +7,8 @@ println(sorted);
 func bubbleSort(vals) {
    let list = ArrayList(vals);
    
-   for(i in 0 .. list.length -1){
-      for(j in 0 .. list.length -1){
+   for(i in 0 to list.length -1){
+      for(j in 0 to list.length -1){
          if(list[j] > list[i]) {
             let swap = list[j];
             
