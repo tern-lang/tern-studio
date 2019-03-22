@@ -1,12 +1,12 @@
-class Foo{
-   test(n){
-      if(n >0) {
-         for(fn in this.class.functions){ 
-            println(fn);
-            if(fn.name == "test")
-               fn(n-1);
-         }
-      }
+
+func fib(n) {
+   let a: BigInteger = 0;
+   let b: BigInteger = 1;
+   
+   for(i in 0 to n){
+      yield a;
+      (a, b) = (b, a+b);
    }
 }
-Foo().test(10);
+
+fib(500).iterator().forEachRemaining(this::println);

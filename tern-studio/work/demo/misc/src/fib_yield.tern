@@ -25,3 +25,17 @@ println(this.class);
 
 fib(30).iterator().forEachRemaining(this::println);
 
+
+import math.BigInteger;
+
+func fibBig(n) {
+   let a: BigInteger = 0;
+   let b: BigInteger = 1;
+   
+   for(i in 0 to n){
+      yield a;
+      (a, b) = (b, a+b);
+   }
+}
+
+fibBig(100).iterator().forEachRemaining(this::println);
