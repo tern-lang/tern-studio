@@ -1,0 +1,101 @@
+
+/**
+
+  1) Add - append to the end of the backing array and moveUp
+  2) Remove - remove from top, copy last to top and move down
+
+ */
+ 
+const q = new PriorityQueue();
+
+q.offer(10);
+q.offer(20);
+q.offer(3);
+
+println(q);
+
+while(q.size > 0) {
+   let n = q.poll();
+   println(n);
+}
+
+
+class PriorityQueue {
+
+   let queue = [];
+
+   public offer(n) {
+      queue.add(n);
+      moveUp(queue.length -1);
+   }
+   
+   public size() {
+      return queue.length;
+   }
+   
+   public poll(){
+      let result = queue.get(0);
+      
+      if(queue.length > 1) {
+         let replace = queue.remove(queue.length -1);
+         
+         queue.set(0, replace);
+         moveDown(0);
+      } else {
+         queue.remove(0);
+      }
+      return result;
+   }
+   
+   private moveUp(pos){
+      let parent = pos /2;
+      
+      if(parent != pos) {
+         let value = queue[parent];
+         let curr = queue[pos];
+         
+         if(value > curr) {
+            swap(parent, pos);
+            
+            if(parent > 0) {
+               moveUp(parent);
+            }
+         }
+      }
+   }
+   
+   private moveDown(pos) {
+      let left = (pos * 2) + 1;
+      let right = left + 1;
+      let index = null;
+      
+      if(right < queue.length){
+         index = queue[left] < queue[right] ? left : right;
+      } else if(left < queue.length){
+         index = left;
+      } 
+      if(index) {
+         let value = queue[index];
+         let curr = queue[pos];
+         
+         if(value < curr){
+            swap(index, pos);
+            moveDown(index);
+         }
+      }
+      
+   }
+   
+      
+   private swap(a, b) {
+      let left = queue[a];
+      let right = queue[b];
+      
+      queue[a] = right;
+      queue[b] = left;
+   }
+   
+   public override toString() {
+      return queue.toString();
+   }
+}

@@ -1,12 +1,20 @@
 
-func fib(n) {
+func fib(): Iterable<BigInteger> {
    let a: BigInteger = 0;
    let b: BigInteger = 1;
    
-   for(i in 0 to n){
-      yield a;
-      (a, b) = (b, a+b);
+   loop {
+      yield b;
+      (a, b) = (b, a + b);
    }
 }
-
-fib(500).iterator().forEachRemaining(this::println);
+let x =
+fib().iterator()
+     .limit(100)
+     .reverse()
+     .gather()
+     .stream()
+     .findFirst()
+     .get();
+     
+     println(x);

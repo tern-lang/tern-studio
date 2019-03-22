@@ -6,8 +6,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.ternlang.core.module.Path;
 import org.ternlang.core.trace.Trace;
 import org.ternlang.core.trace.TraceType;
-import org.ternlang.studio.agent.debug.BreakpointMatcher;
-import org.ternlang.studio.agent.debug.ResumeType;
 
 public class ThreadProgress {
 
@@ -99,7 +97,7 @@ public class ThreadProgress {
             } else if(resumeType == ResumeType.STEP_OVER) {
                return actual <= require;
             } 
-            return require == actual;
+            return require == actual; // this causes problems if line is 0
          }
       }
       return false;
