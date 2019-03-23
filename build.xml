@@ -18,14 +18,9 @@
    </exec>
    <delete file="../tern-site/tern-lang.org/download/tern.jar" />
    <copy file="tern-studio-agent/target/tern.jar" tofile="../tern-site/tern-lang.org/download/tern.jar" overwrite="true" />
-   <exec executable="${java.home}\bin\java.exe">
-      <arg value="-agentlib:jdwp=transport=dt_socket,server=y,address=8111,suspend=n"/>
-      <arg value="-jar" />
-      <arg value="../tern-site/tern-lang.org/download/ternd.jar" />
-      <arg value="--directory=tern-studio\work" />
-      <arg value="--port=4457"/>
-      <arg value="--log-level=INFO"/>  
-      <arg value="--agent-pool=6"/>
-      <arg value="--server-only=false"/> 
-   </exec>        
+   <!-- this part is optional -->
+   <ant inheritAll="false" antfile="../tern-build/dist/ternd/build.xml"/>
+   <ant inheritAll="false" antfile="../tern-build/dist/tern/build.xml"/>
+   <!--- end optional -->
+   <exec executable="ternd.exe" dir="../tern-site/tern-lang.org/download"/>        
 </project>

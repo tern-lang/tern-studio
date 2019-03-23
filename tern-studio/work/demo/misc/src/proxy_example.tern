@@ -7,8 +7,8 @@ import org.simpleframework.http.Protocol;
 class Task with Runnable{
 
    public override run(){
-      for(var i in [1,2,3,4,5]){
-         System.err.println("B.run("+i+")="+Thread.currentThread().getName());   
+      for(i in [1,2,3,4,5]){
+         println("B.run("+i+")="+Thread.currentThread().getName());   
       }
    }
 }

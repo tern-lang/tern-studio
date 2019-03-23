@@ -1,6 +1,7 @@
+#!/usr/bin/env tern
 
 function foo(){
-   for(var x in 0..199){
+   for(var x in 0..1909){
       yield x;
    }
    yield 'done';

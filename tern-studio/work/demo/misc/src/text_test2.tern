@@ -1,9 +1,12 @@
 
+let x: Object = this.getModule()
+   .getContext()
+   .getLoader()
+   .loadType("util.Date")
+   .new(System.currentTimeMillis());
 
-func foo<T>(a: T): List<T> {
-   return [a as T];
-}
 
-foo<?>(`12`).stream()
-   .iterator()
-   .forEachRemaining(this::println);
+println(x);
+
+let y: Map<?, ?>={:};
+println(y);

@@ -1,30 +1,23 @@
 import security.SecureRandom;
 
-/**
 
-  1) Add - append to the end of the backing array and moveUp
-  2) Remove - remove from top, copy last to top and move down
-
- */
- 
-const q = new PriorityQueue();
-const r = new SecureRandom();
-
-for(n in 0 to 100000) {
-   let v = r.nextInt(1000000);
-   q.offer(v);
-}
-const s = System.currentTimeMillis();
-
-while(q.size > 0) {
-   let n = q.poll();
-   assert n != null;
+func generate(count) {
+   const random = new SecureRandom();
+   
+   for(i in 0 to count) {
+      yield random.nextInt(1000000);
+   }
 }
 
-const f = System.currentTimeMillis();
-println(f-s);
+const queue = new PriorityQueue();
+const numbers = generate(10000).iterator().gather();
 
-class PriorityQueue {
+
+numbers.iterator().forEachRemaining(queue::offer);
+queue.iterator().forEachRemaining(this::println);
+
+
+class PriorityQueue with Iterable {
 
    let queue = [];
 
@@ -33,8 +26,8 @@ class PriorityQueue {
       moveUp(queue.length -1);
    }
    
-   public size() {
-      return queue.length;
+   public override iterator() {
+      return new SortIterator(this);
    }
    
    public poll(){
@@ -87,8 +80,7 @@ class PriorityQueue {
       }
       
    }
-   
-      
+ 
    private swap(a, b) {
       let left = queue[a];
       let right = queue[b];
@@ -96,8 +88,29 @@ class PriorityQueue {
       queue[a] = right;
       queue[b] = left;
    }
+      
+   public size() {
+      return queue.length;
+   }
    
    public override toString() {
       return queue.toString();
+   }
+   
+   class SortIterator with Iterator {
+   
+      private let queue;
+      
+      new(queue) {
+         this.queue = queue;
+      }
+      
+      public override next() {
+         return queue.poll();
+      }
+      
+      public override hasNext() {
+         return queue.size > 0;
+      }
    }
 }
