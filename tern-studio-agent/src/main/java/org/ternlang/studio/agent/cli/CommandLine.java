@@ -32,4 +32,8 @@ public class CommandLine {
       return arguments;
    }
 
+   @Override
+   public String toString() {
+      return String.valueOf(values);
+   }
 }

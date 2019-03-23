@@ -332,6 +332,7 @@ function defaultScene(){
 }
 // time for debug: 46931, 46477
 // time for run: 41837, 42174, 39594, 39501, 40236
+// time for new run: 24101, 23933
 function start(path) {
    var rayTracer = new RayTracer();
    var image = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);

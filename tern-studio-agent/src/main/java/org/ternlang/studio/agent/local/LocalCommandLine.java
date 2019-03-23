@@ -3,7 +3,6 @@ package org.ternlang.studio.agent.local;
 import java.io.File;
 import java.net.URI;
 import java.util.List;
-import java.util.jar.Manifest;
 
 import org.ternlang.core.module.Path;
 import org.ternlang.studio.agent.cli.CommandLine;
@@ -44,10 +43,6 @@ public class LocalCommandLine {
    public List<File> getClasspath() {
       return (List<File>)line.getValue(LocalOption.CLASSPATH.name);
    }
-   
-   public Path getScript() {
-      return (Path)line.getValue(LocalOption.SCRIPT.name);
-   }
 
    public String getEvaluation() {
       return (String)line.getValue(LocalOption.EXPRESSION.name);
@@ -60,8 +55,12 @@ public class LocalCommandLine {
    public boolean isVersion() {
       return (Boolean)line.getValue(LocalOption.VERSION.name);
    }
+
+   public Path getScript() {
+      return LocalCommandExtractor.getScript(line);
+   }
    
    public String[] getArguments() {
-      return line.getArguments();
+      return LocalCommandExtractor.getArguments(line);
    }
 }

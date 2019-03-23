@@ -1,20 +1,9 @@
 
-func fib(): Iterable<BigInteger> {
-   let a: BigInteger = 0;
-   let b: BigInteger = 1;
-   
-   loop {
-      yield b;
-      (a, b) = (b, a + b);
-   }
+
+func foo<T>(a: T): List<T> {
+   return [a as T];
 }
-let x =
-fib().iterator()
-     .limit(100)
-     .reverse()
-     .gather()
-     .stream()
-     .findFirst()
-     .get();
-     
-     println(x);
+
+foo<?>(`12`).stream()
+   .iterator()
+   .forEachRemaining(this::println);

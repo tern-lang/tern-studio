@@ -17,7 +17,7 @@
       <arg value="tern-studio-agent\build.xml" />
    </exec>
    <delete file="../tern-site/tern-lang.org/download/tern.jar" />
-   <copy file="tern-studio-agent/target/tern-studio-agent-${build.version}-jar-with-dependencies.jar" tofile="../tern-site/tern-lang.org/download/tern.jar" overwrite="true" />
+   <copy file="tern-studio-agent/target/tern.jar" tofile="../tern-site/tern-lang.org/download/tern.jar" overwrite="true" />
    <exec executable="${java.home}\bin\java.exe">
       <arg value="-agentlib:jdwp=transport=dt_socket,server=y,address=8111,suspend=n"/>
       <arg value="-jar" />

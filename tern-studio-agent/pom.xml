@@ -43,16 +43,18 @@
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
+          <finalName>tern</finalName>
           <archive>
             <manifest>
               <mainClass>org.ternlang.studio.agent.local.LocalProcess</mainClass>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries> 
             </manifest>
           </archive>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
+          <appendAssemblyId>false</appendAssemblyId>
         </configuration>
         <executions>
           <execution>

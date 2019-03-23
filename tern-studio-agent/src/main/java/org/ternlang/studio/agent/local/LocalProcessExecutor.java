@@ -86,11 +86,11 @@ public class LocalProcessExecutor {
       List<? extends CommandOption> options = line.getOptions();
       String process = LocalNameGenerator.getProcess();
       LocalStore store = builder.create(line);
-      String evaluate = line.getEvaluation();
+      String[] arguments = line.getArguments();
       Path script = line.getScript();
-      
-      if(evaluate == null && script == null) {
-         String message = String.format("--%s or --%s required", LocalOption.SCRIPT.name, LocalOption.SCRIPT.name);
+
+      if(script == null && arguments.length == 0) {
+         String message = String.format("--%s required", LocalOption.SCRIPT.name);
          CommandLineUsage.usage(options, message);
       }
       try {

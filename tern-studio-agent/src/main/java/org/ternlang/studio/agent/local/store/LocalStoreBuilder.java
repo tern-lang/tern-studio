@@ -46,7 +46,7 @@ public class LocalStoreBuilder {
    
    private LocalStore createFileStore(LocalCommandLine line) {
       File path = line.getDirectory();
-      
+
       if(!path.exists()) {
          throw new IllegalStateException("Could not create store from " + path);
       }

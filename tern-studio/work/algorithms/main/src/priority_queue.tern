@@ -1,3 +1,4 @@
+import security.SecureRandom;
 
 /**
 
@@ -7,18 +8,21 @@
  */
  
 const q = new PriorityQueue();
+const r = new SecureRandom();
 
-q.offer(10);
-q.offer(20);
-q.offer(3);
-
-println(q);
+for(n in 0 to 100000) {
+   let v = r.nextInt(1000000);
+   q.offer(v);
+}
+const s = System.currentTimeMillis();
 
 while(q.size > 0) {
    let n = q.poll();
-   println(n);
+   assert n != null;
 }
 
+const f = System.currentTimeMillis();
+println(f-s);
 
 class PriorityQueue {
 
@@ -34,15 +38,13 @@ class PriorityQueue {
    }
    
    public poll(){
-      let result = queue.get(0);
+      let result = queue[0];
       
       if(queue.length > 1) {
-         let replace = queue.remove(queue.length -1);
-         
-         queue.set(0, replace);
+         queue[0] = queue.remove(queue.length -1);
          moveDown(0);
       } else {
-         queue.remove(0);
+         queue.clear();
       }
       return result;
    }
