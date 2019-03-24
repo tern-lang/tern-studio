@@ -3,7 +3,8 @@ package org.ternlang.studio.service;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicReference;
 
-import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.ternlang.studio.common.ProgressManager;
 import org.ternlang.studio.project.HomeDirectory;
 import org.ternlang.studio.project.Workspace;
@@ -11,9 +12,11 @@ import org.ternlang.ui.ClientContext;
 import org.ternlang.ui.ClientControl;
 import org.ternlang.ui.ClientEngine;
 import org.ternlang.ui.ClientProvider;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class StudioClientLauncher {
    
@@ -63,11 +66,15 @@ public class StudioClientLauncher {
          final Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-               ClientControl control = ClientProvider.provide(engine).show(context);
-               SplashPanel panel = SplashScreen.getPanel();
-               
-               panel.dispose();
-               reference.set(control);
+               try {
+                  ClientControl control = ClientProvider.provide(engine).show(context);
+                  SplashPanel panel = SplashScreen.getPanel();
+                  
+                  panel.dispose();
+                  reference.set(control);
+               } catch(Exception e) {
+                  log.info("Could not show {} screen", engine, e);
+               }
             }
          });
          thread.start();
