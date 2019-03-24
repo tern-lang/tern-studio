@@ -131,7 +131,7 @@ public class ClassPathUpdater {
             URL entry = location.toURL();
 
             if(debug) {
-               String message = String.format(INCLUDE_MESSAGE , path);
+               String message = String.format(INCLUDE_MESSAGE , entry);
                System.err.println(message);
             }
             if(!file.exists()) {
