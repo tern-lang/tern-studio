@@ -23,7 +23,7 @@
       <groupId>org.ternlang</groupId>
       <artifactId>tern-ui</artifactId>
       <version>1.4.6</version>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.ternlang</groupId>
       <artifactId>tern-studio-agent</artifactId>
@@ -47,6 +47,16 @@
       <groupId>org.simpleframework</groupId>
       <artifactId>simple-http</artifactId>
       <version>6.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.3.0</version>
     </dependency>
     <dependency>
       <groupId>cglib</groupId>
@@ -105,9 +115,9 @@
           <appendAssemblyId>false</appendAssemblyId>
           <archive>
             <manifest>
-                <mainClass>org.ternlang.studio.service.browser.ChromiumStandalone</mainClass>
+              <mainClass>org.ternlang.studio.service.browser.ChromiumStandalone</mainClass>
             </manifest>
-          </archive>      
+          </archive>
         </configuration>
         <executions>
           <execution>
@@ -118,7 +128,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>         
+      </plugin>
     </plugins>
   </build>
 

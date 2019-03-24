@@ -27,6 +27,14 @@
           <source>1.6</source>
           <target>1.6</target>
         </configuration>
+        <!--  configuration>
+          <source>9</source>
+          <target>9</target>
+          <compilerArgs>
+            <arg>- -add-modules</arg>
+            <arg>java.base</arg>
+          </compilerArgs>
+        </configuration -->
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

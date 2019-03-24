@@ -48,6 +48,10 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       String className = WorkerProcess.class.getCanonicalName();
       List<String> command = new ArrayList<String>();
       
+      // add support for JDK 9+
+      arguments.add("-XX:+IgnoreUnrecognizedVMOptions");
+      arguments.add("--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED");
+  
       command.add(java);
       command.addAll(arguments);
       command.add("-jar");
