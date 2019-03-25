@@ -1,3 +1,4 @@
+// https://leetcode.com/problems/flatten-nested-list-iterator/
 
 flatten([[1,1],2,[1,1]]).forEachRemaining(this::println);
 flatten([1,[4,[6]]]).forEachRemaining(this::println);

@@ -1,6 +1,0 @@
-
-assert fractionToDecimal(1, 2) == 0.5;
-
-func fractionToDecimal(numerator, denominator){
-
-}
