@@ -71,7 +71,7 @@ func renameFiles(directory, fromPrefixes, toPrefix, test) {
                   let toFile = fromFile.replace(prefix, toPrefix);
                   
                   if(!test) {
-                     new File(f).renameTo(new File(toFile));
+                     f.renameTo(new File(toFile));
                   } else {
                      println("renameFiles(): ${fromFile} -> ${toFile}");
                   }
@@ -118,9 +118,9 @@ func renameDirs(directory, fromPackage, toPackage, test) {
       });
 }
 
-performRefactor("C:\\Work\\development\\tern-lang", 
+performRefactor("C:\\Work\\development\\tern-lang\\tern-android", 
+   "org.snapscript",
    "org.ternlang",
-   "tern",
    ["snap-"],
    "tern-",
    false);

@@ -1,10 +1,16 @@
 import util.stream.Collectors;
 import util.regex.Pattern;
 
-var ROOT = "C:\\Work\\development\\ternlang\\snap-develop\\snap-develop\\work\\android";
+var ROOT = "C:\\Work\\development\\tern-lang\\tern-studio\\tern-studio\\work\\demo\\physics\\src";
 
-var SOURCE = new File("${ROOT}\\mario_original");
-var DESTINATION = new File("${ROOT}\\mario");
+var SOURCE = new File("${ROOT}\\bounce");
+var DESTINATION = new File("${ROOT}\\balls");
+
+if(!SOURCE.exists()) {
+   System.err.println("Could not find ${SOURCE}");
+   Thread.sleep(10000);
+   System.exit(0);
+}
 
 DESTINATION.mkdirs();
 
@@ -39,7 +45,7 @@ function build(path, name, sources){
       result.getParentFile().mkdirs();
       System.err.println(result);
       var writer = new FileWriter(result);
-      var file = new File(source).readText();
+      var file = source.readText();
       var data = refactor(file);
       writer.write(data.source);
       writer.write("\r\n");

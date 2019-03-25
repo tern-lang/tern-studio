@@ -1,0 +1,26 @@
+
+import javax.swing.*;
+
+
+
+func start(args)
+{
+	var frame: JFrame = new JFrame("BallBounce");
+	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(),BoxLayout.Y_AXIS));
+
+
+	var ballCanvas: BallPanel = new BallPanel();
+	var controlPanel: ControlPanel = new ControlPanel(ballCanvas);
+
+	frame.getContentPane().add(ballCanvas);
+	frame.getContentPane().add(controlPanel);
+	frame.pack();
+	frame.setVisible(true);
+
+	ballCanvas.start();
+
+}
+
+start(args);
+

@@ -1,12 +1,11 @@
+for(i in 0 to 100) {
+   let x = System.currentTimeMillis();
+   fib(30);
+   let y = System.currentTimeMillis();
+   println(y-x);
+}
 
-let x: Object = this.getModule()
-   .getContext()
-   .getLoader()
-   .loadType("util.Date")
-   .new(System.currentTimeMillis());
 
-
-println(x);
-
-let y: Map<?, ?>={:};
-println(y);
+function fib(n) {
+    return n < 2 ? 1 : fib(n-1) + fib(n-2);
+}

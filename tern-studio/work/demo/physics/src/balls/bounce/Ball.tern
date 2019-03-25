@@ -1,0 +1,159 @@
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+
+class Ball with Comparable{
+
+	public var velocity: Vector2d;
+	public var position: Vector2d;
+	private var mass: Float;
+	private var radius: Float;
+	private var angularVel: Float;
+	private var orientation: Float = 45f;
+
+	public new(x: Float, y: Float, radius: Float): 		this(x, y, radius, 1)
+	{
+
+
+	}
+
+	public new(x: Float, y: Float, radius: Float, mass: Float)
+	{
+		this.velocity = new Vector2d(0, 0);
+		this.position = new Vector2d(x, y);
+		this.setMass(mass);
+		this.setRadius(radius);
+	}
+
+	public getBallColor(magnitude: Float): Color
+	{
+		let maxMagnitude = 1000; // tweak this to get the right color range
+
+		magnitude = magnitude < maxMagnitude ? magnitude : maxMagnitude;
+
+		let H = (magnitude/maxMagnitude) * 0.38f;  // 0.4f = green
+		let S = 0.98f;
+		let B = 0.95f;
+
+		return Color.getHSBColor(H, S, B);
+	}
+
+
+	public draw(g2: Graphics2D)
+	{
+
+
+
+		//g2.setColor(getBallColor(velocity.getLength()));
+		//g2.drawOval((int) (position.getX() - getRadius()), (int) (position.getY() - getRadius()), (int) (2 * getRadius()) , (int) (2 * getRadius()) );
+		g2.setColor(getBallColor(velocity.getLength()));
+		g2.fillOval(  (position.getX() - getRadius()),  (position.getY() - getRadius()), (2 * getRadius()) , (2 * getRadius()) );
+
+	}
+
+	public setRadius(radius: Float) {
+		this.radius = radius;
+	}
+
+	public getRadius(): Float {
+		return radius;
+	}
+
+
+	// Deprecated, rolled this into checkCollision for effeciency.
+	public colliding(ball: Ball): Boolean
+	{
+		let xd = position.getX() - ball.position.getX();
+		let yd = position.getY() - ball.position.getY();
+
+		let sumRadius = getRadius() + ball.getRadius();
+		let sqrRadius = sumRadius * sumRadius;
+
+		let distSqr = (xd * xd) + (yd * yd);
+
+		if (distSqr <= sqrRadius)
+		{
+			return true;
+		}
+
+		return false;
+
+	}
+
+	public resolveCollision(ball: Ball)
+	{
+
+		// get the mtd
+		var delta: Vector2d = (position.subtract(ball.position));
+		let r = getRadius() + ball.getRadius();
+		let dist2 = delta.dot(delta);
+
+		if (dist2 > r*r) return; // they aren't colliding
+
+
+		let d = delta.getLength();
+
+		let mtd;
+		if (d != 0.0f)
+		{
+			mtd = delta.multiply(((getRadius() + ball.getRadius())-d)/d); // minimum translation distance to push balls apart after intersecting
+
+		}
+		else // Special case. Balls are exactly on top of eachother.  Don't want to divide by zero.
+		{
+			d = ball.getRadius() + getRadius() - 1.0f;
+			delta = new Vector2d(ball.getRadius() + getRadius(), 0.0f);
+
+			mtd = delta.multiply(((getRadius() + ball.getRadius())-d)/d);
+		}
+
+		// resolve intersection
+		let im1 = 1 / getMass(); // inverse mass quantities
+		let im2 = 1 / ball.getMass();
+
+		// push-pull them apart
+		position = position.add(mtd.multiply(im1 / (im1 + im2)));
+		ball.position = ball.position.subtract(mtd.multiply(im2 / (im1 + im2)));
+
+		// impact speed
+		var v: Vector2d = (this.velocity.subtract(ball.velocity));
+		let vn = v.dot(mtd.normalize());
+
+		// sphere intersecting but moving away from each other already
+		if (vn > 0.0f) return;
+
+		// collision impulse
+		let i = (-1 * (1.0f + Constants.restitution) * vn) / (im1 + im2);
+		var impulse: Vector2d = mtd.multiply(i);
+
+		// change in momentum
+		this.velocity = this.velocity.add(impulse.multiply(im1));
+		ball.velocity = ball.velocity.subtract(impulse.multiply(im2));
+
+	}
+
+	private setMass(mass: Float) {
+		this.mass = mass;
+	}
+
+	private getMass(): Float {
+		return mass;
+	}
+
+	public compareTo(ball: Ball): Integer {
+		if (this.position.getX() - this.getRadius() > ball.position.getX() - ball.getRadius())
+		{
+			return 1;
+		}
+		else if (this.position.getX() - this.getRadius() < ball.position.getX() - ball.getRadius())
+		{
+			return -1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+}
+
