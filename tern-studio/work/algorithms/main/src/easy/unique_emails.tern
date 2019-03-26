@@ -1,0 +1,37 @@
+// google interview leetcode 
+
+assert numUniqueEmails(["test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com"]) == 2;
+
+func numUniqueEmails(emails) {
+   let set = {};
+   
+   for(email in emails) {
+      let index = email.indexOf('@');
+      
+      if(index != -1){
+         let local = email.substring(0, index);
+         let domain = email.substring(index + 1, email.length);
+         let builder = StringBuilder();
+         
+         for(i in 0 to local.length -1){
+            let next = local[i];
+            
+            if(next == '+') {
+               break;
+            }
+            if(next != '.') {
+               builder.append(next);
+            }
+         }
+         builder.append('@');
+         builder.append(domain);
+         
+         let normal = builder.toString();
+         
+         println(normal);
+         set.add(normal);
+         
+      }
+   }
+   return set.length;
+}

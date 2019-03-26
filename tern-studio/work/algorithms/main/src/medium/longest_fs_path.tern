@@ -1,0 +1,92 @@
+// interview question
+
+assert lengthLongestPath("dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext") == "dir/subdir2/subsubdir2/file2.ext";
+
+func lengthLongestPath(input) {
+   let comparator = (a, b) -> Integer.compare(b.prefix.length, a.prefix.length);
+   let queue = PriorityQueue<FileEntry>(comparator);
+   let stack = Stack<FileEntry>();
+   let chars = input.toCharArray();
+   let pos = 0;
+   
+   while(pos < chars.length) {
+      let entry = readFileEntry(chars, pos);
+      
+      if(!entry.file) {
+         if(stack.isEmpty()) {
+            entry.prefix = entry.path;
+            stack.push(entry);
+         } else {
+            let top = stack.peek();
+            
+            if(top.indent < entry.indent) {
+               entry.prefix = top.prefix + "/" + entry.path;
+               stack.push(entry);
+            } else {
+               while(top.indent >= entry.indent) {
+                  stack.pop();
+                  
+                  if(stack.isEmpty()) {
+                     break;
+                  }
+                  top = stack.peek();
+               }
+               if(!stack.isEmpty()) {
+                  entry.prefix = top.prefix + "/" + entry.path;
+               } else {
+                  entry.prefix = entry.path;
+               }
+               stack.push(entry);
+            }
+         }
+      } else {
+         if(stack.isEmpty()) {
+            entry.prefix = entry.path;
+            queue.offer(entry);
+         } else {
+            let top = stack.peek();
+            entry.prefix = top.prefix + "/" + entry.path;
+            queue.offer(entry);
+         }
+      }
+      pos = entry.pos;
+   }
+   return queue.poll().prefix;
+}
+
+func readFileEntry(chars, pos) {
+   if(pos >= chars.length) {
+      return null;
+   }
+   let buf = StringBuilder();
+   let next = chars[pos];
+   let indent = 0;
+      
+   while(pos < chars.length && chars[pos] == '\t') {
+      indent++;
+      pos++;
+   }
+   while(pos < chars.length && chars[pos] != '\n') {
+      buf.append(chars[pos++]);
+   }
+   let path = buf.toString();
+   let file = path.contains(".");
+   
+   return FileEntry(path, indent, file, pos+1);
+}
+
+class FileEntry {
+   let prefix;
+   let pos;
+   let indent;
+   let path;
+   let file;
+   
+   new(path, indent, file, pos) {
+      this.indent = indent;
+      this.path = path;
+      this.file = file;
+      this.pos = pos;
+   }
+}
+

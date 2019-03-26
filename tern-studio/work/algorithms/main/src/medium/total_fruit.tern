@@ -1,0 +1,45 @@
+// interview question 
+
+assert totalFruit([1,0,1,4,1,4,1,2,3]) == 5;
+assert totalFruit([1,2,3,2,2]) == 4;
+assert totalFruit([1,2,1]) == 3;
+
+func totalFruit(tree) {
+   let indexes = LinkedList<?>();
+   let types = HashSet<Integer>();
+   let count = 0;
+   let max = 0;
+   
+   for(let i = 0; i < tree.length; i++) {
+      let fruitType = tree[i];
+
+      types.add(fruitType);
+      indexes.offer(i);
+      count++;
+      
+      if(types.size() > 2) {
+         let old = indexes.peek();
+         let removeType = tree[old];
+         
+         if(removeType != fruitType) {
+            types.remove(fruitType);
+         } else {
+            types.remove(tree[i-1]);
+         }
+         while(!indexes.isEmpty()) {
+            let index = indexes.poll();
+            let currType = tree[index];
+            
+            if(tree[index] != removeType) {
+               break;
+            }
+            count--;
+         }
+      }
+      if(count > max) {
+         max = count;
+      }
+   }
+   return max;
+}
+

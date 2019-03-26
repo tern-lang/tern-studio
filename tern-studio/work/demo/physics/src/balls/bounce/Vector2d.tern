@@ -43,42 +43,42 @@ class Vector2d {
 	public dot(v2: Vector2d): Float
 	{
 		let result = 0.0f;
-		result = this.getX() * v2.getX() + this.getY() * v2.getY();
+		result = x * v2.x + y * v2.y;
 		return result;
 	}
 
 	public getLength(): Float
 	{
-		return Math.sqrt(getX()*getX() + getY()*getY());
+		return Math.sqrt(x*x + y*y);
 	}
 
 	public getDistance(v2: Vector2d): Float
 	{
-		return Math.sqrt((v2.getX() - getX()) * (v2.getX() - getX()) + (v2.getY() - getY()) * (v2.getY() - getY()));
+		return Math.sqrt((v2.x - x) * (v2.x - x) + (v2.y - y) * (v2.y - y));
 	}
 
 
 	public add(v2: Vector2d): Vector2d
 	{
 		var result: Vector2d = new Vector2d();
-		result.setX(getX() + v2.getX());
-		result.setY(getY() + v2.getY());
+		result.setX(x + v2.x);
+		result.setY(y + v2.y);
 		return result;
 	}
 
 	public subtract(v2: Vector2d): Vector2d
 	{
 		var result: Vector2d = new Vector2d();
-		result.setX(this.getX() - v2.getX());
-		result.setY(this.getY() - v2.getY());
+		result.setX(x - v2.x);
+		result.setY(y - v2.y);
 		return result;
 	}
 
 	public multiply(scaleFactor: Float): Vector2d
 	{
 		var result: Vector2d = new Vector2d();
-		result.setX(this.getX() * scaleFactor);
-		result.setY(this.getY() * scaleFactor);
+		result.setX(x * scaleFactor);
+		result.setY(y * scaleFactor);
 		return result;
 	}
 
@@ -87,8 +87,8 @@ class Vector2d {
 		let len = getLength();
 		if (len != 0.0f)
 		{
-			this.setX(this.getX() / len);
-			this.setY(this.getY() / len);
+			this.setX(x / len);
+			this.setY(y / len);
 		}
 		else
 		{

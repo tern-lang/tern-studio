@@ -23,10 +23,10 @@ class Arrow {
 		{
 		  	let arrowWidth = 10.0f ;
 		    var theta: Float = 0.423f ;
-		    let xPoints: Integer[] = new Integer[ 3 ] ;
-		    let yPoints: Integer[] = new Integer[ 3 ] ;
-		    let vecLine: Float[] = new Float[ 2 ] ;
-		    let vecLeft: Float[] = new Float[ 2 ] ;
+		    let xPoints: Integer[] = new Integer[ 3 ];
+		    let yPoints: Integer[] = new Integer[ 3 ];
+		    let vecLine: Float[] = new Float[ 2 ];
+		    let vecLeft: Float[] = new Float[ 2 ];
 		    let fLength: Float;
 		    let th: Float;
 		    let ta: Float;

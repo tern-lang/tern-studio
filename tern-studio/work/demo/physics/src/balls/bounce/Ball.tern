@@ -127,7 +127,7 @@ class Ball with Comparable{
 		var impulse: Vector2d = mtd.multiply(i);
 
 		// change in momentum
-		this.velocity = this.velocity.add(impulse.multiply(im1));
+		velocity = velocity.add(impulse.multiply(im1));
 		ball.velocity = ball.velocity.subtract(impulse.multiply(im2));
 
 	}
@@ -141,11 +141,11 @@ class Ball with Comparable{
 	}
 
 	public compareTo(ball: Ball): Integer {
-		if (this.position.getX() - this.getRadius() > ball.position.getX() - ball.getRadius())
+		if (position.getX() - getRadius() > ball.position.getX() - ball.getRadius())
 		{
 			return 1;
 		}
-		else if (this.position.getX() - this.getRadius() < ball.position.getX() - ball.getRadius())
+		else if (position.getX() - getRadius() < ball.position.getX() - ball.getRadius())
 		{
 			return -1;
 		}

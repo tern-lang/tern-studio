@@ -29,7 +29,7 @@ class BallPanel extends Canvas {
 
 	public new()
 	{
-		setPreferredSize(new Dimension(800, 600));
+		setPreferredSize(new Dimension(1500, 800));
 		setIgnoreRepaint(true);
 
 		// Wire up Events

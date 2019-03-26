@@ -1,0 +1,24 @@
+// interview leetcode
+
+assert licenseKeyFormatting("2-5g-3-J", 2) == "2-5G-3J";
+assert licenseKeyFormatting("5F3Z-2e-9-w", 4) == "5F3Z-2E9W";
+assert licenseKeyFormatting("2-4A0r7-4k", 4) == "24A0-R74K";
+
+func licenseKeyFormatting(s, k) {
+   let buf = StringBuilder();
+   let pos = s.length -1;   
+   let count = 0;
+   
+   while(pos >= 0) {
+      let ch = Character.toUpperCase(s[pos--]);
+      
+      if(ch != '-') {
+         if(count++ == k) {
+            buf.append("-");
+            count = 1;
+         }
+         buf.append(ch);
+      }
+   }
+   return buf.reverse().toString();
+}
