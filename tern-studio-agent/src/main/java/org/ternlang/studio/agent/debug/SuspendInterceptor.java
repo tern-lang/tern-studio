@@ -59,7 +59,7 @@ public class SuspendInterceptor extends TraceAdapter {
             ScopeExtractor extractor = new ScopeExtractor(context, scope, function, path);
             ScopeEventBuilder builder = new ScopeEventBuilder(extractor, type, process, thread, threads, path, line, depth, count);
             ScopeNotifier notifier = new ScopeNotifier(builder, mode, threadName);
-            ScopeEvent suspend = builder.suspendEvent(mode);
+            ScopeEvent suspend = builder.startEvent(mode); //N.B initial event has no variables
             ScopeEvent resume = builder.resumeEvent(mode);
             
             progress.clear(); // clear config
@@ -98,7 +98,7 @@ public class SuspendInterceptor extends TraceAdapter {
             ScopeExtractor extractor = new ScopeExtractor(context, scope, function, path);
             ScopeEventBuilder builder = new ScopeEventBuilder(extractor, type, process, thread, threads, path, line, depth, count);
             ScopeNotifier notifier = new ScopeNotifier(builder, mode, threadName);
-            ScopeEvent suspend = builder.suspendEvent(mode);
+            ScopeEvent suspend = builder.startEvent(mode); //N.B initial event has no variables
             ScopeEvent resume = builder.resumeEvent(mode);
             
             progress.clear(); // clear config

@@ -36,6 +36,28 @@ public class ScopeEventBuilder {
       this.type = type;
    }
    
+   public ScopeEvent startEvent(ProcessMode mode) {  
+      boolean remote = mode.isRemoteAttachment();
+      int count = counter.getAndIncrement();
+      ScopeContext context = extractor.blank(remote); // a blank context prevents suspending on toString() 
+      ScopeVariableTree variables = context.getTree();
+      String source = context.getSource();
+      String name = type.name();      
+ 
+      return new ScopeEvent.Builder(process)
+         .withVariables(variables)
+         .withThread(thread)
+         .withStack(stack)
+         .withInstruction(name)
+         .withStatus(ThreadStatus.SUSPENDED)
+         .withResource(resource)
+         .withSource(source)
+         .withLine(line)
+         .withDepth(depth)
+         .withKey(count)
+         .build();
+   }
+   
    public ScopeEvent suspendEvent(ProcessMode mode) {  
       boolean remote = mode.isRemoteAttachment();
       int count = counter.getAndIncrement();

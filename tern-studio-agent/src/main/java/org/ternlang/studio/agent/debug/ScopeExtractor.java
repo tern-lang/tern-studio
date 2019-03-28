@@ -37,6 +37,22 @@ public class ScopeExtractor implements ScopeBrowser {
       this.path = path;
    }
    
+   public ScopeContext blank(boolean grabSource) {
+      int change = counter.get(); 
+      ResourceManager manager = context.getManager();  
+      String source = null;
+      
+      if(grabSource) {
+         source = manager.getString(path);
+      }
+      ScopeVariableTree tree = new ScopeVariableTree.Builder(change)
+            .withLocal(Collections.EMPTY_MAP)
+            .withEvaluation(Collections.EMPTY_MAP)
+            .build();
+      
+      return new ScopeContext(tree, source);
+   }
+   
    public ScopeContext build(boolean grabSource, boolean expandVariables) {
       int change = counter.get();   
       boolean refresh = execute.getAndSet(false);
