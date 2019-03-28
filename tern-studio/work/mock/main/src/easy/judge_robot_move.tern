@@ -1,0 +1,25 @@
+
+assert judgeCircle("LDRRLRUULR");
+assert judgeCircle("UD");
+assert judgeCircle("UULRDD");
+
+
+func judgeCircle(moves) {
+   let bag = {:};
+   
+   for(n in 0 to moves.length - 1) {
+      let next = moves[n];
+      let count = bag.get(next) ?? null;
+      
+      bag.put(next, count+1);
+   }
+   let horizontal = 0;
+   let vertical = 0;
+   
+   vertical += bag.get("U") ?? 0;
+   vertical -= bag.get("D") ?? 0;
+   horizontal += bag.get("L") ?? 0;
+   horizontal -= bag.get("R") ?? 0;
+   
+   return vertical == 0 && horizontal == 0;
+}

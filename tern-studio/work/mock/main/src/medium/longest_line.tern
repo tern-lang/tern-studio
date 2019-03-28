@@ -1,0 +1,120 @@
+
+
+let result = longestLine(
+   [[1,1,0,0,1,0,0,1,1,0],
+    [1,0,0,1,0,1,1,1,1,1],
+    [1,1,1,0,0,1,1,1,1,0],
+    [0,1,1,1,0,1,1,1,1,1],
+    [0,0,1,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,0,1,1,1],
+    [0,1,1,1,1,1,1,0,0,1],
+    [1,1,1,1,1,0,0,1,1,1],
+    [0,1,0,1,1,0,1,1,1,1],
+    [1,1,1,0,1,0,1,1,1,1]]
+   );
+
+println(result);
+
+func longestLine(M) {
+   let max = 0;
+   
+   for(let i = 0; i < M.length; i++){
+      for(let j = 0; j < M[i].length; j++) {
+         if(M[i][j] != 0) {
+            let length = longestLine(M, i, j);
+            
+            if(length > max) {
+               max = length;
+            }
+         }
+      }
+   }
+   return max;
+}
+
+func longestLine(M, row, column) {
+   let point = Position(row, column);
+   let max = 0;
+   
+   for(direction in Direction.ALL) {
+      let length = lengthWithDirection(M, point, direction);
+      
+      if(length > max) {
+         max = length;
+      }
+   }
+   return max;
+}
+
+
+func lengthWithDirection(M, position: Position, direction: Direction){
+   let back = direction.opposite();
+   let current = position;
+   let value = current;
+   let length = 0;
+      
+   while(value != null){
+      current = value;
+      value = back.next(M, current);
+   }
+   while(current != null){
+      current = direction.next(M, current);
+      length++;
+   }
+   if(length == 8){
+      println("direction.row=${direction.row} direction.column=${direction.column} position=(${position.row}, ${position.column})");
+   }
+   return length;
+}
+
+
+class Position {
+   let column;
+   let row;
+   
+   new(row, column){
+      this.column = column;
+      this.row = row;
+   }
+   
+}
+
+class Direction {
+   const static HORIZONTAL = Direction(0, 1);
+   const static VERTICAL = Direction(1, 0);
+   const static DIAGONAL_RIGHT_LEFT = Direction(-1, 1);
+   const static DIAGONAL_LEFT_RIGHT = Direction(1, 1);   
+   const static ALL = [HORIZONTAL, VERTICAL, DIAGONAL_RIGHT_LEFT, DIAGONAL_LEFT_RIGHT];    
+   
+   let column;
+   let row;
+   
+   new(row, column) {
+      this.column = column;
+      this.row = row;
+   }
+   
+   opposite() {
+      return Direction(-1 * row, -1 * column);
+   }
+   
+   next(M, position: Position) {
+      let next = valueOf(M, position.row + row, position.column + column);
+      
+      if(next == 1) {
+         return Position(position.row + row, position.column + column);
+      }
+      return null;
+   }
+      
+   valueOf(M, row, column) {
+      if(row >= M.length || row < 0) {
+         return 0;
+      }
+      if(column >= M[row].length || column < 0) {
+         return 0;
+      }
+      return M[row][column];
+   }
+}
+

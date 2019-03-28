@@ -1,0 +1,91 @@
+
+
+let cost = leastCostToHireWorkers([10,20,5], [70,50,30], 2);
+
+println(cost);
+
+func leastCostToHireWorkers(quality, wage, k) {
+   let workers = [];
+   
+   for(let i = 0; i < quality.length; i++){
+      let thisWage = wage[i] * 1.0d;
+      let thisQuality = quality[i] * 1.0d;
+      
+      workers[i] = Worker(thisWage, thisWage / thisQuality, i);
+   }
+   Collections.sort(workers, (a, b) -> Integer.compare(a.wage, b.wage)); // cheapest first
+   
+   let baseRatio = workers[0].ratio;
+   let maxRatio = workers[workers.length -1];
+   let min = Integer.MAX_VALUE;
+   
+   while(baseRatio < maxRatio) {
+      let workForce = countWorkersWithRatio(workers, baseRatio);
+      
+      if(workForce.count >= k) {
+         if(workForce.cost < min) {
+            min = workForce.cost;
+         }
+      }
+      baseRatio = workForce.nextRatio;
+      increaseWagesForWorkers(workers, baseRatio);
+   }
+   return -1.0;
+}
+
+func increaseWagesForWorkers(workers, baseRatio) {
+   for(let i = 0; i < workers.length; i++) {
+      if(workers[i].ratio < baseRatio) {
+         let wage = workers[i].wage;
+         let ratio = workers[i].ratio;
+         let original =  wage / ratio;
+         let increase = original / baseRatio;
+         
+         workers[i] = new Worker(increase * wage, baseRatio, i);
+      }
+   }
+   Collections.sort(workers, (a, b) -> Integer.compare(a.wage, b.wage)); // cheapest first     
+}
+
+func countWorkersWithRatio(workers, ratio){
+   let count = 0;
+   let cost = 0;
+   
+   for(let i = 0; i < workers.length; i++) {
+      if(workers[i].ratio != ratio) {
+         let maxRatio = Math.max(workers[i].ratio, ratio);
+         return new WorkForce(maxRatio, count, cost);
+      }
+      cost += workers[i].wage;
+      count++;
+   }
+   return WorkForce(ratio, count, cost);
+}
+
+class WorkForce {
+   const nextRatio;
+   const count;
+   const cost;
+   
+   new(nextRatio, count, cost) {  
+      this.nextRatio = nextRatio;
+      this.count = count;
+      this.cost = cost;
+   }
+}
+
+class Worker {
+   let wage;
+   let ratio;
+   let index;
+   
+   new(wage, ratio, index) {
+      this.ratio = ratio;
+      this.index = index;
+      this.wage = wage;
+   }
+   
+   override toString() {
+      return "${index}=(ratio=${ratio} cost=${wage})";
+   }
+}

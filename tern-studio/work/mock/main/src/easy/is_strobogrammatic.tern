@@ -1,0 +1,68 @@
+/*
+        Map<Character, Character> rotated = new HashMap<>();        
+        
+        rotated.put('6', '9');
+        rotated.put('9', '6');
+        rotated.put('8', '8');
+        rotated.put('0', '0');
+        rotated.put('1', '1');
+        
+        Set<Character> single = new HashSet<>();
+        
+        single.add('8');
+        single.add('0');
+        single.add('1');
+        
+        int length = num.length();
+        int left = 0;        
+        int right = length -1;        
+   
+        while(left < right) {
+            Character leftCh = num.charAt(left++);
+            Character rightCh = num.charAt(right--);
+            Character match = rotated.get(leftCh);
+            
+            if(match == null) {
+                return false;
+            }
+            if(!match.equals(rightCh)) {
+                return false;
+            }        
+        }                
+        if(length % 2 != 0) {            
+            Character ch = num.charAt(length / 2);
+            return single.contains(ch);
+        }
+        return true;
+        */
+
+assert isStrobogrammatic("69");
+assert isStrobogrammatic("818");
+
+
+func isStrobogrammatic(name) {
+   let left = 0;
+   let right = name.length -1;
+   
+   while(left < right) {
+      let leftCh = name[left++];
+      let rightCh = name[right--];
+      
+      if(!isSameRotated(leftCh, rightCh)) {
+         return false;
+      }
+   }
+   return true;
+}
+
+func isSameRotated(left, right) {
+   let same = {
+      '6': '9',
+      '9': '6',
+      '8': '8',
+      '0': '0',
+      '1': '1'
+   };
+   let value = same["${left}"];
+   return value == right;
+}

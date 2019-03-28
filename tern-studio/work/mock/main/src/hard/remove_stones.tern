@@ -1,0 +1,89 @@
+
+assert removeStones([[0,0],[0,1],[1,0],[1,2],[2,1],[2,2]]) == 5;
+
+func removeStones(stones) {
+   let nodes = [];
+   let rows = {:};
+   let cols = {:};
+   
+   for(pair in stones) {
+      let point = Point(pair[0], pair[1]);  
+      let node = Node(point);
+      let rowList = rows[point.row] ?? [];
+      let colList = cols[point.col] ?? [];
+      
+      rowList.add(node);
+      colList.add(node);
+      nodes.add(node);
+      rows[point.row] = rowList;
+      cols[point.col] = colList;
+   }
+   for(node in nodes) {
+      let rowList = rows[node.point.row];
+      let colList = cols[node.point.col];      
+      
+      for(rowNode in rowList) {
+         if(rowNode != node) {
+            node.nodes.add(rowNode);
+         }
+      }
+      for(colNode in colList) {
+         if(colNode != node) {
+            node.nodes.add(colNode);
+         }
+      }      
+   }
+   return countConnections(nodes);
+}
+
+func countConnections(nodes: List<Node>) {
+   let done: Set<Node> = {};
+   let count = 0;
+   
+   for(node in nodes) {
+      if(node.visited == false){
+         collectNodes(node, done);      
+         count += done.size() -1;
+         done.clear();
+         
+      }
+   }
+   return count;
+}
+
+func collectNodes(node: Node, done: Set<Node>) { 
+   if(node.visited == false) {
+      node.visited = true;
+      
+      if(done.add(node)) {
+         for(child in node.nodes) {
+            collectNodes(child, done);
+         }
+      }
+   }
+}
+
+class Node {
+
+   let nodes: Set<Node>;
+   let point: Point;
+   let visited: Boolean;
+   
+   new(point: Point) {
+      this.point = point;
+      this.visited = false;
+      this.nodes = {};      
+   }
+}
+
+class Point {
+   let row: Integer;
+   let col: Integer;
+   let key: String;
+   
+   new(row, col){
+      this.key = "${row}->${col}";
+      this.row = row;
+      this.col = col;
+   }
+}

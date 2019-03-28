@@ -1,0 +1,40 @@
+
+test(3);
+
+
+func test(size) {
+   let average = MovingAverage(size);
+   
+   assert average.next(1) == 1.0;
+   assert average.next(10) == (1 + 10) /2.0;
+   assert average.next(3) == (1 + 10 + 3) / 3.0;
+}
+
+
+class MovingAverage {
+   
+   let values;
+   let size;
+   let off;
+   
+   new(size) {
+      this.values = [];
+      this.size = size;
+      this.off = 0;
+   }
+   
+   next(value) {
+      let sum = 0.0;
+         
+      values[off++] = value;
+
+      if(off >= size) { // 2 + 1
+         off = 0;
+      } 
+      for(let i = 0; i < values.length; i++){
+         sum += values[i];
+      }
+      return sum / values.length;
+   }
+
+}
