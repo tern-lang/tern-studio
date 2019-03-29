@@ -163,7 +163,7 @@ public class ArrayStringBuilder {
                      Type type = instance.getType();
                      buffer.append(type);
                   } else {
-                     buffer.append(element);
+                     buffer.append(ObjectStringBuilder.toString(element));
                   }
                }
             }

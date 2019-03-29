@@ -68,7 +68,7 @@ public class ValueDataBuilder {
    public ValueData createObject(String key, Object value, int modifiers, int depth) {
       Class type = value.getClass();
       String name = type.getSimpleName();
-      String text = String.valueOf(value);
+      String text = ObjectStringBuilder.toString(value);
       int length = text.length();
       
       if(length > limit) {
@@ -80,7 +80,7 @@ public class ValueDataBuilder {
    public ValueData createPrimitive(String key, Object value, int modifiers,int depth) {
       Class type = value.getClass();
       String name = type.getSimpleName();
-      String text = String.valueOf(value);
+      String text = ObjectStringBuilder.toString(value);
       int length = text.length();
       
       if(length > limit) {
