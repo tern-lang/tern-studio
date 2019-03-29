@@ -11,7 +11,7 @@ class Obj{
       x++;
    }
    error(){
-      y=10;
+      //y=10;
    }
    override toString(){
       return "x=${x} y=${y}";
@@ -25,14 +25,14 @@ class BlankConstantTest with TestCase {
       println(o);
       o.modify();
       println(o);
-      var fail = false;
+      /*var fail = false;
       try {
          o.error();
       }catch(e){
          e.printStackTrace();
          fail=true;
       }
-      assert fail;
+      assert fail;*/
       println(o);
    }
 }

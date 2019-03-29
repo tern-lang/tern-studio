@@ -6,7 +6,7 @@ class Blah{
    const z;
    new(a,b,c){
       this.x=(a+b)*c;
-      y="${a}+${b}";
+      this.y="${a}+${b}";
       this.z=-c;
    }
    toString(){
