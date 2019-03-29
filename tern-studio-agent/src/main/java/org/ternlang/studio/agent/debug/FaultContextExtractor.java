@@ -39,22 +39,22 @@ public class FaultContextExtractor extends TraceAdapter {
    @Override
    public void traceRuntimeError(Scope scope, Trace trace, Exception cause) {      
       if(logger.isDebug()) {
-         ScopeVariableTree variables = createVariables(scope);
-         String error = createException(scope, cause);
-         String thread = Thread.currentThread().getName();
-         Path path = trace.getPath();
-         String resource = path.getPath();
-         int line = trace.getLine();
-         
-         FaultEvent event = new FaultEvent.Builder(process)
-            .withVariables(variables)
-            .withCause(error)
-            .withLine(line)
-            .withResource(resource)
-            .withThread(thread)
-            .build();
-         
          try {
+            ScopeVariableTree variables = createVariables(scope);
+            String error = createException(scope, cause);
+            String thread = Thread.currentThread().getName();
+            Path path = trace.getPath();
+            String resource = path.getPath();
+            int line = trace.getLine();
+            
+            FaultEvent event = new FaultEvent.Builder(process)
+               .withVariables(variables)
+               .withCause(error)
+               .withLine(line)
+               .withResource(resource)
+               .withThread(thread)
+               .build();         
+   
             channel.send(event);
          }catch(Exception e) {
             logger.debug("Could not send fault context", e);

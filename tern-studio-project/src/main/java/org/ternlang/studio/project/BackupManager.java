@@ -22,9 +22,9 @@ import java.util.TreeMap;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.ternlang.studio.common.DateFormatter;
-import org.ternlang.studio.project.config.WorkspaceConfiguration;
 import org.springframework.stereotype.Component;
+import org.ternlang.common.DateFormatter;
+import org.ternlang.studio.project.config.WorkspaceConfiguration;
 
 @Slf4j
 @Component

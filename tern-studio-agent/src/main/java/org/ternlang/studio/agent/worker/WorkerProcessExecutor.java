@@ -10,6 +10,12 @@ import org.ternlang.studio.agent.log.LogLevel;
 import org.ternlang.studio.agent.worker.store.WorkerStore;
 
 public class WorkerProcessExecutor {
+   
+   private final WorkerNameGenerator generator;
+   
+   public WorkerProcessExecutor() {
+      this.generator = new WorkerNameGenerator();
+   }
 
    public void execute(WorkerCommandLine line) throws Exception {
       URI download = line.getDownloadURL();
@@ -17,6 +23,9 @@ public class WorkerProcessExecutor {
       String process = line.getName();
       LogLevel level = line.getLogLevel();
       
+      if(process == null) {
+         process = generator.getName();
+      }
       WorkerStore store = new WorkerStore(download);
       Runnable listener = new TerminateListener(mode);
       ProcessContext context = new ProcessContext(mode, store, process);
