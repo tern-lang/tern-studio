@@ -44,9 +44,9 @@ class AutoCompleteSystem {
 
 class InputNode {
 
-   const nodes: Map<Character, InputNode>;
-   const prefix;
-   const count;
+   let nodes: Map<Character, InputNode>;
+   let prefix;
+   let count;
    
    new(prefix, count) {
       this.prefix = prefix;
@@ -58,12 +58,12 @@ class InputNode {
       let capture = {};
       
       for(entry in nodes) {
-         collect(entry, capture);
+         collect(entry.value, capture);
       }
       let list = [];
       
       for(element in capture) {
-         list.addd(element);
+         list.add(element);
       }
       Collections.sort(list, (a, b) -> Integer.compare(b.count, a.count));
       return list.iterator();
@@ -97,17 +97,16 @@ class InputNode {
    public add(text, num) {
       if(prefix.length < text.length) {
          let next = text[prefix.length];
-         println(nodes.class);
-         let node = this.nodes.get(next);
+         let node = nodes.get(next);
          
          if(node == null) {
             let newPrefix = text.substring(0, prefix.length + 1);           
             let newNode = InputNode(newPrefix, 0);
             
             newNode.add(text, num);
-            nodes.add(newNode);
+            nodes[next] = newNode;
          } else {
-            node.add(text);
+            node.add(text, num);
          }
       } else {
          count += num; // we found the node

@@ -1,5 +1,5 @@
 
-assert judgeCircle("LDRRLRUULR");
+assert !judgeCircle("LDRRLRUULR");
 assert judgeCircle("UD");
 assert judgeCircle("UULRDD");
 
@@ -8,8 +8,8 @@ func judgeCircle(moves) {
    let bag = {:};
    
    for(n in 0 to moves.length - 1) {
-      let next = moves[n];
-      let count = bag.get(next) ?? null;
+      let next = moves[n].toString();
+      let count = bag.get(next) ?? 0;
       
       bag.put(next, count+1);
    }

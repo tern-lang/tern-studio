@@ -1,2 +1,3 @@
-println(70/10);
-println(35/5);
+for(i in 0){
+   println(i);
+}  

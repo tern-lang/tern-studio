@@ -1,0 +1,112 @@
+// https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
+
+const root = "C:\\Work\\development\\tern-lang\\tern-studio\\tern-studio\\work\\algorithms";
+const path = "main\\src\\hard\\huffman_tree.tern";
+const file = "${root}\\${path}";
+
+process(file);
+
+func process(file) {
+   let iterator: Iterator<CharCount> = FileIndexer().index(file);
+   let comparator: Comparator = (a, b) -> Integer.compare(a.value.count, b.value.count);
+   let queue: PriorityQueue = PriorityQueue<HuffmanNode>(comparator);
+   
+   while(iterator.hasNext()) {
+      let count: CharCount = iterator.next();
+      let node = HuffmanNode(count);
+      
+      queue.offer(node);
+   }
+   while(queue.size > 1) {
+      let first: HuffmanNode = queue.poll();
+      let second: HuffmanNode = queue.poll();
+      let count = CharCount(null, first.value.count + second.value.count);
+      let node = HuffmanNode(count);
+      
+      node.left = first;
+      node.right = second;
+      queue.offer(node);
+   }
+   let root = queue.poll();
+   let set = [];
+   
+   dump(root, "", set);
+   set.stream().sorted((a, b) -> Integer.compare(a.prefix.length, b.prefix.length)).forEach(this::println);
+}
+
+func dump(node: HuffmanNode, prefix: String, set: List) {
+   if(node.left) {
+      dump(node.left, prefix + "0", set);
+   }
+   if(node.value.char) {
+      let encoding = CharEncoding(node.value.char as Character, prefix, node.value.count);
+      set.add(encoding);
+   }
+   if(node.right) {
+      dump(node.right, prefix + "1", set);
+   }
+}
+
+class CharEncoding {
+
+   let char;
+   let prefix;
+   let count;
+   
+   new(char, prefix, count) {
+      this.count = count;
+      this.char = char;
+      this.prefix = prefix;
+   }
+   
+   override toString() {
+      "${char}: ${prefix}";
+   }
+}
+
+class HuffmanNode {
+
+   let value: CharCount;   
+   let left: HuffmanNode;
+   let right: HuffmanNode;
+   
+   new(value: CharCount) {
+      this.value = value;
+   }
+}
+
+class CharCount {
+
+   const char;
+   const count;
+   
+   new(char, count) {
+      this.char = char;
+      this.count = count;
+   }
+   
+   override toString() {
+      "${count} -> ${char}";
+   }
+}
+
+class FileIndexer {
+
+   index(file): Iterator<CharCount> {
+      const reader = File(file).reader();
+      const count = {:};
+      
+      while(reader.ready) {
+         const next = reader.read();
+         const value = count[next] ?? 0;
+         
+         count[next] = value+1;
+      }
+      return count.entrySet()
+         .stream()
+         .map(e -> CharCount(e.key, e.value))
+         .sorted((a, b) -> Integer.compare(a.count, b.count))
+         .iterator();
+   }
+}
+

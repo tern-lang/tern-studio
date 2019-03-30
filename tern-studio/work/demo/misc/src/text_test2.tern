@@ -1,11 +1,17 @@
-for(i in 0 to 100) {
-   let x = System.currentTimeMillis();
-   fib(30);
-   let y = System.currentTimeMillis();
-   println(y-x);
+class Foo{
+
+   const x;
+   const y;
+   
+   new(x, y){
+      this.x = x;
+      this.y = y;
+   }
+   
+   test(){
+      println(y);
+   }
 }
 
 
-function fib(n) {
-    return n < 2 ? 1 : fib(n-1) + fib(n-2);
-}
+new Foo(1,33).test();

@@ -6,3 +6,7 @@ var v = 0xffff77b8;
 println(Integer.toBinaryString(v));
 println(Integer.toBinaryString(~v));
 //println(Integer.toBinaryString(!v));
+
+
+println(1223);
+println(~1223+1);

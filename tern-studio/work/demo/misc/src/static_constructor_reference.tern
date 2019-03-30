@@ -12,18 +12,18 @@ class X{
    }
    
    dump(){
-      println("a=${a} b=${b}");
+      println("a=${a} b=${b} c=${c}");
    }
 }
 
 class Y extends X {
    static const DEFAULT_SIZE = 10;
-   var a;
+   private var a;
    new(a,b) : super(a, DEFAULT_SIZE){
       this.a=b;
    }
    toString(){
-      return "${a}, ${b}";
+      return "${a}, ${b}, ${c}";
    }
 }
 var y = new Y(1, 2);

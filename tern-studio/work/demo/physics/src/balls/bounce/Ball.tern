@@ -11,7 +11,7 @@ class Ball with Comparable{
 	private var angularVel: Float;
 	private var orientation: Float = 45f;
 
-	public new(x: Float, y: Float, radius: Float): 		this(x, y, radius, 1)
+	public new(x: Float, y: Float, radius: Float): 		this(x, y, radius, 1.0f)
 	{
 
 
@@ -59,27 +59,6 @@ class Ball with Comparable{
 		return radius;
 	}
 
-
-	// Deprecated, rolled this into checkCollision for effeciency.
-	public colliding(ball: Ball): Boolean
-	{
-		let xd = position.getX() - ball.position.getX();
-		let yd = position.getY() - ball.position.getY();
-
-		let sumRadius = getRadius() + ball.getRadius();
-		let sqrRadius = sumRadius * sumRadius;
-
-		let distSqr = (xd * xd) + (yd * yd);
-
-		if (distSqr <= sqrRadius)
-		{
-			return true;
-		}
-
-		return false;
-
-	}
-
 	public resolveCollision(ball: Ball)
 	{
 
@@ -123,7 +102,7 @@ class Ball with Comparable{
 		if (vn > 0.0f) return;
 
 		// collision impulse
-		let i = (-1 * (1.0f + Constants.restitution) * vn) / (im1 + im2);
+		let i = ((-1 * (1.0f + Constants.restitution)) * vn) / (im1 + im2);
 		var impulse: Vector2d = mtd.multiply(i);
 
 		// change in momentum

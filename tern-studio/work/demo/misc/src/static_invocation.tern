@@ -8,7 +8,7 @@ Blah.dump();
 
 class A{
    boo(){
-      foo();
+      this!.foo();
    }
 }
 
@@ -27,4 +27,4 @@ class B extends A{
    }
 }
 var x = new B(11);
-x.boo();
+x?.boo();

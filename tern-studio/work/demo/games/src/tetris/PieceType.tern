@@ -31,6 +31,7 @@ enum PieceType {
    T(4, Point(-1, 0), Point(0, 0),  Point(1, 0),   Point(0, -1));
 
    static const random = new Random();
+   
    var maxOrientations;
    var points;
 

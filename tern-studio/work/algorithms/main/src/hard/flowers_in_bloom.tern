@@ -8,7 +8,7 @@ func flowersInBloom(flowers, k) {
    let distance = k+1;
 
    for(let i = 0; i < flowers.length; i++) {
-      let bloom = Bloom(i, flowers[i]) ;
+      let bloom = Bloom(i + 1, flowers[i]) ;
       list.add(bloom);
    }
    Collections.sort(list, (a, b) -> Integer.compare(a.position, b.position));
@@ -20,6 +20,7 @@ func flowersInBloom(flowers, k) {
          let other = list[i-distance];
          let start = bloom.day;
          let finish = other.day;
+         let result = true;
          
          if(start > finish) {
             (start, finish) = (finish, start);
@@ -27,11 +28,14 @@ func flowersInBloom(flowers, k) {
          for(let j = i -k; j < i; j++) {
             let day = list[j].day;
             
-            if(day >= start && day <= finish) {
-               return -1;
+            if(day <= finish) {
+               result = false;
+               break;
             }
          }
-         return Math.max(start, finish)+ 1; // not zero ordered
+         if(result) {
+            return finish;
+         }
       }
    }
    return -1;
@@ -44,5 +48,9 @@ class Bloom {
    new(day, position) {
       this.day = day;
       this.position = position;
+   }
+   
+   override toString() {
+      return "day="+day+" position="+position;
    }
 }
