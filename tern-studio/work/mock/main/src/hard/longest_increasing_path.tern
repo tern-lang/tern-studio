@@ -1,14 +1,6 @@
 
 
 assert longestIncreasingPath([
-<<<<<<< Updated upstream
-   [9,9,4],
-   [6,6,8],
-   [2,1,1]]) == 4;
-
-assert longestIncreasingPath([
-=======
->>>>>>> Stashed changes
    [0,1,2,3,4,5,6,7,8,9],
    [19,18,17,16,15,14,13,12,11,10],
    [20,21,22,23,24,25,26,27,28,29],
@@ -24,14 +16,11 @@ assert longestIncreasingPath([
    [120,121,122,123,124,125,126,127,128,129],
    [139,138,137,136,135,134,133,132,131,130],
    [0,0,0,0,0,0,0,0,0,0]]) == 140;
-<<<<<<< Updated upstream
-=======
 
 assert longestIncreasingPath([
   [9,9,4],
   [6,6,8],
   [2,1,1]]) == 4;
->>>>>>> Stashed changes
 
 func longestIncreasingPath(matrix) {
    let positions = [];
@@ -46,35 +35,18 @@ func longestIncreasingPath(matrix) {
          positions.add(position);
       }
    }
-<<<<<<< Updated upstream
    Collections.sort(positions, (a, b) -> Integer.compare(b.value, a.value));
    
-   for(let position in positions) {
+   for(let position in positions){
       let count = longestIncreasingPath(matrix, position, cache);
-         
-      if(count > max) {
-         max = count;
-=======
-   Collections.sort(positions, (a, b) -> Integer.compare(matrix[b.row][b.col], matrix[a.row][a.col]));
-   
-   for(let i = 0; i < positions.length; i++){
-      let position = positions[i];
-      let count = longestIncreasingPath(matrix, position, 1, cache);
       
       if(count > max) {
          max = count;
       }
-      if(max > positions.length -i) {
-         break;
->>>>>>> Stashed changes
-      }
    }
-   println(max);
    return max;
 }
 
-
-<<<<<<< Updated upstream
 func longestIncreasingPath(matrix, position, cache){
    let max = 1;
 
@@ -89,45 +61,21 @@ func longestIncreasingPath(matrix, position, cache){
          } 
          if(score >= max) {
             max = score + 1; // this score is next + 1
-=======
-func longestIncreasingPath(matrix, position, depth, cache){
-   let max = 0;
-   
-   for(direction in Direction.ALL) {
-      let next = direction.next(matrix, position);
-      
-      if(next != null) {      
-         let count = longestIncreasingPath(matrix, next, depth+1, cache);   
-         
-         if(count > max) {
-            max = count;
->>>>>>> Stashed changes
          }
       } 
    }
-<<<<<<< Updated upstream
    return cache[position.key] = max;
-=======
-   return max == 0 ? depth : max;
->>>>>>> Stashed changes
 }
 
 class Position {
    const value;
    const row;
    const col;
-   const value;
-   const key;
    
    new(row, col, value) {
       this.value = value;
       this.row = row;
       this.col = col;
-      this.key = "${row}.${col}";      
-   }
-   
-   override toString(){
-      return String.valueOf(value);
    }
    
    getKey() {
