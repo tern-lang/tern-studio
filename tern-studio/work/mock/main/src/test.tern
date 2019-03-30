@@ -1,3 +1,11 @@
+<<<<<<< Updated upstream
 for(i in 0){
    println(i);
 }  
+=======
+call();
+
+func call(){
+   call();
+}
+>>>>>>> Stashed changes

@@ -1,13 +1,10 @@
 package org.ternlang.studio.agent.debug;
 
-import java.lang.reflect.Proxy;
 import java.util.Map;
 
 import org.ternlang.core.Context;
 import org.ternlang.core.convert.PrimitivePromoter;
-import org.ternlang.core.convert.proxy.AnyProxy;
 import org.ternlang.core.convert.proxy.ProxyWrapper;
-import org.ternlang.core.platform.Bridge;
 import org.ternlang.core.scope.instance.Instance;
 
 public class ScopeNodeBuilder {
@@ -67,7 +64,7 @@ public class ScopeNodeBuilder {
          Map<String, String> map = data.getData();
          
          variables.put(path, map);
-      }
+      }      
       return null;
    }
 

@@ -1,0 +1,46 @@
+
+findReplaceString("abcd", [0,2], ["a", "cd"], ["eee", "ffff"]);
+
+func findReplaceString(S, indexes, sources, targets) {
+   let replacements = [];
+   let builder = StringBuilder();
+   
+   for(let i = 0; i < indexes.length; i++){
+      let replacement = Replacement(indexes[i], sources[i], targets[i]);
+      replacements.add(replacement);
+   }
+   Collections.sort(replacements, (a, b) -> Integer.compare(a.index, b.index));
+   
+   let mark = 0; // mark the read offset into the original string
+   
+   for(let i = 0; i < replacements.length; i++){
+      let replacement = replacements[i];
+      let index = S.indexOf(replacement.source, replacement.index);            
+      
+      if(index == replacement.index) {
+         let prefix = S.substring(mark, replacement.index);
+         
+         builder.append(prefix);
+         builder.append(replacement.target);
+         mark = index + replacement.source.length; // this is where we are reading from now
+      }
+   }
+   if(mark < S.length) {
+      let suffix = S.substring(mark);
+      builder.append(suffix);
+   }
+   println(builder);
+   return builder.toString();
+}
+
+class Replacement {
+   let index;
+   let source;
+   let target;
+   
+   new(index, source, target) {
+      this.index = index;
+      this.source = source;
+      this.target = target;
+   }
+}

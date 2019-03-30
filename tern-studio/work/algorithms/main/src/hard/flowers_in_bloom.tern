@@ -1,33 +1,48 @@
 // hard google interview
 
+assert flowersInBloom([3,9,2,8,1,6,10,5,4,7], 1) == 6;
 assert flowersInBloom([1,3,2], 1) == 2;
 assert flowersInBloom([1,2,3], 1) == -1;
 
 func flowersInBloom(flowers, k) {
+   let result = Integer.MAX_VALUE;
    let list = [];
-   let distance = k+1;
-
+   
    for(let i = 0; i < flowers.length; i++) {
+<<<<<<< Updated upstream
       let bloom = Bloom(i + 1, flowers[i]) ;
+=======
+      let bloom = Bloom(i + 1, flowers[i]);
+>>>>>>> Stashed changes
       list.add(bloom);
    }
    Collections.sort(list, (a, b) -> Integer.compare(a.position, b.position));
 
    for(let i = 0; i < flowers.length; i++) {
       let bloom = list[i];
+      let pos = i - (k + 1);
       
-      if(i - distance >=0) {
-         let other = list[i-distance];
+      if(pos >= 0) {
+         let other = list[pos];
+         let distance = bloom.position - other.position;
+         
+         if(distance != k + 1) {
+            throw new RuntimeException("Distance ${distance} does not match ${k + 1} for ${bloom.position} and ${other.position}");
+         }
          let start = bloom.day;
          let finish = other.day;
          let result = true;
          
          if(start > finish) {
             (start, finish) = (finish, start);
+            (bloom, other) = (other, bloom);            
          }
-         for(let j = i -k; j < i; j++) {
-            let day = list[j].day;
+         let plots = [];
+         
+         for(let j = pos; j < i; j++) {
+            let between = list[j];
             
+<<<<<<< Updated upstream
             if(day <= finish) {
                result = false;
                break;
@@ -35,8 +50,30 @@ func flowersInBloom(flowers, k) {
          }
          if(result) {
             return finish;
+=======
+            if(between != bloom && between != other) {
+               plots.add(between);
+            }
+         }
+         if(plots.length != k) {
+            throw new RuntimeException("There should only be ${k} plots but there was ${plots.length}");
+         }
+         let accept = true;
+         
+         for(let plot in plots) {
+            if(plot.day <= finish) {
+               accept = false;
+               break;
+            }
+         }
+         if(accept && finish < result) {
+            result = finish;
+>>>>>>> Stashed changes
          }
       }
+   }
+   if(result < Integer.MAX_VALUE) {
+      return result;
    }
    return -1;
 }
