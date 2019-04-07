@@ -1,6 +1,6 @@
 package org.ternlang.studio.agent.local;
 
-import static org.ternlang.core.Reserved.DEFAULT_PACKAGE;
+import static org.ternlang.core.Reserved.DEFAULT_MODULE;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -129,6 +129,6 @@ public class LocalProcessExecutor {
          String file = script.getPath();
          return converter.createModule(file);
       }
-      return DEFAULT_PACKAGE;
+      return DEFAULT_MODULE;
    }
 }

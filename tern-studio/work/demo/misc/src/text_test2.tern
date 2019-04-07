@@ -1,17 +1,7 @@
-class Foo{
-
-   const x;
-   const y;
-   
-   new(x, y){
-      this.x = x;
-      this.y = y;
-   }
-   
-   test(){
-      println(y);
-   }
-}
 
 
-new Foo(1,33).test();
+let q: HashMap<?> = {:};
+
+q.offer("x");
+let s = q.poll();
+println(s);

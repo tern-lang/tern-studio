@@ -9,13 +9,13 @@ func generate(count) {
    }
 }
 
-const queue = new PriorityQueue();
-const numbers = generate(10000).iterator().gather();
-
-
-numbers.iterator().forEachRemaining(queue::offer);
-queue.iterator().forEachRemaining(this::println);
-
+for(i in 0 to 10000) {
+   const queue = new PriorityQueue();
+   const numbers = generate(10000).iterator().gather();
+   
+   numbers.iterator().forEachRemaining(queue::offer);
+   queue.iterator().forEachRemaining(x -> {});
+}
 
 class PriorityQueue with Iterable {
 

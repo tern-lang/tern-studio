@@ -1,0 +1,98 @@
+
+let toe = TicTacToe(3);
+
+assert toe.move(0, 0, 1) == 0;
+assert toe.move(0, 2, 2) == 0;
+assert toe.move(2, 2, 1) == 0;
+assert toe.move(1, 1, 2) == 0;
+assert toe.move(2, 0, 1) == 0;
+assert toe.move(1, 0, 2) == 0;
+assert toe.move(2, 1, 1) == 1;
+
+class TicTacToe {
+
+   let grid;
+   let count = 0;
+
+   new(n) {
+      this.grid = makeGrid(n);
+      this.count = count;
+   }
+   
+   draw() {
+      for(i in 0 to grid.length -1){
+         for(j in 0 to grid[i].length -1){
+            let value = grid[i][j];
+            print(value ?? "x");
+         }
+         println();
+      }
+      println();      
+   }
+
+   move(row, col, player) {
+      grid[row][col] = player;
+      
+      draw();
+      
+      if(count++ >= 3) {
+         let winner = null;
+         
+         winner = findWin(0, 0, 1, 1) ?? winner;
+         winner = findWin(0, grid.length -1, 1, -1) ?? winner;
+         
+         for(i in 0 to grid.length -1) {
+            winner = findWin(i, 0, 0, 1) ?? winner;
+            winner = findWin(0, i, 1, 0) ?? winner;
+         }
+         if(winner != null) {
+            return winner;
+         }
+      }
+      return 0;
+   }
+   
+   findWin(row, col, addRow, addCol) {
+      let current = grid[row][col];
+      
+      if(current != null) {
+         let count = 0;
+         
+         while(validCell(row, col)) {
+            let player = grid[row][col];
+            
+            if(player != current) {
+               return null;
+            }
+            row += addRow;
+            col += addCol;
+         }
+         return current;
+      }
+      return null;
+   }
+   
+   validCell(row, col) {
+      if(row < 0 || col < 0) {
+         return false;
+      }
+      if(row >= grid.length || col >= grid[row].length) {
+         return false;
+      }
+      return true;
+   }
+   
+   static makeGrid(n) {
+      let grid = [];
+      
+      for(i in 0 to n -1){
+         let row = [];
+         
+         for(j in 0 to n -1){
+            row[j] = null;   
+         }
+         grid[i] = row;   
+      }
+      return grid;
+   }
+}

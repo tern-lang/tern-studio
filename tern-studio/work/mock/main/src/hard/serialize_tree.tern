@@ -1,0 +1,118 @@
+
+
+
+let tree = testTree();
+let text = serialize(tree);
+let otherTree = deserialize(text);
+let otherText = serialize(otherTree);
+
+assert otherText == text;
+
+func serialize(node){
+   let queue = LinkedList();
+   let builder = StringBuilder();
+   
+   queue.offer(node);
+   
+   while(!queue.isEmpty()) {
+      let next = queue.poll();
+      
+      if(next != null) {
+         queue.offer(next.left);
+         queue.offer(next.right);
+         builder.append(next.val);
+      } else {
+         builder.append(null);
+      }
+      builder.append(",");
+   }
+   return builder.toString();
+}
+
+func deserialize(text) {
+   let queue = arrangeTokens(text);
+   let root = queue.poll();
+   
+   if(root.isValid()) {
+      let tree = TreeNode(root.number);
+      let parent = LinkedList();
+      
+      parent.offer(tree);
+      
+      while(!parent.isEmpty()) {
+         let left = queue.poll();
+         let right = queue.poll();
+         let node = parent.poll();
+         
+         if(left.isValid()) {
+            node.left = TreeNode(left.number);
+            parent.offer(node.left);
+         }
+         if(right.isValid()) {
+            node.right = TreeNode(right.number);
+            parent.offer(node.right);
+         }
+      }
+      return tree;
+   }
+   return null;
+}
+
+func arrangeTokens(text) {
+   let parts = text.split(",");
+   let queue = LinkedList();
+ 
+   for(part in parts) {
+      if(part.equals("null")) {
+         let value = Value(null);
+         queue.offer(value);
+      } else {
+         let number = Integer.parseInt(part);
+         let value = Value(number);
+         queue.offer(value);
+      }
+   }
+   return queue;
+}
+
+func testTree() {
+   let tree = TreeNode(1);
+   
+   tree.left = TreeNode(2);
+   tree.right = TreeNode(3);
+   tree.right.left = TreeNode(4);
+   tree.right.right = TreeNode(5);
+
+   return tree;
+}
+
+class Value {
+   let number;
+   
+   new(number: Number) {
+      this.number = number;
+   }
+   
+   isValid() {
+      return number != null;
+   }
+   
+   override toString() {
+      return "${number}";
+   }
+}
+
+
+class TreeNode{
+   let left: TreeNode;
+   let right: TreeNode;
+   let val;
+   
+   new(val) {
+      this.val = val;
+   }
+   
+   override toString() {
+      return "${val}";
+   }
+}
