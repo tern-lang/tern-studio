@@ -1,7 +1,11 @@
+var start = System.currentTimeMillis();
+for(x in 0 to 99) { // 10
+   var sum = 0;
+   for (var i = 0; i < 100000; i = i + 1) {
+     sum = sum + i;
+   }
+}
+var finish = System.currentTimeMillis();
+var duration = finish-start;
 
-
-let q: HashMap<?> = {:};
-
-q.offer("x");
-let s = q.poll();
-println(s);
+println(duration);
