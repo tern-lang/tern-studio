@@ -44,7 +44,17 @@ func generate(page: Page, readme: String, destination: String): String {
 }
 
 func generateFooter(page: Page) {
-   return `</body></html>`;
+   return `<!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138155960-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+        gtag('config', 'UA-138155960-1');
+      </script>
+      </body>
+      </html>`;
 }
 
 func generateHeader(page: Page) {
@@ -108,7 +118,7 @@ func generateMenu(page: Page) {
 func generateMenuOption(title: String, path: String, highlight: Boolean) {
    let suffix = highlight ? "-highlight" : "";
    
-   return `<td width="120" align="center" valign="top" class="header-row">
+   return `<td width="120" align="center" valign="top" class="header-row" onclick="location = '${path}'">
          <table height="100%" width="100%" class="header-table" border="0" cellpadding="0" cellspacing="0">
             <tr class="header-row-banner${suffix}">
                <td class="header-cell-banner${suffix}"></td>
