@@ -263,7 +263,7 @@ func processBulletList(source: List<String>, elements: List<HtmlElement>) {
 
 func processVideo(source: List<String>, elements: List<HtmlElement>) {
    let line = source.remove(0);
-   let pattern = Pattern.compile("\\[!\\[(.*)\\]\\((.*)\\)\\]\\((.*)\\)");
+   let pattern = Pattern.compile("\\[!\\[(.*)\\]\\((.*)\\)\\]\\(https://www\\.youtube\\.com/watch\\?v=(.*)\\)");
    let matcher = pattern.matcher(line);
    
    if(!matcher.matches()) {
@@ -447,10 +447,15 @@ class VideoElement extends HtmlElement {
    }
 
    override render(indent: String, b: PrintStream) {
+      // b.print("${indent}<p>");
+      // b.print("<a href='https://www.youtube.com/watch?v=${video}' rel='nofollow'>");
+      // b.print("<img alt='${title}' src='${image}' style='max-width:100%;'>");
+      // b.print("</a>");
+      // b.print("</p>");
       b.print("${indent}<p>");
-      b.print("<a href='${video}' rel='nofollow'>");
-      b.print("<img alt='${title}' src='${image}' style='max-width:100%;'>");
-      b.print("</a>");
+      b.print("<iframe width='850' height='480' src='https://www.youtube.com/embed/${video}' ");
+      b.print(" frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen>");
+      b.print("</iframe>");
       b.print("</p>");
 
    }
