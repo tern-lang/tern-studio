@@ -18,8 +18,8 @@ class Bird {
    
    get(value) {
       if(birdBitmaps.isEmpty()) {
-         for(var resource in resources){
-            var bitmap = ImageStore.loadImage(resource);
+         for(resource in resources){
+            let bitmap = ImageStore.loadImage(resource);
             birdBitmaps.add(bitmap);
          }
       }

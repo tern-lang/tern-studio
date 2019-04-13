@@ -261,7 +261,7 @@ class MarioResourceManager
       } catch (e) {
          // TODO Auto-generated catch block
          //e.printStackTrace();
-         Log.e("resource",e.getMessage()+fileName);
+         //Log.e("resource",""+e.getMessage()+fileName);
       }
       return null;
     }

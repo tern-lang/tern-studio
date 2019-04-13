@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 module ImageStore {
 
    loadImage(resource) {
-      var stream = ImageStore.getResource(resource);
+      let stream = ImageStore.getResource(resource);
       println("Loaded ${resource}");
       return BitmapFactory.decodeStream(stream);
    }

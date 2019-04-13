@@ -141,6 +141,9 @@ class GameRenderer {
      * to make important decisions. So calling draw() DOES change the game state.
      */
     public draw(g, mainMap, backgroundMap, foregroundMap, screenWidth, screenHeight) {
+       if(mainMap == null){
+         return;
+       }
         // add the three maps to the list of maps to draw, only mainMap is interactive
        if (backgroundMap!=null)maps.add(backgroundMap);
        maps.add(mainMap);

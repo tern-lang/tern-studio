@@ -8,6 +8,7 @@ import org.ternlang.game.framework.Input.TouchEvent;
 import mario.core.Assets;
 import android.graphics.Rect;
 import android.util.Log;
+import android.os.Process;
 
 class MainMenuScreen extends Screen {
    var playBound=new Rect(6,42,100,77);
@@ -76,11 +77,11 @@ class MainMenuScreen extends Screen {
     }
     
     public override dispose() {
-
+ 
     }
     
     public override onBackPressed() {
-        android.os.Process.killProcess(android.os.Process.myPid());
+       Process.killProcess(Process.myPid());
 
     }
 }

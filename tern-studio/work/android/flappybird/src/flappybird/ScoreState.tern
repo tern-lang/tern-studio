@@ -7,8 +7,8 @@ class ScoreState {
    static const HIGH_SCORE_PREFERENCE = "SharedPreferences";
    static const KEY_HIGH_SCORE = "key_high_score";
    
-   var context;
-   var highScore = -1;
+   let context;
+   let highScore = -1;
    
    new(context) {
       this.context = context;
@@ -16,15 +16,15 @@ class ScoreState {
 
    getHighScore() {
       if(highScore == -1) {
-         var preferences = context.getSharedPreferences(HIGH_SCORE_PREFERENCE, Context.MODE_PRIVATE);
+         let preferences = context.getSharedPreferences(HIGH_SCORE_PREFERENCE, Context.MODE_PRIVATE);
          highScore = preferences.getInt(KEY_HIGH_SCORE, 0);
       }
       return highScore;
    }
    
    setHighScore(score){
-      var preferences = context.getSharedPreferences(HIGH_SCORE_PREFERENCE, Context.MODE_PRIVATE);
-      var editor = preferences.edit();
+      let preferences = context.getSharedPreferences(HIGH_SCORE_PREFERENCE, Context.MODE_PRIVATE);
+      let editor = preferences.edit();
       editor.putInt(KEY_HIGH_SCORE, score);
       editor.commit();
       highScore = score;

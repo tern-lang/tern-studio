@@ -25,8 +25,8 @@ class Score {
    
    get(value) {
       if(scoreBitmaps.isEmpty()) {
-         for(var resource in resources) {
-            var bitmap = ImageStore.loadImage(resource);
+         for(resource in resources) {
+            let bitmap = ImageStore.loadImage(resource);
             scoreBitmaps.add(bitmap);
          }
       }
@@ -34,7 +34,7 @@ class Score {
    }
    
    recycle(){
-      for(var bitmap in scoreBitmaps){
+      for(bitmap in scoreBitmaps){
          bitmap.recycle();
       }
    }
