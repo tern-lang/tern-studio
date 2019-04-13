@@ -6,7 +6,7 @@ import android.graphics.Canvas;
  * an Animation. 
  */
 
-class Animatible {
+abstract class Animatible {
    
    private var currAnim;
    private var offsetX = 0;

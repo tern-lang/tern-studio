@@ -84,6 +84,7 @@ class GameScreen extends Screen {
          foregroundMap = gameLoader.loadOtherMaps("maps/fore3.txt");
          map.setPlayer(mario); // set the games main player to mario
       } catch (e){
+         e.printStackTrace();
          System.out.println("Invalid Map.");
          Log.e("Errrr", "invalid map");
       }
@@ -145,58 +146,58 @@ class GameScreen extends Screen {
           eventID=iD;
           mario.processEvent(eventID);
        }
-             
-       // Update all relevant Creatures.
-       for(var i = 0; i < map.relevantCreatures().size(); i++) {
-          var c = map.relevantCreatures().get(i);
-          if(c !instanceof Coin) {
-             c.updateCreature(map, period);
-             mario.playerCollision(map, c);
-             for(var other in map.relevantCreatures()) {
-                c.creatureCollision(other);
+       if(map) {      
+          // Update all relevant Creatures.
+          for(var i = 0; i < map.relevantCreatures().size(); i++) {
+             var c = map.relevantCreatures().get(i);
+             if(c !instanceof Coin) {
+                c.updateCreature(map, period);
+                mario.playerCollision(map, c);
+                for(var other in map.relevantCreatures()) {
+                   c.creatureCollision(other);
+                }
+             } else {
+                c.updateCreature(map, period);
+                mario.playerCollision(map, c);
              }
-          } else {
-             c.updateCreature(map, period);
-             mario.playerCollision(map, c);
           }
-       }
-                
-       // Debugging information:
-       //System.out.println("relevant creatures size: " + map.relevantCreatures().size());
-       //System.out.println("creatures size: " + map.creatures().size());
-       //System.out.println(map.platforms().size());
-       
-       for(var tile in map.animatedTiles()) {
-             //tile.collidingCreatures().clear();  // clear the colliding sprites on the tile
-             tile.update(20);
-       }
-      
-
-       for(var tile in backgroundMap.animatedTiles()) {
-             tile.collidingCreatures().clear();  // clear the colliding sprites on the tile
-             tile.update(20);
-       }
-      
-       for(var tile in foregroundMap.animatedTiles()) {
-             tile.collidingCreatures().clear();  // clear the colliding sprites on the tile
-             tile.update(20);
-       }
-       
-       // Add creatures that need to be created. They are added here to aconcurrent modifcation errors.
-       for(var c in map.creaturesToAdd()) {
-          map.creatures().add(c);
-       }
-       
-       map.creaturesToAdd().clear(); // This line MUST be called BEFORE mario.update(). Why?
-                              // If it is called after, all the creatures that are created
-                              // as a result of mario colliding are not added next update because
-                              // they are cleared immediately afterwards.
-
-       mario.update(map, period);
-       Coin.turn.update(period);
-       map.relevantCreatures().clear();
-       map.platforms().clear();
-                
+                   
+          // Debugging information:
+          //System.out.println("relevant creatures size: " + map.relevantCreatures().size());
+          //System.out.println("creatures size: " + map.creatures().size());
+          //System.out.println(map.platforms().size());
+          
+          for(var tile in map.animatedTiles()) {
+                //tile.collidingCreatures().clear();  // clear the colliding sprites on the tile
+                tile.update(20);
+          }
+         
+   
+          for(var tile in backgroundMap.animatedTiles()) {
+                tile.collidingCreatures().clear();  // clear the colliding sprites on the tile
+                tile.update(20);
+          }
+         
+          for(var tile in foregroundMap.animatedTiles()) {
+                tile.collidingCreatures().clear();  // clear the colliding sprites on the tile
+                tile.update(20);
+          }
+          
+          // Add creatures that need to be created. They are added here to aconcurrent modifcation errors.
+          for(var c in map.creaturesToAdd()) {
+             map.creatures().add(c);
+          }
+          
+          map.creaturesToAdd().clear(); // This line MUST be called BEFORE mario.update(). Why?
+                                 // If it is called after, all the creatures that are created
+                                 // as a result of mario colliding are not added next update because
+                                 // they are cleared immediately afterwards.
+   
+          mario.update(map, period);
+          Coin.turn.update(period);
+          map.relevantCreatures().clear();
+          map.platforms().clear();
+      }   
     }
 
     private updatePaused(touchEvents) {

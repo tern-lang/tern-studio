@@ -19,54 +19,54 @@ class GamePanel with Panel {
    static const Y_DOWN_ACCELERATE = 0.2f;
    static const Y_JUMP_THRUST = 0.7f;
    
-   var context;
-   var gameStatus;
-   var random;
-   var state;
-   var scores;
-   var bird;
-   var score = 0;
-   var speedX = 0.0f;
-   var scoreIncrease = 0;
-   var isRunning = false;
-   var dieOnLand = false;
-   var dieOutsidePipe = false;
-   var curPipeIsOne = false;
-   var needUseDownBitmap = false;
-   var plusScoreFlag1 = true;
-   var plusScoreFlag2 = true;
+   let context;
+   let gameStatus;
+   let random;
+   let state;
+   let scores;
+   let bird;
+   let score = 0;
+   let speedX = 0.0f;
+   let scoreIncrease = 0;
+   let isRunning = false;
+   let dieOnLand = false;
+   let dieOutsidePipe = false;
+   let curPipeIsOne = false;
+   let needUseDownBitmap = false;
+   let plusScoreFlag1 = true;
+   let plusScoreFlag2 = true;
 
-   var dayBgBitmap;
-   var landBitmap;
-   var birdDownBitmap;
-   var pipeDownBitmap;
-   var pipeUpBitmap;
-   var getReadyBitmap;
-   var tutorialBitmap;
-   var titleBitmap;
-   var gameOverBitmap;
+   let dayBgBitmap;
+   let landBitmap;
+   let birdDownBitmap;
+   let pipeDownBitmap;
+   let pipeUpBitmap;
+   let getReadyBitmap;
+   let tutorialBitmap;
+   let titleBitmap;
+   let gameOverBitmap;
 
-   var viewWidth = 0.0f;
-   var viewHeight = 0.0f;
-   var birdX = 0.0f;
-   var birdY = 0.0f;
-   var birdWidth = 0.0f;
-   var birdHeight = 0.0f;
-   var birdWidth2 = 0.0f;
-   var birdHeight2 = 0.0f;
-   var landY = 0.0f;
-   var landX = 0.0f;
-   var minPipeHeight = 0.0f;
-   var maxPipeHeight = 0.0f;
-   var pipeGap = 0.0f;
-   var pipeX1 = 0.0f;
-   var pipeX2 = 0.0f;
-   var pipeWidth = 0.0f;
-   var upPipeHeight1 = 0.0f;
-   var upPipeHeight2 = 0.0f;
-   var birdJump = 0.0f;
-   var birdDownDis = 0.0f;
-   var birdWingAnim = 0;
+   let viewWidth = 0.0f;
+   let viewHeight = 0.0f;
+   let birdX = 0.0f;
+   let birdY = 0.0f;
+   let birdWidth = 0.0f;
+   let birdHeight = 0.0f;
+   let birdWidth2 = 0.0f;
+   let birdHeight2 = 0.0f;
+   let landY = 0.0f;
+   let landX = 0.0f;
+   let minPipeHeight = 0.0f;
+   let maxPipeHeight = 0.0f;
+   let pipeGap = 0.0f;
+   let pipeX1 = 0.0f;
+   let pipeX2 = 0.0f;
+   let pipeWidth = 0.0f;
+   let upPipeHeight1 = 0.0f;
+   let upPipeHeight2 = 0.0f;
+   let birdJump = 0.0f;
+   let birdDownDis = 0.0f;
+   let birdWingAnim = 0;
 
    new(context) {
       this.state = new ScoreState(context);
@@ -78,7 +78,7 @@ class GamePanel with Panel {
 
       initResources();
 
-      var isSpeedMode = false; // increase the speed
+      let isSpeedMode = false; // increase the speed
       if (isSpeedMode) {
          speedX = 20;
          scoreIncrease = 2;
@@ -90,8 +90,8 @@ class GamePanel with Panel {
    
 
    override onStart(frame: Frame, rate: Integer) {
-      var w = frame.getWidth();
-      var h = frame.getHeight();
+      let w = frame.getWidth();
+      let h = frame.getHeight();
 
       viewHeight = h;
       viewWidth = w;
@@ -202,7 +202,7 @@ class GamePanel with Panel {
          dieOnLand = true;
          return true;
       }
-      var isCrashPipe = checkPipeCrash(pipeX1, upPipeHeight1);
+      let isCrashPipe = checkPipeCrash(pipeX1, upPipeHeight1);
       if (isCrashPipe) {
          curPipeIsOne = true;
          return true;
@@ -270,7 +270,7 @@ class GamePanel with Panel {
                birdY = landY - birdHeight2;
             }
          } else {
-            var mCurUpPipeHeight;
+            let mCurUpPipeHeight;
             if (curPipeIsOne) {
                mCurUpPipeHeight = upPipeHeight1;
             } else {
@@ -316,7 +316,7 @@ class GamePanel with Panel {
    }
 
    drawBackground(canvas) {
-      var rectF = new RectF(0, 0, viewWidth, viewHeight);
+      let rectF = new RectF(0, 0, viewWidth, viewHeight);
       canvas.drawBitmap(dayBgBitmap, null, rectF, null);
    }
 
@@ -327,7 +327,7 @@ class GamePanel with Panel {
       if (Math.abs(landX) >= viewWidth) {
          landX = 0;
       }
-      var rectF = new RectF(landX, landY, viewWidth + landX, viewHeight);
+      let rectF = new RectF(landX, landY, viewWidth + landX, viewHeight);
       canvas.drawBitmap(landBitmap, null, rectF, null);
       rectF.set(viewWidth + landX, landY, viewWidth + landX + viewWidth, viewHeight);
       canvas.drawBitmap(landBitmap, null, rectF, null);
@@ -335,7 +335,7 @@ class GamePanel with Panel {
 
    drawBird(canvas) {
       birdX = viewWidth / 2 - birdWidth;
-      var rectF = new RectF(birdX, birdY, birdX + birdWidth, birdY + birdHeight);
+      let rectF = new RectF(birdX, birdY, birdX + birdWidth, birdY + birdHeight);
 
       if (gameStatus != GameStatus.OVER) {
          canvas.drawBitmap(bird.get(birdWingAnim % 3), null, rectF, null);
@@ -369,7 +369,7 @@ class GamePanel with Panel {
          plusScoreFlag2 = true;
          upPipeHeight2 = random.nextFloat() * (maxPipeHeight - minPipeHeight) + minPipeHeight;
       }
-      var highScore = state.getHighScore();
+      let highScore = state.getHighScore();
       
       if (pipeX1 + pipeWidth < birdX && plusScoreFlag1) {
          score += scoreIncrease;
@@ -393,7 +393,7 @@ class GamePanel with Panel {
    }
 
    drawOnePipe(canvas,x,height) {
-      var rectF = new RectF(x, 0, x + pipeWidth, landY);
+      let rectF = new RectF(x, 0, x + pipeWidth, landY);
       canvas.save();
       canvas.translate(0, -1 * (landY - height));
       canvas.drawBitmap(pipeUpBitmap, null, rectF, null);
@@ -403,93 +403,93 @@ class GamePanel with Panel {
    }
 
    drawScore(canvas,score) {
-      var hundred;
-      var decade;
-      var unit;
+      let hundred;
+      let decade;
+      let unit;
       hundred = score / 100;
       decade = score % 100 / 10;
       unit = score % 10;
-      var numWidth = birdWidth / 2;
-      var numHeight = numWidth * 2;
-      var numGap = numWidth / 20;
-      var scoreWidth;
-      var top = pipeGap;
-      var bottom = pipeGap + numHeight;
-      var center = viewWidth / 2;
+      let numWidth = birdWidth / 2;
+      let numHeight = numWidth * 2;
+      let numGap = numWidth / 20;
+      let scoreWidth;
+      let top = pipeGap;
+      let bottom = pipeGap + numHeight;
+      let center = viewWidth / 2;
       if (hundred != 0) {
          scoreWidth = 3 * numWidth + 2 * numGap;
-         var rectF = new RectF(center - scoreWidth / 2, top, center - scoreWidth / 2 + numWidth, bottom);
-         var hundredBitmap = scores.get(hundred);
+         let rectF = new RectF(center - scoreWidth / 2, top, center - scoreWidth / 2 + numWidth, bottom);
+         let hundredBitmap = scores.get(hundred);
          canvas.drawBitmap(hundredBitmap, null, rectF, null);
          rectF.set(center - numWidth / 2, top, center + numWidth / 2, bottom);
-         var decadeBitmap = scores.get(decade);
+         let decadeBitmap = scores.get(decade);
          canvas.drawBitmap(decadeBitmap, null, rectF, null);
          rectF.set(center + numWidth / 2 + numGap, top, center + scoreWidth / 2 + numGap, bottom);
-         var unitBitmap = scores.get(unit);
+         let unitBitmap = scores.get(unit);
          canvas.drawBitmap(unitBitmap, null, rectF, null);
       }
       if (hundred == 0 && decade != 0) {
          scoreWidth = 2 * numWidth + numGap;
-         var rectF = new RectF(center - scoreWidth / 2, top, center - scoreWidth / 2 + numWidth, bottom);
-         var decadeBitmap = scores.get(decade);
+         let rectF = new RectF(center - scoreWidth / 2, top, center - scoreWidth / 2 + numWidth, bottom);
+         let decadeBitmap = scores.get(decade);
          canvas.drawBitmap(decadeBitmap, null, rectF, null);
          rectF.set(center + numGap, top, center + numWidth + numGap, bottom);
-         var unitBitmap = scores.get(unit);
+         let unitBitmap = scores.get(unit);
          canvas.drawBitmap(unitBitmap, null, rectF, null);
       }
       if (hundred == 0 && decade == 0) {
          scoreWidth = numWidth;
-         var rectF = new RectF(center - scoreWidth / 2, top, center + scoreWidth / 2, bottom);
-         var bitmap = scores.get(unit);
+         let rectF = new RectF(center - scoreWidth / 2, top, center + scoreWidth / 2, bottom);
+         let bitmap = scores.get(unit);
          canvas.drawBitmap(bitmap, null, rectF, null);
       }
    }
 
    drawReady(canvas) {
-      var center = viewWidth / 2;
+      let center = viewWidth / 2;
 
-      var getReadyWidth = pipeWidth * 3;
-      var getReadyHeight = pipeGap * 0.7f;
-      var getReadyY = birdY + birdHeight * 2;
-      var rectF = new RectF(center - getReadyWidth / 2, getReadyY, center + getReadyWidth / 2, getReadyY + getReadyHeight);
+      let getReadyWidth = pipeWidth * 3;
+      let getReadyHeight = pipeGap * 0.7f;
+      let getReadyY = birdY + birdHeight * 2;
+      let rectF = new RectF(center - getReadyWidth / 2, getReadyY, center + getReadyWidth / 2, getReadyY + getReadyHeight);
       canvas.drawBitmap(getReadyBitmap, null, rectF, null);
 
-      var tutorialWidth = getReadyWidth;
-      var tutorialHeight = getReadyHeight * 2;
-      var tutorialY = getReadyY + getReadyHeight;
+      let tutorialWidth = getReadyWidth;
+      let tutorialHeight = getReadyHeight * 2;
+      let tutorialY = getReadyY + getReadyHeight;
       rectF.set(center - tutorialWidth / 2, tutorialY, center + tutorialWidth / 2, tutorialY + tutorialHeight);
       canvas.drawBitmap(tutorialBitmap, null, rectF, null);
 
-      var titleWidth = getReadyWidth * 1.2f;
-      var titleHeight = getReadyHeight * 0.6f;
-      var titleY = pipeGap * 0.4f;
+      let titleWidth = getReadyWidth * 1.2f;
+      let titleHeight = getReadyHeight * 0.6f;
+      let titleY = pipeGap * 0.4f;
       rectF.set(center - titleWidth / 2, titleY, center + titleWidth / 2, titleY + titleHeight);
       canvas.drawBitmap(titleBitmap, null, rectF, null);
    }
 
    drawGameOver(canvas) {
-      var center = viewWidth / 2;
+      let center = viewWidth / 2;
 
-      var panelWidth = viewWidth * 0.65f;
-      var panelHeight = panelWidth * 0.45f;
-      var panelY = landY / 2;
+      let panelWidth = viewWidth * 0.65f;
+      let panelHeight = panelWidth * 0.45f;
+      let panelY = landY / 2;
       // Drawable drawable =
       // mContext.getResources().getDrawable(R.drawable.shape_score_panel);
       // drawable.setBounds((int)(center - panelWidth / 2), (int)panelY,
       // (int)(center + panelWidth / 2), (int)(panelY + panelHeight));
       // drawable.draw(canvas);
 
-      var gameOverWidth = pipeWidth * 3;
-      var gameOverHeight = pipeGap * 0.6f;
-      var gameOverY = landY / 2;
-      var highScore = state.getHighScore();
-      var rectF = new RectF(center - gameOverWidth / 2, gameOverY + birdHeight * 0.3f, center + gameOverWidth / 2, gameOverY + birdHeight * 0.3f + gameOverHeight);
+      let gameOverWidth = pipeWidth * 3;
+      let gameOverHeight = pipeGap * 0.6f;
+      let gameOverY = landY / 2;
+      let highScore = state.getHighScore();
+      let rectF = new RectF(center - gameOverWidth / 2, gameOverY + birdHeight * 0.3f, center + gameOverWidth / 2, gameOverY + birdHeight * 0.3f + gameOverHeight);
       canvas.drawBitmap(gameOverBitmap, null, rectF, null);
 
-      var paint = new Paint();
+      let paint = new Paint();
       paint.setTextAlign(Align.CENTER);
       paint.setTextSize(birdHeight);
-      var font = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
+      let font = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
       paint.setTypeface(font);
       paint.setColor(Color.parseColor("#FCA048"));
       canvas.drawText("score:" + score + "  best:" + highScore, center, gameOverY + gameOverHeight + birdHeight * 1.2f, paint);
