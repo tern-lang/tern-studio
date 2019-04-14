@@ -229,6 +229,8 @@ func processBulletList(source: List<String>, elements: List<HtmlElement>) {
          let title = matcher.group(2).trim();
          let anchor = matcher.group(3).trim();
          
+         debug title == 'Debug Remote Process';
+         
          if(indent.length == previous.indent.length) {
             // we are working on the same list
             let element = BulletElement(title, anchor, indent);
@@ -239,10 +241,18 @@ func processBulletList(source: List<String>, elements: List<HtmlElement>) {
          } else if(indent.length < previous.indent.length) {
             // we go back to the parent
             let element = BulletElement(title, anchor, indent);
-            let current = stack.pop();
-            let parent = stack.peek();
+            let before = previous;
             
-            parent.addElement(element);
+            while(indent.length <= before.indent.length) {
+               if(stack.isEmpty()) {
+                  throw new IllegalStateException("Bullet list for '${title}' not aligned");
+               }
+               let current = stack.pop();
+               let parent = stack.peek();
+               
+               before = parent;
+            }
+            before.addElement(element);
             previous = element;
          } else {
             // why does this not become the current???
@@ -453,7 +463,7 @@ class VideoElement extends HtmlElement {
       // b.print("</a>");
       // b.print("</p>");
       b.print("${indent}<p>");
-      b.print("<iframe width='850' height='480' src='https://www.youtube.com/embed/${video}?VQ=HD1080' ");
+      b.print("<iframe width='850' height='480' src='https://www.youtube.com/embed/${video}?VQ=HD1080&amp;rel=0' ");
       b.print(" frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen>");
       b.print("</iframe>");
       b.print("</p>");

@@ -4,7 +4,11 @@ const root = "C:\\Work\\development\\tern-lang\\tern-studio\\tern-studio\\work\\
 const path = "main\\src\\hard\\huffman_tree.tern";
 const file = "${root}\\${path}";
 
-process(file);
+if(args.length > 0) {
+   process(args[0]);
+} else {
+   process(file);
+}
 
 func process(file) {
    let iterator: Iterator<CharCount> = FileIndexer().index(file);

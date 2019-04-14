@@ -1,0 +1,139 @@
+// https://leetcode.com/problems/remove-invalid-parentheses/
+
+assert removeInvalidParentheses("()(((((((()") == ["()()"];
+assert removeInvalidParentheses("()())()") == ["(())()", "()()()"];
+assert removeInvalidParentheses(")(") == [];
+
+func removeInvalidParentheses(s) {
+   let success = findBalancedNodes(s);
+   let result = [];
+   
+   for(token in success) {
+      result.add(token);
+   }
+   println("${s} -> ${result}");
+   return result;
+}
+
+func findBalancedNodes(text) {
+   let queue = PriorityQueue((a, b) -> Integer.compare(a.distance, b.distance));
+   let success = PriorityQueue((a, b) -> Integer.compare(a.changes, b.changes));   
+   let balance = findFloatingBrace(text);
+   let distance = Math.abs(balance);
+   let root = Node(text, distance, 0);
+   let done = {};
+   
+   queue.offer(root);
+   
+   while(!queue.isEmpty()) {
+      let next = queue.poll();
+      
+      if(done.add(next.text)) {
+         let nodes = findCloserChildren(next);
+         
+         for(node in nodes) {
+            if(node.distance == 0) {
+               if(isBalanced(node.text)) {
+                  success.offer(node);
+               }
+            } else {
+               queue.offer(node);
+            }
+         }
+      }
+   }
+   let result = {};
+   let min = text.length;
+   
+   while(!success.isEmpty()) {
+      let next = success.poll();
+      
+      if(next.changes <= min) {
+         result.add(next.text);
+         min = next.changes;
+      }
+   }
+   return result;
+}
+
+func findCloserChildren(node) {
+   let balance = findFloatingBrace(node.text);
+   let current = Math.abs(balance);
+   let delete = (text, i) -> text.substring(0, i) + text.substring(i+1);
+   let children = [];
+   let done = {};
+   
+   debug node.text.length <= 5;
+   
+   for(i in 1 to node.text.length -1) {
+      let next = node.text[i];
+      let distance = 0;     
+      
+      if(next == '(') {
+         distance = Math.abs(balance - 1);
+      } else {
+         distance = Math.abs(balance + 1);
+      }
+      let remain = delete(node.text, i); 
+      
+      if(done.add(remain)) {
+         let child = Node(remain, distance, node.changes+1);
+         children.add(child);
+      }
+   }
+   return children;
+}
+
+func findFloatingBrace(text){
+   let count = 0;
+   
+   for(i in 0 to text.length -1) {
+      let next = text[i];
+   
+      if(next == '(') {
+         count++;
+      } else {
+         count--;
+      }
+   }
+   return count;
+}
+
+func isBalanced(text) {
+   let stack = Stack();
+   
+   for(i in 0 to text.length -1) {
+      let next = text[i];
+   
+      if(next == '(' || next == ')') {
+         if(next == '(') {
+            stack.push(next);
+         }  else {
+            if(stack.isEmpty()) {
+               return false;
+            } else {
+               stack.pop();
+            }
+         }
+      }
+   }
+   return stack.isEmpty();
+}
+
+
+class Node {
+
+   const changes;
+   const text;
+   const distance;
+   
+   new(text, distance, changes) {
+      this.changes = changes;
+      this.text = text;
+      this.distance = distance;
+   }
+   
+   override toString() {
+      return "${text} -> ${distance}";
+   }
+}

@@ -1,0 +1,68 @@
+import util.regex.Pattern;
+
+let wholeInternet = crawl("https://news.ycombinator.com"); // may contain billions of results
+
+for(page in wholeInternet) {
+   println(page);
+}
+
+class Page {
+
+   const location: String;
+   const distance: Integer;
+   
+   new(location: String, distance: Integer) {
+      this.location = location;
+      this.distance = distance;
+   }
+   
+   override toString() {
+      return "${location} -> ${distance}";
+   }
+}
+
+func crawl(location: String) {
+   let queue = LinkedList();
+   let root = Page(location, 0);
+   let done = HashSet();
+   
+   queue.offer(root);
+   done.add(location);
+   
+   while(!queue.isEmpty()) {
+      let next: Page = queue.poll();
+      let children: List<Page> = findChildren(next);
+       
+      yield next; // yield the result
+            
+      for(child in children) {
+         if(done.add(child.location)) {
+            queue.offer(child);
+         }
+      }
+   }
+}
+
+func findChildren(page: Page): List<Page> {
+   let pattern = Pattern.compile(`.*href=['|"](https://.*?)['|"].*`);
+   let children = [];
+   let lines = URL(page.location)
+      .get()
+      .response()
+      .getInputStream()
+      .reader()
+      .readLines();
+      
+   for(line in lines) {
+      let matcher = pattern.matcher(line);
+      
+      if(matcher.matches()) {
+         let location = matcher.group(1);
+         let child = Page(location, page.distance + 1);
+         
+         children.add(child);
+      }
+   }
+   return children;
+}
+

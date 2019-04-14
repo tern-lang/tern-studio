@@ -1,8 +1,0 @@
-// https://leetcode.com/problems/regular-expression-matching/
-
-assert !isMatch("aa", "a");
-assert isMatch("aa", "a*");
-
-func isMatch(s, p){
-   
-}
