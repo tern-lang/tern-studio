@@ -137,26 +137,28 @@ public class LocalProcessController {
       
       public void run() {
          try {
-            ServerSocket listener = new ServerSocket(port);
-            
-            try {
-               int local = listener.getLocalPort();
+            if(port != null) {
+               ServerSocket listener = new ServerSocket(port);
                
-               System.err.println("Debug agent listening on " + local);
-               
-               while(active.get()) {
-                  Socket socket = listener.accept();
-      
-                  try {
-                     consumer.consume(socket);
-                  }catch(Exception e) {
-                     e.printStackTrace();
-                  }finally {
-                     socket.close();
+               try {
+                  int local = listener.getLocalPort();
+                  
+                  System.err.println("Debug agent listening on " + local);
+                  
+                  while(active.get()) {
+                     Socket socket = listener.accept();
+         
+                     try {
+                        consumer.consume(socket);
+                     }catch(Exception e) {
+                        e.printStackTrace();
+                     }finally {
+                        socket.close();
+                     }
                   }
+               } finally {
+                  listener.close();
                }
-            } finally {
-               listener.close();
             }
          } catch(Exception e){
             e.printStackTrace();
