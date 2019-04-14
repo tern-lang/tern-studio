@@ -9,7 +9,6 @@ import org.ternlang.core.trace.TraceInterceptor;
 import org.ternlang.core.trace.TraceListener;
 import org.ternlang.core.trace.TraceType;
 import org.ternlang.studio.agent.ProcessContext;
-import org.ternlang.studio.agent.debug.BreakpointMatcher;
 import org.ternlang.studio.agent.debug.TraceAdapter;
 import org.ternlang.studio.agent.local.message.AttachRequest;
 
@@ -74,7 +73,7 @@ public class LocalDebugNotifier {
                TraceInterceptor interceptor = context.getInterceptor();
                
                controller.attachRequest(request);
-               interceptor.traceBefore(scope, trace);
+               interceptor.traceBefore(scope, trace); // suspend once attached
             }
          }
       }
