@@ -1,6 +1,7 @@
 
 
-var request = new ProcessRequest(execution); // suspend
+var request = new ProcessRequest(execution); 
+debug 1 < 2;
 request.process();
 
 println("Finished");

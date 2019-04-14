@@ -1,0 +1,6 @@
+
+
+println("start");
+debug 1 < 2;
+println("finish");
+

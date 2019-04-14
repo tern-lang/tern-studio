@@ -15,6 +15,7 @@ import org.ternlang.studio.agent.cli.CommandOption;
 public enum LocalOption implements CommandOption {
    DIRECTORY("d", "directory", "specify directory to execute in", ".+", File.class, "."),
    URL("u", "url", "specify a URL to download sources from", ".+", URI.class),
+   NOTIFY("n", "notify", "notify URL for reverse debug", ".+", URI.class),
    SCRIPT("s", "script", "script to execute", ".+", Path.class),
    EXPRESSION("e", "expression", "expression to evaluate", ".+", String.class),
    CLASSPATH("cp", "classpath", "optional classpath file", ".+", File[].class),

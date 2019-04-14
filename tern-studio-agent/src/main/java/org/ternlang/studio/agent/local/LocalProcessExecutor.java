@@ -2,6 +2,7 @@ package org.ternlang.studio.agent.local;
 
 import static org.ternlang.core.Reserved.DEFAULT_MODULE;
 
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +44,14 @@ public class LocalProcessExecutor {
       ExpressionEvaluator evaluator = context.getEvaluator();
       String evaluate = line.getEvaluation();
       Path script = line.getScript();
+      URI notify = line.getNotifyURI();
       Integer port = line.getPort();
       
       try {      
          CountDownLatch latch = new CountDownLatch(1);
          
-         if(port != null && script != null) {
-            LocalProcessController connector = new LocalProcessController(context, latch, script, port);
+         if(port != null || notify != null) {
+            LocalProcessController connector = new LocalProcessController(context, latch, notify, script, port);
       
             if(!line.isWait()) {
                latch.countDown(); // if no suspend then count down

@@ -47,8 +47,12 @@ public class LocalCommandLine {
    public String getEvaluation() {
       return (String)line.getValue(LocalOption.EXPRESSION.name);
    }
+
+   public URI getNotifyURI() {
+      return (URI)line.getValue(LocalOption.NOTIFY.name);
+   }
    
-   public URI getURI() {
+   public URI getDownloadURI() {
       return (URI)line.getValue(LocalOption.URL.name);
    }
 

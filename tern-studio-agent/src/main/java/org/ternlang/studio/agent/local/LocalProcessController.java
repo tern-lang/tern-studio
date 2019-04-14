@@ -20,19 +20,25 @@ import org.ternlang.studio.agent.log.LogLevel;
 public class LocalProcessController {
 
    private final AtomicReference<ProcessClient> reference;
+   private final LocalDebugNotifier notifier;
    private final ConnectLauncher launcher;
    private final ProcessContext context;
    private final AtomicBoolean active;
    private final CountDownLatch latch;
+   private final Integer port; // local port to listen for debugger
+   private final URI notify; // remote debugger
    private final Path script;
    
-   public LocalProcessController(ProcessContext context, CountDownLatch latch, Path script, int port) {
+   public LocalProcessController(ProcessContext context, CountDownLatch latch, URI notify, Path script, Integer port) {
+      this.notifier = new LocalDebugNotifier(this, context, notify);
       this.launcher = new ConnectLauncher(context, this, port);
       this.reference = new AtomicReference<ProcessClient>();
       this.active = new AtomicBoolean();
       this.context = context;
       this.script = script;
+      this.notify = notify;
       this.latch = latch;
+      this.port = port;
    }
 
    public String attachRequest(AttachRequest request) {
@@ -88,7 +94,12 @@ public class LocalProcessController {
    }
    
    public void start() {
-      launcher.run();
+      if(notify != null) {
+         notifier.register();
+      }
+      if(port != null) {
+         launcher.run();
+      }
    }
    
    private class ConnectLauncher implements Runnable {
@@ -97,7 +108,7 @@ public class LocalProcessController {
       private final ConnectAcceptor acceptor;
       private final ThreadFactory factory;
       
-      public ConnectLauncher(ProcessContext context, LocalProcessController listener, int port) {
+      public ConnectLauncher(ProcessContext context, LocalProcessController listener, Integer port) {
          this.acceptor = new ConnectAcceptor(listener, port);
          this.factory = new ThreadBuilder();
          this.listener = listener;
@@ -117,9 +128,9 @@ public class LocalProcessController {
    private class ConnectAcceptor implements Runnable {
       
       private final LocalMessageConsumer consumer;
-      private final int port;
+      private final Integer port;
       
-      public ConnectAcceptor(LocalProcessController listener, int port) {
+      public ConnectAcceptor(LocalProcessController listener, Integer port) {
          this.consumer = new LocalMessageConsumer(listener);
          this.port = port;
       }

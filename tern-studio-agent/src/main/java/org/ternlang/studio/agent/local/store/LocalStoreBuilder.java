@@ -16,7 +16,7 @@ public class LocalStoreBuilder {
    }
    
    public LocalStore create(LocalCommandLine line) {
-      URI url = line.getURI();
+      URI url = line.getDownloadURI();
       
       try {
          if(url != null) {
@@ -30,7 +30,7 @@ public class LocalStoreBuilder {
    }
    
    private LocalStore createRemoteStore(LocalCommandLine line) {
-      URI file = line.getURI();
+      URI file = line.getDownloadURI();
       Path script = line.getScript();
       boolean debug = line.isDebug();
       
