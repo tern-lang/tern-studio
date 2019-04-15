@@ -599,7 +599,10 @@ class CodeElement extends HtmlElement {
    }
    
    override render(indent: String, b: PrintStream) {
-      b.print("${indent}<pre>${code}</pre>");
+      let text = code.replace("<", "&lt;")
+                     .replace(">", "&gt;");
+                     
+      b.print("${indent}<pre>${text}</pre>");
    }
 }
    
