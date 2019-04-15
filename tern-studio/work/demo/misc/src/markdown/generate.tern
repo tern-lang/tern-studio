@@ -602,7 +602,7 @@ class CodeElement extends HtmlElement {
       let text = code.replace("<", "&lt;")
                      .replace(">", "&gt;");
                      
-      b.print("${indent}<pre>${text}</pre>");
+      b.print("${indent}<pre style='border: 1px solid #dfe2e5'>${text}</pre>");
    }
 }
    
