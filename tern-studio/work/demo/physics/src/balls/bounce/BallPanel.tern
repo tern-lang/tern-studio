@@ -56,6 +56,7 @@ class BallPanel extends Canvas {
 		{
 			currentTime = System.currentTimeMillis();
 			elapsedTime = (currentTime - previousTime); // elapsed time in seconds
+			println("time "+elapsedTime);
 			totalElapsedTime += elapsedTime;
 
 			if (totalElapsedTime > 1000)

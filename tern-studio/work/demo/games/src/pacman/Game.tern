@@ -1,0 +1,12 @@
+
+func start() {
+   const p = new Pacman();
+   
+   try {
+      p.start();
+   } catch(e) {
+      e.printStackTrace();
+   }
+}
+
+start();

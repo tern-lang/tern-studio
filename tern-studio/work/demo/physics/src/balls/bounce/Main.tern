@@ -1,10 +1,6 @@
+import swing.*;
 
-import javax.swing.*;
-
-
-
-func start(args)
-{
+func start(args) {
 	var frame: JFrame = new JFrame("BallBounce");
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(),BoxLayout.Y_AXIS));
@@ -19,7 +15,6 @@ func start(args)
 	frame.setVisible(true);
 
 	ballCanvas.start();
-
 }
 
 start(args);

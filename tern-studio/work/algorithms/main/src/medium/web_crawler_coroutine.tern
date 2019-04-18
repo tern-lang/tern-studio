@@ -1,68 +1,55 @@
 import util.regex.Pattern;
+import util.concurrent.LinkedBlockingQueue;
 
-let wholeInternet = crawl("https://news.ycombinator.com"); // may contain billions of results
-
-for(page in wholeInternet) {
-   println(page);
-}
-
-class Page {
-
-   const location: String;
-   const distance: Integer;
-   
-   new(location: String, distance: Integer) {
-      this.location = location;
-      this.distance = distance;
-   }
-   
-   override toString() {
-      return "${location} -> ${distance}";
-   }
-}
+crawl("https://news.ycombinator.com/").iterator().forEachRemaining(this::println);
 
 func crawl(location: String) {
-   let queue = LinkedList();
-   let root = Page(location, 0);
-   let done = HashSet();
+   let queue = LinkedBlockingQueue();
+   let done = {:};
    
-   queue.offer(root);
-   done.add(location);
+   queue.offer({
+      'location': location, 
+      'distance': 0}
+   );
    
-   while(!queue.isEmpty()) {
-      let next: Page = queue.poll();
-      let children: List<Page> = findChildren(next);
-       
-      yield next; // yield the result
-            
-      for(child in children) {
-         if(done.add(child.location)) {
-            queue.offer(child);
-         }
+   loop {
+      let next = queue.take();
+
+      if(next) {
+         collect(next, done, queue);
       }
+      yield next; // yield the result
    }
 }
 
-func findChildren(page: Page): List<Page> {
-   let pattern = Pattern.compile(`.*href=['|"](https://.*?)['|"].*`);
-   let children = [];
-   let lines = URL(page.location)
+async func collect(page, done, queue) {
+   let lines = await URL(page.location)
       .get()
       .response()
       .getInputStream()
       .reader()
       .readLines();
       
-   for(line in lines) {
-      let matcher = pattern.matcher(line);
+   let pattern = Pattern.compile(`.*href=['|"](https://.*?)['|"].*`);
+   let children = [];
       
-      if(matcher.matches()) {
-         let location = matcher.group(1);
-         let child = Page(location, page.distance + 1);
+   for(line in lines) {
+      if(line.contains("href=")) {
+         let matcher = pattern.matcher(line);
          
-         children.add(child);
+         if(matcher.matches()) {
+            let location = matcher.group(1);
+            let uri = URI.create(location);
+            let paths = done.computeIfAbsent(uri.host, (_) -> HashSet());
+            
+            if(paths.add(uri.path)) {
+               queue.offer({
+                  'location': location, 
+                  'distance': page.distance + 1}
+               );
+            }
+         }
       }
    }
-   return children;
 }
 

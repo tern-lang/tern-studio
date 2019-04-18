@@ -1,0 +1,24 @@
+
+
+import java.awt.Image;
+
+class ImageMap { // problem if this is a module
+   
+   static const PACMAN = ImageLoader.loadImage("/pacman/images/pacman.jpg"); // static analysis not done
+   static const PACMAN_UP = ImageLoader.loadImage("/pacman/images/pacmanup.jpg");
+   static const PACMAN_DOWN = ImageLoader.loadImage("/pacman/images/pacmandown.jpg");
+   static const PACMAN_LEFT = ImageLoader.loadImage("/pacman/images/pacmanleft.jpg");
+   static const PACMAN_RIGHT = ImageLoader.loadImage("/pacman/images/pacmanright.jpg");
+   static const GHOST_10 = ImageLoader.loadImage("/pacman/images/ghost10.jpg");
+   static const GHOST_20 = ImageLoader.loadImage("/pacman/images/ghost20.jpg");
+   static const GHOST_30 = ImageLoader.loadImage("/pacman/images/ghost30.jpg");
+   static const GHOST_40 = ImageLoader.loadImage("/pacman/images/ghost40.jpg");
+   static const GHOST_11 = ImageLoader.loadImage("/pacman/images/ghost11.jpg");
+   static const GHOST_21 = ImageLoader.loadImage("/pacman/images/ghost21.jpg");
+   static const GHOST_31 = ImageLoader.loadImage("/pacman/images/ghost31.jpg");
+   static const GHOST_41 = ImageLoader.loadImage("/pacman/images/ghost41.jpg");
+   static const SPLASH = ImageLoader.loadImage("/pacman/images/titleScreen.jpg");
+   static const GAME_OVER = ImageLoader.loadImage("/pacman/images/gameOver.jpg");
+   static const WINNER = ImageLoader.loadImage("/pacman/images/winScreen.jpg");
+}
+

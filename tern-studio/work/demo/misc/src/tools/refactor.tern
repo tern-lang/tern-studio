@@ -1,10 +1,10 @@
 import util.stream.Collectors;
 import util.regex.Pattern;
 
-var ROOT = "C:\\Work\\development\\tern-lang\\tern-studio\\tern-studio\\work\\demo\\physics\\src";
+var ROOT = "C:\\Work\\development\\tern-lang\\tern-studio\\tern-studio\\work\\demo\\games\\src\\pacman";
 
-var SOURCE = new File("${ROOT}\\bounce");
-var DESTINATION = new File("${ROOT}\\balls");
+var SOURCE = new File("${ROOT}\\old");
+var DESTINATION = new File("${ROOT}\\new");
 
 if(!SOURCE.exists()) {
    System.err.println("Could not find ${SOURCE}");
@@ -140,15 +140,16 @@ function replaceTokens(line){
    line = regexReplace(line, "(<[A-Z][a-zA-Z0-9]+\\s*,\\s*[A-Z][a-zA-Z0-9]+>)", "");       
    line = regexReplace(line, "(<[A-Z][a-zA-Z0-9]+>)", "");      
    line = regexReplace(line, "(,\\s+|\\()([A-Z][a-zA-Z0-9]+)(\\s\\s*)([a-z][a-zA-Z0-9_]*)(,|\\)|\\s*;)", "%1%4:%3%2%5");
-   line = regexReplace(line, "(public\\s+)([A-Z][a-zA-Z0-9]+)(\\s\\s*)([a-z][a-zA-Z0-9_]*)(,|\\)|\\s*;)", "%1var %4:%3%2%5");
-   line = regexReplace(line, "(private\\s+)([A-Z][a-zA-Z0-9]+)(\\s\\s*)([a-z][a-zA-Z0-9_]*)(,|\\)|\\s*;)", "%1var %4:%3%2%5");
-   line = regexReplace(line, "(static\\s+)([A-Z][a-zA-Z0-9]+)(\\s\\s*)([a-z][a-zA-Z0-9_]*)(,|\\)|\\s*;)", "%1var %4:%3%2%5");
-   line = regexReplace(line, "(\\s+)([A-Z][a-zA-Z0-9]+)(\\s\\s*)([a-z][a-zA-Z0-9_]*)(\\s*=)", "%1var %4:%3%2%5");
+   line = regexReplace(line, "(public\\s+)([A-Z][a-zA-Z0-9]+)(\\s\\s*)([a-z][a-zA-Z0-9_]*)(,|\\)|\\s*;)", "%1let %4:%3%2%5");
+   line = regexReplace(line, "(private\\s+)([A-Z][a-zA-Z0-9]+)(\\s\\s*)([a-z][a-zA-Z0-9_]*)(,|\\)|\\s*;)", "%1let %4:%3%2%5");
+   line = regexReplace(line, "(static\\s+)([A-Z][a-zA-Z0-9]+)(\\s\\s*)([a-z][a-zA-Z0-9_]*)(,|\\)|\\s*;)", "%1let %4:%3%2%5");
+   line = regexReplace(line, "(\\s+)([A-Z][a-zA-Z0-9]+)(\\s\\s*)([a-z][a-zA-Z0-9_]*)(\\s*=)", "%1let %4:%3%2%5");
    line = regexReplace(line, "(public\\s+static)(\\s+[A-Z][a-zA-Z0-9]+)(\\s.*)(\\))(\\s*\\{)", "%1%3%4:%2%5");
    line = regexReplace(line, "(public)(\\s+[A-Z][a-zA-Z0-9]+)(\\s.*)(\\))(\\s*\\{)", "%1%3%4:%2%5");
    line = regexReplace(line, "(private\\s+static)(\\s+[A-Z][a-zA-Z0-9]+)(\\s.*)(\\))(\\s*\\{)", "%1%3%4:%2%5");
    line = regexReplace(line, "(private)(\\s+[A-Z][a-zA-Z0-9]+)(\\s.*)(\\))(\\s*\\{)", "%1%3%4:%2%5"); 
-   line = regexReplace(line, "(abstract)(\\s+[A-Z][a-zA-Z0-9]+)(\\s.*)(\\))(\\s*\\{)", "%1%3%4:%2%5");    
+   line = regexReplace(line, "(abstract)(\\s+[A-Z][a-zA-Z0-9]+)(\\s.*)(\\))(\\s*\\{)", "%1%3%4:%2%5"); 
+   line = regexReplace(line, "package.*;.*", ""); 
    return line;
 }
 
