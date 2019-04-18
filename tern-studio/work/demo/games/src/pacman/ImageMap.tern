@@ -2,7 +2,7 @@
 
 import java.awt.Image;
 
-class ImageMap { // problem if this is a module
+class ImageMap { // FIXME: problem if this is a module
    
    static const PACMAN = ImageLoader.loadImage("/pacman/images/pacman.jpg"); // static analysis not done
    static const PACMAN_UP = ImageLoader.loadImage("/pacman/images/pacmanup.jpg");
