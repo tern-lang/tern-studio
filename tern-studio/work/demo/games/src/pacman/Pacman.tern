@@ -55,7 +55,6 @@ class Pacman extends JFrame {
       stepFrame(true);
 
       panel.requestFocus();
-      sleep(2000);
       gameLoop();
    }
    
