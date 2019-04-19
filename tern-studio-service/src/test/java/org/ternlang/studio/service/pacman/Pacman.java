@@ -1,6 +1,8 @@
 package org.ternlang.studio.service.pacman;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -29,7 +31,13 @@ public class Pacman extends JFrame {
       this.board = new Board();
       this.panel = new BoardPanel(board);
       this.controller = new GameController(this, board);
-      this.frameTimer = new Timer(30, (e) -> stepFrame(false));
+      this.frameTimer = new Timer(30, new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            stepFrame(false);
+         }
+         
+      });
       
       panel.requestFocus();
       //f.setSize(420, 460);

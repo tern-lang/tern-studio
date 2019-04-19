@@ -41,6 +41,9 @@ class Pacman extends JFrame {
       panel.addMouseListener(controller);
       panel.addKeyListener(controller);
 
+      addMouseListener(controller);
+      addKeyListener(controller);
+
       /* Make frame visible, disable resizing */
       setVisible(true);
       setResizable(false);

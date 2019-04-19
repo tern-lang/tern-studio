@@ -1,10 +1,9 @@
 
+import net.URL;
 
-import java.net.URL;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import sound.sampled.AudioInputStream;
+import sound.sampled.AudioSystem;
+import sound.sampled.Clip;
 
 module ClipManager {
 
