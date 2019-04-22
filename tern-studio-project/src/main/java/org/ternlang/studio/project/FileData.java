@@ -42,6 +42,9 @@ public class FileData {
    }
    
    public byte[] getByteArray() {
+      if(file == null) {
+         throw new IllegalStateException("File not found for " + location);
+      }
       try {
          if(data == null) {
             data = fileSystem.readAsByteArray(location);
@@ -53,6 +56,9 @@ public class FileData {
    }
    
    public String getString() {
+      if(file == null) {
+         throw new IllegalStateException("File not found for " + location);
+      }
       try {
          if(text == null) {
             text = fileSystem.readAsString(location);

@@ -61,7 +61,11 @@ public class FileSystem {
       File projectFile = new File(rootPath, realPath);
       
       if(projectFile.exists()) {
-         return new FileData(this, path, projectFile, time);
+         String canonicalPath = projectFile.getCanonicalPath();
+         
+         if(canonicalPath.endsWith(realPath)) {
+            return new FileData(this, path, projectFile, time);
+         }
       }          
       return new FileData(this, path, null, time);
    }

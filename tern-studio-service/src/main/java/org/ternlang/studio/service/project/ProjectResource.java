@@ -7,13 +7,12 @@ import java.io.PrintStream;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.ternlang.studio.agent.runtime.RuntimeAttribute;
+import org.springframework.stereotype.Component;
 import org.ternlang.studio.common.resource.Resource;
 import org.ternlang.studio.common.resource.ResourcePath;
 import org.ternlang.studio.common.resource.display.DisplayModelResolver;
 import org.ternlang.studio.common.resource.template.TemplateEngine;
 import org.ternlang.studio.common.resource.template.TemplateModel;
-import org.springframework.stereotype.Component;
 
 @Component
 @ResourcePath("/project/.*")
