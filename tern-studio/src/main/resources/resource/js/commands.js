@@ -36,7 +36,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                             resourceLink += '#' + createLinkForJavaResource(typesFound[i].extra, packageName + "." + className);
                         }
                         else {
-                            resourceLink += "#" + typesFound[i].resource;
+                            resourceLink += "#" + tree_1.FileTree.cleanResourcePath(typesFound[i].resource);
                         }
                         var typeCell = {
                             text: typesFound[i].name + "&nbsp;&nbsp;" + typePackage,
@@ -128,7 +128,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                             line = null;
                         }
                         else {
-                            resource = "/resource/" + common_1.Common.getProjectName() + resource;
+                            resource = tree_1.FileTree.cleanResourcePath("/resource/" + common_1.Common.getProjectName() + resource);
                         }
                         var outlineCell = {
                             text: outlineFound.name + "&nbsp;&nbsp;" + constraintInfo,
@@ -239,9 +239,10 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                         var locationPath = window.document.location.pathname;
                         var locationHash = window.document.location.hash;
                         var debug = locationPath.indexOf(debugToggle, locationPath.length - debugToggle.length) !== -1;
-                        var resourceLink = "/resource/" + fileFound.project + "/" + fileFound.resource;
+                        var resourceLink = tree_1.FileTree.cleanResourcePath("/resource/" + fileFound.project + "/" + fileFound.resource);
+                        var resource = tree_1.FileTree.cleanResourcePath(fileFound.resource);
                         var resourceCell = {
-                            text: fileFound.resource,
+                            text: resource,
                             line: fileFound.line,
                             resource: resourceLink,
                             style: 'resourceNode'
@@ -265,7 +266,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
         }
         function findFilesWithText(text, fileTypes, searchCriteria, onComplete) {
             var originalText = text;
-            if (text && text.length > 1) {
+            if (text && text.length > 0) {
                 var searchUrl = '';
                 searchUrl += '/find/' + common_1.Common.getProjectName();
                 searchUrl += '?expression=' + encodeURIComponent(originalText);
@@ -311,7 +312,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                         if (debug) {
                             resourceLink += debugToggle;
                         }
-                        resourceLink += "#" + fileFound.resource;
+                        resourceLink += "#" + tree_1.FileTree.cleanResourcePath(fileFound.resource);
                         var resourceCell = {
                             text: fileFound.text,
                             name: fileFound.name,
@@ -335,7 +336,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                         for (var i = 0; i < filesMatched.length; i++) {
                             var fileMatch = filesMatched[i];
                             var typeEntry = {
-                                resource: fileMatch.resource,
+                                resource: tree_1.FileTree.cleanResourcePath(fileMatch.resource),
                                 path: fileMatch.path,
                                 name: fileMatch.name,
                                 project: common_1.Common.getProjectName()

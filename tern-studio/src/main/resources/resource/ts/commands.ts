@@ -14,7 +14,7 @@ import {History} from "history"
 import {VariableManager} from "variables"
 import {DialogBuilder} from "dialog"
 import {FileExplorer, FileResource} from "explorer"
-import {DebugManager} from "debug"
+import {DebugManager} from "debug" 
   
 export module Command {
 
@@ -56,7 +56,7 @@ export module Command {
                   
                   resourceLink += '#' + createLinkForJavaResource(typesFound[i].extra, packageName + "." + className);
                } else {
-                  resourceLink += "#" + typesFound[i].resource;
+                  resourceLink += "#" + FileTree.cleanResourcePath(typesFound[i].resource);
                }
                var typeCell = {
                   text: typesFound[i].name + "&nbsp;&nbsp;" + typePackage,
@@ -156,7 +156,7 @@ export module Command {
                   resourceLink = "/project/" + Common.getProjectName() + "#" + createLinkForJavaResource(outlineFound.libraryPath, outlineFound.declaringClass);
                   line = null;
                } else {
-                  resource = "/resource/" + Common.getProjectName() + resource;
+                  resource = FileTree.cleanResourcePath("/resource/" + Common.getProjectName() + resource);
                }
                var outlineCell = {
                   text: outlineFound.name + "&nbsp;&nbsp;" + constraintInfo,
@@ -274,10 +274,11 @@ export module Command {
                var locationPath = window.document.location.pathname;
                var locationHash = window.document.location.hash;
                var debug = locationPath.indexOf(debugToggle, locationPath.length - debugToggle.length) !== -1;
-               var resourceLink = "/resource/" + fileFound.project + "/" + fileFound.resource;
+               var resourceLink = FileTree.cleanResourcePath("/resource/" + fileFound.project + "/" + fileFound.resource);
+               var resource = FileTree.cleanResourcePath(fileFound.resource);
                
                var resourceCell = {
-                  text: fileFound.resource,
+                  text: resource,
                   line: fileFound.line,
                   resource: resourceLink,
                   style: 'resourceNode'
@@ -303,7 +304,7 @@ export module Command {
    function findFilesWithText(text, fileTypes, searchCriteria, onComplete) {
       let originalText = text;
       
-      if(text && text.length > 1) {
+      if(text && text.length > 0) {
          var searchUrl = '';
          
          searchUrl += '/find/' + Common.getProjectName();
@@ -354,7 +355,7 @@ export module Command {
                if (debug) {
                    resourceLink += debugToggle;
                }
-               resourceLink += "#" + fileFound.resource;
+               resourceLink += "#" + FileTree.cleanResourcePath(fileFound.resource);
                
                var resourceCell = {
                   text: fileFound.text,
@@ -381,7 +382,7 @@ export module Command {
                for(var i = 0; i < filesMatched.length; i++) {
                   var fileMatch = filesMatched[i];
                   var typeEntry = {
-                     resource: fileMatch.resource,
+                     resource: FileTree.cleanResourcePath(fileMatch.resource),
                      path: fileMatch.path,
                      name: fileMatch.name,
                      project: Common.getProjectName()

@@ -244,21 +244,17 @@ export module DialogBuilder {
             setTimeout(function() {
                dialogBody.init();
                $('#dialogPath').on('change keyup paste', function() {
-                  var expressionText = $("#dialogPath").html();
+                  var expressionText = extractTextFromElement("dialogPath");
                   
                   // add a delay before you execute
                   executeIfTextUnchanged(expressionText, "dialogPath", 300, function() {
                      var expressionPattern = null;
                      
                      if(patternList) {
-                        expressionPattern = $("#dialogFolder").html();
-                        expressionPattern = Common.clearHtml(expressionPattern);
+                        expressionPattern = extractTextFromElement("dialogFolder");
                      }
-                     if(expressionText) {
-                        expressionText = Common.clearHtml(expressionText);
-                     } 
                      listFunction(expressionText, expressionPattern, function(list, requestedExpression) {
-                        var currentExpression = $("#dialogPath").html();
+                        var currentExpression = extractTextFromElement("dialogPath");
                         
                         if(!requestedExpression || requestedExpression == currentExpression) {
                            var content = createDialogListTable(list);
@@ -311,7 +307,7 @@ export module DialogBuilder {
          element.focus();
       };
       var executeSearch = function() {
-         var expressionText = $("#searchText").html();
+         var expressionText = extractTextFromElement("searchText");
          
          // add a delay before you execute
          executeIfTextUnchanged(expressionText, "searchText", 300, function() {
@@ -323,14 +319,10 @@ export module DialogBuilder {
             var expressionPattern = null;
             
             if(fileFilterPatterns) {
-               expressionPattern = $("#fileFilterPatterns").html();
-               expressionPattern = Common.clearHtml(expressionPattern);
+               expressionPattern = extractTextFromElement("fileFilterPatterns");
             }
-            if(expressionText) {
-               expressionText = Common.clearHtml(expressionText);
-            } 
             listFunction(expressionText, expressionPattern, searchCriteria, function(list, requestedText) {
-               var currentText = $("#searchText").html();
+               var currentText = extractTextFromElement("searchText");
                
                if(!requestedText || currentText == requestedText) {
                   var content = createDialogListTable(list);
@@ -404,7 +396,7 @@ export module DialogBuilder {
          element.focus();
       };
       var executeSearch = function() {
-         var expressionText = $("#searchText").html();
+         var expressionText = extractTextFromElement("searchText");
          
          // add a delay before you execute
          executeIfTextUnchanged(expressionText, "searchText", 300, function() {
@@ -416,14 +408,10 @@ export module DialogBuilder {
             var expressionPattern = null;
             
             if(fileFilterPatterns) {
-               expressionPattern = $("#fileFilterPatterns").html();
-               expressionPattern = Common.clearHtml(expressionPattern);
+               expressionPattern = extractTextFromElement("fileFilterPatterns");
             }
-            if(expressionText) {
-               expressionText = Common.clearHtml(expressionText);
-            } 
             listFunction(expressionText, expressionPattern, searchCriteria, function(list, requestedText) {
-               var currentText = $("#searchText").html();
+               var currentText = extractTextFromElement("searchText");
                
                if(!requestedText || currentText == requestedText) {
                   var content = createDialogListTable(list);
@@ -481,9 +469,9 @@ export module DialogBuilder {
          }
       });
       $("#dialogSave").click(function() {
-         var searchText = $("#searchText").html();
-         var replaceText = $("#replaceText").html();
-         var filePatterns = $("#fileFilterPatterns").html();
+         var searchText = extractTextFromElement("searchText");
+         var replaceText = extractTextFromElement("replaceText");
+         var filePatterns = extractTextFromElement("fileFilterPatterns");
          var searchCriteria = {
                caseSensitive: isCheckboxSelected("inputCaseSensitive"),
                regularExpression: isCheckboxSelected("inputRegularExpression"),
@@ -1024,6 +1012,19 @@ export module DialogBuilder {
             console.log("Ignoring '" + text + "' as its not current");
          }
       }, delay);
+   }
+   
+   function extractTextFromElement(id) {
+      var inputField = document.getElementById(id);
+      
+      if(inputField) {
+         var value = inputField.innerHTML;
+         
+         if(value) {
+        	return Common.clearHtml(value);
+         }
+      }
+      return "";
    }
    
    function isCheckboxSelected(input) {

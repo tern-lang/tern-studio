@@ -230,19 +230,15 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
                     setTimeout(function () {
                         dialogBody.init();
                         $('#dialogPath').on('change keyup paste', function () {
-                            var expressionText = $("#dialogPath").html();
+                            var expressionText = extractTextFromElement("dialogPath");
                             // add a delay before you execute
                             executeIfTextUnchanged(expressionText, "dialogPath", 300, function () {
                                 var expressionPattern = null;
                                 if (patternList) {
-                                    expressionPattern = $("#dialogFolder").html();
-                                    expressionPattern = common_1.Common.clearHtml(expressionPattern);
-                                }
-                                if (expressionText) {
-                                    expressionText = common_1.Common.clearHtml(expressionText);
+                                    expressionPattern = extractTextFromElement("dialogFolder");
                                 }
                                 listFunction(expressionText, expressionPattern, function (list, requestedExpression) {
-                                    var currentExpression = $("#dialogPath").html();
+                                    var currentExpression = extractTextFromElement("dialogPath");
                                     if (!requestedExpression || requestedExpression == currentExpression) {
                                         var content = createDialogListTable(list);
                                         if (content.content) {
@@ -294,7 +290,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
                 element.focus();
             };
             var executeSearch = function () {
-                var expressionText = $("#searchText").html();
+                var expressionText = extractTextFromElement("searchText");
                 // add a delay before you execute
                 executeIfTextUnchanged(expressionText, "searchText", 300, function () {
                     var searchCriteria = {
@@ -304,14 +300,10 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
                     };
                     var expressionPattern = null;
                     if (fileFilterPatterns) {
-                        expressionPattern = $("#fileFilterPatterns").html();
-                        expressionPattern = common_1.Common.clearHtml(expressionPattern);
-                    }
-                    if (expressionText) {
-                        expressionText = common_1.Common.clearHtml(expressionText);
+                        expressionPattern = extractTextFromElement("fileFilterPatterns");
                     }
                     listFunction(expressionText, expressionPattern, searchCriteria, function (list, requestedText) {
-                        var currentText = $("#searchText").html();
+                        var currentText = extractTextFromElement("searchText");
                         if (!requestedText || currentText == requestedText) {
                             var content = createDialogListTable(list);
                             if (content.content) {
@@ -384,7 +376,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
                 element.focus();
             };
             var executeSearch = function () {
-                var expressionText = $("#searchText").html();
+                var expressionText = extractTextFromElement("searchText");
                 // add a delay before you execute
                 executeIfTextUnchanged(expressionText, "searchText", 300, function () {
                     var searchCriteria = {
@@ -394,14 +386,10 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
                     };
                     var expressionPattern = null;
                     if (fileFilterPatterns) {
-                        expressionPattern = $("#fileFilterPatterns").html();
-                        expressionPattern = common_1.Common.clearHtml(expressionPattern);
-                    }
-                    if (expressionText) {
-                        expressionText = common_1.Common.clearHtml(expressionText);
+                        expressionPattern = extractTextFromElement("fileFilterPatterns");
                     }
                     listFunction(expressionText, expressionPattern, searchCriteria, function (list, requestedText) {
-                        var currentText = $("#searchText").html();
+                        var currentText = extractTextFromElement("searchText");
                         if (!requestedText || currentText == requestedText) {
                             var content = createDialogListTable(list);
                             if (content.content) {
@@ -458,9 +446,9 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
                 }
             });
             $("#dialogSave").click(function () {
-                var searchText = $("#searchText").html();
-                var replaceText = $("#replaceText").html();
-                var filePatterns = $("#fileFilterPatterns").html();
+                var searchText = extractTextFromElement("searchText");
+                var replaceText = extractTextFromElement("replaceText");
+                var filePatterns = extractTextFromElement("fileFilterPatterns");
                 var searchCriteria = {
                     caseSensitive: isCheckboxSelected("inputCaseSensitive"),
                     regularExpression: isCheckboxSelected("inputRegularExpression"),
@@ -968,6 +956,16 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
                     console.log("Ignoring '" + text + "' as its not current");
                 }
             }, delay);
+        }
+        function extractTextFromElement(id) {
+            var inputField = document.getElementById(id);
+            if (inputField) {
+                var value = inputField.innerHTML;
+                if (value) {
+                    return common_1.Common.clearHtml(value);
+                }
+            }
+            return "";
         }
         function isCheckboxSelected(input) {
             var inputField = document.getElementById(input);
