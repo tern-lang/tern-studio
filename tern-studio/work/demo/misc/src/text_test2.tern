@@ -1,1 +1,3 @@
-println(InetAddress.getLocalHost().hostName);
+println(InetAddress.getLocalHost().getHostName());
+
+
