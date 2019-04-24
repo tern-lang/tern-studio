@@ -1,0 +1,15 @@
+
+class ImageElement extends HtmlElement {
+   
+   const text;
+   const link;
+   
+   new(text, link) {
+      this.text = text;
+      this.link = link;
+   }
+   
+   override render(indent: String, b: PrintStream) {
+      b.println("${indent}<img src='${link}' alt='${text}'>");
+   }
+}

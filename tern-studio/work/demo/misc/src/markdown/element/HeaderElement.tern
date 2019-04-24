@@ -1,0 +1,15 @@
+
+class HeaderElement extends HtmlElement {
+
+   const size;
+   const text;
+   
+   new(text, size) {
+      this.text = text;
+      this.size = size;
+   }
+   
+   override render(indent: String, b: PrintStream) {
+      b.println("${indent}<h${size}><a id='${text.toLowerCase().replace(' ', '-')}'></a>${text}</h${size}>");
+   }
+}

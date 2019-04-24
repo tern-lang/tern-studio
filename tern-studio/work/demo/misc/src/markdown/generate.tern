@@ -1,4 +1,17 @@
 import util.regex.Pattern;
+import util.stream.Collectors;
+import markdown.element.BulletElement;
+import markdown.element.CodeElement;
+import markdown.element.HeaderElement;
+import markdown.element.ImageElement;
+import markdown.element.LinkElement;
+import markdown.element.Page;
+import markdown.element.ParagraphElement;
+import markdown.element.TableElement;
+import markdown.element.TableRowElement;
+import markdown.element.TextElement;
+import markdown.element.VideoElement;
+import markdown.element.HtmlElement;
 
 let root = "C:\\Work\\development\\tern-lang";
 
@@ -6,19 +19,6 @@ generate(Page.HOME, "${root}\\tern\\README.md", "${root}\\tern-site\\tern-lang.o
 generate(Page.DOWNLOAD, "${root}\\tern-site\\tern-lang.org\\download\\README.md", "${root}\\tern-site\\tern-lang.org\\download\\index.html");
 generate(Page.GUIDE, "${root}\\tern-site\\tern-lang.org\\videos\\README.md", "${root}\\tern-site\\tern-lang.org\\videos\\index.html");
 
-enum Page {
-   HOME("Home", "/"),
-   GUIDE("Guide", "/videos"),
-   DOWNLOAD("Download", "/download");
-   
-   const title;
-   const path;
-   
-   new(title, path) {
-      this.title = title;
-      this.path = path;
-   }
-}
 
 func generate(page: Page, readme: String, destination: String): String {
    let lines = File(readme).readLines();
@@ -61,7 +61,7 @@ func generateHeader(page: Page) {
    return `<html>
       <head>
         <title>Tern Programming Language</title>        
-        <link rel='stylesheet' href='/css/style.css'>
+        <link rel='stylesheet' href='./css/style.css'>
         <meta property='og:url' content='http://tern-lang.org/'/>
         <meta property='og:type' content='website'/>
         <meta property='og:description' content='Tern Programming Language' />
@@ -88,6 +88,7 @@ func generateHeader(page: Page) {
                   s.parentNode.insertBefore(link_element, s);
               })();
           </script>
+          <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">        
       </head>
       <body>
       ${generateMenu(page)}
@@ -229,7 +230,7 @@ func processBulletList(source: List<String>, elements: List<HtmlElement>) {
          let title = matcher.group(2).trim();
          let anchor = matcher.group(3).trim();
          
-         debug title == 'Debug Remote Process';
+         //debug title == 'Debug Remote Process';
          
          if(indent.length == previous.indent.length) {
             // we are working on the same list
@@ -359,261 +360,3 @@ func processCode(source: List<String>, elements: List<HtmlElement>) {
 }
    
    
-abstract class HtmlElement {
-   const elements;
-   
-   new() {
-      this.elements = [];
-   }
-   
-   addElement(e: HtmlElement) {
-      if(e) {
-         elements.add(e);
-      }
-   }
-   
-   abstract render(indent: String, b: PrintStream);
-}
-
-class TextElement extends HtmlElement {
-
-   const text;
-   
-   new(text) {
-      this.text = text;
-   }
-   
-   override render(indent: String, b: PrintStream){
-      let builder = StringBuilder();
-      let original = text;
-      
-      loop {
-         if(original.matches(".*\\[.*\\]\\(.*\\).*")) {
-            let length = original.length();
-            let start = original.indexOf("[");
-            let end = original.indexOf(")", start);
-            
-            while(end < length) {
-               let char = original.charAt(end);
-               
-               if(char != ')') {
-                  break;
-               }
-               end++;
-            }
-            let prefix = original.substring(0, start);
-            let link = original.substring(start, end);
-            let pattern = Pattern.compile("\\[(.*)\\]\\((.*)\\)");
-            let matcher = pattern.matcher(link);
-            
-            if(!matcher.matches()) {
-               throw new IllegalStateException("Invalid link ${link}");
-            }
-            let display = matcher.group(1);
-            let address = matcher.group(2);
-            
-            builder.append(prefix);
-            builder.append("<a href='${address}'>${display}</a>");
-            
-            original = original.substring(end, length);
-         } else if(original.matches(".*```.*```.*")) {
-            let length = original.length();
-            let start = original.indexOf("```");
-            let end = original.indexOf("```", start + 1);
-            let prefix = original.substring(0, start);
-            let code = original.substring(start, end + 3);
-            let pattern = Pattern.compile("```(.*)```");
-            let matcher = pattern.matcher(code);
-            
-            if(!matcher.matches()) {
-               throw new IllegalStateException("Invalid code ${code}");
-            }
-            let source = matcher.group(1);
-            
-            builder.append(prefix);
-            builder.append("<span style='font-family: monospace'>${source}</span>");
-            
-            original = original.substring(end + 3, length);
-         } else {
-            builder.append(original);
-            break;
-         }
-      }
-      b.print("${indent}${builder} ");
-   }
-   
-}
-
-class VideoElement extends HtmlElement {
-
-   const video;
-   const image;
-   const title;
-   
-   new(video, image, title) {
-      this.video = video;
-      this.image = image;
-      this.title = title;
-   }
-
-   override render(indent: String, b: PrintStream) {
-      // b.print("${indent}<p>");
-      // b.print("<a href='https://www.youtube.com/watch?v=${video}' rel='nofollow'>");
-      // b.print("<img alt='${title}' src='${image}' style='max-width:100%;'>");
-      // b.print("</a>");
-      // b.print("</p>");
-      b.print("${indent}<p>");
-      b.print("<iframe width='850' height='480' src='https://www.youtube.com/embed/${video}?VQ=HD1080&amp;rel=0' ");
-      b.print(" frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen>");
-      b.print("</iframe>");
-      b.print("</p>");
-
-   }
-}
-
-class TableElement extends HtmlElement {
-
-   const titles;
-   
-   new(titles) {
-      this.titles = titles;
-   }
-   
-   override render(indent: String, b: PrintStream) {
-      b.println("${indent}<table border='0'>");
-      
-      for(title in titles) {
-         b.println("${indent}    <th>${title}</th>");
-      }
-      for(element in elements) {
-         element.render("${indent}   ", b);
-      }
-      b.println("${indent}</table>");
-   }
-}
-
-class TableRowElement extends HtmlElement {
-
-   const values;
-   
-   new(values) {
-      this.values = values;
-   }
-   
-   override render(indent: String, b: PrintStream) {
-      b.println("${indent}<tr>");
-      
-      for(value in values){
-         b.println("${indent}   <td>${value}</td>");
-      }
-      b.println("${indent}</tr>");
-   }
-}
-
-class BulletElement extends HtmlElement {
-
-   const text;
-   const anchor;
-   const indent;
-   
-   new(text, anchor, indent) {
-      this.text = text;
-      this.anchor = anchor;
-      this.indent = indent;
-   }
-   
-   override render(i: String, b: PrintStream) {
-      if(text) {
-         b.print("${i}${indent}<li><a href='#${anchor}'>${text}</a>");
-      }
-      if(!elements.isEmpty()) {
-         b.println();
-         b.println("${i}${indent}<ul>");
-      
-         for(entry in elements) {
-            entry.render("${i}${indent}", b);
-         }
-         b.println("${i}${indent}</ul>");
-         b.println("${i}${indent}</li>");
-      } else {
-         if(text) {
-            b.println("</li>");
-         }
-      }
-   }
-}
-
-class LinkElement extends HtmlElement {
-   
-   const text;
-   const link;
-   
-   new(text, link) {
-      this.text = text;
-      this.link = link;
-   }
-   
-   override render(indent: String, b: PrintStream) {
-      b.print("${indent}<a href='${link}'>${text}</a>");
-   }
-}
-
-class ImageElement extends HtmlElement {
-   
-   const text;
-   const link;
-   
-   new(text, link) {
-      this.text = text;
-      this.link = link;
-   }
-   
-   override render(indent: String, b: PrintStream) {
-      b.println("${indent}<img src='${link}' alt='${text}'>");
-   }
-}
-
-class HeaderElement extends HtmlElement {
-
-   const size;
-   const text;
-   
-   new(text, size) {
-      this.text = text;
-      this.size = size;
-   }
-   
-   override render(indent: String, b: PrintStream) {
-      b.println("${indent}<h${size}><a id='${text.toLowerCase().replace(' ', '-')}'></a>${text}</h${size}>");
-   }
-}
-
-class CodeElement extends HtmlElement {
-
-   const lang;
-   const code;
-   
-   new(code, lang) {
-      this.code = code;
-      this.lang = lang;
-   }
-   
-   override render(indent: String, b: PrintStream) {
-      let text = code.replace("<", "&lt;")
-                     .replace(">", "&gt;");
-                     
-      b.print("${indent}<pre style='border: 1px solid #dfe2e5'>${text}</pre>");
-   }
-}
-   
-class ParagraphElement extends HtmlElement {
-   
-   override render(indent: String, b: PrintStream) {
-      b.print("${indent}<p>");
-      
-      for(element in elements) {
-         element.render(indent, b);
-      }
-      b.println("${indent}</p>");
-   }
-}

@@ -1,0 +1,33 @@
+
+class BulletElement extends HtmlElement {
+
+   const text;
+   const anchor;
+   const indent;
+   
+   new(text, anchor, indent) {
+      this.text = text;
+      this.anchor = anchor;
+      this.indent = indent;
+   }
+   
+   override render(i: String, b: PrintStream) {
+      if(text) {
+         b.print("${i}${indent}<li><a href='#${anchor}'>${text}</a>");
+      }
+      if(!elements.isEmpty()) {
+         b.println();
+         b.println("${i}${indent}<ul>");
+      
+         for(entry in elements) {
+            entry.render("${i}${indent}", b);
+         }
+         b.println("${i}${indent}</ul>");
+         b.println("${i}${indent}</li>");
+      } else {
+         if(text) {
+            b.println("</li>");
+         }
+      }
+   }
+}

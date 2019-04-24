@@ -1,0 +1,20 @@
+
+class CodeElement extends HtmlElement {
+
+   const processor;
+   const lang;
+   const code;
+   
+   new(code, lang) {
+      this.processor = CodeHighlightProcessor();
+      this.code = code;
+      this.lang = lang;
+   }
+   
+   override render(indent: String, b: PrintStream) {
+      let text = code.replace("<", "&lt;").replace(">", "&gt;");
+      let highlight = processor.process(text);
+      
+      b.print("${indent}<pre style='border: 1px solid #dfe2e5'>${highlight}</pre>");
+   }
+}

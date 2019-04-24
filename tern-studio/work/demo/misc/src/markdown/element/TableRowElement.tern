@@ -1,0 +1,18 @@
+
+class TableRowElement extends HtmlElement {
+
+   const values;
+   
+   new(values) {
+      this.values = values;
+   }
+   
+   override render(indent: String, b: PrintStream) {
+      b.println("${indent}<tr>");
+      
+      for(value in values){
+         b.println("${indent}   <td>${value}</td>");
+      }
+      b.println("${indent}</tr>");
+   }
+}

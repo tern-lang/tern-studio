@@ -1,0 +1,16 @@
+
+abstract class HtmlElement {
+   const elements;
+   
+   new() {
+      this.elements = [];
+   }
+   
+   addElement(e: HtmlElement) {
+      if(e) {
+         elements.add(e);
+      }
+   }
+   
+   abstract render(indent: String, b: PrintStream);
+}
