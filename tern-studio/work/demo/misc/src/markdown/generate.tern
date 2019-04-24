@@ -61,7 +61,7 @@ func generateHeader(page: Page) {
    return `<html>
       <head>
         <title>Tern Programming Language</title>        
-        <link rel='stylesheet' href='./css/style.css'>
+        <link rel='stylesheet' href='/css/style.css'>
         <meta property='og:url' content='http://tern-lang.org/'/>
         <meta property='og:type' content='website'/>
         <meta property='og:description' content='Tern Programming Language' />
@@ -88,7 +88,16 @@ func generateHeader(page: Page) {
                   s.parentNode.insertBefore(link_element, s);
               })();
           </script>
-          <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">        
+          <script type="text/javascript">
+              (function() {
+                  var link_element = document.createElement("link"),
+                      s = document.getElementsByTagName("script")[0];
+                  link_element.href = "http://fonts.googleapis.com/css?family=Source+Code+Pro:400,700";
+                  link_element.rel = "stylesheet";
+                  link_element.type = "text/css";
+                  s.parentNode.insertBefore(link_element, s);
+              })();
+          </script>          
       </head>
       <body>
       ${generateMenu(page)}

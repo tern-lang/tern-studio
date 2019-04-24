@@ -6,14 +6,14 @@ class CodeHighlightProcessor {
       "let", "func", "return", "class", 
       "trait", "enum", "with", "extends", 
       "return", "assert", "until", "unless",
-      "if", "else", "instanceof", "as", 
+      "if", "else", "instanceof", "as", "debug", 
       "const", "while", "for", "in", "break",
       "continue", "loop", "catch", "finally",
       "try", "throw", "new", "this", "super",
       "static", "public", "private", "abstract",
       "override", "yield", "async", "await",
       "module", "import", "type", "switch",
-      "false", "true", "null", "from"];
+      "false", "true", "null", "from", "to"];
       
    const special;
    
