@@ -1,0 +1,29 @@
+
+let foo: Integer = 1;
+let farce: String = "";
+
+@Configuration
+module TeaMaker {
+
+   @Provides
+   public providesHeater(): Pump {
+      return ElectricHeater();
+   }
+
+   @Provides
+   public providesPump(t: Thermosiphon): Pump {
+      return t;
+   }
+}
+
+class ExpensiveCoffeeMaker {
+  
+  @Inject 
+  @Named(name: "water") 
+  let waterHeater: Heater;
+  
+  @Inject 
+  @Named(name: "hot plate") 
+  let hotPlateHeater: Heater;
+ 
+}

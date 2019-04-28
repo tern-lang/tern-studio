@@ -33,7 +33,6 @@ class GameLoader {
    private var grass_center: BufferedImage;
    
    public new() {
-       
       plain = [];
       plainTiles = new SpriteMap("/mario/tiles/Plain_Tiles.png", 6, 17).getSprites();
       
@@ -102,7 +101,7 @@ class GameLoader {
       }
       return newMap;   
    }
-       
+   
     // Use this to load the main map
    public loadMap(filename: String, soundManager: MarioSoundManager22050Hz): TileMap  {
       // lines is a list of strings, each element is a row of the map

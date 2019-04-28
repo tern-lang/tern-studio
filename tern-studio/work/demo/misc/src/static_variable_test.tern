@@ -23,13 +23,13 @@ for(var i = 0; i < 10; i++) {
    System.out.println(Test.at(0));
    System.out.println(Test.at(1));
    System.out.println(Test.at(2));
-
-   var t = new Test(33,44);
+   
+   const t = new Test(33,44);
 
    System.out.println(t);
    System.out.println(t);   
    //System.out.println(t.dump()); returns null
-
+   
    System.out.println(Test.inc());
    System.out.println(Test.inc());
    System.out.println(Test.inc());

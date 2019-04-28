@@ -112,7 +112,7 @@ class Mario extends CollidableObject{
    private var soundManager2: MarioSoundManager10512Hz;
    
    public new(soundManager: MarioSoundManager22050Hz): super(STARTING_X, STARTING_Y, soundManager) {
-      
+   
       setIsJumping(true);
       dy = STARTING_DY;
       jumpHeight = INITIAL_JUMP_HEIGHT;
@@ -130,7 +130,7 @@ class Mario extends CollidableObject{
       }
             
       // Create left animations.
-       stillLeft = new Animation(ANIM_TIME).addFrame(l[0]);
+      stillLeft = new Animation(ANIM_TIME).addFrame(l[0]);
       walkLeft = new Animation(ANIM_TIME).addFrame(l[1]).addFrame(l[2]);
       runLeft = new Animation(ANIM_TIME - 30).addFrame(l[3]).addFrame(l[4]);
       crouchLeft = new Animation(ANIM_TIME).addFrame(l[5]);

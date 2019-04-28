@@ -23,7 +23,7 @@ class CodeHighlightProcessor {
          .collect(Collectors.toList());
    }
       
-   process(text: String) {
+   public process(text: String) {
       let index = 0;
       let builder = StringBuilder();
       
@@ -45,7 +45,7 @@ class CodeHighlightProcessor {
       return builder.toString();
    }
    
-   encode(text: String) {
+   private encode(text: String) {
       let builder = StringBuilder();
       let code = text.replace("&lt;", "<").replace("&gt;", ">");
       
@@ -62,7 +62,7 @@ class CodeHighlightProcessor {
       return builder.toString();
    }
    
-   replaceText(text: String) {
+   private replaceText(text: String) {
       let index = 0;
       let findFirst = (text, start) -> {
          let min = -1;
@@ -108,7 +108,7 @@ class CodeHighlightProcessor {
       return text;
    }
    
-   replaceComment(text: String) {
+   private replaceComment(text: String) {
       let index = 0;
       
       while(index != -1) {
@@ -133,7 +133,7 @@ class CodeHighlightProcessor {
       return text;
    }
    
-   replaceLineComment(text: String) {
+   private replaceLineComment(text: String) {
       let index = text.indexOf("//");
       
       if(index != -1) {
@@ -146,7 +146,7 @@ class CodeHighlightProcessor {
       return text;
    }
    
-   replaceToken(text: String, token: String) {
+   private replaceToken(text: String, token: String) {
       let ignore = text.indexOf("//") == -1 ? text.length : text.indexOf("//");
       let matches = [];
       let index = 0;

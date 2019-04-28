@@ -3,7 +3,7 @@
     <variable name="PROJECT_ROOT">C:\Work\development\tern-lang\tern-studio\tern-studio\work</variable>
   </environment>
   <arguments>
-    <argument>-Xmx1000m</argument>
+    <argument>-Xmx100m</argument>
     <argument>-Xms100m</argument>
     <argument>-XX:+UnlockCommercialFeatures</argument>
     <argument>-XX:+FlightRecorder</argument>

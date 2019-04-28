@@ -10,7 +10,7 @@ println("xX");
 
 var list =[];
 
-for(x in 1..10)
+for(x in 1..100)
    list.add(Thread(->{
       for(var i in 0..9){
          println(new Foo("xx")); // BUG DEFINING CONSTRUCTOR

@@ -1,12 +1,14 @@
 import static lang.Math.*;
 import security.SecureRandom;
 
-function sort (a) {//shellsort
-    var increment = a.size() / 2;
+func sort (a) {//shellsort
+    let increment = a.length / 2;
+    
     while (increment > 0) {
-       for (var i = increment; i < a.size(); i++) {
-          var j = i;
-          var temp = a[i];
+       for (let i = increment; i < a.length; i++) {
+          let j = i;
+          let temp = a[i];
+    
           while (j >= increment && a[j - increment] > temp) {
              a[j] = a[j - increment];
              j = j - increment;
@@ -20,15 +22,17 @@ function sort (a) {//shellsort
        }
     }
 }
-var s={};
-var m={:};
-var random=new SecureRandom();
-var array = [];
-for(var i = 0; i < 1000; i++){
-   var value = random.nextInt(100000);   
+let s={};
+let m={:};
+let random=new SecureRandom();
+let array = [];
+
+for(let i = 0; i < 1000; i++){
+   let value = random.nextInt(100000);   
    array.add(value);
 }
 sort(array);
-for(var x in array){
-   System.out.println("shell="+x+" length="+array.size());
+
+for(let x in array){
+   System.out.println("shell="+x+" length="+array.length);
 }

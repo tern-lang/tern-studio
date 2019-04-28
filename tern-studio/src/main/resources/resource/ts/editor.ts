@@ -1127,7 +1127,8 @@ export module FileEditor {
       
       editor.setShowPrintMargin(false);
       editor.setOptions({
-         enableBasicAutocompletion: true
+         enableBasicAutocompletion: true,
+         enableLiveAutocompletion: true
       });
       editor.on("click", function(e) {
          var options = editor.getOptions();    
@@ -1243,6 +1244,7 @@ export module FileEditor {
       editorView.getEditorPanel().completers = [autoComplete];
       editorView.getEditorPanel().setOptions({
          enableBasicAutocompletion: true,
+         enableLiveAutocompletion: true,
          fontFamily: actualFont,
          fontSize: fontSize
       });

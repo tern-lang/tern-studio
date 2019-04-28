@@ -33,7 +33,7 @@ class MarioSoundManager {
       var s: Scanner = null;
       try {
          s = new Scanner(new File(fileName)); 
-      } catch (FileNotFounde) {
+      } catch (e) {
          System.out.println(e);
       }
       

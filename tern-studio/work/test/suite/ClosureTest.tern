@@ -10,7 +10,7 @@ class ClosureTest with TestCase {
           .filter((s) -> s.startsWith("c"))
           .map(s -> s.toUpperCase())
           .sorted()
-          .forEach(s: String -> result.add(s));
+          .forEach((s: String) -> result.add(s));
       
       assert result.length == 2;
       assert result[0] == 'C1';

@@ -914,7 +914,8 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             // #############################################################
             editor.setShowPrintMargin(false);
             editor.setOptions({
-                enableBasicAutocompletion: true
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true
             });
             editor.on("click", function (e) {
                 var options = editor.getOptions();
@@ -1022,6 +1023,7 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             editorView.getEditorPanel().completers = [autoComplete];
             editorView.getEditorPanel().setOptions({
                 enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true,
                 fontFamily: actualFont,
                 fontSize: fontSize
             });

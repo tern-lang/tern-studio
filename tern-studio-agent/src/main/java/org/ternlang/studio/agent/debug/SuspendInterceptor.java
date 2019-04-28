@@ -8,6 +8,7 @@ import org.ternlang.core.function.Function;
 import org.ternlang.core.module.Module;
 import org.ternlang.core.module.Path;
 import org.ternlang.core.scope.Scope;
+import org.ternlang.core.stack.StackTrace;
 import org.ternlang.core.stack.ThreadStack;
 import org.ternlang.core.trace.Trace;
 import org.ternlang.core.trace.TraceType;
@@ -51,7 +52,8 @@ public class SuspendInterceptor extends TraceAdapter {
             int depth = progress.currentDepth();
             Context context = module.getContext();
             ThreadStack stack = context.getStack();
-            Function function = stack.current(); // we can determine the function type
+            StackTrace frame = stack.trace();
+            Function function = frame.current(); // we can determine the function type
             String path = ResourceExtractor.extractResource(resource);
             ThreadStackGenerator generator = new ThreadStackGenerator(stack);
             String threads = generator.generate();
@@ -90,7 +92,8 @@ public class SuspendInterceptor extends TraceAdapter {
             int depth = progress.currentDepth();
             Context context = module.getContext();
             ThreadStack stack = context.getStack();
-            Function function = stack.current(); // we can determine the function type
+            StackTrace frame = stack.trace();
+            Function function = frame.current(); // we can determine the function type
             String path = ResourceExtractor.extractResource(resource);
             ThreadStackGenerator generator = new ThreadStackGenerator(stack);
             String threads = generator.generate();
