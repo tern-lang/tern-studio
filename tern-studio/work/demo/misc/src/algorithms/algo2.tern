@@ -14,7 +14,7 @@ for(var x in 0..4){
    println(r);
 }
 
-time(() -> fib(30));
+time(() -> fib(40));
 
 // for(var x in 0..3){
 //    time(->fib(30));

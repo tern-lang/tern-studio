@@ -73,8 +73,8 @@ class GamePanel extends JPanel with Runnable {
       try {
          manager = new GameLoader();
          renderer = new GameRenderer();
-         renderer.setBackground(ImageManipulator.loadImage("/mario/backgrounds/background2.png"));
-         //renderer.setBackground(ImageManipulator.loadImage("/mario/backgrounds/Icy_Background.png"));
+         //renderer.setBackground(ImageManipulator.loadImage("/mario/backgrounds/background2.png"));
+         renderer.setBackground(ImageManipulator.loadImage("/mario/backgrounds/Icy_Background.png"));
          //renderer.setBackground(ImageManipulator.loadImage("/mario/backgrounds/swamp_background.png"));
          map = manager.loadMap("/mario/maps/map4.txt", SM_22050_Hz); // use the ResourceManager to load the game map
          //backgroundMap = manager.loadOtherMaps("backgroundMap.txt");

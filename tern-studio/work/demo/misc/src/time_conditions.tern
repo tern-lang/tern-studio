@@ -1,9 +1,18 @@
 function time(name, func){
-   var s = System.currentTimeMillis();
-   func();
-   var f = System.currentTimeMillis();
-   println(name +": "+(f-s));
+   //Thread(-> {
+      //println(Thread.currentThread().name);
+      var s = System.currentTimeMillis();
+      func();
+      var f = System.currentTimeMillis();
+      println(name +": "+(f-s));
+      try{
+         func.blah();
+      } catch(e){
+         e.printStackTrace();
+      }
+   //}).start();
 }
+
 const ITERATIONS = 10000000;
 /*
 if{}: 2626
@@ -15,6 +24,11 @@ if{}: 821
 if: 745
 if{}: 655
 if: 577
+
+if{}: 601
+if: 590
+if{}: 481
+if: 481
 */
 time("if{}",->{
    var x=0;
@@ -46,3 +60,5 @@ time("if",->{
          x++;
    
 });
+
+sleep(10000);

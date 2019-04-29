@@ -12,6 +12,13 @@ function test(i){
 var expression = x->x>0;
 var compound = x->{return x>0;};
 
+/*
+i>-1: 466
+test(i): 3652
+expression(i): 3757
+compound(i): 3706
+*/
+
 time("i>-1", ->{
    for(var i = 0; i < 10000000; i++){
       assert i >-1;

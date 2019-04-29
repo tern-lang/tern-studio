@@ -1,9 +1,6 @@
 package org.ternlang.studio.common.resource.display;
 
-import static java.util.Collections.EMPTY_MAP;
-
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.simpleframework.xml.Element;
@@ -107,11 +104,17 @@ public class DisplayDefinition {
       DisplayDefinition definition = new DisplayDefinition(defaultFonts, DEFAULT_THEME, DEFAULT_LOGO, DEFAULT_FONT, DEFAULT_SIZE, DEFAULT_CAPACITY);
 
       defaultFonts.put("Consolas", "Consolas");
-      defaultFonts.put("Lucida Console", "Lucida Console");
-      defaultFonts.put("Courier New", "Courier New");
       defaultFonts.put("Courier", "Courier");
-      defaultFonts.put("Menlo", "Menlo");
+      defaultFonts.put("Courier New", "Courier New");
+      defaultFonts.put("Deja Vu", "Deja Vu");
+      defaultFonts.put("Hack", "Hack");
+      defaultFonts.put("Lucida Console,Menlo", "Lucida Console");
+      defaultFonts.put("Menlo,Lucida Console", "Menlo");
       defaultFonts.put("Monaco", "Monaco");
+      defaultFonts.put("Oxygen Mono", "Oxygen Mono");
+      defaultFonts.put("Roboto Mono", "Roboto Mono");
+      defaultFonts.put("Source Code Pro", "Source Code Pro");
+      defaultFonts.put("Ubuntu Mono", "Ubuntu Mono");
 
       if(!defaultFonts.containsKey(DEFAULT_FONT)) {
          throw new IllegalStateException("Default font '" + DEFAULT_FONT+ "' not available");

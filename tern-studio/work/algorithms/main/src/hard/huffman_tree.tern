@@ -1,6 +1,8 @@
 
 // https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
 
+import text.DecimalFormat;
+
 const root = "C:\\Work\\development\\tern-lang\\tern-studio\\tern-studio\\work\\algorithms";
 const path = "main\\src\\hard\\huffman_tree.tern";
 const file = "${root}\\${path}";
@@ -97,14 +99,22 @@ class CharCount {
 
 class FileIndexer {
 
+   static const format = DecimalFormat("###,###,###,###,###,###");
+
    index(file): Iterator<CharCount> {
+      const length = File(file).length();
       const reader = File(file).reader();
       const count = {:};
-      
+      let i = 0.0;
+
       while(reader.ready) {
          const next = reader.read();
          const value = count[next] ?? 0;
-         
+
+         if(i++ % 1000000 == 0) {
+            print("\n");
+            print(Math.floor((i / length) * 100.0) + "% -  " + format.format(i-1));
+         }         
          count[next] = value+1;
       }
       return count.entrySet()

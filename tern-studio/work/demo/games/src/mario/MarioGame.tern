@@ -1,5 +1,5 @@
 
-import static lang.Integer.*; // static import
+ import static lang.Integer.*; // static import
 
 import mario.core.GameFrame;
 import mario.core.GamePanel;
