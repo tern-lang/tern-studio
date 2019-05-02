@@ -28,7 +28,7 @@ import mario.util.Digest;
     <li>don't play a sound if more than, say, 500ms has passed
         since the request to play
     </ul>
-*/
+*/ 
 
 class SoundManager extends ThreadPool {
 
@@ -58,11 +58,6 @@ class SoundManager extends ThreadPool {
         localLine = new ThreadLocal();
         localBuffer = new ThreadLocal();
         pausedLock = new Object();
-        
-        // notify threads in pool it's ok to start
-        synchronized (this) {
-            notifyAll();
-        }
     }
 
     /**
@@ -84,47 +79,12 @@ class SoundManager extends ThreadPool {
         Does any clean up before closing.
     */
     public cleanUp() {
-        // signal to unpause
-        setPaused(false);
 
         // close the mixer (stops any running sounds)
         var mixer = AudioSystem.getMixer(null);
         if (mixer.isOpen()) {
             mixer.close();
         }
-    }
-
-
-    public close() {
-        cleanUp();
-        super.close();
-    }
-
-    public join() {
-        cleanUp();
-        super.join();
-    }
-
-    /**
-        Sets the paused state. Sounds may not pause immediately.
-    */
-    public setPaused(paused) {
-        if (this.paused != paused) {
-            synchronized (pausedLock) {
-                this.paused = paused;
-                if (!paused) {
-                    // restart sounds
-                    pausedLock.notifyAll();
-                }
-            }
-        }
-    }
-
-    /**
-        Returns the paused state.
-    */
-    public isPaused() {
-        return paused;
     }
 
     /**
@@ -255,14 +215,6 @@ class SoundManager extends ThreadPool {
         Thread's line and buffer.
     */
     public threadStarted() {
-        // wait for the SoundManager constructor to finish
-        synchronized (this) {
-            try {
-                wait();
-            }
-            catch (e) { }
-        }
-
         // use a short, 100ms (1/10th sec) buffer for filters that
         // change in real-time
         var bufferSize = playbackFormat.getFrameSize() * Math.round(playbackFormat.getSampleRate() / 10);
