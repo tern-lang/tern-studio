@@ -106,17 +106,20 @@ class FileIndexer {
       const reader = File(file).reader();
       const count = {:};
       let i = 0.0;
+      let s = System.currentTimeMillis();
 
       while(reader.ready) {
          const next = reader.read();
          const value = count[next] ?? 0;
 
          if(i++ % 1000000 == 0) {
+            let per = (i+1)/(System.currentTimeMillis()-s);
             print("\n");
-            print(Math.floor((i / length) * 100.0) + "% -  " + format.format(i-1));
+            print(Math.floor((i / length) * 100.0) + "% -  " + format.format(i-1) + " -> "+Math.round(per));
          }         
          count[next] = value+1;
       }
+      println(System.currentTimeMillis()-s);
       return count.entrySet()
          .stream()
          .map(e -> CharCount(e.key, e.value))

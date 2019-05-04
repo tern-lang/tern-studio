@@ -9,9 +9,10 @@ code can be done by setting break points.
 Download - [http://tern-lang.org/ternd.zip](http://tern-lang.org/ternd.zip)
 
 #### Debug Android Game
-[![Debug Android Game](http://img.youtube.com/vi/w-baBQbZ5dI/0.jpg)](https://www.youtube.com/watch?v=w-baBQbZ5dI)
+[![Debug Android Game](http://img.youtube.com/vi/oJoTgxaNs8I/0.jpg)](https://www.youtube.com/watch?v=oJoTgxaNs8I)
+
 #### Debug Desktop Game
-[![Debug Desktop Game](http://img.youtube.com/vi/6vo2y83unG0/0.jpg)](https://www.youtube.com/watch?v=6vo2y83unG0)
+[![Debug Desktop Game](http://img.youtube.com/vi/yK4ZyIS3w9o/0.jpg)](https://www.youtube.com/watch?v=yK4ZyIS3w9o)
 
 Below are some screenshots of the development environment. 
 

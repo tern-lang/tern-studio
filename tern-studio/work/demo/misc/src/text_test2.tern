@@ -1,1 +1,11 @@
-println(11);
+
+
+class Foo{
+
+
+   new(a): super(a, 1){} // why
+
+
+}
+
+new Foo(1);
