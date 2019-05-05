@@ -50,15 +50,14 @@ public class StudioClientLauncher {
          final File logFile = HomeDirectory.getPath(CLIENT_LOG);
          final File cachePath = HomeDirectory.getPath(CLIENT_CACHE);
          final String title = directory.getCanonicalPath();
-         final ClientContext context = ClientContext.builder()
-            .logFile(logFile)
-            .cachePath(cachePath)
-            .folder(path)
-            .debug(debug)            
-            .host(host)
-            .port(port)            
-            .title(title)
-            .build();
+         final ClientContext context = new ClientContext()
+            .setLogFile(logFile)
+            .setCachePath(cachePath)
+            .setFolder(path)
+            .setDebug(debug)            
+            .setHost(host)
+            .setPort(port)            
+            .setTitle(title);
          
          ProgressManager.getProgress().update("Creating client");
          context.validate();

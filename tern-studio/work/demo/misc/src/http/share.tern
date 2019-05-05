@@ -1,6 +1,7 @@
 import org.simpleframework.http.Status;
+import org.simpleframework.http.Request;
 import text.SimpleDateFormat;
-import http.Server;
+import http.server.Server;
 
 class FileSystem {
    
@@ -17,12 +18,70 @@ class FileSystem {
     
       println(req);
     
+      if(normal.equals("/upload")) {
+         if(req.method.equals("POST")) {
+            handleUploadFile(req, resp);
+         } else {
+            handleShowUploadPage(req, resp);
+         }
+      }
       if(file.isDirectory()){
          handleDirectory(req, resp,file);
       } else {
          handleFile(req, resp, file);
       }
       resp.close();
+   }
+   
+   handleUploadFile(req, resp) {
+      let list = req.getParts();
+      
+      for(part in list) {
+         let name = part.getFileName();
+         
+         if(name) {
+            let root = File("c:/Work/temp/upload");
+            
+            root.mkdirs();
+            System.err.println(name);
+            System.err.println(root.canonicalPath);
+            
+            let path = File(root.canonicalPath, name);
+            let data = part.getInputStream();
+            let output = FileOutputStream(path);
+            
+            data.copyTo(output);
+            output.close();
+         }
+      }
+      let page = "<html>
+         <body>
+         <h1>File Uploaded</h1>
+         <pre>${req}</pre>
+         </body>
+         </html>";
+         
+      resp.setStatus(Status.OK);
+      resp.setValue("Content-Type", "text/html");         
+      resp.getPrintStream().println(page);
+      resp.getPrintStream().close();      
+   }
+   
+   handleShowUploadPage(req, resp){
+      let page = "<html>
+         <body>
+         <form action='/upload' method='post' enctype='multipart/form-data'>
+         Select image to upload:
+         <input type='file' name='fileToUpload' id='fileToUpload'>
+         <input type='submit' value='Upload Image' name='submit'>
+         </form>
+         </body>
+         </html>";
+         
+      resp.setStatus(Status.OK);
+      resp.setValue("Content-Type", "text/html");         
+      resp.getPrintStream().println(page);
+      resp.getPrintStream().close();
    }
    
    handleDirectory(req, resp, file){
