@@ -17,10 +17,19 @@ public class VersionValue extends ManifestValue {
 
    @Override
    public String getValue() {
-      Attributes.Name key = new Attributes.Name(IMPLEMENTATION_VERSION);
       Manifest manifest = getManifest();
-      String version = (String)manifest.getMainAttributes().get(key);
+      return getValue(manifest);
+   }
 
-      return version == null ? DEFAULT_VERSION : version;
+   public static String getValue(Manifest manifest) {
+      Attributes.Name key = new Attributes.Name(IMPLEMENTATION_VERSION);
+
+      if(manifest != null) {
+         Attributes attributes = manifest.getMainAttributes();
+         String version = (String) attributes.get(key);
+
+         return version == null ? DEFAULT_VERSION : version;
+      }
+      return DEFAULT_VERSION;
    }
 }
