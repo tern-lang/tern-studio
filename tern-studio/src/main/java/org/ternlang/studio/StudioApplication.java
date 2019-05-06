@@ -56,6 +56,7 @@ public class StudioApplication {
          if(mainClass == null || isForkDisabled) {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", ABOUT_NAME);
+            DeploymentManager.deploy(DEPLOY_PATH, mainClass, list);
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             SplashScreen.getPanel().show(60000); // 1 minute
             SplashScreen.getPanel().update("Tern Studio " + version);
