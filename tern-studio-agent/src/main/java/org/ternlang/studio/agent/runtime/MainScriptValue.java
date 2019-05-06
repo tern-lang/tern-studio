@@ -1,22 +1,22 @@
 package org.ternlang.studio.agent.runtime;
 
-import static org.ternlang.studio.agent.runtime.RuntimeAttribute.SCRIPT;
+import static org.ternlang.studio.agent.runtime.RuntimeAttribute.MAIN_SCRIPT;
 
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 public class MainScriptValue extends ManifestValue {
 
-   public static final String MAIN_SCRIPT = "Main-Script";
+   public static final String APPLICATION_SCRIPT = "Main-Script";
 
    @Override
    public String getName() {
-      return SCRIPT.name;
+      return MAIN_SCRIPT.name;
    }
 
    @Override
    public String getValue() {
-      Attributes.Name key = new Attributes.Name(MAIN_SCRIPT);
+      Attributes.Name key = new Attributes.Name(APPLICATION_SCRIPT);
       Manifest manifest = getManifest();
 
       return (String)manifest.getMainAttributes().get(key);

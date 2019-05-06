@@ -1,19 +1,18 @@
 package org.ternlang.studio.service;
 
-import static java.util.Collections.EMPTY_LIST;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import org.ternlang.core.module.Path;
 import org.ternlang.studio.agent.cli.CommandLineBuilder;
 import org.ternlang.studio.agent.cli.CommandOption;
 import org.ternlang.studio.agent.log.LogLevel;
 import org.ternlang.studio.project.HomeDirectory;
 import org.ternlang.studio.project.ProjectMode;
-import org.ternlang.ui.ClientEngine;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import static java.util.Collections.EMPTY_LIST;
 
 public enum StudioOption implements CommandOption {
    AGENT_POOL("n", "agent-pool", "Number of agents in pool", "\\d+", Integer.class, 4),
@@ -24,7 +23,6 @@ public enum StudioOption implements CommandOption {
    LOG("f", "log-file", "Log file to use", ".+", File.class, "${user.home}/" + HomeDirectory.HOME_DIRECTORY + "/log/ternd.log"),
    SCRIPT("s", "script", "Script to launch", ".*.tern", Path.class),
    SERVER_ONLY("o", "server-only", "Launch server only", "(true|false)", Boolean.class, false),
-   BROWSER_ENGINE("e", "browser-engine", "Browser engine to use", "(JAVAFX|CEF)", String.class, ClientEngine.CEF),
    CLIENT_DEBUG("i", "client-debug", "Enable client debugger", "(true|false)", String.class, false); // firebug
 
    public final Pattern pattern;

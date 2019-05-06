@@ -32,6 +32,7 @@ import org.codehaus.plexus.util.StringUtils;
 import org.ternlang.core.type.extend.FileExtension;
 import org.ternlang.studio.agent.local.LocalJarProcess;
 import org.ternlang.studio.agent.local.LocalProcess;
+import org.ternlang.studio.agent.runtime.MainScriptValue;
 import org.ternlang.studio.project.generate.ClassPathConfigFile;
 import org.ternlang.studio.project.generate.ClassPathFileGenerator;
 import org.springframework.core.io.Resource;
@@ -107,7 +108,7 @@ public class ArchiveBuilder {
       manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
       
       if(!StringUtils.isBlank(mainScript)) {
-         Attributes.Name mainScriptKey = new Attributes.Name(LocalJarProcess.MAIN_SCRIPT);
+         Attributes.Name mainScriptKey = new Attributes.Name(MainScriptValue.APPLICATION_SCRIPT);
          
          manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, LocalJarProcess.class.getName());  
          manifest.getMainAttributes().put(mainScriptKey, mainScript);  

@@ -8,6 +8,7 @@ public class RuntimeState {
            ProcessUserValue.class,
            OperatingSystemValue.class,
            MainScriptValue.class,
+           MainClassValue.class,
            VersionValue.class
    );
 

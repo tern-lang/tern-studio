@@ -1,8 +1,7 @@
 package org.ternlang.studio.service;
 
-import java.io.File;
-import java.util.concurrent.atomic.AtomicReference;
-
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.ternlang.studio.common.ProgressManager;
@@ -10,11 +9,10 @@ import org.ternlang.studio.project.HomeDirectory;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.ui.ClientContext;
 import org.ternlang.ui.ClientControl;
-import org.ternlang.ui.ClientEngine;
 import org.ternlang.ui.ClientProvider;
 
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Component
@@ -43,7 +41,7 @@ public class StudioClientLauncher {
    }
 
    @SneakyThrows
-   public void launch(final ClientEngine engine, final String host, final int port) {
+   public void launch(final String host, final int port) {
       if(!disabled) {
          final File root = HomeDirectory.getRootPath();
          final String path = root.getCanonicalPath();
@@ -66,13 +64,13 @@ public class StudioClientLauncher {
             @Override
             public void run() {
                try {
-                  ClientControl control = ClientProvider.provide(engine).show(context);
+                  ClientControl control = ClientProvider.provide().show(context);
                   SplashPanel panel = SplashScreen.getPanel();
                   
                   panel.dispose();
                   reference.set(control);
                } catch(Exception e) {
-                  log.info("Could not show {} screen", engine, e);
+                  log.info("Could not show client", e);
                }
             }
          });

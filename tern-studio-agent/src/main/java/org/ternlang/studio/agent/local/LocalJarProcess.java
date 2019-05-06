@@ -10,8 +10,6 @@ import org.ternlang.studio.agent.runtime.RuntimeAttribute;
 
 public class LocalJarProcess {
    
-   public static final String MAIN_SCRIPT = "Main-Script";
-   
    public static void main(String[] arguments) throws Exception {
       CommandLineBuilder builder = LocalOption.getBuilder();
       CommandLine line = builder.build(arguments);
@@ -21,7 +19,7 @@ public class LocalJarProcess {
       if(path == null) {
          String[] empty = new String[]{};
          List<String> expanded = new ArrayList<String>();
-         String script = RuntimeAttribute.SCRIPT.getValue();
+         String script = RuntimeAttribute.MAIN_SCRIPT.getValue();
          
          for(String argument : arguments) {
             expanded.add(argument);

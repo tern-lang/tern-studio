@@ -1,8 +1,9 @@
 package org.ternlang.studio.agent.runtime;
 
 public enum RuntimeAttribute {
+   MAIN_CLASS("main-class"),
+   MAIN_SCRIPT("main-script"),
    VERSION("version"),
-   SCRIPT("script"),
    PID("pid"),
    HOST("host"),
    USER("user"),
