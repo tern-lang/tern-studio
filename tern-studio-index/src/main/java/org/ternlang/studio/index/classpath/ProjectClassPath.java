@@ -40,7 +40,6 @@ public class ProjectClassPath {
             List<IndexNode> list = new ArrayList<IndexNode>();
             Map<String, IndexNode> map = new HashMap<String, IndexNode>();
             ClassIndexNodePath path = new MapIndexNodePath(map);
-            ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
             Iterator<ClassInfo> infos = new ClassGraph()
                     .enableAllInfo()
                     .disableDirScanning()

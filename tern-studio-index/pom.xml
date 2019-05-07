@@ -55,6 +55,7 @@
         <configuration>
           <source>8</source>
           <target>8</target>
+          <argLine>-XX:+IgnoreUnrecognizedVMOptions --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED</argLine>          
         </configuration>
       </plugin>
       <plugin>
