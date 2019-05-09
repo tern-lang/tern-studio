@@ -6,7 +6,11 @@ play button. This will initiate a bootstrapping process where the interpreter is
 this bootstrapping process has completed the source program is downloaded and executed. Stepping through the
 code can be done by setting break points.
 
-Download - [http://tern-lang.org/ternd.zip](http://tern-lang.org/ternd.zip)
+| Platform      | Description   | Download   |
+| ------------- | ------------- | ------ |
+| Windows      | This build uses Chrome Embedded Framework compatible with 64-bit Windows  | [Download](http://tern-lang.org/download/ternd-windows.zip)   |
+| Linux      | This build uses Chrome Embedded Framework compatible with 64-bit Linux  | [Download](http://tern-lang.org/download/ternd-linux.tar.gz)   |
+| Mac      | This build uses Chrome Embedded Framework compatible with 64-bit Mac  | [Download](http://tern-lang.org/download/ternd-mac.zip)   |
 
 #### Debug Android Game
 [![Debug Android Game](http://img.youtube.com/vi/oJoTgxaNs8I/0.jpg)](https://www.youtube.com/watch?v=oJoTgxaNs8I)

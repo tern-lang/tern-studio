@@ -11,7 +11,12 @@ class TableRowElement extends HtmlElement {
       b.println("${indent}<tr>");
       
       for(value in values){
-         b.println("${indent}   <td>${value}</td>");
+         let element = TextElement(value);
+         
+         b.println("${indent}   <td>");
+         element.render(indent, b);
+         b.println();
+         b.println("${indent}</td>");
       }
       b.println("${indent}</tr>");
    }

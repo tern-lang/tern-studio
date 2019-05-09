@@ -8,4 +8,4 @@ class Foo{
 
 }
 
-new Foo(1);
+println(new Foo(1));
