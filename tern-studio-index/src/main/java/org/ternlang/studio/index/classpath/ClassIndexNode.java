@@ -1,19 +1,10 @@
 package org.ternlang.studio.index.classpath;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ClassInfoList;
-import io.github.classgraph.FieldInfo;
-import io.github.classgraph.FieldInfoList;
-import io.github.classgraph.MethodInfo;
-import io.github.classgraph.MethodInfoList;
 import org.ternlang.studio.index.IndexNode;
 import org.ternlang.studio.index.IndexType;
 
@@ -57,7 +48,7 @@ public class ClassIndexNode implements IndexNode {
             return file.getName();
          } catch(Throwable e) {}
       }
-      return "?";
+      return getURL();
    }
 
    @Override
@@ -69,11 +60,20 @@ public class ClassIndexNode implements IndexNode {
             return file.getCanonicalPath();
          } catch(Throwable e) {}
       }
-      return "?";
+      return getURL();
+   }
+
+   private String getURL() {
+      return info.getClasspathElementURL().toString();
    }
 
    public File getFile() {
-      return info.getClasspathElementFile();
+      File file = info.getClasspathElementFile();
+      
+      if (file == null) {
+         return SystemClassPath.findModuleBase(info);
+      }
+      return file;
    }
 
    @Override

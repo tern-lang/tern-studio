@@ -1,5 +1,6 @@
 package org.ternlang.studio.index.classpath;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +28,8 @@ public class SystemClassPath {
    private static final Map<String, IndexNode> DEFAULT_NODES = new ConcurrentHashMap<String, IndexNode>();
    private static final Map<String, IndexNode> DEFAULT_NODES_BY_TYPE = new ConcurrentHashMap<String, IndexNode>();
    private static final Map<String, IndexNode> DEFAULT_NODES_BY_NAME = new ConcurrentHashMap<String, IndexNode>();
+   private static final Map<String, File> BASE_PATH_BY_NAME = new ConcurrentHashMap<String, File>();
+   private static final Map<String, File> BASE_PATH_BY_MODULE = new ConcurrentHashMap<String, File>();
    private static final String[][] PRIMITIVE_TYPES = new String[][] {
       new String[]{"java.lang.Integer", "int"},
       new String[]{"java.lang.Byte", "byte"},
@@ -121,6 +124,44 @@ public class SystemClassPath {
       DEFAULT_NODES.putAll(DEFAULT_NODES_BY_NAME);
       SYSTEM_NODES_BY_TYPE.putAll(map);
       SYSTEM_NODES.addAll(nodes);
+   }
+   
+   public static File findModuleBase(ClassInfo info) {
+      String name = info.getName();
+      return BASE_PATH_BY_NAME.computeIfAbsent(name, (key) -> buildModuleBasePath(info));
+   }
+
+   public static File findModuleBase(String module) {
+      return BASE_PATH_BY_MODULE.computeIfAbsent(module, (key) -> buildModuleBasePath(module));
+   }
+
+   private static File buildModuleBasePath(ClassInfo info) {
+      try {
+         String module = info.getClasspathElementURL().toString();
+
+         if(module.startsWith("jrt:")) {
+            return buildModuleBasePath(module);
+         }
+      } catch (Exception e) {}
+      return null;
+   }
+
+   private static File buildModuleBasePath(String module) {
+      try {
+         String home = System.getProperty("java.home");
+         File prefix = new File(home, "src");
+
+         if(prefix.exists()) {
+            int length = module.length();
+            String suffix = module.substring(4, length);
+            File file = new File(prefix, suffix);
+
+            if(file.exists()) {
+               return file;
+            }
+         }
+      } catch (Exception e) {}
+      return null;
    }
 
    @AllArgsConstructor
