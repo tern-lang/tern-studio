@@ -55,7 +55,14 @@ export module Command {
                   var className = typesFound[i].name;
                   
                   resourceLink += '#' + createLinkForJavaResource(typesFound[i].extra, packageName + "." + className);
-               } else {
+               }
+               else if(isJavaModule(typesFound[i].extra, typesFound[i].resource)) { // java internal module
+                  var packageName = typesFound[i].module;
+                  var className = typesFound[i].name;
+
+                  resourceLink += '#' + createLinkForJavaModule(typesFound[i].extra, packageName + "." + className);
+               }
+               else {
                   resourceLink += "#" + FileTree.cleanResourcePath(typesFound[i].resource);
                }
                var typeCell = {
@@ -76,7 +83,15 @@ export module Command {
          });
      }, null, "Search Types");  
    }
-   
+
+   function isJavaModule(libraryPath, moduleName) {
+     if(libraryPath) {
+        return Common.stringStartsWith(moduleName, "java.") ||
+               Common.stringStartsWith(moduleName, "jdk.");
+     }
+     return false;
+   }
+
    function isJavaResource(libraryPath) {
       return libraryPath && Common.stringEndsWith(libraryPath, ".jar");
    }
@@ -87,6 +102,14 @@ export module Command {
       var typeName = createTypeNameFromFullClassName(className);
       
       return "/decompile/" + jarFile + "/" + packageName + "/" + typeName + ".java";
+   }
+
+   function createLinkForJavaModule(libraryPath, className) {
+      var moduleBase = Common.stringReplaceText(libraryPath, "\\", "/")
+      var packageName = createPackageNameFromFullClassName(className);
+      var typeName = createTypeNameFromFullClassName(className);
+
+      return "/decompile/" + moduleBase + "/" + packageName + "/" + typeName + ".java";
    }
 
    function createPackageNameFromFullClassName(className) {

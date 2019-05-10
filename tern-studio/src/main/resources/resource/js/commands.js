@@ -35,6 +35,11 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                             var className = typesFound[i].name;
                             resourceLink += '#' + createLinkForJavaResource(typesFound[i].extra, packageName + "." + className);
                         }
+                        else if (isJavaModule(typesFound[i].extra, typesFound[i].resource)) {
+                            var packageName = typesFound[i].module;
+                            var className = typesFound[i].name;
+                            resourceLink += '#' + createLinkForJavaModule(typesFound[i].extra, packageName + "." + className);
+                        }
                         else {
                             resourceLink += "#" + tree_1.FileTree.cleanResourcePath(typesFound[i].resource);
                         }
@@ -57,6 +62,13 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
             }, null, "Search Types");
         }
         Command.searchTypes = searchTypes;
+        function isJavaModule(libraryPath, moduleName) {
+            if (libraryPath) {
+                return common_1.Common.stringStartsWith(moduleName, "java.") ||
+                    common_1.Common.stringStartsWith(moduleName, "jdk.");
+            }
+            return false;
+        }
         function isJavaResource(libraryPath) {
             return libraryPath && common_1.Common.stringEndsWith(libraryPath, ".jar");
         }
@@ -65,6 +77,12 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
             var packageName = createPackageNameFromFullClassName(className);
             var typeName = createTypeNameFromFullClassName(className);
             return "/decompile/" + jarFile + "/" + packageName + "/" + typeName + ".java";
+        }
+        function createLinkForJavaModule(libraryPath, className) {
+            var moduleBase = common_1.Common.stringReplaceText(libraryPath, "\\", "/");
+            var packageName = createPackageNameFromFullClassName(className);
+            var typeName = createTypeNameFromFullClassName(className);
+            return "/decompile/" + moduleBase + "/" + packageName + "/" + typeName + ".java";
         }
         function createPackageNameFromFullClassName(className) {
             return className.substring(0, className.lastIndexOf('.'));
