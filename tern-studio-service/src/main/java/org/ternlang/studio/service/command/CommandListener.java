@@ -1,6 +1,7 @@
 package org.ternlang.studio.service.command;
 
 import java.io.File;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.simpleframework.common.encode.Base64Encoder;
 import org.simpleframework.http.Path;
+import org.simpleframework.http.parse.AddressParser;
 import org.simpleframework.http.socket.FrameChannel;
 import org.ternlang.common.command.CommandBuilder;
 import org.ternlang.common.command.Console;
@@ -64,11 +66,11 @@ public class CommandListener {
          FrameChannel frameChannel, 
          BackupManager backupManager, 
          TreeContextManager treeManager, 
+         CommandFilter commandFilter,
          Project project,
          Path path, 
          String cookie) 
    {
-      this.commandFilter = new CommandFilter();
       this.commandClient = new CommandClient(frameChannel, project);
       this.forwarder = new CommandEventForwarder(commandClient, commandFilter, project);
       this.lastModified = new AtomicLong(project.getModificationTime());
@@ -83,6 +85,7 @@ public class CommandListener {
       this.backupManager = backupManager;
       this.processManager = processManager;
       this.debugService = debugService;
+      this.commandFilter = commandFilter;
       this.project = project;
       this.cookie = cookie;
       this.path = path;
@@ -90,9 +93,27 @@ public class CommandListener {
 
    public void onLaunch(LaunchCommand command) {
       String address = command.getAddress();
+      String session = command.getSession();
 
       try {
-         clientLauncher.launch(address);
+         if(session != null) {
+            URI target = URI.create(address);
+            String host = target.getHost();
+            String path = target.getPath();
+            String query = target.getRawQuery();
+            int port = target.getPort();
+
+            // this is a hack job for session
+            if(port != -1 && port != 0 && port != 80) {
+               String redirect = String.format("http://%s:%s/session/%s%s?%s", host, port, session, path, query);
+               clientLauncher.launch(redirect);
+            } else {
+               String redirect = String.format("http://%s/session/%s%s?%s", host, session, path, query);
+               clientLauncher.launch(redirect);
+            }
+         } else {
+            clientLauncher.launch(address);
+         }
       } catch(Exception e) {
          log.info("Error launching window " + address, e);
       }

@@ -8,9 +8,15 @@ import org.ternlang.studio.agent.event.ProcessEventFilter;
 public class CommandFilter implements ProcessEventFilter {
 
    private final AtomicReference<String> attachment;
-   
-   public CommandFilter() {
+   private final String session;
+
+   public CommandFilter(String session) {
       this.attachment = new AtomicReference<String>();
+      this.session = session;
+   }
+
+   public String getSession(){
+      return session;
    }
    
    @Override

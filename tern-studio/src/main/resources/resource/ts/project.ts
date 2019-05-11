@@ -59,38 +59,34 @@ export module Project {
    export function openDialogWindow(name, tabs) {
       var address = "/project/" + Common.getProjectName() + ";dialog?visible=" + name;
       var dialog = Command.openChildWindow(address, name);
+      var tabList = w2ui[tabs].panels[0].tabs.tabs;
       var title = document.title;
 
-      if(dialog) {
-         var tabList = w2ui[tabs].panels[0].tabs.tabs;
-
-         if(tabList.length <= 2) {
-            for(var i = 0; i < tabList.length; i++) {
-                var tab = tabList[i];
-
-                if(tab) {
-                    tab.closable = false;
-                }
-            }
-         }
-         for(var i = 0; i < tabList.length; i++) {
+     if(tabList.length <= 2) {
+        for(var i = 0; i < tabList.length; i++) {
             var tab = tabList[i];
 
-            if(!tab.hidden && !Common.stringStartsWith(tab.id, name)) {
-              var perspective = determineProjectLayout();
-
-              if (perspective != "dialog") {
-                  if (perspective == "debug") {
-                     w2ui['debugBottomTabLayout_main_tabs'].click(tab.id);
-                  } else {
-                     w2ui['exploreBottomTabLayout_main_tabs'].click(tab.id);
-                  }
-              }
-              break;
+            if(tab) {
+                tab.closable = false;
             }
-         }
-      }
-      return dialog;
+        }
+     }
+     for(var i = 0; i < tabList.length; i++) {
+        var tab = tabList[i];
+
+        if(!tab.hidden && !Common.stringStartsWith(tab.id, name)) {
+          var perspective = determineProjectLayout();
+
+          if (perspective != "dialog") {
+              if (perspective == "debug") {
+                 w2ui['debugBottomTabLayout_main_tabs'].click(tab.id);
+              } else {
+                 w2ui['exploreBottomTabLayout_main_tabs'].click(tab.id);
+              }
+          }
+          break;
+        }
+     }
    }
 
    export function showProblemsTab() {
@@ -1087,11 +1083,11 @@ export module Project {
                tabs : [ {
                   id : 'consoleTab',
                   caption : '<div class="consoleTab" id="consoleTabTitle">Console</div>',
-                  closable: true
+                  closable: false
                }, {
                   id : 'problemsTab',
                   caption : '<div class="problemsTab" id="problemsTabTitle">Problems</div>',
-                  closable: true
+                  closable: false
                }, {
                   id : 'breakpointsTab',
                   caption : '<div class="breakpointsTab" id="breakpointsTabTitle">Breakpoints</div>',
@@ -1099,28 +1095,30 @@ export module Project {
                }, {
                   id : 'threadsTab',
                   caption : '<div class="threadTab" id="threadTabTitle">Threads</div>',
-                  closable: true
+                  closable: false
                }, {
                   id : 'variablesTab',
                   caption : '<div class="variableTab" id="variableTabTitle">Variables</div>',
-                  closable: true
+                  closable: false
                }, {
                   id : 'profilerTab',
                   caption : '<div class="profilerTab" id="profilerTabTitle">Profiler</div>',
-                  closable: true
+                  closable: false
                }, {
                   id : 'debugTab',
                   caption : '<div class="debugTab" id="debugTabTitle">Debug&nbsp;&nbsp;</div>',
-                  closable: true
+                  closable: false
                }, {
                   id : 'historyTab',
                   caption : '<div class="historyTab" id="historyTabTitle">History&nbsp;&nbsp;</div>',
-                  closable: true
+                  closable: false
                } ],
-               onClose: function(event) {
-                  openDialogWindow(event.target.replace("Tab", ""), "exploreBottomTabLayout");
-               },
                onClick : function(event) {
+                  var tabName = event.target.replace("Tab", "");
+
+                  clickOnTab(tabName, function() {
+                     openDialogWindow(tabName, "exploreBottomTabLayout");
+                  });
                   activateTab(event.target, "exploreBottomTabLayout", false, false, "style='right: 0px;'");
                },
                onRender: function(event) {

@@ -38,6 +38,21 @@ define(["require", "exports", "jquery", "w2ui"], function (require, exports, $, 
             return results[1];
         }
         Common.extractParameter = extractParameter;
+        function extractCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        Common.extractCookie = extractCookie;
         function decodeValue(value) {
             if (value.length > 0) {
                 var result = '@' + value; // ensure we do not reference larger parent string

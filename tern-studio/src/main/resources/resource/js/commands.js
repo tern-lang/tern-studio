@@ -8,13 +8,15 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
             var port = window.document.location.port;
             var scheme = window.document.location.protocol;
             var address = scheme + "//" + host;
+            var session = common_1.Common.extractCookie("SESSID"); // hardcoded :(
             if ((port - parseFloat(port) + 1) >= 0) {
                 address += ":";
                 address += port;
             }
             address += path;
             socket_1.EventBus.sendEvent("LAUNCH", {
-                address: address
+                address: address,
+                session: session
             });
         }
         Command.openChildWindow = openChildWindow;

@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class LaunchCommand implements Command {
 
    private String address;
+   private String session;
 }

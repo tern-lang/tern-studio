@@ -25,14 +25,17 @@ export module Command {
       var port = window.document.location.port;
       var scheme = window.document.location.protocol;
       var address = scheme + "//" + host;
+      var session = Common.extractCookie("SESSID"); // hardcoded :(
 
       if((port - parseFloat(port) + 1) >= 0) {
          address += ":";
          address += port;
       }
       address += path;
+
       EventBus.sendEvent("LAUNCH", {
-         address: address
+         address: address,
+         session: session
       });
    }
    

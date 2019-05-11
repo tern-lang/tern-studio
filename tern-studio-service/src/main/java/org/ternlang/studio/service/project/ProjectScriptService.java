@@ -1,15 +1,21 @@
 package org.ternlang.studio.service.project;
 
 import static org.ternlang.studio.common.resource.SessionConstants.SESSION_ID;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.simpleframework.http.Cookie;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
+import org.simpleframework.http.Response;
 import org.simpleframework.http.socket.FrameChannel;
 import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
 import org.ternlang.common.thread.ThreadPool;
+import org.ternlang.studio.common.resource.SessionConstants;
 import org.ternlang.studio.common.resource.display.DisplayPersister;
 import org.ternlang.studio.project.BackupManager;
 import org.ternlang.studio.project.Project;
@@ -18,7 +24,9 @@ import org.ternlang.studio.service.ConnectListener;
 import org.ternlang.studio.service.ProcessManager;
 import org.ternlang.studio.service.StudioClientLauncher;
 import org.ternlang.studio.service.agent.local.LocalProcessClient;
+import org.ternlang.studio.service.command.Command;
 import org.ternlang.studio.service.command.CommandController;
+import org.ternlang.studio.service.command.CommandFilter;
 import org.ternlang.studio.service.command.CommandListener;
 import org.ternlang.studio.service.tree.TreeContextManager;
 import org.springframework.stereotype.Component;
@@ -27,6 +35,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProjectScriptService implements Service {
 
+   private final ConcurrentMap<String, CommandFilter> commandFilters;
    private final StudioClientLauncher clientLauncher;
    private final DisplayPersister displayPersister;
    private final TreeContextManager treeManager;
@@ -48,6 +57,7 @@ public class ProjectScriptService implements Service {
          LocalProcessClient debugService,
          ThreadPool pool) 
    {
+      this.commandFilters = new ConcurrentHashMap<String, CommandFilter>();
       this.problemFinder = new ProjectProblemFinder(workspace, pool);
       this.displayPersister = displayPersister;
       this.treeManager = treeManager;
@@ -61,19 +71,17 @@ public class ProjectScriptService implements Service {
   
    @Override
    public void connect(Session connection) {
-      Request request = connection.getRequest();    
+      Request request = connection.getRequest();
+      Response response = connection.getResponse();
       Path path = request.getPath(); // /connect/<project-name>
       
       try {
          FrameChannel channel = connection.getChannel();
          Project project = workspace.createProject(path);
-         Cookie cookie = request.getCookie(SESSION_ID);
-         String value = null;
-         
-         if(cookie != null) {
-            value = cookie.getValue();
-         }
+         String value = SessionConstants.findOrCreate(request, response);
+
          try {
+            CommandFilter commandFilter = commandFilters.computeIfAbsent(value, CommandFilter::new);
             CommandListener commandListener = new CommandListener(
                   clientLauncher,
                   processManager, 
@@ -83,6 +91,7 @@ public class ProjectScriptService implements Service {
                   channel, 
                   backupManager, 
                   treeManager,
+                  commandFilter,
                   project,
                   path, 
                   value);
@@ -93,9 +102,8 @@ public class ProjectScriptService implements Service {
          } catch(Exception e) {
             log.info("Could not connect " + path, e);
          }
-      }catch(Exception e){
+      }catch(Exception e) {
          log.info("Error connecting " + path, e);
       }
-      
    }
 }
