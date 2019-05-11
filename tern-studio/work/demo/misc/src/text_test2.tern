@@ -1,8 +1,4 @@
-
-class Bar {
-   foo<A>(a: A): String {
-      println(a);
-   }
+class Foo<T>{
+   dump(a): T {}
 }
-
-new Bar().foo<?, Double>(1.0);
+new Foo<List>().dump(11).size();

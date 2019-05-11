@@ -13,4 +13,5 @@ public class OpenCommand implements Command {
 
    private String resource;
    private String project;
+   private int line;
 }

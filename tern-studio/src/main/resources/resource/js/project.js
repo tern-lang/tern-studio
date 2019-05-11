@@ -929,6 +929,10 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                                     closable: false
                                 }],
                             onClick: function (event) {
+                                var tabName = event.target.replace("Tab", "");
+                                clickOnTab(tabName, function () {
+                                    openDialogWindow(tabName, "exploreLeftTabLayout");
+                                });
                                 activateTab(event.target, "exploreLeftTabLayout", true, false, "style='right: 0px;'");
                             },
                             onRender: function (event) {

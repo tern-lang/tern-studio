@@ -45,7 +45,6 @@ public class CommandSession {
             client.sendCommand(command);
          } catch (Exception e) {
             log.info("Could not send command", e);
-         } finally {
             clients.remove(client);
          }
       }

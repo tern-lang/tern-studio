@@ -3,6 +3,13 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
     var Command;
     (function (Command) {
         var windowHandles = {};
+        function openTreeFile(path) {
+            socket_1.EventBus.sendEvent("OPEN", {
+                project: common_1.Common.getProjectName(),
+                resource: path
+            });
+        }
+        Command.openTreeFile = openTreeFile;
         function openChildWindow(path, name) {
             var host = window.document.location.hostname;
             var port = window.document.location.port;

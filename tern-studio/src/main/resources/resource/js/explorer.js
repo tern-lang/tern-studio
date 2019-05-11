@@ -76,15 +76,23 @@ define(["require", "exports", "jquery", "common", "socket", "tree", "editor", "c
         function showTree() {
             reloadTreeAtRoot();
             socket_1.EventBus.createRoute("RELOAD_TREE", reloadTree);
+            socket_1.EventBus.createRoute("OPEN", openFileNotification);
         }
         FileExplorer.showTree = showTree;
         function reloadTree(socket, type, text) {
             reloadTreeAtRoot();
         }
+        function openFileNotification(socket, type, text) {
+            var message = JSON.parse(text);
+            var resource = message.resource;
+            if (resource) {
+                openTreeFile(resource, function () { });
+            }
+        }
         function reloadTreeAtRoot() {
             tree_1.FileTree.createTree("/" + common_1.Common.getProjectName(), "explorer", "explorerTree", "/.", false, handleTreeMenu, function (event, data) {
                 if (!data.node.isFolder()) {
-                    openTreeFile(data.node.tooltip, function () { });
+                    commands_1.Command.openTreeFile(data.node.tooltip);
                 }
             });
         }

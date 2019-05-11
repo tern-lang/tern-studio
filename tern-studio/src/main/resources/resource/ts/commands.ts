@@ -20,6 +20,13 @@ export module Command {
 
    var windowHandles = {};
 
+   export function openTreeFile(path) {
+      EventBus.sendEvent("OPEN", {
+         project: Common.getProjectName(),
+         resource: path
+      });
+   }
+
    export function openChildWindow(path, name) {
       var host = window.document.location.hostname;
       var port = window.document.location.port;

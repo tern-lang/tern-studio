@@ -108,17 +108,26 @@ export module FileExplorer {
    export function showTree() {
       reloadTreeAtRoot();
       EventBus.createRoute("RELOAD_TREE", reloadTree);
-   
+      EventBus.createRoute("OPEN", openFileNotification);   
    }
    
    function reloadTree(socket, type, text) {
       reloadTreeAtRoot();
    }
    
+   function openFileNotification(socket, type, text) {
+      var message = JSON.parse(text);
+      var resource: string = message.resource;
+      
+      if(resource) {
+         openTreeFile(resource, function(){});
+      }
+   }
+   
    function reloadTreeAtRoot() {
       FileTree.createTree("/" + Common.getProjectName(), "explorer", "explorerTree", "/.", false, handleTreeMenu, function(event, data) {
          if (!data.node.isFolder()) {
-            openTreeFile(data.node.tooltip, function(){});
+         	Command.openTreeFile(data.node.tooltip);
          }
       });
    }
