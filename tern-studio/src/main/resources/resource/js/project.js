@@ -1188,6 +1188,10 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                                     closable: false
                                 }],
                             onClick: function (event) {
+                                var tabName = event.target.replace("Tab", "");
+                                clickOnTab(tabName, function () {
+                                    openDialogWindow(tabName, "debugLeftTabLayout");
+                                });
                                 activateTab(event.target, "debugLeftTabLayout", true, false, "");
                             },
                             onRender: function (event) {
@@ -1224,6 +1228,10 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                                     closable: false
                                 }],
                             onClick: function (event) {
+                                var tabName = event.target.replace("Tab", "");
+                                clickOnTab(tabName, function () {
+                                    openDialogWindow(tabName, "debugRightTabLayout");
+                                });
                                 activateTab(event.target, "debugRightTabLayout", false, false, "");
                             },
                             onRender: function (event) {
@@ -1265,6 +1273,10 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                                     closable: false
                                 }],
                             onClick: function (event) {
+                                var tabName = event.target.replace("Tab", "");
+                                clickOnTab(tabName, function () {
+                                    openDialogWindow(tabName, "debugBottomTabLayout");
+                                });
                                 activateTab(event.target, "debugBottomTabLayout", false, false, "");
                             },
                             onRender: function (event) {
