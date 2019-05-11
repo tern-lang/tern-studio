@@ -63,7 +63,7 @@ export module ProblemManager {
    var currentProblems = {};
    
    export function registerProblems() {
-   	EventBus.createRoute('PROBLEM', updateProblems);
+   	  EventBus.createRoute('PROBLEM', updateProblems);
       setInterval(refreshProblems, 1000); // refresh the problems systems every 1 second
    }
    
@@ -141,7 +141,7 @@ export module ProblemManager {
       }
       if(Common.updateTableRecords(problemRecords, 'problems')) {
          highlightProblems(); // highlight them also      
-         Project.showProblemsTab(); // focus the problems tab
+         //Project.showProblemsTab(); // focus the problems tab
          return true;
       }
       return false;

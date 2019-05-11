@@ -1,1 +1,8 @@
-class Foo{}
+
+class Bar {
+   foo<A>(a: A): String {
+      println(a);
+   }
+}
+
+new Bar().foo<?, Double>(1.0);
