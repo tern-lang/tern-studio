@@ -46,6 +46,7 @@ public class CommandListener {
    private final TreeContextManager treeManager;
    private final CommandFilter commandFilter;
    private final CommandClient commandClient;
+   private final CommandSession commandSession;
    private final ProcessManager processManager;
    private final BackupManager backupManager;
    private final ProblemFinder finder;
@@ -63,16 +64,16 @@ public class CommandListener {
          ProjectProblemFinder problemFinder, 
          DisplayPersister displayPersister,
          LocalProcessClient debugService,
-         FrameChannel frameChannel, 
          BackupManager backupManager, 
          TreeContextManager treeManager, 
-         CommandFilter commandFilter,
+         CommandSession commandSession,
+         CommandClient commandClient,
          Project project,
          Path path, 
          String cookie) 
    {
-      this.commandClient = new CommandClient(frameChannel, project);
-      this.forwarder = new CommandEventForwarder(commandClient, commandFilter, project);
+      this.commandFilter = commandSession.getFilter();
+      this.forwarder = commandClient.getForwarder();
       this.lastModified = new AtomicLong(project.getModificationTime());
       this.factory = new ThreadBuilder(true);
       this.finder = new ProblemFinder();
@@ -85,10 +86,20 @@ public class CommandListener {
       this.backupManager = backupManager;
       this.processManager = processManager;
       this.debugService = debugService;
-      this.commandFilter = commandFilter;
+      this.commandSession = commandSession;
+      this.commandClient = commandClient;
       this.project = project;
       this.cookie = cookie;
       this.path = path;
+   }
+
+   public void onOpen(OpenCommand command) {
+      try {
+         // notify all sessions of open
+         commandSession.sendOpenAlert(command);
+      } catch(Exception e) {
+         log.info("Could not send open alert", e);
+      }
    }
 
    public void onLaunch(LaunchCommand command) {
@@ -481,6 +492,8 @@ public class CommandListener {
          if(context != null) {
             log.info("Expand folder: " + folder);
             context.folderExpand(folder);
+            // notify all sessions of expand
+            commandSession.sendFolderExpandAlert(command);
          }
       } catch(Exception e) {
          log.info("Error stopping process " + focus, e);
@@ -498,6 +511,8 @@ public class CommandListener {
          if(context != null) {
             log.info("Collapse folder: " + folder);
             context.folderCollapse(folder);
+            // notify all sessions of expand
+            commandSession.sendFolderCollapseAlert(command);
          }
       } catch(Exception e) {
          log.info("Error stopping process " + focus, e);

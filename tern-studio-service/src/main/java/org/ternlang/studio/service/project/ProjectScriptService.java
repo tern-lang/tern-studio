@@ -25,9 +25,11 @@ import org.ternlang.studio.service.ProcessManager;
 import org.ternlang.studio.service.StudioClientLauncher;
 import org.ternlang.studio.service.agent.local.LocalProcessClient;
 import org.ternlang.studio.service.command.Command;
+import org.ternlang.studio.service.command.CommandClient;
 import org.ternlang.studio.service.command.CommandController;
 import org.ternlang.studio.service.command.CommandFilter;
 import org.ternlang.studio.service.command.CommandListener;
+import org.ternlang.studio.service.command.CommandSession;
 import org.ternlang.studio.service.tree.TreeContextManager;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +37,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProjectScriptService implements Service {
 
-   private final ConcurrentMap<String, CommandFilter> commandFilters;
+   private final ConcurrentMap<String, CommandSession> commandSessions;
    private final StudioClientLauncher clientLauncher;
    private final DisplayPersister displayPersister;
    private final TreeContextManager treeManager;
@@ -57,7 +59,7 @@ public class ProjectScriptService implements Service {
          LocalProcessClient debugService,
          ThreadPool pool) 
    {
-      this.commandFilters = new ConcurrentHashMap<String, CommandFilter>();
+      this.commandSessions = new ConcurrentHashMap<String, CommandSession>();
       this.problemFinder = new ProjectProblemFinder(workspace, pool);
       this.displayPersister = displayPersister;
       this.treeManager = treeManager;
@@ -79,19 +81,20 @@ public class ProjectScriptService implements Service {
          FrameChannel channel = connection.getChannel();
          Project project = workspace.createProject(path);
          String value = SessionConstants.findOrCreate(request, response);
+         CommandSession commandSession = commandSessions.computeIfAbsent(value, CommandSession::new);
+         CommandClient commandClient = commandSession.createClient(channel, project);
 
          try {
-            CommandFilter commandFilter = commandFilters.computeIfAbsent(value, CommandFilter::new);
             CommandListener commandListener = new CommandListener(
                   clientLauncher,
                   processManager, 
                   problemFinder, 
                   displayPersister,
                   debugService,
-                  channel, 
                   backupManager, 
                   treeManager,
-                  commandFilter,
+                  commandSession,
+                  commandClient,
                   project,
                   path, 
                   value);

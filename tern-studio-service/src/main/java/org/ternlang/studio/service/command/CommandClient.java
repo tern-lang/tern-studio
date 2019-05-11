@@ -4,16 +4,22 @@ import org.simpleframework.http.socket.FrameChannel;
 import org.ternlang.studio.project.Project;
 
 public class CommandClient {
-   
+
+   private final CommandEventForwarder forwarder;
    private final CommandWriter writer;
    private final FrameChannel channel;
    private final Project project;
    
-   public CommandClient(FrameChannel channel, Project project) {
+   public CommandClient(FrameChannel channel, CommandFilter filter, Project project) {
+      this.forwarder = new CommandEventForwarder(this, filter, project);
       this.writer = new CommandWriter();
       this.channel = channel;
       this.project = project;
-   } 
+   }
+
+   public CommandEventForwarder getForwarder() {
+      return forwarder;
+   }
    
    public void sendCommand(Command command) throws Exception {
       String message = writer.write(command);

@@ -34,7 +34,8 @@ public enum CommandType {
    UPLOAD(UploadCommandMarshaller.class, UploadCommand.class, CLIENT),
    REMOTE_DEBUG(RemoteDebugCommandMarshaller.class, RemoteDebugCommand.class, CLIENT),
    CREATE_ARCHIVE(CreateArchiveCommandMarshaller.class, CreateArchiveCommand.class, CLIENT),
-   LAUNCH(LaunchCommandMarshaller.class, LaunchCommand.class, CLIENT);
+   LAUNCH(LaunchCommandMarshaller.class, LaunchCommand.class, CLIENT),
+   OPEN(OpenCommandMarshaller.class, OpenCommand.class, CLIENT);
    
    public final Class<? extends CommandMarshaller> marshaller;
    public final Class<? extends Command> command;
