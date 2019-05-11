@@ -8,13 +8,13 @@ import mario.util.ImageManipulator;
 
 class Mushroom extends Creature {
    
-   private var redMushroom;
-   private var updateNum;
+   private let redMushroom;
+   private let updateNum;
    
    public new(pixelX, pixelY): super(pixelX, pixelY) {
       setIsItem(true);
       setIsAlwaysRelevant(true);
-      var shroom = ImageManipulator.loadImage("/mario/items/Mushroom.png");
+      let shroom = ImageManipulator.loadImage("/mario/items/Mushroom.png");
       redMushroom = new Animation();
       redMushroom.addFrame(shroom, 1000);
       redMushroom.addFrame(shroom, 1000);

@@ -14,8 +14,8 @@ import imageio.ImageIO;
 
 class SpriteMap {
    
-    private var spriteMap;
-    private var sprites; 
+    private let spriteMap;
+    private let sprites; 
     
     public new(filename, c, r) {
         loadSprites(filename, c, r);
@@ -38,18 +38,18 @@ class SpriteMap {
    // This is acomplished by drawing a portion of the larger image onto a new BufferedImage
    // by calling the graphics of each new BufferedImage.
    private splitSprites(c, r) {
-      var pWidth = spriteMap.getWidth() / c; // width of each sprite
-      var pHeight = spriteMap.getHeight() / r; // height of each sprite
-      var sprites = new BufferedImage[c*r];
-      var n = 0; // used to count sprites
+      let pWidth = spriteMap.getWidth() / c; // width of each sprite
+      let pHeight = spriteMap.getHeight() / r; // height of each sprite
+      let sprites = new BufferedImage[c*r];
+      let n = 0; // used to count sprites
       
       //int xOff = 0; if needed to adjust cutting precision
-      var yOff = 0;
+      let yOff = 0;
    
-      for(var y=0; y < r; y++) {
-         for(var x = 0; x < c; x++) {
+      for(let y=0; y < r; y++) {
+         for(let x = 0; x < c; x++) {
             sprites[n] = new BufferedImage(pWidth, pHeight, 2);
-                var g = sprites[n].createGraphics(); // retrieve graphics to draw onto the BufferedImage
+                let g = sprites[n].createGraphics(); // retrieve graphics to draw onto the BufferedImage
                 // draws a portion of the spriteMap into sprites by directly drawing on the BufferedImage
                 g.drawImage(spriteMap, 0, 0, pWidth, pHeight, pWidth*x, pHeight*y, pWidth*x+pWidth, pHeight*y+pHeight-yOff, null); 
                 g.dispose();

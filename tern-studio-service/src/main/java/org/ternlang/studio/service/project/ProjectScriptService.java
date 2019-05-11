@@ -16,6 +16,7 @@ import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.service.ConnectListener;
 import org.ternlang.studio.service.ProcessManager;
+import org.ternlang.studio.service.StudioClientLauncher;
 import org.ternlang.studio.service.agent.local.LocalProcessClient;
 import org.ternlang.studio.service.command.CommandController;
 import org.ternlang.studio.service.command.CommandListener;
@@ -25,7 +26,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class ProjectScriptService implements Service {
-   
+
+   private final StudioClientLauncher clientLauncher;
    private final DisplayPersister displayPersister;
    private final TreeContextManager treeManager;
    private final ProjectProblemFinder problemFinder;
@@ -36,6 +38,7 @@ public class ProjectScriptService implements Service {
    private final Workspace workspace;
    
    public ProjectScriptService(
+         StudioClientLauncher clientLauncher,
          ProcessManager processManager, 
          ConnectListener connectListener, 
          Workspace workspace, 
@@ -50,6 +53,7 @@ public class ProjectScriptService implements Service {
       this.treeManager = treeManager;
       this.backupManager = backupManager;
       this.connectListener = connectListener;
+      this.clientLauncher = clientLauncher;
       this.workspace = workspace;
       this.processManager = processManager;
       this.debugService = debugService;
@@ -71,6 +75,7 @@ public class ProjectScriptService implements Service {
          }
          try {
             CommandListener commandListener = new CommandListener(
+                  clientLauncher,
                   processManager, 
                   problemFinder, 
                   displayPersister,

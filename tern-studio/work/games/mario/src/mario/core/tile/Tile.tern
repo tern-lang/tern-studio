@@ -9,11 +9,11 @@ import mario.core.animation.Animation;
 class Tile extends Animatible {
    
    // fields
-   private var tileX = 0;
-   private var tileY = 0;
-   private var pixelX = 0;
-   private var pixelY = 0;
-   public var img;
+   private let tileX = 0;
+   private let tileY = 0;
+   private let pixelX = 0;
+   private let pixelY = 0;
+   public let img;
    
    public new(pixelX, pixelY, anim, img) {
       tileX = GameRenderer.pixelsToTiles(pixelX);

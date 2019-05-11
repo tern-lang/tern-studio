@@ -32,11 +32,11 @@ import mario.util.Digest;
 
 class SoundManager extends ThreadPool {
 
-    private var playbackFormat;
-    private var localLine;
-    private var localBuffer;
-    private var pausedLock;
-    private var paused = false;
+    private let playbackFormat;
+    private let localLine;
+    private let localBuffer;
+    private let pausedLock;
+    private let paused = false;
 
     /**
         Creates a new SoundManager using the maximum number of
@@ -65,9 +65,9 @@ class SoundManager extends ThreadPool {
         specified AudioFormat that the default mixer can play.
     */
     public static getMaxSimultaneousSounds(playbackFormat) {
-        var lineInfo = new DataLine.Info( SourceDataLine.class, playbackFormat);
-        var mixer = AudioSystem.getMixer(null);
-        var maxLines = mixer.getMaxLines(lineInfo);
+        let lineInfo = new DataLine.Info( SourceDataLine.class, playbackFormat);
+        let mixer = AudioSystem.getMixer(null);
+        let maxLines = mixer.getMaxLines(lineInfo);
         if (maxLines == AudioSystem.NOT_SPECIFIED) {
             maxLines = 10; // 32
         }
@@ -81,7 +81,7 @@ class SoundManager extends ThreadPool {
     public cleanUp() {
 
         // close the mixer (stops any running sounds)
-        var mixer = AudioSystem.getMixer(null);
+        let mixer = AudioSystem.getMixer(null);
         if (mixer.isOpen()) {
             mixer.close();
         }
@@ -92,17 +92,17 @@ class SoundManager extends ThreadPool {
         error occurs.
     */
     public getSound(filename) {
-        var audioStream = getAudioInputStream(filename);
+        let audioStream = getAudioInputStream(filename);
     
         if (audioStream == null) {
             return null;
         }
         // get the number of bytes to read
-        var length = audioStream.getFrameLength() * audioStream.getFormat().getFrameSize();
+        let length = audioStream.getFrameLength() * audioStream.getFormat().getFrameSize();
 
         // read the entire stream
-        var samples = new Byte[length];
-        var is = new DataInputStream(audioStream);
+        let samples = new Byte[length];
+        let is = new DataInputStream(audioStream);
         try {
             is.readFully(samples);
             is.close();
@@ -139,7 +139,7 @@ class SoundManager extends ThreadPool {
                 is = new BufferedInputStream(is);
             }
             // open the source stream
-            var source = AudioSystem.getAudioInputStream(is);
+            let source = AudioSystem.getAudioInputStream(is);
 
             // convert to playback format
             return AudioSystem.getAudioInputStream(playbackFormat, source);
@@ -174,7 +174,7 @@ class SoundManager extends ThreadPool {
         looping. This method returns immediately.
     */
     public play(sound: Sound, filter, loopFlag) {
-        var is;
+        let is;
         if (sound != null) {
             if (loopFlag) {
                 is = new LoopingByteInputStream(sound.getSamples());
@@ -217,11 +217,11 @@ class SoundManager extends ThreadPool {
     public threadStarted() {
         // use a short, 100ms (1/10th sec) buffer for filters that
         // change in real-time
-        var bufferSize = playbackFormat.getFrameSize() * Math.round(playbackFormat.getSampleRate() / 10);
+        let bufferSize = playbackFormat.getFrameSize() * Math.round(playbackFormat.getSampleRate() / 10);
 
         // create, open, and start the line
-        var line;
-        var lineInfo = new DataLine.Info(SourceDataLine.class, playbackFormat);
+        let line;
+        let lineInfo = new DataLine.Info(SourceDataLine.class, playbackFormat);
 
         try {
             line = AudioSystem.getLine(lineInfo);
@@ -236,7 +236,7 @@ class SoundManager extends ThreadPool {
         line.start();
 
         // create the buffer
-        var buffer = new Byte[bufferSize];
+        let buffer = new Byte[bufferSize];
 
         // set this thread's locals
         localLine.set(line);
@@ -248,7 +248,7 @@ class SoundManager extends ThreadPool {
         closes the Thread's Line.
     */
     public threadStopped() {
-        var line = localLine.get();
+        let line = localLine.get();
         if (line != null) {
             line.drain();
             line.close();
@@ -258,14 +258,14 @@ class SoundManager extends ThreadPool {
     /**
         The SoundPlayer class is a task for the PooledThreads to
         run. It receives the threads's Line and Byte buffer from
-        the ThreadLocal variables and plays a sound from an
+        the ThreadLocal letiables and plays a sound from an
         InputStream.
         <p>This class only works when called from a PooledThread.
     */
     class SoundPlayer with Runnable {
 
-        private var manager;
-        private var source;
+        private let manager;
+        private let source;
 
         public new(manager, source) {
             this.source = source;
@@ -274,8 +274,8 @@ class SoundManager extends ThreadPool {
 
         public run() {
             // get line and buffer from ThreadLocals
-            var line = manager.localLine.get();
-            var buffer = manager.localBuffer.get();
+            let line = manager.localLine.get();
+            let buffer = manager.localBuffer.get();
             if (line == null || buffer == null) {
                 // the line is unavailable
                 return;
@@ -283,7 +283,7 @@ class SoundManager extends ThreadPool {
 
             // copy data to the line
             try {
-                var numBytesRead = 0;
+                let numBytesRead = 0;
                 while (numBytesRead != -1) {
                     // if paused, wait until unpaused
                     synchronized (manager.pausedLock) {

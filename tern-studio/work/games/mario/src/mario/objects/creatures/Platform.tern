@@ -9,17 +9,17 @@ import mario.util.ImageManipulator;
 
 class Platform extends Creature {
    
-   public var move;
-   public var turn;
-   public var isVertical = false;
-   public var isHorizontal = false;
-   public var switchedVertical = false;
-   public var switchedHorizontal = false;
-   public var canJumpThrough = false;
-   public var oldX = 0f;
-   public var oldY = 0f;
-   public var oldDx = 0f;
-   public var oldDy = 0f;
+   public let move;
+   public let turn;
+   public let isVertical = false;
+   public let isHorizontal = false;
+   public let switchedVertical = false;
+   public let switchedHorizontal = false;
+   public let canJumpThrough = false;
+   public let oldX = 0f;
+   public let oldY = 0f;
+   public let oldDx = 0f;
+   public let oldDy = 0f;
    
    public new(pixelX, pixelY): super(pixelX, pixelY) {
       setIsAlwaysRelevant(true);
@@ -27,7 +27,7 @@ class Platform extends Creature {
       turn = 1;
       dx = 0;
       dy = 0;
-      var red_platform = ImageManipulator.loadImage("/mario/items/Red_Platform_2.png");
+      let red_platform = ImageManipulator.loadImage("/mario/items/Red_Platform_2.png");
       move = new Animation(2000).addFrame(red_platform);
       setAnimation(move);
    }

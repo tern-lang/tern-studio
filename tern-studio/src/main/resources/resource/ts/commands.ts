@@ -20,13 +20,20 @@ export module Command {
 
    var windowHandles = {};
 
-   export function addWindowHandle(name, windowHandle) {
-      var existing = windowHandles[name];
+   export function openChildWindow(path, name) {
+      var host = window.document.location.hostname;
+      var port = window.document.location.port;
+      var scheme = window.document.location.protocol;
+      var address = scheme + "//" + host;
 
-      if(existing) {
-        existing.close();
+      if((port - parseFloat(port) + 1) >= 0) {
+         address += ":";
+         address += port;
       }
-      windowHandles[name] = windowHandle;
+      address += path;
+      EventBus.sendEvent("LAUNCH", {
+         address: address
+      });
    }
    
    export function searchTypes() {

@@ -9,14 +9,14 @@ import mario.util.ImageManipulator;
 
 class Score extends Creature {
    
-   public var oneHundred;
+   public let oneHundred;
    
    public new(x, y): super(x, y) {
       setIsItem(true);
       
       dy = -0.45f;
 
-      var one_hundred = ImageManipulator.loadImage("/mario/items/Score_100_New6.png");
+      let one_hundred = ImageManipulator.loadImage("/mario/items/Score_100_New6.png");
 
       oneHundred = new Animation(-> kill());
       

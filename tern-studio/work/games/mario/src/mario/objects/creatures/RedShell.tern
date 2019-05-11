@@ -11,12 +11,12 @@ import mario.util.ImageManipulator;
 
 class RedShell extends Creature {
    
-   private var still;
-   private var rotate;
-   private var flip;
+   private let still;
+   private let rotate;
+   private let flip;
    
-   private var map;
-   private var isMoving;
+   private let map;
+   private let isMoving;
    
    public new(x, y, map, soundManager, isStill):
       super(x, y, soundManager) {
@@ -24,11 +24,11 @@ class RedShell extends Creature {
       this.map = map;
       setIsAlwaysRelevant(true);
        
-      var stay = ImageManipulator.loadImage("/mario/baddies/Red_Shell_1.png");
-      var rotate_1 = ImageManipulator.loadImage("/mario/baddies/Red_Shell_2.png");
-      var rotate_2 = ImageManipulator.loadImage("/mario/baddies/Red_Shell_3.png");
-      var rotate_3 = ImageManipulator.loadImage("/mario/baddies/Red_Shell_4.png");
-      var flipped = ImageManipulator.loadImage("/mario/baddies/Red_Shell_Flip.png");
+      let stay = ImageManipulator.loadImage("/mario/baddies/Red_Shell_1.png");
+      let rotate_1 = ImageManipulator.loadImage("/mario/baddies/Red_Shell_2.png");
+      let rotate_2 = ImageManipulator.loadImage("/mario/baddies/Red_Shell_3.png");
+      let rotate_3 = ImageManipulator.loadImage("/mario/baddies/Red_Shell_4.png");
+      let flipped = ImageManipulator.loadImage("/mario/baddies/Red_Shell_Flip.png");
       
       still = new Animation();
       rotate = new Animation();
@@ -55,7 +55,7 @@ class RedShell extends Creature {
    
    public xCollide(p) {
       super.xCollide(p);
-      var tile = map.getTile(p.x, p.y);
+      let tile = map.getTile(p.x, p.y);
       if(this.isOnScreen()) {
          soundManager.playBump();
          if(tile != null) {

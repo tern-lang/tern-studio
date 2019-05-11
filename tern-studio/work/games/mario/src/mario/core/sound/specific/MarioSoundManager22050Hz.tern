@@ -6,15 +6,15 @@ import mario.core.sound.SoundManager;
 
 class MarioSoundManager22050Hz extends SoundManager {
    
-   private var bump;
-   private var kick;
-   private var coin;
-   private var jump;
-   private var pause;
-   private var itemSprout;
-   private var bonusPoints;
-   private var healthUp;
-   private var healthDown;
+   private let bump;
+   private let kick;
+   private let coin;
+   private let jump;
+   private let pause;
+   private let itemSprout;
+   private let bonusPoints;
+   private let healthUp;
+   private let healthDown;
 
    public new(format): super(format) {
        bump = getSound("/mario/sounds/bump.wav");

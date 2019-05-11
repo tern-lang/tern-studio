@@ -11,10 +11,10 @@ import mario.objects.creatures.RedShell;
 
 class Creature extends CollidableObject {
    
-   public static var xCollideOffset = 2; 
-   public static var offMapOffset = 15;
-   public static var GRAVITY = 0.0008f;
-   public static var gravityEffect = 0.22f; 
+   public static let xCollideOffset = 2; 
+   public static let offMapOffset = 15;
+   public static let GRAVITY = 0.0008f;
+   public static let gravityEffect = 0.22f; 
    
    // Wake up values are constants based on the number of tiles on the screen
    // that are used to determine when mario comes within range of a creature.
@@ -38,13 +38,13 @@ class Creature extends CollidableObject {
     *            and creatures can interact with. 
     * Invisible a creature is invisible, it isn't drawn.
     */
-   private var isAlwaysRelevant = false; 
-   private var isAlive = false; 
-   private var isSleeping = false; 
-   private var isFlipped = false;
-   private var isItem = false;
-   private var isPlatform = false;
-   private var isInvisible = false;
+   private let isAlwaysRelevant = false; 
+   private let isAlive = false; 
+   private let isSleeping = false; 
+   private let isFlipped = false;
+   private let isItem = false;
+   private let isPlatform = false;
+   private let isInvisible = false;
    
    public new(): this(0, 0, null) { 
       
@@ -239,17 +239,17 @@ class Creature extends CollidableObject {
          dy = dy + GRAVITY * time;
       }
       
-      var dx = this.dx;
-      var oldX = this.x;
-      var newX = oldX + dx * time;
+      let dx = this.dx;
+      let oldX = this.x;
+      let newX = oldX + dx * time;
       
-      var dy = this.dy;
-      var oldY = this.y;
-      var newY = oldY + dy * time; 
+      let dy = this.dy;
+      let oldY = this.y;
+      let newY = oldY + dy * time; 
       
       if(!isFlipped) {
-         var xTile = GameRenderer.getTileCollision(map, this, x, y, newX, y);
-         var yTile = GameRenderer.getTileCollision(map, this, x, y, x, newY);
+         let xTile = GameRenderer.getTileCollision(map, this, x, y, newX, y);
+         let yTile = GameRenderer.getTileCollision(map, this, x, y, x, newY);
          
          this.update(time);
          
@@ -281,7 +281,7 @@ class Creature extends CollidableObject {
                if(dy > 0) {
                   // mark this creature as colliding with a tile
                   map.getTile(yTile.x, yTile.y).collidingCreatures().add(this); 
-                  var tileRight = map.getTile(yTile.getX() + 1, yTile.getY());
+                  let tileRight = map.getTile(yTile.getX() + 1, yTile.getY());
                   if(tileRight != null) {
                      tileRight.collidingCreatures().add(this);
                   }
@@ -305,7 +305,7 @@ class Creature extends CollidableObject {
       if(!this.isItem && !creature.isItem && !this.isPlatform && !creature.isPlatform &&
             this != creature && this.isCollidable() && creature.isCollidable()) {
          
-         var collision = isCollision(this, creature);
+         let collision = isCollision(this, creature);
          if(collision) {   
             // Handeling RedShell collision cases....
             // ______________________________________

@@ -3,10 +3,10 @@ import awt.event.KeyEvent;
 
 class Sprite extends Animatible {
    
-   public var x = 0f;
-    public var y = 0f;
-    public var dx = 0f;
-    public var dy = 0f;
+   public let x = 0f;
+    public let y = 0f;
+    public let dx = 0f;
+    public let dy = 0f;
    
    public new(): this(0, 0) { 
    }
@@ -80,10 +80,10 @@ class Sprite extends Animatible {
        }
    
        // get the pixel location of the Sprites
-       var s1x = Math.round(s1.getX());
-       var s1y = Math.round(s1.getY());
-       var s2x = Math.round(s2.getX());
-       var s2y = Math.round(s2.getY());
+       let s1x = Math.round(s1.getX());
+       let s1y = Math.round(s1.getY());
+       let s2x = Math.round(s2.getX());
+       let s2y = Math.round(s2.getY());
    
        // check if the two sprites' boundaries intersect
        return (s1x < s2x + s2.getWidth() && s2x < s1x + s1.getWidth() && 

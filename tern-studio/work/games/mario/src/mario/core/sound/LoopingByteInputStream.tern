@@ -16,7 +16,7 @@ import io.IOException;
 */
 class LoopingByteInputStream extends ByteArrayInputStream {
 
-    private var closed;
+    private let closed;
     
     // Creates a new LoopingByteInputStream with the specified Byte array.
     // The array is not copied.
@@ -31,10 +31,10 @@ class LoopingByteInputStream extends ByteArrayInputStream {
         if (closed) {
             return -1;
         }
-        var totalBytesRead = 0;
+        let totalBytesRead = 0;
 
         while (totalBytesRead < length) {
-            var numBytesRead = super.read(buffer,
+            let numBytesRead = super.read(buffer,
                 offset + totalBytesRead,
                 length - totalBytesRead);
             if (numBytesRead > 0) {

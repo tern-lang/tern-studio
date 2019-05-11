@@ -55,6 +55,8 @@ public class CommandController implements FrameListener {
                listener.onDisplayUpdate((DisplayUpdateCommand)command);
             } else if(command instanceof UploadCommand) {
                listener.onUpload((UploadCommand)command);
+            } else if(command instanceof LaunchCommand) {
+               listener.onLaunch((LaunchCommand)command);
             } else if(command instanceof ExploreCommand) {
                listener.onExplore((ExploreCommand)command);
             } else if(command instanceof RemoteDebugCommand) {

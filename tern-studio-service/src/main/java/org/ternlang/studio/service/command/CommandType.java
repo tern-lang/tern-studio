@@ -33,7 +33,8 @@ public enum CommandType {
    DISPLAY_UPDATE(DisplayUpdateCommandMarshaller.class, DisplayUpdateCommand.class, CLIENT),
    UPLOAD(UploadCommandMarshaller.class, UploadCommand.class, CLIENT),
    REMOTE_DEBUG(RemoteDebugCommandMarshaller.class, RemoteDebugCommand.class, CLIENT),
-   CREATE_ARCHIVE(CreateArchiveCommandMarshaller.class, CreateArchiveCommand.class, CLIENT);
+   CREATE_ARCHIVE(CreateArchiveCommandMarshaller.class, CreateArchiveCommand.class, CLIENT),
+   LAUNCH(LaunchCommandMarshaller.class, LaunchCommand.class, CLIENT);
    
    public final Class<? extends CommandMarshaller> marshaller;
    public final Class<? extends Command> command;

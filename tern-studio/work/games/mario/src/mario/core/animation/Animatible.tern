@@ -7,9 +7,9 @@ import awt.Graphics;
 
 abstract class Animatible {
    
-   private var currAnim;
-   private var offsetX = 0;
-   private var offsetY = 0;
+   private let currAnim;
+   private let offsetX = 0;
+   private let offsetY = 0;
 
    public abstract draw(g, pixelX, pixelY);
    public abstract draw(g, pixelX, pixelY, offsetX, offsetY);

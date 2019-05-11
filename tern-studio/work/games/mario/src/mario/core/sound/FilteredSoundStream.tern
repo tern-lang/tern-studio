@@ -12,8 +12,8 @@ class FilteredSoundStream extends FilterInputStream {
 
     private static const REMAINING_SIZE_UNKNOWN = -1;
 
-    private var soundFilter;
-    private var remainingSize;
+    private let soundFilter;
+    private let remainingSize;
 
     /**
         Creates a new FilteredSoundStream object with the
@@ -35,7 +35,7 @@ class FilteredSoundStream extends FilterInputStream {
         
     {
         // read and filter the sound samples in the stream
-        var bytesRead = super.read(samples, offset, length);
+        let bytesRead = super.read(samples, offset, length);
         if (bytesRead > 0) {
             soundFilter.filter(samples, offset, bytesRead);
             return bytesRead;
@@ -53,7 +53,7 @@ class FilteredSoundStream extends FilterInputStream {
             length = Math.min(length, remainingSize);
 
             // clear the buffer
-            for (var i=offset; i<offset+length; i++) {
+            for (let i=offset; i<offset+length; i++) {
                 samples[i] = 0;
             }
 

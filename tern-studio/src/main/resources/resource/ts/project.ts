@@ -58,11 +58,10 @@ export module Project {
 
    export function openDialogWindow(name, tabs) {
       var address = "/project/" + Common.getProjectName() + ";dialog?visible=" + name;
+      var dialog = Command.openChildWindow(address, name);
       var title = document.title;
-      var dialog = window.open(address, name, "location=false,toolbar=false,scrollbars=yes,resizable=yes,width=400,height=400");
 
       if(dialog) {
-         Command.addWindowHandle(name, dialog);
          var tabList = w2ui[tabs].panels[0].tabs.tabs;
 
          if(tabList.length <= 2) {

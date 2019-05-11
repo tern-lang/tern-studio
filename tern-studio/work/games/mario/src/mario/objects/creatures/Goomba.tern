@@ -9,16 +9,16 @@ import mario.util.ImageManipulator;
 
 class Goomba extends Creature {
    
-   private var waddle;
-   private var dead;
-   private var flip;
+   private let waddle;
+   private let dead;
+   private let flip;
    
    public new(x, y, soundManager): super(x, y, soundManager) {
       
-      var w1 = ImageManipulator.loadImage("/mario/baddies/Goomba_Normal_1.png");
-      var w2 = ImageManipulator.loadImage("/mario/baddies/Goomba_Normal_2.png");
-      var smashed = ImageManipulator.loadImage("/mario/baddies/Goomba_Dead.png");
-      var flipped = ImageManipulator.loadImage("/mario/baddies/Goomba_Flip.png");
+      let w1 = ImageManipulator.loadImage("/mario/baddies/Goomba_Normal_1.png");
+      let w2 = ImageManipulator.loadImage("/mario/baddies/Goomba_Normal_2.png");
+      let smashed = ImageManipulator.loadImage("/mario/baddies/Goomba_Dead.png");
+      let flipped = ImageManipulator.loadImage("/mario/baddies/Goomba_Flip.png");
 
       waddle = new Animation(150).addFrame(w1).addFrame(w2);
       dead = new Animation(-> kill()).setDAL(100).addFrame(smashed).setDAL(20).addFrame(smashed);
@@ -27,7 +27,7 @@ class Goomba extends Creature {
    }
    
    public wakeUp() {
-      var r = new Random();
+      let r = new Random();
       super.wakeUp();
       dx = r.nextInt(3) == 0 ? -0.03f : 0.03f;
    }

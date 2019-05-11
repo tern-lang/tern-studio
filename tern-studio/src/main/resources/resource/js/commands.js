@@ -3,14 +3,21 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
     var Command;
     (function (Command) {
         var windowHandles = {};
-        function addWindowHandle(name, windowHandle) {
-            var existing = windowHandles[name];
-            if (existing) {
-                existing.close();
+        function openChildWindow(path, name) {
+            var host = window.document.location.hostname;
+            var port = window.document.location.port;
+            var scheme = window.document.location.protocol;
+            var address = scheme + "//" + host;
+            if ((port - parseFloat(port) + 1) >= 0) {
+                address += ":";
+                address += port;
             }
-            windowHandles[name] = windowHandle;
+            address += path;
+            socket_1.EventBus.sendEvent("LAUNCH", {
+                address: address
+            });
         }
-        Command.addWindowHandle = addWindowHandle;
+        Command.openChildWindow = openChildWindow;
         function searchTypes() {
             dialog_1.DialogBuilder.createListDialog(function (text, ignoreMe, onComplete) {
                 findTypesMatching(text, function (typesFound, originalExpression) {

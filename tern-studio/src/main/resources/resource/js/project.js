@@ -41,10 +41,9 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
         Project.createMainLayout = createMainLayout;
         function openDialogWindow(name, tabs) {
             var address = "/project/" + common_1.Common.getProjectName() + ";dialog?visible=" + name;
+            var dialog = commands_1.Command.openChildWindow(address, name);
             var title = document.title;
-            var dialog = window.open(address, name, "location=false,toolbar=false,scrollbars=yes,resizable=yes,width=400,height=400");
             if (dialog) {
-                commands_1.Command.addWindowHandle(name, dialog);
                 var tabList = w2ui_1.w2ui[tabs].panels[0].tabs.tabs;
                 if (tabList.length <= 2) {
                     for (var i = 0; i < tabList.length; i++) {

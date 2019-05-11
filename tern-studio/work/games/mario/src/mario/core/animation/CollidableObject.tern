@@ -3,9 +3,9 @@ import mario.core.sound.specific.MarioSoundManager22050Hz;
 
 class CollidableObject extends Sprite {
    
-   public var soundManager;
-   private var isCollidable;
-   private var isOnScreen = false;
+   public let soundManager;
+   private let isCollidable;
+   private let isOnScreen = false;
    
    public new(pixelX, pixelY, soundManager): super(pixelX, pixelY){
       this.isCollidable = true;

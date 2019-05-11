@@ -32,33 +32,33 @@ import mario.util.SampleAverager;
 
 class GamePanel extends JPanel with Runnable {
 
-   private var panelWidth;
-   private var panelHeight;
-   private var panelScale;
-   private var dbg;
-   private var dbImage = null;
+   private let panelWidth;
+   private let panelHeight;
+   private let panelScale;
+   private let dbg;
+   private let dbImage = null;
 
-   private var running = false; 
-   private var gameOver = false;
-   private var gameFreeze = false;
+   private let running = false; 
+   private let gameOver = false;
+   private let gameFreeze = false;
    
-   private var averager;
-   private var animator;
-   private var period = 30; 
-   private var frames = 0;
+   private let averager;
+   private let animator;
+   private let period = 30; 
+   private let frames = 0;
    
-   private var mario;
-   private var map;
-   private var backgroundMap;
-   private var foregroundMap;
-   private var renderer;
-   private var manager;
-   private var screen;
+   private let mario;
+   private let map;
+   private let backgroundMap;
+   private let foregroundMap;
+   private let renderer;
+   private let manager;
+   private let screen;
    
    
-   private var player;
-   private var SM_22050_Hz;
-   private var SM_10512_Hz;
+   private let player;
+   private let SM_22050_Hz;
+   private let SM_10512_Hz;
    
    public new(w, h, scale) {
       
@@ -86,9 +86,9 @@ class GamePanel extends JPanel with Runnable {
       }
       
       player = new MidiPlayer();
-      var sequence;
-      var r = new Random();
-      var rNum = r.nextInt(4);
+      let sequence;
+      let r = new Random();
+      let rNum = r.nextInt(4);
       if(rNum == 0) {
          sequence = player.getSequence("/mario/sounds/smwovr2.mid");
            player.play(sequence, true);
@@ -149,17 +149,17 @@ class GamePanel extends JPanel with Runnable {
       
       running = true;
       while(running) {
-         var start = System.currentTimeMillis();
+         let start = System.currentTimeMillis();
       
          if(!gameFreeze) {
             gameAction();
          }
-         var finish = System.currentTimeMillis();
-         var duration = finish - start;
-         var slip = Math.max(0, duration - 8);
+         let finish = System.currentTimeMillis();
+         let duration = finish - start;
+         let slip = Math.max(0, duration - 8);
          
          try {
-            var wait = period - slip;
+            let wait = period - slip;
             
             if(wait > 0) {
                Thread.sleep(wait);
@@ -168,7 +168,7 @@ class GamePanel extends JPanel with Runnable {
             frames++;
 
             if(frames % 100 == 0) {
-                var average = averager.average();
+                let average = averager.average();
                 println(average);
             }
          } catch(e){}
@@ -184,12 +184,12 @@ class GamePanel extends JPanel with Runnable {
       
       if (!gameOver) {
          // Update all relevant Creatures.
-         for(var i = 0; i < map.relevantCreatures().size(); i++) {
-            var c = map.relevantCreatures().get(i);
+         for(let i = 0; i < map.relevantCreatures().size(); i++) {
+            let c = map.relevantCreatures().get(i);
             if(c !instanceof Coin) {
                c.updateCreature(map, period);
                mario.playerCollision(map, c);
-               for(var other in map.relevantCreatures()) {
+               for(let other in map.relevantCreatures()) {
                   c.creatureCollision(other);
                }
             } else {
@@ -203,13 +203,13 @@ class GamePanel extends JPanel with Runnable {
          //System.out.println("creatures size: " + map.creatures().size());
          //System.out.println(map.platforms().size());
          
-         for(var tile in map.animatedTiles()) {
+         for(let tile in map.animatedTiles()) {
                tile.collidingCreatures().clear();  // clear the colliding sprites on the tile
                tile.update(period);
          }
         
          // Add creatures that need to be created. They are added here to aconcurrent modifcation errors.
-            for(var c in map.creaturesToAdd()) {
+            for(let c in map.creaturesToAdd()) {
                map.creatures().add(c);
             }
             
@@ -241,7 +241,7 @@ class GamePanel extends JPanel with Runnable {
     * Draws the game image to the screen by drawing the buffer.
     */
    private paintScreen() {   
-      var g;
+      let g;
       try {
          g = this.getGraphics();
          if ((g != null) && (dbImage != null))  {
@@ -269,7 +269,7 @@ class GamePanel extends JPanel with Runnable {
       }
       
        public keyReleased(e: KeyEvent) {
-          var key = e.getKeyCode();
+          let key = e.getKeyCode();
          
           // 'Z' is pressed.
            if (key == KeyEvent.VK_Z) { // pause
@@ -304,7 +304,7 @@ class GamePanel extends JPanel with Runnable {
        
        // 'L' is pressed or held.
        public keyPressed(e: KeyEvent) {
-          var key = e.getKeyCode();
+          let key = e.getKeyCode();
           if (key == KeyEvent.VK_L) {
              panel.gameAction();
           }

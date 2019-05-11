@@ -8,7 +8,7 @@ import awt.event.KeyEvent;
 
 class SpriteListener extends KeyAdapter {
    
-   private var sprite;
+   private let sprite;
    
    public new(sprite) {
       this.sprite = sprite;

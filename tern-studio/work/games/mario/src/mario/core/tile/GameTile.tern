@@ -10,9 +10,9 @@ import mario.objects.base.Creature;
 class GameTile extends Tile {
    
    // fields
-   private var isCollidable = true;
-   private var isSloped = false;
-   private var collidingCreatures;
+   private let isCollidable = true;
+   private let isSloped = false;
+   private let collidingCreatures;
    
    /**
     * Constructs a new GameTile at the pixel (x,y) position with the Animation anim

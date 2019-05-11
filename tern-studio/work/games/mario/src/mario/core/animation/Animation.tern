@@ -17,12 +17,12 @@ import util.ArrayList;
 class Animation {
    
    // fields
-   private var frames;
-   private var currFrameIndex = 0; // index of current frame
-   private var animTime = 0; // current time in animation
-   private var totalDuration = 0; // length of entire animation
-   private var defaultAnimLength = 0;
-   private var endOfAnimation;
+   private let frames;
+   private let currFrameIndex = 0; // index of current frame
+   private let animTime = 0; // current time in animation
+   private let totalDuration = 0; // length of entire animation
+   private let defaultAnimLength = 0;
+   private let endOfAnimation;
    
    /**
     * Constructs a new Animation object with no frames.

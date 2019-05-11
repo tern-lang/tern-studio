@@ -27,6 +27,7 @@ import org.ternlang.studio.project.config.DependencyFile;
 import org.ternlang.studio.project.config.OperatingSystem;
 import org.ternlang.studio.project.config.ProjectConfiguration;
 import org.ternlang.studio.service.ProcessManager;
+import org.ternlang.studio.service.StudioClientLauncher;
 import org.ternlang.studio.service.agent.local.LocalProcessClient;
 import org.ternlang.studio.service.project.ProjectProblemFinder;
 import org.ternlang.studio.service.tree.TreeContext;
@@ -34,7 +35,8 @@ import org.ternlang.studio.service.tree.TreeContextManager;
 
 @Slf4j
 public class CommandListener {
-   
+
+   private final StudioClientLauncher clientLauncher;
    private final DisplayPersister displayPersister;
    private final CommandEventForwarder forwarder;
    private final ProjectProblemFinder problemFinder;
@@ -54,6 +56,7 @@ public class CommandListener {
    private final File root;
    
    public CommandListener(
+         StudioClientLauncher clientLauncher,
          ProcessManager processManager, 
          ProjectProblemFinder problemFinder, 
          DisplayPersister displayPersister,
@@ -74,6 +77,7 @@ public class CommandListener {
       this.projectName = project.getName();
       this.root = project.getBasePath();
       this.displayPersister = displayPersister;
+      this.clientLauncher = clientLauncher;
       this.treeManager = treeManager;
       this.problemFinder = problemFinder;
       this.backupManager = backupManager;
@@ -82,6 +86,16 @@ public class CommandListener {
       this.project = project;
       this.cookie = cookie;
       this.path = path;
+   }
+
+   public void onLaunch(LaunchCommand command) {
+      String address = command.getAddress();
+
+      try {
+         clientLauncher.launch(address);
+      } catch(Exception e) {
+         log.info("Error launching window " + address, e);
+      }
    }
 
    public void onExplore(ExploreCommand command) {

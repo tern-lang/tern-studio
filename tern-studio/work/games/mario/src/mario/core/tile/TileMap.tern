@@ -15,17 +15,17 @@ import mario.objects.tiles.SlopedTile;
 class TileMap {
    
    // fields
-   private var tiles; 
-   private var platforms; // List of Platforms on the current screen.
-   private var creatures; // Starts containing every Creature and decreases as they die.
-   private var relevantCreatures; // List of relevant Creatures to the current frame.
+   private let tiles; 
+   private let platforms; // List of Platforms on the current screen.
+   private let creatures; // Starts containing every Creature and decreases as they die.
+   private let relevantCreatures; // List of relevant Creatures to the current frame.
                                    // This is a subset of creatures.
-   private var creaturesToAdd; // List of Creatures to be added inbetween frames.
-   private var animatedTiles;
-   private var slopedTiles;
-   private var player; 
-   private var width;
-   private var height;
+   private let creaturesToAdd; // List of Creatures to be added inbetween frames.
+   private let animatedTiles;
+   private let slopedTiles;
+   private let player; 
+   private let width;
+   private let height;
    
    /**
     * Constructs a new TileMap with the specified width and height (in number of tiles)

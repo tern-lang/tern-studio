@@ -9,8 +9,8 @@
  * Sequencer sends a Sequence to the MIDI synthesizer.
  * 
  * Generally, playing a MIDI file looks something like this:
- * var sequence = MidiSystem.getSequence(new File(filename));
- * var sequencer = MidiSystem.getSequencer();
+ * let sequence = MidiSystem.getSequence(new File(filename));
+ * let sequencer = MidiSystem.getSequencer();
  * sequencer.open();
  * sequencer.setSequence(sequence);
  * sequencer.start();
@@ -39,9 +39,9 @@ class MidiPlayer with MetaEventListener {
     // Midi meta event integer for a track ending
     public static const END_OF_TRACK_MESSAGE = 47;
 
-    private var sequencer; // play through this sequencer
-    private var loopFlag;
-    private var paused;
+    private let sequencer; // play through this sequencer
+    private let loopFlag;
+    private let paused;
 
     // Creates a new MidiPlayer object.
     // Gets the sequencer to play a sequence
@@ -76,7 +76,7 @@ class MidiPlayer with MetaEventListener {
                 is = new BufferedInputStream(is);
             }
             // get the sequence
-            var s = MidiSystem.getSequence(is);
+            let s = MidiSystem.getSequence(is);
             // close the stream and return the sequence to play!
             is.close();
             return s;

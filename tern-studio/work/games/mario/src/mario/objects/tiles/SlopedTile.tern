@@ -7,9 +7,9 @@ import mario.core.tile.GameTile;
 
 class SlopedTile extends GameTile {
    
-   private var startingPoint;
-   private var endingPoint;
-   private var hasPositiveSlope;
+   private let startingPoint;
+   private let endingPoint;
+   private let hasPositiveSlope;
       
    public new(pixelX, pixelY, img, hasPositiveSlope):
          super(pixelX, pixelY, null, img){
@@ -62,8 +62,8 @@ class SlopedTile extends GameTile {
    }
    
    public isWithin(pixelX, pixelY, deltaX, deltaY) {
-      var xOnLine = correlateX(pixelY);
-      var yOnLine = correlateY(pixelX);
+      let xOnLine = correlateX(pixelY);
+      let yOnLine = correlateY(pixelX);
 //      System.out.println();
 //      System.out.println("X on Line: " + xOnLine);
 //      System.out.println("Starting Point X: " + startingPoint.x);

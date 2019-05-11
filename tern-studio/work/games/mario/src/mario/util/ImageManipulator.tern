@@ -23,7 +23,7 @@ module ImageManipulator {
    
    /** Reads in a BufferedImage using the standard ImageIO.read() */
    public loadImage(filename) {
-      var img = cache.get(filename);
+      let img = cache.get(filename);
       try {
          if(img == null) {
             img = ImageIO.read(loadResource(filename));
@@ -42,11 +42,11 @@ module ImageManipulator {
    
    public scaleImage(img, factor) {
       if(factor.compareTo(1) != 0) {
-         var w = img.getWidth();   
-         var h = img.getHeight();  
-         var scaled = img.getScaledInstance(-1, h * factor, 4 /*BufferedImage.SCALE_SMOOTH*/);
-         var dimg = new BufferedImage(w * factor, h * factor, img.getColorModel().getTransparency());    
-         var g = dimg.getGraphics();
+         let w = img.getWidth();   
+         let h = img.getHeight();  
+         let scaled = img.getScaledInstance(-1, h * factor, 4 /*BufferedImage.SCALE_SMOOTH*/);
+         let dimg = new BufferedImage(w * factor, h * factor, img.getColorModel().getTransparency());    
+         let g = dimg.getGraphics();
    
          g.drawImage(scaled, 0, 0, null);
          g.dispose();
@@ -58,10 +58,10 @@ module ImageManipulator {
 
    /** Horizontally flips img. */
    public horizontalFlip(img) {   
-        var w = img.getWidth();   
-        var h = img.getHeight();   
-        var dimg = new BufferedImage(w, h, img.getColorModel().getTransparency());     
-        var g = dimg.createGraphics();   
+        let w = img.getWidth();   
+        let h = img.getHeight();   
+        let dimg = new BufferedImage(w, h, img.getColorModel().getTransparency());     
+        let g = dimg.createGraphics();   
         g.drawImage(img, 0, 0, w, h, w, 0, 0, h, null);   
         g.dispose();   
         return dimg;   
@@ -69,10 +69,10 @@ module ImageManipulator {
    
    /** Vertically flips img. */
    public verticalFlip(img) {   
-        var w = img.getWidth();   
-        var h = img.getHeight();   
-        var dimg = new BufferedImage(w, h, img.getColorModel().getTransparency());   
-        var g = dimg.createGraphics();   
+        let w = img.getWidth();   
+        let h = img.getHeight();   
+        let dimg = new BufferedImage(w, h, img.getColorModel().getTransparency());   
+        let g = dimg.createGraphics();   
         g.drawImage(img, 0, 0, w, h, 0, h, w, 0, null);   
         g.dispose();   
         return dimg;   

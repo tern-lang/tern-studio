@@ -1,5 +1,5 @@
 
-import static lang.Integer.*; // this does not really work
+import static lang.Integer.MAX_VALUE; 
 
 import mario.core.GameFrame;
 import mario.core.GamePanel;
@@ -9,7 +9,7 @@ func start(scale) {
    
    try {
       g.start();
-      sleep(Integer.MAX_VALUE);
+      sleep(MAX_VALUE);
    } catch(e) {
       e.printStackTrace();
    }

@@ -8,7 +8,7 @@ import mario.core.sound.SoundManager;
 
 class MarioSoundManager10512Hz extends SoundManager {
    
-   private var hurt1, hurt2, yahoo1, yahoo2;
+   private let hurt1, hurt2, yahoo1, yahoo2;
 
    public new(format): super(format) {
        hurt1 = getSound("/mario/sounds/mario_ooh.wav");
@@ -18,8 +18,8 @@ class MarioSoundManager10512Hz extends SoundManager {
    }
    
    public playHurt() {
-      var r = new Random();
-      var rNum = r.nextInt(2);
+      let r = new Random();
+      let rNum = r.nextInt(2);
       if(rNum == 0) {
          play(hurt1);
       } else {
@@ -28,8 +28,8 @@ class MarioSoundManager10512Hz extends SoundManager {
    }
    
    public playCelebrate() {
-      var r = new Random();
-      var rNum = r.nextInt(2);
+      let r = new Random();
+      let rNum = r.nextInt(2);
       if(rNum == 0) {
          play(yahoo1);
       } else {
