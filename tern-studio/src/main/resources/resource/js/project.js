@@ -740,7 +740,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                                 console.log(event);
                             },
                             onClick: function (event) {
-                                activateTab(event.target, "dialogTabLayout", true, false, "style='right: 0px;'");
+                                activateTab(event.target, "dialogTabLayout", true, false, "");
                             },
                             onRender: function (event) {
                                 layoutEventListener("dialogTabLayout#tabs");
