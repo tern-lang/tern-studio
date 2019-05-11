@@ -819,6 +819,12 @@ export module Project {
                 id: 'historyTab',
                 caption: '<div class="historyTab">History  </div>',
                 closable: false
+            },
+            browse: {
+                id : 'browseTab',
+                caption : '<div class="browseTab">Project</div>',
+                content : "<div style='overflow: scroll; font-family: monospace;' id='browse'><div id='browseParent'></div></div>",
+                closable: false
             }
           };
 
@@ -844,7 +850,7 @@ export module Project {
                    console.log(event);
                 },
                 onClick : function(event) {
-                   activateTab(event.target, "dialogTabLayout", false, false, "style='right: 0px;'");
+                   activateTab(event.target, "dialogTabLayout", true, false, "style='right: 0px;'");
                 },
                 onRender: function(event) {
                    layoutEventListener("dialogTabLayout#tabs");
@@ -1438,7 +1444,7 @@ export module Project {
                },
                onRender: function(event) {
                   layoutEventListener("debugBottomTabLayout#tabs"); 
-               }  
+               }
             }
          } ],
          onRender: function(event) {
