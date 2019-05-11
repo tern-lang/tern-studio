@@ -74,15 +74,27 @@ public class StudioClientLauncher {
             @Override
             public void run() {
                try {
-                  ClientControl control = ClientProvider.provide().show(context);
+                  ClientControl control = ClientProvider.provide().create(context);
                   SplashPanel panel = SplashScreen.getPanel();
                   
                   panel.dispose();
 
                   if(reference.compareAndSet(null, control)) {
+                     control.show();
                      control.closeOnExit(true);
                   } else {
-                     control.closeOnExit(false);
+                     ClientControl previous = reference.get();
+                     ClientContext original = previous.getContext();
+                     String root = original.getAddress();
+
+                     if(address.startsWith(root)) { // do not allow random windows
+                        log.info("Opening '{}'", address);
+                        control.show();
+                        control.closeOnExit(false);
+                     } else {
+                        log.info("Could not open '{}' it is not a child of '{}'", address, root);
+                        control.dispose();
+                     }
                   }
                } catch(Exception e) {
                   log.info("Could not show client", e);
