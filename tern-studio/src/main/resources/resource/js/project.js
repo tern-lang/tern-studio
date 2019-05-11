@@ -638,6 +638,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
             }, layoutEvents, 200);
             var pstyle = 'background-color: ${PROJECT_BACKGROUND_COLOR}; overflow: hidden;';
             var leftStyle = pstyle + " margin-top: 32px; border-top: 1px solid ${PROJECT_BORDER_COLOR};";
+            keys_1.KeyBinder.disableKeys();
             createDialogMainLayout(pstyle, layoutEventListener, layoutEvents);
             createDialogTabLayout(pstyle, layoutEventListener, layoutEvents);
             validateLayout(layoutEvents, ["createDialogLayout"]);

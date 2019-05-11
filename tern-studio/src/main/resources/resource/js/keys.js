@@ -6,10 +6,18 @@ define(["require", "exports", "jquery", "mousetrap", "common", "editor", "comman
         var pressTimes = {};
         var controlPressed = false;
         var keyBindings = {};
+        var disable = false;
         function getKeyBindings() {
             return keyBindings;
         }
         KeyBinder.getKeyBindings = getKeyBindings;
+        function disableKeys() {
+            disable = true;
+        }
+        KeyBinder.disableKeys = disableKeys;
+        function isKeysDisabled() {
+            return disable;
+        }
         function bindKeys() {
             disableBrowserKeys();
             createKeyBinding("alt left", "Navigate Back", true, function () {
@@ -199,7 +207,9 @@ define(["require", "exports", "jquery", "mousetrap", "common", "editor", "comman
             editor_1.FileEditor.addEditorKeyBinding(keyBinding, pressAction);
             Mousetrap.bindGlobal(keyBinding.global, function (e) {
                 if (pressAction) {
-                    pressAction();
+                    if (!isKeysDisabled()) {
+                        pressAction();
+                    }
                 }
                 return !preventDefault;
             });
@@ -208,7 +218,9 @@ define(["require", "exports", "jquery", "mousetrap", "common", "editor", "comman
             var keyBinding = parseKeyBinding(name);
             Mousetrap.bindGlobal(keyBinding.global, function (e) {
                 if (pressAction) {
-                    pressAction();
+                    if (!isKeysDisabled()) {
+                        pressAction();
+                    }
                 }
                 return !preventDefault;
             }, 'keydown');
@@ -217,7 +229,9 @@ define(["require", "exports", "jquery", "mousetrap", "common", "editor", "comman
             var keyBinding = parseKeyBinding(name);
             Mousetrap.bindGlobal(keyBinding.global, function (e) {
                 if (pressAction) {
-                    pressAction();
+                    if (!isKeysDisabled()) {
+                        pressAction();
+                    }
                 }
                 return !preventDefault;
             }, 'keyup');

@@ -13,9 +13,18 @@ export module KeyBinder {
    const pressTimes = {};
    var controlPressed = false;
    var keyBindings = {};  
-   
+   var disable = false;
+
    export function getKeyBindings() {
       return keyBindings;
+   }
+
+   export function disableKeys() {
+      disable = true;
+   }
+
+   function isKeysDisabled() {
+      return disable;
    }
 
    export function bindKeys() {
@@ -218,7 +227,9 @@ export module KeyBinder {
       FileEditor.addEditorKeyBinding(keyBinding, pressAction);
       Mousetrap.bindGlobal(keyBinding.global, function(e) {
          if(pressAction) {
-            pressAction();
+            if(!isKeysDisabled()) {
+                pressAction();
+            }
          }
          return !preventDefault;
       });
@@ -229,7 +240,9 @@ export module KeyBinder {
 
       Mousetrap.bindGlobal(keyBinding.global, function(e) {
          if(pressAction) {
-            pressAction();
+            if(!isKeysDisabled()) {
+                pressAction();
+            }
          }
          return !preventDefault;
       }, 'keydown');
@@ -240,7 +253,9 @@ export module KeyBinder {
 
       Mousetrap.bindGlobal(keyBinding.global, function(e) {
          if(pressAction) {
-            pressAction();
+            if(!isKeysDisabled()) {
+               pressAction();
+            }
          }
          return !preventDefault;
       }, 'keyup');

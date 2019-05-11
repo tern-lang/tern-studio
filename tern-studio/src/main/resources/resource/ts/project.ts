@@ -425,8 +425,7 @@ export module Project {
    function showEditorHelpContent(containsEditor) { // hack to render editor
       var newParent = document.getElementById('editParent');
       var editorFileName = document.getElementById("editFileName");
-      
-      
+
       if(newParent != null) {
          var keyBindings = KeyBinder.getKeyBindings();
          var content = "";
@@ -728,7 +727,7 @@ export module Project {
       }
    }
 
-  function createDialogLayout(startFunction) {
+   function createDialogLayout(startFunction) {
         var layoutEvents = ["createDialogLayout"];
         var layoutEventListener = Common.createSimpleStateMachineFunction("createDialogLayout", function() {
            console.log("Dialog layout fully rendered");
@@ -738,6 +737,7 @@ export module Project {
         var pstyle = 'background-color: ${PROJECT_BACKGROUND_COLOR}; overflow: hidden;';
         var leftStyle = pstyle + " margin-top: 32px; border-top: 1px solid ${PROJECT_BORDER_COLOR};";
 
+        KeyBinder.disableKeys();
         createDialogMainLayout(pstyle, layoutEventListener, layoutEvents);
         createDialogTabLayout(pstyle, layoutEventListener, layoutEvents);
 
