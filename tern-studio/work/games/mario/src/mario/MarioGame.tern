@@ -1,5 +1,5 @@
 
-import static lang.Integer.MAX_VALUE; 
+import static lang.Integer.*; 
 
 import mario.core.GameFrame;
 import mario.core.GamePanel;
