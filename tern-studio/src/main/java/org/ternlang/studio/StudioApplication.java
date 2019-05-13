@@ -17,8 +17,8 @@ import org.ternlang.studio.service.SplashScreen;
 import org.ternlang.studio.service.StudioCommandLine;
 import org.ternlang.studio.service.StudioOption;
 import org.ternlang.ui.OperatingSystem;
-import org.ternlang.ui.chrome.load.DeploymentManager;
-import org.ternlang.ui.chrome.load.DeploymentTask;
+import org.ternlang.ui.chrome.install.deploy.DeploymentManager;
+import org.ternlang.ui.chrome.install.deploy.DeploymentTask;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
