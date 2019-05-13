@@ -1,6 +1,10 @@
 package org.ternlang.studio.service;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
@@ -14,15 +18,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import org.ternlang.studio.common.ClassPathReader;
 import org.ternlang.studio.common.ProgressManager;
 import org.ternlang.ui.WindowIcon;
 import org.ternlang.ui.WindowIconLoader;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SplashScreen {
@@ -37,6 +48,10 @@ public class SplashScreen {
 
    public static SplashPanel getPanel() {
       return INSTANCE;
+   }
+   
+   public static void main(String[] list) throws Exception {
+      getPanel().show(100000);
    }
 
    private static SplashPanel createPanel(final String resource, final String background, final String icon, final String foreground, final String message) {
@@ -219,6 +234,7 @@ public class SplashScreen {
       frame.add(panel);
       frame.pack();
       frame.setLocationRelativeTo(null);
+      frame.setBackground(Color.RED);
       frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
       return new SplashDialog(frame, label);
@@ -239,14 +255,14 @@ public class SplashScreen {
       ImageIcon icon = new ImageIcon(image);
       JLabel label = new JLabel(icon);
       BorderLayout layout = new BorderLayout();
-
+      BoxLayout verticalLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+      
       label.setSize(width, height);
       label.setLayout(layout);
       label.setBorder(BorderFactory.createEmptyBorder(50, 20, 50, 20));
       spacer.setSize(10, 10);
       spacer.setBackground(Color.decode(background));
-      panel.setBackground(Color.decode(background));
-      BoxLayout verticalLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+      panel.setBackground(Color.decode(background));   
       panel.setLayout(verticalLayout);
       panel.setBorder(BorderFactory.createLineBorder(Color.decode(border)));
       panel.add(spacer);

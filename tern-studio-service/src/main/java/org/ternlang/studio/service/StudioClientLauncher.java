@@ -15,10 +15,10 @@ import org.ternlang.ui.ClientProvider;
 
 @Slf4j
 @Component
-public class StudioClientLauncher {
+public class StudioClientLauncher {    
    
-   public static final String CLIENT_LOG = "client.log";
-   public static final String CLIENT_CACHE = "cache";         
+   private static final String CLIENT_LOG = "/log/client.log";
+   private static final String CLIENT_CACHE = "cache";   
 
    private final AtomicReference<ClientControl> reference;
    private final File directory;
