@@ -27,6 +27,36 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
             });
         }
         Command.openChildWindow = openChildWindow;
+        function openTerminal(resourcePath) {
+            if (tree_1.FileTree.isResourceFolder(resourcePath.getFilePath())) {
+                var host = window.document.location.hostname;
+                var port = window.document.location.port;
+                var scheme = window.document.location.protocol;
+                var address = scheme + "//" + host;
+                var session = common_1.Common.extractCookie("SESSID"); // hardcoded :(
+                if ((port - parseFloat(port) + 1) >= 0) {
+                    address += ":";
+                    address += port;
+                }
+                address += "/terminal?path=" + resourcePath.getFilePath();
+                socket_1.EventBus.sendEvent("LAUNCH", {
+                    address: address,
+                    session: session
+                });
+            }
+        }
+        Command.openTerminal = openTerminal;
+        function exploreDirectory(resourcePath) {
+            if (tree_1.FileTree.isResourceFolder(resourcePath.getFilePath())) {
+                var message = {
+                    project: common_1.Common.getProjectName(),
+                    resource: resourcePath.getFilePath(),
+                    terminal: false
+                };
+                socket_1.EventBus.sendEvent("EXPLORE", message);
+            }
+        }
+        Command.exploreDirectory = exploreDirectory;
         function searchTypes() {
             dialog_1.DialogBuilder.createListDialog(function (text, ignoreMe, onComplete) {
                 findTypesMatching(text, function (typesFound, originalExpression) {
@@ -386,28 +416,6 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                 onComplete([], originalText);
             }
         }
-        function openTerminal(resourcePath) {
-            if (tree_1.FileTree.isResourceFolder(resourcePath.getFilePath())) {
-                var message = {
-                    project: common_1.Common.getProjectName(),
-                    resource: resourcePath.getFilePath(),
-                    terminal: true
-                };
-                socket_1.EventBus.sendEvent("EXPLORE", message);
-            }
-        }
-        Command.openTerminal = openTerminal;
-        function exploreDirectory(resourcePath) {
-            if (tree_1.FileTree.isResourceFolder(resourcePath.getFilePath())) {
-                var message = {
-                    project: common_1.Common.getProjectName(),
-                    resource: resourcePath.getFilePath(),
-                    terminal: false
-                };
-                socket_1.EventBus.sendEvent("EXPLORE", message);
-            }
-        }
-        Command.exploreDirectory = exploreDirectory;
         function folderExpand(resourcePath) {
             var message = {
                 project: common_1.Common.getProjectName(),

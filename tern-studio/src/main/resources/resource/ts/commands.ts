@@ -46,6 +46,39 @@ export module Command {
       });
    }
    
+      
+   export function openTerminal(resourcePath: FilePath) {
+      if(FileTree.isResourceFolder(resourcePath.getFilePath())) {
+	      var host = window.document.location.hostname;
+	      var port = window.document.location.port;
+	      var scheme = window.document.location.protocol;
+	      var address = scheme + "//" + host;
+	      var session = Common.extractCookie("SESSID"); // hardcoded :(
+	
+	      if((port - parseFloat(port) + 1) >= 0) {
+	         address += ":";
+	         address += port;
+	      }
+	      address += "/terminal?path=" + resourcePath.getFilePath();
+	
+	      EventBus.sendEvent("LAUNCH", {
+	         address: address,
+	         session: session
+	      });
+      }
+   }
+   
+   export function exploreDirectory(resourcePath: FilePath) {
+      if(FileTree.isResourceFolder(resourcePath.getFilePath())) {
+         var message = {
+            project : Common.getProjectName(),
+            resource : resourcePath.getFilePath(),
+            terminal: false
+         };
+         EventBus.sendEvent("EXPLORE", message);
+      }
+   }
+   
    export function searchTypes() {
       DialogBuilder.createListDialog(function(text, ignoreMe, onComplete){
          findTypesMatching(text, function(typesFound, originalExpression) {
@@ -435,28 +468,6 @@ export module Command {
          });
       } else {
          onComplete([], originalText);
-      }
-   }
-   
-   export function openTerminal(resourcePath: FilePath) {
-      if(FileTree.isResourceFolder(resourcePath.getFilePath())) {
-         var message = {
-            project : Common.getProjectName(),
-            resource : resourcePath.getFilePath(),
-            terminal: true
-         };
-         EventBus.sendEvent("EXPLORE", message);
-      }
-   }
-   
-   export function exploreDirectory(resourcePath: FilePath) {
-      if(FileTree.isResourceFolder(resourcePath.getFilePath())) {
-         var message = {
-            project : Common.getProjectName(),
-            resource : resourcePath.getFilePath(),
-            terminal: false
-         };
-         EventBus.sendEvent("EXPLORE", message);
       }
    }
    

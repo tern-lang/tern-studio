@@ -3,6 +3,8 @@ package org.ternlang.studio.common.server;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.InetSocketAddress;
+import java.util.List;
+import java.util.Optional;
 
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.ProcessingException;
@@ -15,16 +17,16 @@ import org.glassfish.jersey.simple.SimpleTraceAnalyzer;
 import org.glassfish.jersey.simple.internal.LocalizationMessages;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.http.core.ContainerSocketProcessor;
-import org.simpleframework.http.socket.service.DirectRouter;
 import org.simpleframework.http.socket.service.Router;
 import org.simpleframework.http.socket.service.RouterContainer;
 import org.simpleframework.http.socket.service.Service;
 import org.simpleframework.transport.SocketProcessor;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
+import org.springframework.stereotype.Component;
 import org.ternlang.studio.common.ProgressManager;
 import org.ternlang.studio.common.resource.CombinationMatcher;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.common.resource.ResourcePathRouter;
 
 @Component
 public class RestServerBuilder {
@@ -32,8 +34,8 @@ public class RestServerBuilder {
    private final CombinationMatcher matcher;
    private final Router router;
 
-   public RestServerBuilder(CombinationMatcher matcher, Service service) {
-      this.router = new DirectRouter(service);
+   public RestServerBuilder(CombinationMatcher matcher, Optional<List<Service>> services) {
+      this.router = new ResourcePathRouter(services);
       this.matcher = matcher;
    }
    

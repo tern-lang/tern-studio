@@ -1,20 +1,17 @@
 package org.ternlang.studio.service.project;
 
-import static org.ternlang.studio.common.resource.SessionConstants.SESSION_ID;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import lombok.extern.slf4j.Slf4j;
-
-import org.simpleframework.http.Cookie;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.socket.FrameChannel;
 import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
+import org.springframework.stereotype.Component;
 import org.ternlang.common.thread.ThreadPool;
+import org.ternlang.studio.common.resource.ResourcePath;
 import org.ternlang.studio.common.resource.SessionConstants;
 import org.ternlang.studio.common.resource.display.DisplayPersister;
 import org.ternlang.studio.project.BackupManager;
@@ -24,17 +21,17 @@ import org.ternlang.studio.service.ConnectListener;
 import org.ternlang.studio.service.ProcessManager;
 import org.ternlang.studio.service.StudioClientLauncher;
 import org.ternlang.studio.service.agent.local.LocalProcessClient;
-import org.ternlang.studio.service.command.Command;
 import org.ternlang.studio.service.command.CommandClient;
 import org.ternlang.studio.service.command.CommandController;
-import org.ternlang.studio.service.command.CommandFilter;
 import org.ternlang.studio.service.command.CommandListener;
 import org.ternlang.studio.service.command.CommandSession;
 import org.ternlang.studio.service.tree.TreeContextManager;
-import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@ResourcePath("/connect.*")
 public class ProjectScriptService implements Service {
 
    private final ConcurrentMap<String, CommandSession> commandSessions;

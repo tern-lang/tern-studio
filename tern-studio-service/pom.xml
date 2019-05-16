@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>tern-studio-service</artifactId>
   <packaging>jar</packaging>
@@ -49,6 +50,11 @@
       <version>6.0.1</version>
     </dependency>
     <dependency>
+      <groupId>com.kodedu.pty4j</groupId>
+      <artifactId>pty4j</artifactId>
+      <version>0.7.4</version>
+    </dependency>
+    <dependency>
       <groupId>javax.activation</groupId>
       <artifactId>activation</artifactId>
       <version>1.1.1</version>
@@ -83,6 +89,13 @@
     </dependency>
   </dependencies>
 
+  <repositories>
+    <repository>
+      <id>pty4j-releases</id>
+      <url>https://github.com/javaterminal/pty4j/raw/master/releases</url>
+    </repository>
+  </repositories>
+
   <build>
     <plugins>
       <plugin>
@@ -105,30 +118,9 @@
           </execution>
         </executions>
       </plugin>
-      <!--plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <finalName>cef</finalName>
-          <appendAssemblyId>false</appendAssemblyId>
-          <archive>
-            <manifest>
-              <mainClass>org.ternlang.studio.service.browser.ChromiumStandalone</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-        <executions>
-          <execution>
-            <id>make-assembly</id> 
-            <phase>package</phase> 
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin-->
+      <!--plugin> <artifactId>maven-assembly-plugin</artifactId> <configuration> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> </descriptorRefs> <finalName>cef</finalName> <appendAssemblyId>false</appendAssemblyId> 
+        <archive> <manifest> <mainClass>org.ternlang.studio.service.browser.ChromiumStandalone</mainClass> </manifest> </archive> </configuration> <executions> <execution> <id>make-assembly</id> <phase>package</phase> 
+        <goals> <goal>single</goal> </goals> </execution> </executions> </plugin -->
     </plugins>
   </build>
 
