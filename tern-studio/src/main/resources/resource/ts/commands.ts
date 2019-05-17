@@ -59,7 +59,7 @@ export module Command {
 	         address += ":";
 	         address += port;
 	      }
-	      address += "/terminal?path=" + resourcePath.getFilePath();
+	      address += "/terminal/" + Common.getProjectName() + resourcePath.getFilePath();
 	
 	      EventBus.sendEvent("LAUNCH", {
 	         address: address,

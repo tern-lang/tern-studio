@@ -2,6 +2,7 @@ package org.ternlang.studio.service.terminal;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -35,17 +36,13 @@ public class TerminalProcess implements TerminalListener {
     private BufferedWriter outputWriter;
     private FrameChannel channel;
     private Executor executor;
-    private String shell; // initial shell command
+    private File directory; // initial directory
 
-    public TerminalProcess(FrameChannel channel) {
-       this(channel, null);
-    }
-    
-    public TerminalProcess(FrameChannel channel, String shell) {
+    public TerminalProcess(FrameChannel channel, File directory) {
        this.commands = new LinkedBlockingQueue<>();
        this.executor = Executors.newFixedThreadPool(1);
+       this.directory = directory;
        this.channel = channel;
-       this.shell = shell;
        
     }
 
@@ -73,16 +70,14 @@ public class TerminalProcess implements TerminalListener {
     private void initializeProcess() throws Exception {
         String userHome = System.getProperty("user.home");
         Path dataDir = Paths.get(userHome).resolve(".ternd/terminalfx");
+        String startPath = directory.getCanonicalPath();
+        
         TerminalHelper.copyLibPty(dataDir);
 
         if (Platform.isWindows()) {
             this.termCommand = "cmd.exe".split("\\s+");
         } else {
             this.termCommand = "/bin/bash -i".split("\\s+");
-        }
-
-        if(Objects.nonNull(shell)){
-            this.termCommand = shell.split("\\s+");
         }
 
         Map<String, String> envs = new HashMap<>(System.getenv());
@@ -96,28 +91,29 @@ public class TerminalProcess implements TerminalListener {
         this.inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         this.errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         this.outputWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-
-        onTerminalCommand("cd c:\\temp\r");
+        
+        onTerminalCommand("cd "+startPath+"\r");
+        
         new TerminalConsole(inputReader, channel).start();
         new TerminalConsole(errorReader, channel).start();
     }
 
-    public void onTerminalCommand(String command) throws InterruptedException {
-
-        if (Objects.isNull(command)) {
-            return;
+    public void onTerminalCommand(String command) {
+        if (command != null) {
+           try {
+              commands.put(command);
+              executor.execute(() -> {
+                  try {
+                      outputWriter.write(commands.poll());
+                      outputWriter.flush();
+                  } catch (IOException e) {
+                      e.printStackTrace();
+                  }
+              });
+           } catch(Exception e) {
+              throw new IllegalStateException("Could not process command '" + command + "'", e);
+           }
         }
-
-        commands.put(command);
-        executor.execute(() -> {
-            try {
-                outputWriter.write(commands.poll());
-                outputWriter.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-
     }
 
     public void onTerminalResize(String columns, String rows) {

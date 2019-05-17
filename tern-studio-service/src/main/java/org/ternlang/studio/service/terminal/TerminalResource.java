@@ -16,7 +16,7 @@ import org.ternlang.studio.project.Workspace;
 import org.springframework.stereotype.Component;
 
 @Component
-@ResourcePath("/terminal")
+@ResourcePath("/terminal/.*")
 public class TerminalResource implements Resource {
    
    private static final String TERMINAL_RESOURCE = "terminal.vm";

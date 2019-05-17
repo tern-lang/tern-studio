@@ -1,9 +1,10 @@
 package org.ternlang.studio.service.terminal;
 
+import java.io.File;
 import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
+import org.simpleframework.http.Path;
+import org.simpleframework.http.Request;
 import org.simpleframework.http.socket.Frame;
 import org.simpleframework.http.socket.FrameChannel;
 import org.simpleframework.http.socket.FrameListener;
@@ -13,6 +14,8 @@ import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
 import org.springframework.stereotype.Component;
 import org.ternlang.studio.common.resource.ResourcePath;
+import org.ternlang.studio.project.Project;
+import org.ternlang.studio.project.Workspace;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,21 +24,32 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@ResourcePath("/session")
+@ResourcePath("/session/.*")
 public class TerminalService implements Service {
 
-   private final Executor executor;
+   private final Workspace workspace;
    
-   public TerminalService() {
-      this.executor = new ScheduledThreadPoolExecutor(3);
+   public TerminalService(Workspace workspace) {
+      this.workspace = workspace;
    }
    
    @Override
    public void connect(Session session) {
       FrameChannel channel = session.getChannel();
+      Request request = session.getRequest();
+      Path path = request.getPath();
+      Project project = workspace.createProject(path);
+      String[] segments = path.getSegments();
+      File root = project.getBasePath();
+      String suffix = "/";
       
+      if(segments.length > 2) {
+         suffix = path.getPath(2);
+      }
       try {
-         SessionController client = new SessionController(channel);
+         File directory = new File(root, suffix);
+         SessionController client = new SessionController(channel, directory);
+         
          channel.register(client);
       } catch(Exception e) {
          log.warn("Error creating session", e);
@@ -48,9 +62,9 @@ public class TerminalService implements Service {
       private final TerminalProcess process;
       private final ObjectMapper mapper;
 
-      public SessionController(FrameChannel channel) {
+      public SessionController(FrameChannel channel, File directory) {
          this.reference = new TypeReference<Map<String, String>>() {};
-         this.process = new TerminalProcess(channel);
+         this.process = new TerminalProcess(channel, directory);
          this.mapper = new ObjectMapper();
       }
 

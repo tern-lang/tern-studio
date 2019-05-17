@@ -116,12 +116,16 @@ function openSocket() {
 	}
 	var segments = window.document.location.pathname.split("/");
 	var address = protocol + location.host;
-	
-	for(var i = 1; i < segments.length - 1; i++) {
-		address += "/" + segments[i];
-	}
-	
+	 
 	address += "/session";
+
+   if(segments.length >= 3) {     
+   	  for(var i = 2; i < segments.length; i++) {
+	   	address += "/" + segments[i];
+	  }
+   } else {
+      address += "/";
+   }
 	var socket = new WebSocket(address);
 	
 	terminal.decorate(document.querySelector('#terminal'));
