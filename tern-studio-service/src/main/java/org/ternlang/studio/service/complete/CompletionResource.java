@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.ternlang.studio.common.resource.Resource;
-import org.ternlang.studio.common.resource.ResourcePath;
 import org.ternlang.studio.index.complete.CompletionCompiler;
 import org.ternlang.studio.index.complete.CompletionRequest;
 import org.ternlang.studio.index.complete.CompletionResponse;
@@ -21,6 +19,8 @@ import org.ternlang.studio.index.complete.FindTraitToImplement;
 import org.ternlang.studio.index.complete.FindTypesToExtend;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
+import org.ternlang.studio.resource.Resource;
+import org.ternlang.studio.resource.ResourcePath;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;

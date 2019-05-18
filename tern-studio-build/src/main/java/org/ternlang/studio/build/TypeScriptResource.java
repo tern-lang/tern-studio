@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.ternlang.studio.common.resource.Resource;
-import org.ternlang.studio.common.resource.ResourcePath;
-import org.ternlang.studio.common.resource.display.DisplayResourceMatcher;
+import org.ternlang.studio.common.display.DisplayResourceMatcher;
+import org.ternlang.studio.resource.Resource;
+import org.ternlang.studio.resource.ResourcePath;
 import org.springframework.stereotype.Component;
 
 @Component

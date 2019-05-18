@@ -16,10 +16,10 @@ import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
-import org.ternlang.studio.common.resource.Resource;
-import org.ternlang.studio.common.resource.ResourcePath;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
+import org.ternlang.studio.resource.Resource;
+import org.ternlang.studio.resource.ResourcePath;
 import org.springframework.stereotype.Component;
 
 @Slf4j

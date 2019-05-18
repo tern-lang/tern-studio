@@ -1,8 +1,8 @@
 package org.ternlang.studio.service.project;
 
-import org.ternlang.studio.common.resource.ContentTypeResolver;
-import org.ternlang.studio.common.resource.ResourcePath;
 import org.ternlang.studio.project.Workspace;
+import org.ternlang.studio.resource.ContentTypeResolver;
+import org.ternlang.studio.resource.ResourcePath;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.AllArgsConstructor;
-
 import org.simpleframework.http.socket.FrameChannel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class TerminalConsole implements Runnable {
@@ -45,7 +45,7 @@ public class TerminalConsole implements Runnable {
       map.put("type", "TERMINAL_PRINT");
       map.put("text", text);
 
-      String message = new ObjectMapper().writeValueAsString(map);
+      String message = new Gson().toJson(map);
 
       channel.send(message);
 

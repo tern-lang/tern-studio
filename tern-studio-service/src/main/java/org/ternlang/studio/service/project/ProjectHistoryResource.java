@@ -16,13 +16,13 @@ import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
 import org.ternlang.core.Reserved;
-import org.ternlang.studio.common.resource.Resource;
-import org.ternlang.studio.common.resource.ResourcePath;
 import org.ternlang.studio.project.BackupFile;
 import org.ternlang.studio.project.BackupManager;
 import org.ternlang.studio.project.FileSystem;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
+import org.ternlang.studio.resource.Resource;
+import org.ternlang.studio.resource.ResourcePath;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;

@@ -1,7 +1,7 @@
 package org.ternlang.studio.service.tree;
 
-import org.ternlang.studio.common.resource.display.DisplayModelResolver;
-import org.ternlang.studio.common.resource.template.TemplateModel;
+import org.ternlang.studio.common.display.DisplayModelResolver;
+import org.ternlang.studio.resource.template.TemplateModel;
 
 public class TreeBuilder {
 

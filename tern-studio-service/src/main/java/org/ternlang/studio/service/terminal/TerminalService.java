@@ -1,6 +1,7 @@
 package org.ternlang.studio.service.terminal;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.Map;
 
 import org.simpleframework.http.Path;
@@ -13,12 +14,12 @@ import org.simpleframework.http.socket.Reason;
 import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
 import org.springframework.stereotype.Component;
-import org.ternlang.studio.common.resource.ResourcePath;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
+import org.ternlang.studio.resource.ResourcePath;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,14 +59,14 @@ public class TerminalService implements Service {
 
    private static class SessionController implements FrameListener {
 
-      private final TypeReference<Map<String, String>> reference;
       private final TerminalProcess process;
-      private final ObjectMapper mapper;
+      private final Type reference;
+      private final Gson mapper;
 
       public SessionController(FrameChannel channel, File directory) {
-         this.reference = new TypeReference<Map<String, String>>() {};
+         this.reference = new TypeToken<Map<String, String>>() {}.getType();
          this.process = new TerminalProcess(channel, directory);
-         this.mapper = new ObjectMapper();
+         this.mapper = new Gson();
       }
 
       @Override
@@ -75,7 +76,7 @@ public class TerminalService implements Service {
          if (type.isText()) {
             try {
                String text = frame.getText();
-               Map<String, String> message = mapper.readValue(text, reference);
+               Map<String, String> message = mapper.fromJson(text, reference);
                String value = message.get("type");
 
                log.info("Terminal command: {}", text);

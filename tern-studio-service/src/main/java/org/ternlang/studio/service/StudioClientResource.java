@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
-import org.ternlang.studio.common.resource.Resource;
-import org.ternlang.studio.common.resource.ResourcePath;
 import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.Resource;
+import org.ternlang.studio.resource.ResourcePath;
 
 @Component
 @AllArgsConstructor

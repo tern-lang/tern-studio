@@ -21,12 +21,12 @@ import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
-import org.ternlang.studio.common.resource.Content;
-import org.ternlang.studio.common.resource.ContentTypeResolver;
-import org.ternlang.studio.common.resource.FileResolver;
-import org.ternlang.studio.common.resource.Resource;
-import org.ternlang.studio.common.resource.ResourcePath;
 import org.ternlang.studio.project.Workspace;
+import org.ternlang.studio.resource.Content;
+import org.ternlang.studio.resource.ContentTypeResolver;
+import org.ternlang.studio.resource.FileResolver;
+import org.ternlang.studio.resource.Resource;
+import org.ternlang.studio.resource.ResourcePath;
 import org.springframework.stereotype.Component;
 
 @Slf4j

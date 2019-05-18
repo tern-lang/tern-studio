@@ -8,8 +8,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
-import org.ternlang.studio.common.resource.display.DisplayKey;
-import org.ternlang.studio.common.resource.template.TemplateModel;
+import org.ternlang.studio.common.display.DisplayKey;
+import org.ternlang.studio.resource.template.TemplateModel;
 
 public class TreeDirectory {
    

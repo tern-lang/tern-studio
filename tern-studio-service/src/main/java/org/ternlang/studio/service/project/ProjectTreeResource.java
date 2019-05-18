@@ -1,6 +1,6 @@
 package org.ternlang.studio.service.project;
 
-import static org.ternlang.studio.common.resource.SessionConstants.SESSION_ID;
+import static org.ternlang.studio.resource.SessionConstants.SESSION_ID;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -10,11 +10,11 @@ import org.simpleframework.http.Cookie;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.ternlang.studio.common.resource.Resource;
-import org.ternlang.studio.common.resource.ResourcePath;
-import org.ternlang.studio.common.resource.display.DisplayModelResolver;
+import org.ternlang.studio.common.display.DisplayModelResolver;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
+import org.ternlang.studio.resource.Resource;
+import org.ternlang.studio.resource.ResourcePath;
 import org.ternlang.studio.service.tree.TreeBuilder;
 import org.ternlang.studio.service.tree.TreeContext;
 import org.ternlang.studio.service.tree.TreeContextManager;

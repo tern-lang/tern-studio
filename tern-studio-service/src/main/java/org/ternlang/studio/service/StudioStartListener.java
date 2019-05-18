@@ -1,14 +1,16 @@
 package org.ternlang.studio.service;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.glassfish.jersey.simple.SimpleServer;
+import java.net.InetSocketAddress;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.ternlang.studio.common.ProgressManager;
-import org.ternlang.studio.common.server.RestServer;
+import org.ternlang.studio.resource.server.RestServer;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -22,8 +24,8 @@ public class StudioStartListener implements ApplicationListener<ContextRefreshed
     public void onApplicationEvent(ContextRefreshedEvent event) {
        try {
           ApplicationContext context = event.getApplicationContext();
-          SimpleServer server = starter.start(context);
-          int port = server.getPort();
+          InetSocketAddress address = starter.start(context);
+          int port = address.getPort();
           String host = "localhost"; //InetAddress.getLocalHost().getHostName();
           String project = String.format("http://%s:%s/", host, port);
           String script = StudioOption.SCRIPT.getValue();

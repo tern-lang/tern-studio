@@ -1,21 +1,19 @@
 package org.ternlang.studio.service.complete;
 
-import javax.inject.Inject;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import org.ternlang.studio.project.Project;
+import org.ternlang.studio.project.Workspace;
+import org.ternlang.studio.resource.action.annotation.DefaultValue;
+import org.ternlang.studio.resource.action.annotation.POST;
+import org.ternlang.studio.resource.action.annotation.Path;
+import org.ternlang.studio.resource.action.annotation.PathParam;
+import org.ternlang.studio.resource.action.annotation.Produces;
+import org.ternlang.studio.resource.action.annotation.QueryParam;
 
 import lombok.AllArgsConstructor;
 
-import org.ternlang.studio.project.Project;
-import org.ternlang.studio.project.Workspace;
-
 // /format/<project>/<file>
 @Path("/format")
-@AllArgsConstructor(onConstructor=@__({@Inject}))
+@AllArgsConstructor
 public class SourceFormatResource {
 
    private final SourceFormatter formatter;

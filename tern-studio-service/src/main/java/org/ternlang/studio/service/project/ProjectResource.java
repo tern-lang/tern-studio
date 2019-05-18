@@ -8,11 +8,11 @@ import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.springframework.stereotype.Component;
-import org.ternlang.studio.common.resource.Resource;
-import org.ternlang.studio.common.resource.ResourcePath;
-import org.ternlang.studio.common.resource.display.DisplayModelResolver;
-import org.ternlang.studio.common.resource.template.TemplateEngine;
-import org.ternlang.studio.common.resource.template.TemplateModel;
+import org.ternlang.studio.common.display.DisplayModelResolver;
+import org.ternlang.studio.resource.Resource;
+import org.ternlang.studio.resource.ResourcePath;
+import org.ternlang.studio.resource.template.TemplateEngine;
+import org.ternlang.studio.resource.template.TemplateModel;
 
 @Component
 @ResourcePath("/project/.*")
