@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ternlang.service.annotation.Component;
 import org.ternlang.studio.project.Workspace;
-import org.ternlang.studio.resource.action.annotation.Component;
 
 import lombok.AllArgsConstructor;
 

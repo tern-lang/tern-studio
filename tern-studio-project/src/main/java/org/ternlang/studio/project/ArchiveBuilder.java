@@ -26,12 +26,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.ternlang.core.type.extend.FileExtension;
+import org.ternlang.service.PathMatchingClassScanner;
 import org.ternlang.studio.agent.local.LocalJarProcess;
 import org.ternlang.studio.agent.local.LocalProcess;
 import org.ternlang.studio.agent.runtime.MainScriptValue;
 import org.ternlang.studio.project.generate.ClassPathConfigFile;
 import org.ternlang.studio.project.generate.ClassPathFileGenerator;
-import org.ternlang.studio.resource.boot.PathMatchingClassScanner;
 
 import io.github.classgraph.ClassInfo;
 import lombok.AllArgsConstructor;

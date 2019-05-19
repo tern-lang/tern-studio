@@ -1,0 +1,4 @@
+<theme name="terminal" extend="dark">
+  <value key="TREE_BACKGROUND_COLOR">#0f0f0f</value>
+  <value key="TREE_FONT_COLOR">#DEDEDE</value>  
+</theme>

@@ -2,8 +2,8 @@ package org.ternlang.studio.build;
 
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.ternlang.studio.resource.action.annotation.GET;
-import org.ternlang.studio.resource.action.annotation.Path;
+import org.ternlang.service.annotation.GET;
+import org.ternlang.service.annotation.Path;
 
 import lombok.AllArgsConstructor;
 

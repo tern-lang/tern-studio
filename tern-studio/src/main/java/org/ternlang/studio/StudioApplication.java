@@ -6,15 +6,15 @@ import java.util.jar.Manifest;
 
 import javax.swing.UIManager;
 
+import org.ternlang.service.DependencySystemBuilder;
 import org.ternlang.studio.agent.cli.CommandLine;
 import org.ternlang.studio.agent.cli.CommandLineBuilder;
 import org.ternlang.studio.agent.runtime.MainClassValue;
 import org.ternlang.studio.agent.runtime.ManifestLocator;
 import org.ternlang.studio.agent.runtime.VersionValue;
-import org.ternlang.studio.resource.boot.DependencySystemBuilder;
-import org.ternlang.studio.service.SplashScreen;
-import org.ternlang.studio.service.StudioCommandLine;
-import org.ternlang.studio.service.StudioOption;
+import org.ternlang.studio.core.SplashScreen;
+import org.ternlang.studio.core.StudioCommandLine;
+import org.ternlang.studio.core.StudioOption;
 import org.ternlang.ui.OperatingSystem;
 import org.ternlang.ui.chrome.install.deploy.DeploymentManager;
 import org.ternlang.ui.chrome.install.deploy.DeploymentTask;

@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
+import org.ternlang.service.annotation.Component;
+import org.ternlang.service.resource.Resource;
 import org.ternlang.studio.common.display.DisplayResourceMatcher;
-import org.ternlang.studio.resource.Resource;
-import org.ternlang.studio.resource.action.annotation.Component;
 
 import lombok.SneakyThrows;
 

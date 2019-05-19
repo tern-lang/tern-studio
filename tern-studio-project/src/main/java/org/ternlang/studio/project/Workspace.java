@@ -16,6 +16,8 @@ import org.simpleframework.http.Path;
 import org.slf4j.LoggerFactory;
 
 import org.ternlang.common.thread.ThreadPool;
+import org.ternlang.service.annotation.Component;
+import org.ternlang.service.annotation.Value;
 import org.ternlang.studio.common.FileDirectorySource;
 import org.ternlang.studio.common.ProgressManager;
 import org.ternlang.studio.project.config.ConfigurationReader;
@@ -25,8 +27,6 @@ import org.ternlang.studio.project.config.ProjectConfiguration;
 import org.ternlang.studio.project.config.WorkspaceConfiguration;
 import org.ternlang.studio.project.decompile.Decompiler;
 import org.ternlang.studio.project.generate.ConfigFileSource;
-import org.ternlang.studio.resource.action.annotation.Component;
-import org.ternlang.studio.resource.action.annotation.Value;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;

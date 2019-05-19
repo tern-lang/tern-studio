@@ -9,15 +9,20 @@
     <artifactId>tern-studio-parent</artifactId>
     <version>1.4.6</version>
   </parent>
+  <properties>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
+    <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>org.ternlang</groupId>
-      <artifactId>tern-compile</artifactId>
+      <artifactId>tern-platform</artifactId>
       <version>1.4.6</version>
     </dependency>
     <dependency>
       <groupId>org.ternlang</groupId>
-      <artifactId>tern-tree</artifactId>
+      <artifactId>tern-ui</artifactId>
       <version>1.4.6</version>
     </dependency>
     <dependency>
@@ -27,24 +32,56 @@
     </dependency>
     <dependency>
       <groupId>org.ternlang</groupId>
-      <artifactId>tern-studio-resource</artifactId>
+      <artifactId>tern-studio-project</artifactId>
       <version>1.4.6</version>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
+      <groupId>org.simpleframework</groupId>
+      <artifactId>simple-xml</artifactId>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
+      <groupId>org.simpleframework</groupId>
+      <artifactId>simple-http</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.kodedu.pty4j</groupId>
+      <artifactId>pty4j</artifactId>
+      <version>0.7.4</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib</artifactId>
+      <version>3.2.5</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+
+  <repositories>
+    <repository>
+      <id>pty4j-releases</id>
+      <url>https://github.com/javaterminal/pty4j/raw/master/releases</url>
+    </repository>
+  </repositories>
+
   <build>
     <plugins>
       <plugin>
@@ -67,6 +104,10 @@
           </execution>
         </executions>
       </plugin>
+      <!--plugin> <artifactId>maven-assembly-plugin</artifactId> <configuration> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> </descriptorRefs> <finalName>cef</finalName> <appendAssemblyId>false</appendAssemblyId> 
+        <archive> <manifest> <mainClass>org.ternlang.studio.service.browser.ChromiumStandalone</mainClass> </manifest> </archive> </configuration> <executions> <execution> <id>make-assembly</id> <phase>package</phase> 
+        <goals> <goal>single</goal> </goals> </execution> </executions> </plugin -->
     </plugins>
   </build>
+
 </project>

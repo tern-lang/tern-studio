@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.ternlang.service.annotation.Component;
 import org.ternlang.studio.project.FilePersister;
 import org.ternlang.studio.project.FileSystem;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.config.ProjectConfiguration;
-import org.ternlang.studio.resource.action.annotation.Component;
 
 import lombok.extern.slf4j.Slf4j;
 

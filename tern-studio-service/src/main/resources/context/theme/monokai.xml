@@ -1,5 +1,0 @@
-<theme name="monokai" extend="dark">
-  <value key="TREE_BACKGROUND_COLOR">#2F3129</value>
-  <value key="HELP_BACKGROUND_COLOR">#2F3129</value>
-  <value key="CONSOLE_BACKGROUND_COLOR">#2F3129</value>
-</theme>

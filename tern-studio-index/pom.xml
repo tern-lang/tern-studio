@@ -21,7 +21,7 @@
     </dependency>
     <dependency>
       <groupId>org.ternlang</groupId>
-      <artifactId>tern-studio-core</artifactId>
+      <artifactId>tern-studio-common</artifactId>
       <version>1.4.6</version>
     </dependency>
     <dependency>
