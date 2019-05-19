@@ -1,24 +1,24 @@
 package org.ternlang.studio.service;
 
-import org.simpleframework.http.Request;
-import org.simpleframework.http.Response;
-import org.simpleframework.http.Status;
-import org.ternlang.studio.resource.Resource;
-import org.ternlang.studio.resource.ResourcePath;
-import org.ternlang.studio.resource.action.annotation.Component;
+import org.ternlang.core.Bug;
+import org.ternlang.studio.resource.action.annotation.GET;
+import org.ternlang.studio.resource.action.annotation.Path;
+import org.ternlang.studio.resource.action.annotation.Produces;
 
 import lombok.AllArgsConstructor;
 
-@Component
+@Path("/debugger")
 @AllArgsConstructor
-@ResourcePath("/debugger")
-public class StudioClientResource implements Resource {
+public class StudioClientResource {
 
    private final StudioClientLauncher launcher;
 
-   @Override
-   public void handle(Request request, Response response) throws Throwable {
-      response.setStatus(Status.OK);
+   @GET
+   @Bug("Why does it need to be /debugger/ ??")
+   @Path(".*")
+   @Produces("text/plain")
+   public boolean debug() throws Throwable {
       launcher.debug();
+      return true;
    }
 }

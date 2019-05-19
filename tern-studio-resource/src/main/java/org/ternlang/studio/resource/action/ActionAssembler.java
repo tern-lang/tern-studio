@@ -18,6 +18,7 @@ import org.ternlang.studio.resource.action.extract.BodyExtractor;
 import org.ternlang.studio.resource.action.extract.CookieExtractor;
 import org.ternlang.studio.resource.action.extract.Extractor;
 import org.ternlang.studio.resource.action.extract.HeaderExtractor;
+import org.ternlang.studio.resource.action.extract.JsonExtractor;
 import org.ternlang.studio.resource.action.extract.ModelExtractor;
 import org.ternlang.studio.resource.action.extract.PartExtractor;
 import org.ternlang.studio.resource.action.extract.PathExtractor;
@@ -86,6 +87,7 @@ public class ActionAssembler {
       builders.add(new ExceptionWriter());
       builders.add(new StringWriter());
 
+      extractors.add(new JsonExtractor());
       extractors.add(new PathExtractor());
       extractors.add(new QueryExtractor());
       extractors.add(new CookieExtractor());
