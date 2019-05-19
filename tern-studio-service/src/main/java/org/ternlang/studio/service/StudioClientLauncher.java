@@ -14,6 +14,7 @@ import org.ternlang.ui.ClientControl;
 import org.ternlang.ui.ClientProvider;
 
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class StudioClientLauncher {    
    
@@ -26,9 +27,9 @@ public class StudioClientLauncher {
    private final boolean debug;
    
    public StudioClientLauncher(
-         @Value("${directory}") File directory, 
-         @Value("${server-only}") boolean disabled, 
-         @Value("${client-debug}") boolean debug)
+         @org.ternlang.studio.resource.action.annotation.Value("${directory}") @Value("${directory}") File directory, 
+         @org.ternlang.studio.resource.action.annotation.Value("${server-only}") @Value("${server-only}") boolean disabled, 
+         @org.ternlang.studio.resource.action.annotation.Value("${client-debug}") @Value("${client-debug}") boolean debug)
    {
       this.reference = new AtomicReference<ClientControl>();
       this.directory = directory;

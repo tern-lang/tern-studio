@@ -16,13 +16,14 @@ import org.springframework.stereotype.Component;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ResourcePathRouter implements Router {
    
-   private final Optional<List<Service>> services;
    private final Cache<String, Router> routes;
-
-   public ResourcePathRouter(Optional<List<Service>> services) {
+   private final List<Service> services;
+   
+   public ResourcePathRouter(List<Service> services) {
       this.routes = new LeastRecentlyUsedCache<String, Router>();
       this.services = services;
    }
@@ -38,21 +39,17 @@ public class ResourcePathRouter implements Router {
             Router router = routes.fetch(normal);
             
             if(router == null) {
-               if(services.isPresent()) {
-                  List<Service> list = services.get();
+               for(Service service : services) {
+                  Class<?> type = service.getClass();
+                  ResourcePath label = type.getAnnotation(ResourcePath.class);
                   
-                  for(Service service : list) {
-                     Class<?> type = service.getClass();
-                     ResourcePath label = type.getAnnotation(ResourcePath.class);
+                  if(label != null) {
+                     String pattern = label.value();
                      
-                     if(label != null) {
-                        String pattern = label.value();
-                        
-                        if(normal.matches(pattern)) {
-                           router = new DirectRouter(service);
-                           routes.cache(normal, router);
-                           return router.route(request, response);
-                        }
+                     if(normal.matches(pattern)) {
+                        router = new DirectRouter(service);
+                        routes.cache(normal, router);
+                        return router.route(request, response);
                      }
                   }
                }

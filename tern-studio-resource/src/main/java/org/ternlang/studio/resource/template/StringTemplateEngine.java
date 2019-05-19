@@ -10,6 +10,7 @@ import org.ternlang.studio.resource.Content;
 import org.ternlang.studio.resource.FileResolver;
 import org.springframework.stereotype.Component;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class StringTemplateEngine implements TemplateEngine {
    

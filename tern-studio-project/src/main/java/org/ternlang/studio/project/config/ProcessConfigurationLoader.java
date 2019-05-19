@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.ternlang.studio.project.Workspace;
 import org.springframework.stereotype.Component;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @AllArgsConstructor
 public class ProcessConfigurationLoader {

@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 
 // /complete/<project>
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/complete.*")
 public class CompletionResource implements Resource {

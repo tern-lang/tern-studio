@@ -13,6 +13,7 @@ import org.ternlang.studio.project.config.ProjectConfiguration;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ClassPathFileGenerator implements ConfigFileGenerator {
    

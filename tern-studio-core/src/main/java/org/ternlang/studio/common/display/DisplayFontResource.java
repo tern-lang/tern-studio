@@ -13,7 +13,7 @@ import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
 
 // /theme/<project>
-@Component
+@org.ternlang.studio.resource.action.annotation.Component
 @ResourcePath("/font/.*")
 public class DisplayFontResource implements Resource {
 

@@ -27,6 +27,7 @@ import org.ternlang.common.DateFormatter;
 import org.ternlang.studio.project.config.WorkspaceConfiguration;
 
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @AllArgsConstructor
 public class BackupManager {

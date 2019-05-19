@@ -9,6 +9,7 @@ import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
 
 @Component
+@org.ternlang.studio.resource.action.annotation.Component
 @AllArgsConstructor
 @ResourcePath("/debugger")
 public class StudioClientResource implements Resource {

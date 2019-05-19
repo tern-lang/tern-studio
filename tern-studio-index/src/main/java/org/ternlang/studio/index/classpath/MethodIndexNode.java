@@ -3,12 +3,11 @@ package org.ternlang.studio.index.classpath;
 import java.util.Collections;
 import java.util.Set;
 
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.MethodInfo;
-import io.github.classgraph.MethodParameterInfo;
-import io.github.classgraph.MethodTypeSignature;
 import org.ternlang.studio.index.IndexNode;
 import org.ternlang.studio.index.IndexType;
+
+import io.github.classgraph.MethodInfo;
+import io.github.classgraph.MethodParameterInfo;
 
 public class MethodIndexNode implements IndexNode {
 

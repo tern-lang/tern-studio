@@ -15,26 +15,25 @@ import org.ternlang.studio.project.config.ProjectConfiguration;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ConfigFileSource {
    
    private static final String PROJECT_FILE = ProjectConfiguration.PROJECT_FILE;
    
-   private final Optional<List<ConfigFileGenerator>> generators;
+   private final List<ConfigFileGenerator> generators;
    private final Map<String, ConfigFileGenerator> cache;
    private final Map<String, ConfigFile> files;
    
-   public ConfigFileSource(Optional<List<ConfigFileGenerator>> generators) {
+   public ConfigFileSource(List<ConfigFileGenerator> generators) {
       this.cache = new ConcurrentHashMap<String, ConfigFileGenerator>();
       this.files = new ConcurrentHashMap<String, ConfigFile>();
       this.generators = generators;
    }
 
    public synchronized <T extends ConfigFile> T getConfigFile(Project project, String name) {
-      if(generators.isPresent() && cache.isEmpty()) {
-         List<ConfigFileGenerator> list = generators.get();
-         
-         for(ConfigFileGenerator generator : list) {
+      if(cache.isEmpty()) {
+         for(ConfigFileGenerator generator : generators) {
             String configPath = generator.getConfigName(project);
             cache.put(configPath, generator);
          }
@@ -93,10 +92,8 @@ public class ConfigFileSource {
    }
 
    public synchronized boolean deleteConfigFile(Project project, String name) {
-      if(generators.isPresent() && cache.isEmpty()) {
-         List<ConfigFileGenerator> list = generators.get();
-
-         for(ConfigFileGenerator generator : list) {
+      if(cache.isEmpty()) {
+         for(ConfigFileGenerator generator : generators) {
             String configPath = generator.getConfigName(project);
             cache.put(configPath, generator);
          }

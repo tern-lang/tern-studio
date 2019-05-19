@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import com.google.javascript.jscomp.CompilationLevel;
 
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class TypeScriptCompiler {
    

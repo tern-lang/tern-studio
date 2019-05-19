@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import org.ternlang.studio.agent.worker.WorkerNameGenerator;
 import org.ternlang.studio.service.ProcessNameFilter;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class WorkerProcessNameFilter implements ProcessNameFilter {
    

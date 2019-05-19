@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.springframework.stereotype.Component;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class FileResolver {
 

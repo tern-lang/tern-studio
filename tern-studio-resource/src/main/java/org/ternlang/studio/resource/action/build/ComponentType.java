@@ -3,13 +3,13 @@ package org.ternlang.studio.resource.action.build;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
-import org.ternlang.studio.resource.action.annotation.Component;
 import org.ternlang.studio.resource.action.annotation.DELETE;
 import org.ternlang.studio.resource.action.annotation.GET;
 import org.ternlang.studio.resource.action.annotation.Intercept;
 import org.ternlang.studio.resource.action.annotation.POST;
 import org.ternlang.studio.resource.action.annotation.PUT;
 import org.ternlang.studio.resource.action.annotation.Path;
+import org.ternlang.studio.resource.action.annotation.Payload;
 
 public enum ComponentType {
    SERVICE(Path.class) {
@@ -39,7 +39,7 @@ public enum ComponentType {
          return null;
       }
    },
-   COMPONENT(Component.class) {
+   PAYLOAD(Payload.class) {
       public String extractPath(AnnotatedElement element) {
          return null;
       }

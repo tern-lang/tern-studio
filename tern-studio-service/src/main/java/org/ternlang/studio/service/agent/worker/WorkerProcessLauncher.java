@@ -20,6 +20,7 @@ import org.ternlang.studio.service.ProcessLauncher;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class WorkerProcessLauncher implements ProcessLauncher {
    

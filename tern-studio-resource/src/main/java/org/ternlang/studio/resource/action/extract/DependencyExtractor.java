@@ -4,12 +4,12 @@ import org.ternlang.studio.resource.action.Context;
 import org.ternlang.studio.resource.action.annotation.Inject;
 import org.ternlang.studio.resource.action.build.DependencySystem;
 
-public class ComponentSourceExtractor implements Extractor<Object> {
+public class DependencyExtractor implements Extractor<Object> {
 
    private final DependencySystem system;
    private final Class type;
 
-   public ComponentSourceExtractor(DependencySystem system, Class type) {
+   public DependencyExtractor(DependencySystem system, Class type) {
       this.system = system;
       this.type = type;
    }
@@ -36,10 +36,10 @@ public class ComponentSourceExtractor implements Extractor<Object> {
             int length = name.length();
             
             if(length > 0) {
-               return system.getDependency(type, name);
+               return system.resolve(type, name);
             }
          }
-         return system.getDependency(type);
+         return system.resolve(type);
       } catch (Exception e) {
          return null;
       } 

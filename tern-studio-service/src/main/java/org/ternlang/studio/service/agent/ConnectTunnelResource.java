@@ -19,6 +19,7 @@ import org.ternlang.studio.service.ProcessManager;
 import org.ternlang.studio.service.agent.worker.WorkerProcessBeginListener;
 import org.springframework.stereotype.Component;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath(".*:\\d+/connect/.+")
 public class ConnectTunnelResource implements Resource {

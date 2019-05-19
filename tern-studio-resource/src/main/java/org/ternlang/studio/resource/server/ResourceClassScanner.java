@@ -17,6 +17,7 @@ import org.ternlang.core.ContextClassLoader;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ResourceClassScanner {
    

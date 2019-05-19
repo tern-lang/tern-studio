@@ -13,6 +13,7 @@ import org.ternlang.studio.agent.cli.CommandLineBuilder;
 import org.ternlang.studio.agent.runtime.MainClassValue;
 import org.ternlang.studio.agent.runtime.ManifestLocator;
 import org.ternlang.studio.agent.runtime.VersionValue;
+import org.ternlang.studio.resource.boot.DependencySystemBuilder;
 import org.ternlang.studio.service.SplashScreen;
 import org.ternlang.studio.service.StudioCommandLine;
 import org.ternlang.studio.service.StudioOption;
@@ -43,7 +44,8 @@ public class StudioApplication {
 
       if (commandLine.isServerOnly()) {
          System.setProperty("java.awt.headless", "true");
-         SpringApplication.run(StudioApplication.class, list);
+         //SpringApplication.run(StudioApplication.class, list);
+         DependencySystemBuilder.create("org.ternlang");
       } else {
          if (process.isForkRequired()) {
             forkTask.run();
@@ -53,7 +55,8 @@ public class StudioApplication {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             SplashScreen.getPanel().show(60000); // 1 minute
             SplashScreen.getPanel().update("Tern Studio " + version);
-            SpringApplication.run(StudioApplication.class, list);
+            //SpringApplication.run(StudioApplication.class, list);
+            DependencySystemBuilder.create("org.ternlang");
          }
       }
    }

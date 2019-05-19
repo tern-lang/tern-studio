@@ -91,7 +91,7 @@ public class ValidationTest extends TestCase {
       extractors.add(new CookieExtractor());
       extractors.add(new HeaderExtractor());
       extractors.add(new PartExtractor());
-      DependencySystem dependencySystem = new MapSystem(Collections.EMPTY_MAP);
+      DependencySystem dependencySystem = new MapSystem();
       ComponentFinder finder = new ComponentFinder(ControllerThatTakesComponent.class);
       MethodScanner scanner = new MethodScanner(dependencySystem, extractors);
       MethodScannerResolver resolver = new MethodScannerResolver(scanner, finder);

@@ -11,6 +11,7 @@ import org.ternlang.common.LeastRecentlyUsedCache;
 
 import com.google.gson.Gson;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ContentTypeResolver {
    

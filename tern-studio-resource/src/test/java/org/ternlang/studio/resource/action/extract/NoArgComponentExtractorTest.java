@@ -58,11 +58,11 @@ public class NoArgComponentExtractorTest extends TestCase {
       extractors.add(new CookieExtractor());
       extractors.add(new HeaderExtractor());
       extractors.add(new PartExtractor());
-      DependencySystem dependencySystem = new MapSystem(Collections.EMPTY_MAP);
+      DependencySystem dependencySystem = new MapSystem();
       ConstructorScanner scanner = new ConstructorScanner(dependencySystem, extractors);
       List<ComponentBuilder> builder = scanner.createBuilders(Query.class);
       ComponentExtractor extractor = new ComponentExtractor(builder, Query.class);
-      Parameter parameter = new Parameter(Query.class, null, Collections.EMPTY_MAP, false);
+      Parameter parameter = new Parameter(Query.class, null, null, Collections.EMPTY_MAP, false);
       MockRequest request = new MockRequest("GET", "/?x=X", "");
       MockResponse response = new MockResponse();
       Context context = new HashContext(request, response);

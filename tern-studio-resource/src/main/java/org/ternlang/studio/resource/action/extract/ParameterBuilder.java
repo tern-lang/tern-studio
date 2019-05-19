@@ -17,6 +17,15 @@ public class ParameterBuilder {
       this.extractors = extractors;
       this.parameters = parameters;
    }
+   
+   public Class[] require() {
+      Class[] types = new Class[parameters.length];
+
+      for (int i = 0; i < parameters.length; i++) {
+         types[i] = parameters[i].getType();
+      }
+      return types;
+   }
 
    public Object[] extract(Context context) throws Exception {
       Object[] arguments = new Object[extractors.length];
@@ -47,9 +56,7 @@ public class ParameterBuilder {
          Parameter parameter = parameters[i];
 
          if (extractor != null) {
-            Object result = extractor.extract(parameter, context);
-
-            if (result == null) {
+            if(!extractor.accept(parameter)) {
                if (parameter.isRequired()) {
                   return -1;
                }

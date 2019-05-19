@@ -2,6 +2,7 @@ package org.ternlang.studio.resource.action.build;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import org.springframework.util.LinkedMultiValueMap;
@@ -38,6 +39,9 @@ public class MethodScanner extends ConstructorScanner {
                   MethodDispatcher dispatcher = createDispatcher(builders, method, matcher);
                   String pattern = matcher.pattern();
 
+                  if(dispatcher == null) {
+                     throw new IllegalStateException("Could not resolve for " + pattern + " on " + method);
+                  }
                   dispatchers.add(pattern, dispatcher);
                }
             }
@@ -87,14 +91,18 @@ public class MethodScanner extends ConstructorScanner {
    }
 
    private MethodExecutor createExecutor(Method method, MethodMatcher matcher) throws Exception {
-      Annotation[] annotations = method.getAnnotations();
-      MethodHeader header = createHeader(method, annotations);
       ParameterBuilder extractor = createExtractor(method);
       
-      if (!method.isAccessible()) {
-         method.setAccessible(true);
+      if(extractor != null) {
+         Annotation[] annotations = method.getAnnotations();
+         MethodHeader header = createHeader(method, annotations);
+         
+         if (!method.isAccessible()) {
+            method.setAccessible(true);
+         }
+         return new MethodExecutor(matcher, header, extractor, validator, method);
       }
-      return new MethodExecutor(matcher, header, extractor, validator, method);
+      return null;
    }
 
    private MethodHeader createHeader(Method method, Annotation[] annotations) throws Exception {
@@ -108,13 +116,17 @@ public class MethodScanner extends ConstructorScanner {
 
    private Parameter[] createParameters(Method method) throws Exception {
       Annotation[][] annotations = method.getParameterAnnotations();
-      Class[] types = method.getParameterTypes();
+      Type[] types = method.getGenericParameterTypes();
+      Class[] classes = method.getParameterTypes();
 
       if (types.length > 0) {
          Parameter[] parameters = new Parameter[types.length];
 
          for (int i = 0; i < types.length; i++) {
-            parameters[i] = createParameter(types[i], annotations[i], false);
+            Class entry = createDependency(types[i]);
+            Class type = classes[i];
+            
+            parameters[i] = createParameter(type, entry, annotations[i], true);
          }
          return parameters;
       }
@@ -123,12 +135,17 @@ public class MethodScanner extends ConstructorScanner {
 
    private ParameterBuilder createExtractor(Method method) throws Exception {
       Parameter[] parameters = createParameters(method);
+      Class parent = method.getDeclaringClass();
 
       if (parameters.length > 0) {
          Extractor[] extractors = new Extractor[parameters.length];
 
          for (int i = 0; i < parameters.length; i++) {
-            extractors[i] = createExtractor(parameters[i]);
+            extractors[i] = createExtractor(parent, parameters[i]);
+            
+            if(extractors[i] == null) {
+               return null;
+            }
          }
          return new ParameterBuilder(extractors, parameters);
       }

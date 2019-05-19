@@ -5,13 +5,14 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ResourceSystem {
 
-   private final Optional<List<ResourceMatcher>> matchers;
    private final RegularExpressionMatcher matcher;
+   private final List<ResourceMatcher> matchers;
    
-   public ResourceSystem(RegularExpressionMatcher matcher, Optional<List<ResourceMatcher>> matchers) {
+   public ResourceSystem(RegularExpressionMatcher matcher, List<ResourceMatcher> matchers) {
       this.matchers = matchers;
       this.matcher = matcher;
    }
@@ -21,16 +22,12 @@ public class ResourceSystem {
          Resource resource = matcher.match(request, response);
          
          if(resource == null) {
-            if(matchers.isPresent()) {
-               List<ResourceMatcher> list = matchers.get();
-               
-               for (ResourceMatcher next : list) {
-                  if(next != matcher) {
-                     Resource matched = next.match(request, response);
-            
-                     if (matched != null) {
-                        return matched;
-                     }
+            for (ResourceMatcher next : matchers) {
+               if(next != matcher) {
+                  Resource matched = next.match(request, response);
+         
+                  if (matched != null) {
+                     return matched;
                   }
                }
             }
@@ -38,5 +35,4 @@ public class ResourceSystem {
          return resource;
       };
    }
-
 }

@@ -1,6 +1,5 @@
 package org.ternlang.studio.resource.action.build;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,16 +7,9 @@ import org.ternlang.studio.resource.action.Context;
 import org.ternlang.studio.resource.action.HashContext;
 import org.ternlang.studio.resource.action.Model;
 import org.ternlang.studio.resource.action.annotation.Component;
-import org.ternlang.studio.resource.action.annotation.Inject;
 import org.ternlang.studio.resource.action.annotation.Path;
 import org.ternlang.studio.resource.action.annotation.QueryParam;
 import org.ternlang.studio.resource.action.annotation.Required;
-import org.ternlang.studio.resource.action.build.ComponentFinder;
-import org.ternlang.studio.resource.action.build.DependencySystem;
-import org.ternlang.studio.resource.action.build.MapSystem;
-import org.ternlang.studio.resource.action.build.MethodDispatcher;
-import org.ternlang.studio.resource.action.build.MethodScanner;
-import org.ternlang.studio.resource.action.build.MethodScannerResolver;
 import org.ternlang.studio.resource.action.extract.CookieExtractor;
 import org.ternlang.studio.resource.action.extract.Extractor;
 import org.ternlang.studio.resource.action.extract.HeaderExtractor;
@@ -81,7 +73,7 @@ public class MethodValidationTest extends TestCase {
       extractors.add(new CookieExtractor());
       extractors.add(new HeaderExtractor());
       extractors.add(new PartExtractor());
-      DependencySystem dependencySystem = new MapSystem(Collections.EMPTY_MAP);
+      DependencySystem dependencySystem = new MapSystem();
       ComponentFinder finder = new ComponentFinder(SomeExampleController.class);
       MethodScanner scanner = new MethodScanner(dependencySystem, extractors);
       MethodScannerResolver resolver = new MethodScannerResolver(scanner, finder);
@@ -105,7 +97,7 @@ public class MethodValidationTest extends TestCase {
       extractors.add(new CookieExtractor());
       extractors.add(new HeaderExtractor());
       extractors.add(new PartExtractor());
-      DependencySystem dependencySystem = new MapSystem(Collections.EMPTY_MAP);
+      DependencySystem dependencySystem = new MapSystem();
       ComponentFinder finder = new ComponentFinder(SomeExampleController.class);
       MethodScanner scanner = new MethodScanner(dependencySystem, extractors);
       MethodScannerResolver resolver = new MethodScannerResolver(scanner, finder);

@@ -12,6 +12,7 @@ import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourceMatcher;
 import org.springframework.stereotype.Component;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class DisplayResourceMatcher implements ResourceMatcher {
 

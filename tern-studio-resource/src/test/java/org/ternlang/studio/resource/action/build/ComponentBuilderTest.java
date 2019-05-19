@@ -156,12 +156,10 @@ public class ComponentBuilderTest extends TestCase {
       extractors.add(new HeaderExtractor());
       extractors.add(new PartExtractor());
       
-      Map<String, Object> dependency = new LinkedHashMap<String, Object>();
-      DependencySystem system = new MapSystem(dependency);
+      DependencySystem system = new MapSystem();
       
-      dependency.put("foo", new FooService("foo"));
-      dependency.put("blah1", new BlahService("blah1"));
-      dependency.put("blah2", new BlahService("blah2"));
+      system.register(new FooService("foo"));
+      system.register(new BlahService("blah1"));
       
       scanner = new ConstructorScanner(system, extractors);
    }

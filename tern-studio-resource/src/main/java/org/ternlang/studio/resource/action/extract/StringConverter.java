@@ -1,5 +1,8 @@
 package org.ternlang.studio.resource.action.extract;
 
+import java.io.File;
+import java.nio.file.Paths;
+
 public class StringConverter {
 
    public StringConverter() {
@@ -34,6 +37,9 @@ public class StringConverter {
          return true;
       }
       if (actual == Character.class) {
+         return true;
+      }
+      if (actual == File.class) {
          return true;
       }
       if (Enum.class.isAssignableFrom(type)) {
@@ -71,6 +77,9 @@ public class StringConverter {
       }
       if (actual == Character.class) {
          return value.charAt(0);
+      }
+      if (actual == File.class) {
+         return Paths.get(value).toFile();
       }
       if (Enum.class.isAssignableFrom(type)) {
          return Enum.valueOf(type, value);

@@ -12,6 +12,7 @@ import org.ternlang.studio.resource.ResourcePath;
 import com.google.gson.Gson;
 
 // /theme/<project>
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/display/.*")
 public class DisplayThemeResource implements Resource {

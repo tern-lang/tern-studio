@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.ternlang.studio.resource.template.TemplateEngine;
 import org.ternlang.studio.resource.template.TemplateModel;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class DisplayInterpolator {
    

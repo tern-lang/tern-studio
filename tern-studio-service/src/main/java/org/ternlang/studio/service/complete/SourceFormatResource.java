@@ -2,6 +2,7 @@ package org.ternlang.studio.service.complete;
 
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
+import org.ternlang.studio.resource.action.annotation.Body;
 import org.ternlang.studio.resource.action.annotation.DefaultValue;
 import org.ternlang.studio.resource.action.annotation.POST;
 import org.ternlang.studio.resource.action.annotation.Path;
@@ -26,7 +27,7 @@ public class SourceFormatResource {
          @PathParam("project") String name, 
          @PathParam("path") String path, 
          @QueryParam("indent") @DefaultValue("3") int indent,
-         String body) throws Exception
+         @Body String body) throws Exception
    {
       Project project = workspace.getByName(name);
       return formatter.format(project, path, body, indent);

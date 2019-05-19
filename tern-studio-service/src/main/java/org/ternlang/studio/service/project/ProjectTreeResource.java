@@ -20,6 +20,7 @@ import org.ternlang.studio.service.tree.TreeContext;
 import org.ternlang.studio.service.tree.TreeContextManager;
 import org.springframework.stereotype.Component;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/tree.*")
 public class ProjectTreeResource implements Resource {

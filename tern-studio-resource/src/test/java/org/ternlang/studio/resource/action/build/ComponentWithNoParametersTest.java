@@ -1,6 +1,5 @@
 package org.ternlang.studio.resource.action.build;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,10 +9,6 @@ import org.ternlang.studio.resource.action.annotation.Component;
 import org.ternlang.studio.resource.action.annotation.Inject;
 import org.ternlang.studio.resource.action.annotation.QueryParam;
 import org.ternlang.studio.resource.action.annotation.Required;
-import org.ternlang.studio.resource.action.build.ComponentBuilder;
-import org.ternlang.studio.resource.action.build.ConstructorScanner;
-import org.ternlang.studio.resource.action.build.DependencySystem;
-import org.ternlang.studio.resource.action.build.MapSystem;
 import org.ternlang.studio.resource.action.extract.CookieExtractor;
 import org.ternlang.studio.resource.action.extract.Extractor;
 import org.ternlang.studio.resource.action.extract.HeaderExtractor;
@@ -67,7 +62,7 @@ public class ComponentWithNoParametersTest extends TestCase {
       extractors.add(new CookieExtractor());
       extractors.add(new HeaderExtractor());
       extractors.add(new PartExtractor());
-      DependencySystem dependencySystem = new MapSystem(Collections.EMPTY_MAP);
+      DependencySystem dependencySystem = new MapSystem();
       ConstructorScanner scanner = new ConstructorScanner(dependencySystem, extractors);
       List<ComponentBuilder> builders = scanner.createBuilders(SomeComponent.class);
       MockRequest request = new MockRequest("GET", "/?a=A", "");
@@ -96,7 +91,7 @@ public class ComponentWithNoParametersTest extends TestCase {
       extractors.add(new CookieExtractor());
       extractors.add(new HeaderExtractor());
       extractors.add(new PartExtractor());
-      DependencySystem dependencySystem = new MapSystem(Collections.EMPTY_MAP);
+      DependencySystem dependencySystem = new MapSystem();
       ConstructorScanner scanner = new ConstructorScanner(dependencySystem, extractors);
       List<ComponentBuilder> builders = scanner.createBuilders(SomeComponentWithSomeComponent.class);
       MockRequest request = new MockRequest("GET", "/", "");

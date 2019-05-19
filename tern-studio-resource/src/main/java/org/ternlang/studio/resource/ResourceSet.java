@@ -8,14 +8,15 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.springframework.stereotype.Component;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ResourceSet {
 
    private final AtomicReference<List<Resource>> sorted;
-   private final Optional<List<Resource>> resources;
    private final Comparator<Resource> comparator;
+   private final List<Resource> resources;
    
-   public ResourceSet(Optional<List<Resource>> resources) {
+   public ResourceSet(List<Resource> resources) {
       this.sorted = new AtomicReference<List<Resource>>(Collections.EMPTY_LIST);
       this.comparator = new ResourcePathComparator();
       this.resources = resources;
@@ -24,14 +25,12 @@ public class ResourceSet {
    public List<Resource> getResources() {
       List<Resource> result = sorted.get();
       
-      if(resources.isPresent() && result.isEmpty()) {
-         List<Resource> list = resources.get();
-         
-         if(!list.isEmpty()) {
-            Collections.sort(list, comparator);
+      if(result.isEmpty()) {
+         if(!resources.isEmpty()) {
+            Collections.sort(resources, comparator);
          }
-         sorted.set(list);
-         return Collections.unmodifiableList(list);
+         sorted.set(resources);
+         return Collections.unmodifiableList(resources);
       }
       return Collections.unmodifiableList(result);
    }

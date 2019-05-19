@@ -8,27 +8,22 @@ import java.util.Map;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.ternlang.common.LeastRecentlyUsedMap;
-import org.ternlang.studio.resource.action.ActionAssembler;
 import org.ternlang.studio.resource.action.ActionMatcher;
-import org.ternlang.studio.resource.action.build.ApplicationContextSystem;
-import org.ternlang.studio.resource.action.build.DependencySystem;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class RegularExpressionMatcher implements ResourceMatcher {
 
    private final Map<String, Resource> cache;
-   private final DependencySystem system;
    private final ResourceSet resources;
    private final ActionMatcher matcher;
    
-   public RegularExpressionMatcher(ApplicationContext context, ResourceSet resources) {
+   public RegularExpressionMatcher(ActionMatcher matcher, ResourceSet resources) {
       this.cache = new LeastRecentlyUsedMap<String, Resource>(1000);
-      this.system = new ApplicationContextSystem(context);
-      this.matcher = ActionAssembler.assemble(system);
       this.resources = resources;
+      this.matcher = matcher;
    }
 
    @Override

@@ -15,6 +15,7 @@ import org.ternlang.studio.resource.SessionConstants;
 import org.ternlang.studio.service.StudioClientLauncher;
 
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/session/.*")
 public class ProjectSessionResource implements Resource {

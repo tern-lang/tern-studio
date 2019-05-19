@@ -30,6 +30,7 @@ import org.ternlang.studio.resource.ResourcePath;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/img/theme/.*.png")
 public class ImageScaleResource implements Resource {

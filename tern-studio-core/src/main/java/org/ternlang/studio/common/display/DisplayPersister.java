@@ -10,6 +10,7 @@ import org.ternlang.studio.common.FileDirectorySource;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class DisplayPersister {
    

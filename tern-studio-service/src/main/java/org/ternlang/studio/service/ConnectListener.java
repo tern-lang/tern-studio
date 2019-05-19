@@ -14,6 +14,7 @@ import org.ternlang.studio.service.command.CommandListener;
 import org.ternlang.studio.service.command.ExecuteCommand;
 import org.springframework.stereotype.Component;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @AllArgsConstructor
 public class ConnectListener {

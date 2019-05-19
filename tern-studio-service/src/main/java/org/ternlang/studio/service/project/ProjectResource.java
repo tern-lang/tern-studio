@@ -14,6 +14,7 @@ import org.ternlang.studio.resource.ResourcePath;
 import org.ternlang.studio.resource.template.TemplateEngine;
 import org.ternlang.studio.resource.template.TemplateModel;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/project/.*")
 public class ProjectResource implements Resource {

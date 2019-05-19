@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/outline.*")
 public class SearchOutlineResource implements Resource {

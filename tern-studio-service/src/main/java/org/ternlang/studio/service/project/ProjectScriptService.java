@@ -30,6 +30,7 @@ import org.ternlang.studio.service.tree.TreeContextManager;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/connect.*")
 public class ProjectScriptService implements Service {

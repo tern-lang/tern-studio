@@ -13,6 +13,7 @@ import org.ternlang.studio.resource.ResourcePath;
 import org.springframework.stereotype.Component;
 
 @Component
+@org.ternlang.studio.resource.action.annotation.Component
 @ResourcePath("/.*.js")
 public class TypeScriptResource implements Resource {
    

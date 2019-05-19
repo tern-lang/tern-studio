@@ -13,6 +13,7 @@ import org.ternlang.studio.agent.local.message.DetachResponse;
 import org.ternlang.studio.project.config.ProcessConfiguration;
 import org.springframework.stereotype.Component;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class LocalProcessClient {
    

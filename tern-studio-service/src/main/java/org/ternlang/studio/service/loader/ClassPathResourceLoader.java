@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.ternlang.studio.common.ClassPathReader;
 import org.springframework.stereotype.Component;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ClassPathResourceLoader {
    

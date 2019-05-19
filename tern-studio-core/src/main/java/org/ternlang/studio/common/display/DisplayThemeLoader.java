@@ -10,6 +10,7 @@ import org.ternlang.studio.common.ClassPathReader;
 import org.ternlang.studio.resource.template.TemplateModel;
 import org.springframework.stereotype.Component;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class DisplayThemeLoader {
    

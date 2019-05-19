@@ -4,18 +4,22 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.ternlang.studio.resource.action.annotation.DefaultValue;
 import org.ternlang.studio.resource.action.annotation.Inject;
 import org.ternlang.studio.resource.action.annotation.Required;
 import org.ternlang.studio.resource.action.extract.Extractor;
 import org.ternlang.studio.resource.action.extract.Parameter;
+import org.ternlang.studio.resource.action.extract.StringConverter;
 import org.ternlang.studio.resource.action.validate.AnnotationValidator;
 import org.ternlang.studio.resource.action.validate.Validator;
 
 public abstract class Scanner {
 
+   protected final Map<Class, List<ComponentBuilder>> cache;
    protected final List<Extractor> extractors;
+   protected final StringConverter converter;
    protected final DependencySystem system;
    protected final PathFormatter formatter;
    protected final Validator validator;
@@ -25,6 +29,8 @@ public abstract class Scanner {
    }
 
    protected Scanner(DependencySystem system, List<Extractor> extractors, Validator validator) {
+      this.cache = new ConcurrentHashMap<Class, List<ComponentBuilder>>();
+      this.converter = new StringConverter();
       this.formatter = new PathFormatter();
       this.extractors = extractors;
       this.validator = validator;
@@ -56,10 +62,10 @@ public abstract class Scanner {
             int length = name.length();
             
             if(length > 0) {
-               return system.getDependency(type, name) != null;
+               return system.resolve(type, name) != null;
             }
          }
-         return system.getDependency(type) != null;
+         return system.resolve(type) != null;
       } catch (Exception e) {
          return false;
       } 
@@ -99,33 +105,33 @@ public abstract class Scanner {
       return data;
    }
 
-   protected Property createProperty(Class type, Annotation[] annotations) throws Exception {
+   protected Property createProperty(Class type, Class entry, Annotation[] annotations) throws Exception {
       AnnotationContext data = createData(annotations);
       Map<Class, Annotation> map = data.getAnnotations();
       String value = data.getDefault();
       boolean required = data.isRequired();
 
-      return new Property(type, value, map, required);
+      return new Property(type, entry, value, map, required);
    }
 
-   protected Parameter createParameter(Class type, Annotation[] annotations, boolean constructor) throws Exception {
+   protected Parameter createParameter(Class type, Class entry, Annotation[] annotations, boolean constructor) throws Exception {
       AnnotationContext data = createData(annotations);
       Map<Class, Annotation> map = data.getAnnotations();
       String value = data.getDefault();
       boolean required = data.isRequired();
 
-      return new Parameter(type, value, map, constructor, required);
+      return new Parameter(type, entry, value, map, constructor, required);
    }
 
-   protected Extractor createExtractor(Parameter parameter) throws Exception {
+   protected Extractor createExtractor(Class type, Parameter parameter) throws Exception {
       for (Extractor extractor : extractors) {
          if (extractor.accept(parameter)) {
             return extractor;
          }
       }
-      return createDefaultExtractor(parameter);
+      return createDefaultExtractor(type, parameter);
    }
 
-   protected abstract Extractor createDefaultExtractor(Parameter parameter) throws Exception;
+   protected abstract Extractor createDefaultExtractor(Class type, Parameter parameter) throws Exception;
 
 }

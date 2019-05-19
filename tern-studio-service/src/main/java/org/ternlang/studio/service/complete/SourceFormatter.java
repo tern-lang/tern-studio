@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 
 import ch.qos.logback.core.net.ObjectWriter;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class SourceFormatter {
 

@@ -15,6 +15,7 @@ import org.ternlang.studio.resource.ResourceMatcher;
 import org.ternlang.studio.resource.ResourcePathRouter;
 import org.ternlang.studio.resource.ResourceSystem;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class RestServerBuilder {
    

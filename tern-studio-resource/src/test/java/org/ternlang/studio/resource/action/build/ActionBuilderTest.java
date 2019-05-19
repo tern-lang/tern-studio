@@ -91,7 +91,7 @@ public class ActionBuilderTest extends TestCase {
       extractors.add(new CookieExtractor());
       extractors.add(new HeaderExtractor());
       extractors.add(new PartExtractor());
-      DependencySystem dependencySystem = new MapSystem(Collections.EMPTY_MAP);
+      DependencySystem dependencySystem = new MapSystem();
       ComponentFinder interceptorFinder = new ComponentFinder(InterceptorA.class, InterceptorB.class);
       ComponentFinder serviceFinder = new ComponentFinder(ServiceA.class, ServiceB.class, ServiceC.class);
       MethodScanner scanner = new MethodScanner(dependencySystem, extractors);

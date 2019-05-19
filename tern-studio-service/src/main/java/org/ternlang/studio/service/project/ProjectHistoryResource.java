@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/history.*")
 public class ProjectHistoryResource implements Resource {
