@@ -20,9 +20,6 @@ public class ResourceContainer implements Container {
    private final ResourceMatcher matcher;
 
    public ResourceContainer(ResourceSystem system) {
-      if(system==null) {
-         System.err.println();
-      }
       this.matcher = system.create();
    }
 

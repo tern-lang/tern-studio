@@ -15,11 +15,11 @@
     <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
   </properties>
   <dependencies>
-    <dependency>
+    <!--  dependency>
       <groupId>org.ternlang</groupId>
       <artifactId>tern-studio-build</artifactId>
       <version>1.4.6</version>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>org.ternlang</groupId>
       <artifactId>tern-studio-service</artifactId>

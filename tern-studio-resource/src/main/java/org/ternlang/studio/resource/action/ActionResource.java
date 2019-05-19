@@ -1,5 +1,7 @@
 package org.ternlang.studio.resource.action;
 
+import static org.simpleframework.http.Method.CONNECT;
+
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.ternlang.studio.resource.Resource;
@@ -42,7 +44,12 @@ public class ActionResource implements Resource {
             context.setError(cause);
             router.write(context, cause);
          }
+      } finally {
+         String method = request.getMethod();
+         
+         if(!method.equalsIgnoreCase(CONNECT)) {
+            response.close();
+         }
       }
-      response.close();
    }
 }

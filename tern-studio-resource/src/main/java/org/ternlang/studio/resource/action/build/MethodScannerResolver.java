@@ -1,5 +1,7 @@
 package org.ternlang.studio.resource.action.build;
 
+import static org.simpleframework.http.Method.CONNECT;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -117,9 +119,7 @@ public class MethodScannerResolver implements MethodResolver {
    }
 
    private synchronized MatchGroup match(Context context) throws Exception {
-      Request request = context.getRequest();
-      Path path = request.getPath();
-      String normalized = path.getPath();
+      String normalized = target(context);
 
       if (!cache.contains(normalized)) {
          List<Match> matches = matches();
@@ -158,6 +158,18 @@ public class MethodScannerResolver implements MethodResolver {
          order(matches);
       }
       return matches;
+   }
+
+   private synchronized String target(Context context) throws Exception {
+      Request request = context.getRequest();
+      Path path = request.getPath();
+      String normalized = path.getPath();
+      String method = request.getMethod();
+      
+      if (method.equals(CONNECT)) { // connect uses domain:port rather than path
+         return request.getTarget();
+      }
+      return normalized;
    }
 
    private synchronized void order(List<Match> matches) throws Exception {

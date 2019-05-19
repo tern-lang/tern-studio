@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.ternlang.studio.resource.action.annotation.CONNECT;
+
 public class MethodMatcher {
 
    private final Class<? extends Annotation> verb;
@@ -24,7 +26,7 @@ public class MethodMatcher {
       Map<String, String> parameters = new LinkedHashMap<String, String>();
 
       if (!path.isEmpty()) {
-         String source = expression.pattern();
+         String source = expression.pattern(verb != CONNECT.class);
          Pattern pattern = Pattern.compile(source);
          Matcher matcher = pattern.matcher(path);
 
@@ -47,12 +49,12 @@ public class MethodMatcher {
       return parameters;
    }
    
-   public String verb() {
-      return verb.getSimpleName();
+   public String pattern() {
+      return expression.pattern(verb != CONNECT.class);
    }
    
-   public String pattern() {
-      return expression.pattern();
+   public String verb() {
+      return verb.getSimpleName();
    }
    
    public String ignore() {
@@ -64,7 +66,6 @@ public class MethodMatcher {
       private List<PathSegment> segments;
       private StringBuilder builder;
       private PathSegment segment;
-      private String[] parts;
 
       public PathParser(String... parts) {
          this.segments = new LinkedList<PathSegment>();
@@ -82,13 +83,16 @@ public class MethodMatcher {
          return list;
       }
 
-      public String pattern() {
+      public String pattern(boolean path) {
          StringBuilder builder = new StringBuilder();
 
          for (PathSegment segment : segments) {
             String pattern = segment.pattern();
-
-            builder.append("/");
+            int length = builder.length();
+            
+            if(length > 0 || path) {
+               builder.append("/");
+            }
             builder.append(pattern);
          }
          return builder.toString();

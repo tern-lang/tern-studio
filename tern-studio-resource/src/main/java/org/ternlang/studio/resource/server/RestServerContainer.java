@@ -56,7 +56,7 @@ public class RestServerContainer implements Container {
          log.info("Error handling resource", cause);
       } finally {
          try {
-            if(!method.equals(CONNECT)) {
+            if(!method.equalsIgnoreCase(CONNECT)) {
                response.close();
             }
          } catch (IOException ignore) {

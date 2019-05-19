@@ -3,6 +3,7 @@ package org.ternlang.studio.resource.action.build;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
+import org.ternlang.studio.resource.action.annotation.CONNECT;
 import org.ternlang.studio.resource.action.annotation.DELETE;
 import org.ternlang.studio.resource.action.annotation.GET;
 import org.ternlang.studio.resource.action.annotation.Intercept;
@@ -22,7 +23,8 @@ public enum ComponentType {
          if(element.isAnnotationPresent(GET.class) || 
             element.isAnnotationPresent(POST.class) || 
             element.isAnnotationPresent(PUT.class) ||
-            element.isAnnotationPresent(DELETE.class))
+            element.isAnnotationPresent(DELETE.class) ||
+            element.isAnnotationPresent(CONNECT.class))
          {
             return "/";
          }

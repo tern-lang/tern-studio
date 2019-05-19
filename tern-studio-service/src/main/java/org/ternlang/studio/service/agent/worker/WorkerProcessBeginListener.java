@@ -5,8 +5,10 @@ import org.ternlang.studio.agent.event.BeginEvent;
 import org.ternlang.studio.agent.event.ExitEvent;
 import org.ternlang.studio.agent.event.ProcessEventAdapter;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
+import org.ternlang.studio.resource.action.annotation.Component;
 import org.ternlang.studio.service.ProcessRemoteController;
 
+@Component
 public class WorkerProcessBeginListener extends ProcessEventAdapter {
    
    private final ProcessRemoteController controller;
