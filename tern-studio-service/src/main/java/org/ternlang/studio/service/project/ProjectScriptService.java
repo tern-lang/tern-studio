@@ -9,7 +9,6 @@ import org.simpleframework.http.Response;
 import org.simpleframework.http.socket.FrameChannel;
 import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
-import org.springframework.stereotype.Component;
 import org.ternlang.common.thread.ThreadPool;
 import org.ternlang.studio.common.display.DisplayPersister;
 import org.ternlang.studio.project.BackupManager;
@@ -17,6 +16,7 @@ import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.resource.ResourcePath;
 import org.ternlang.studio.resource.SessionConstants;
+import org.ternlang.studio.resource.action.annotation.Component;
 import org.ternlang.studio.service.ConnectListener;
 import org.ternlang.studio.service.ProcessManager;
 import org.ternlang.studio.service.StudioClientLauncher;
@@ -30,7 +30,6 @@ import org.ternlang.studio.service.tree.TreeContextManager;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/connect.*")
 public class ProjectScriptService implements Service {

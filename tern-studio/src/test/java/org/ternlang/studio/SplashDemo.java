@@ -20,9 +20,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import lombok.SneakyThrows;
+import org.ternlang.studio.resource.ClassPathReader;
 
-import org.ternlang.studio.common.ClassPathReader;
+import lombok.SneakyThrows;
 
 public class SplashDemo {
 

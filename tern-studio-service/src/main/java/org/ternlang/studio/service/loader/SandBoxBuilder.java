@@ -12,9 +12,8 @@ import javax.annotation.PostConstruct;
 
 import org.ternlang.studio.project.HomeDirectory;
 import org.ternlang.studio.project.Workspace;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class SandBoxBuilder {
    

@@ -10,9 +10,8 @@ import org.ternlang.studio.resource.Content;
 import org.ternlang.studio.resource.FileResolver;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourceMatcher;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class DisplayResourceMatcher implements ResourceMatcher {
 

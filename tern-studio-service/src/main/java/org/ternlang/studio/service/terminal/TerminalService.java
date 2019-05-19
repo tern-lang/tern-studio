@@ -13,10 +13,10 @@ import org.simpleframework.http.socket.FrameType;
 import org.simpleframework.http.socket.Reason;
 import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
-import org.springframework.stereotype.Component;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.resource.ResourcePath;
+import org.ternlang.studio.resource.action.annotation.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,7 +24,6 @@ import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/session/.*")
 public class TerminalService implements Service {

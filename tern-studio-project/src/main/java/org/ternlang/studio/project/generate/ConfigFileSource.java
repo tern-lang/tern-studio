@@ -3,19 +3,17 @@ package org.ternlang.studio.project.generate;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.ternlang.studio.project.FilePersister;
+import org.ternlang.studio.project.FileSystem;
+import org.ternlang.studio.project.Project;
+import org.ternlang.studio.project.config.ProjectConfiguration;
+import org.ternlang.studio.resource.action.annotation.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.ternlang.studio.project.FileSystem;
-import org.ternlang.studio.project.FilePersister;
-import org.ternlang.studio.project.Project;
-import org.ternlang.studio.project.config.ProjectConfiguration;
-import org.springframework.stereotype.Component;
-
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ConfigFileSource {
    

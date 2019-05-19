@@ -2,7 +2,6 @@ package org.ternlang.studio.service;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
@@ -27,8 +26,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.ternlang.studio.common.ClassPathReader;
 import org.ternlang.studio.common.ProgressManager;
+import org.ternlang.studio.resource.ClassPathReader;
 import org.ternlang.ui.WindowIcon;
 import org.ternlang.ui.WindowIconLoader;
 

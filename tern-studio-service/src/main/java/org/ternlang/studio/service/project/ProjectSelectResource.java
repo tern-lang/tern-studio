@@ -11,11 +11,10 @@ import org.ternlang.studio.common.display.DisplayModelResolver;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
+import org.ternlang.studio.resource.action.annotation.Component;
 import org.ternlang.studio.resource.template.TemplateEngine;
 import org.ternlang.studio.resource.template.TemplateModel;
-import org.springframework.stereotype.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/")
 public class ProjectSelectResource implements Resource {

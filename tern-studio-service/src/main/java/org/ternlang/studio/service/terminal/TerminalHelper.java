@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.ternlang.studio.common.ClassPathReader;
+import org.ternlang.studio.resource.ClassPathReader;
 
 /**
  * Created by usta on 12.09.2016.

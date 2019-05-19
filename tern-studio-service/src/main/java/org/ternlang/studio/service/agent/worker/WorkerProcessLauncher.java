@@ -15,12 +15,11 @@ import org.ternlang.studio.agent.worker.WorkerProcess;
 import org.ternlang.studio.project.HomeDirectory;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.project.config.ProcessConfiguration;
+import org.ternlang.studio.resource.action.annotation.Component;
 import org.ternlang.studio.service.ProcessDefinition;
 import org.ternlang.studio.service.ProcessLauncher;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class WorkerProcessLauncher implements ProcessLauncher {
    

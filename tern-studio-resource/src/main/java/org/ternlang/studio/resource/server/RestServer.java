@@ -2,17 +2,16 @@ package org.ternlang.studio.resource.server;
 
 import java.net.InetSocketAddress;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
+import org.ternlang.studio.resource.action.annotation.Value;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class RestServer {
    
    private final RestServerBuilder builder;
    private final int port;
    
-   public RestServer(RestServerBuilder builder, @org.ternlang.studio.resource.action.annotation.Value("${port}") @Value("${port}") int port) {
+   public RestServer(RestServerBuilder builder, @Value("${port}") int port) {
       this.builder = builder;
       this.port = port;
    }

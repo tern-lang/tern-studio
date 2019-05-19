@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>tern-studio</artifactId>
   <packaging>jar</packaging>
@@ -27,19 +28,11 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.6</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>1.9.5</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -66,30 +59,27 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
+        <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
-          <mainClass>org.ternlang.studio.StudioApplication</mainClass>
           <finalName>ternd</finalName>
-          <excludes>
-            <exclude>
-              <groupId>org.ternlang</groupId>
-              <artifactId>tern-studio-build</artifactId> <!-- only needed for development -->
-            </exclude>
-            <exclude>
-              <groupId>com.google.javascript</groupId>
-              <artifactId>closure-compiler</artifactId> <!-- only needed for development -->
-            </exclude>
-            <exclude>
-              <groupId>com.google.protobuf</groupId>
-              <artifactId>protobuf-java</artifactId>
-            </exclude>
-          </excludes>
+          <archive>
+            <manifest>
+              <mainClass>org.ternlang.studio.StudioApplication</mainClass>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <appendAssemblyId>false</appendAssemblyId>
         </configuration>
         <executions>
           <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
             <goals>
-              <goal>repackage</goal>
+              <goal>single</goal>
             </goals>
           </execution>
         </executions>

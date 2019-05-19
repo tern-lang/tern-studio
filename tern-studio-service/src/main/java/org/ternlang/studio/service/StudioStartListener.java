@@ -2,11 +2,8 @@ package org.ternlang.studio.service;
 
 import java.net.InetSocketAddress;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 import org.ternlang.studio.common.ProgressManager;
+import org.ternlang.studio.resource.action.annotation.Component;
 import org.ternlang.studio.resource.action.annotation.ComponentListener;
 import org.ternlang.studio.resource.server.RestServer;
 
@@ -14,10 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @AllArgsConstructor
-public class StudioStartListener implements ApplicationListener<ContextRefreshedEvent>, ComponentListener {
+public class StudioStartListener implements ComponentListener {
   
     private final StudioClientLauncher launcher;
     private final ProcessManager manager;
@@ -44,9 +40,5 @@ public class StudioStartListener implements ApplicationListener<ContextRefreshed
        } catch(Exception e) {
           throw new IllegalStateException("Could not start server", e);
        }
-    }
-   
-    public void onApplicationEvent(ContextRefreshedEvent event) {
-       onReady();
     }
 }

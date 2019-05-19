@@ -5,13 +5,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.stereotype.Component;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
+import org.ternlang.studio.resource.action.annotation.Component;
 
 import com.google.gson.Gson;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ContentTypeResolver {
    

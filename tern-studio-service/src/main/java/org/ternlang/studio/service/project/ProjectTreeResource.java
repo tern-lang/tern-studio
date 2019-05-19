@@ -15,12 +15,11 @@ import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
+import org.ternlang.studio.resource.action.annotation.Component;
 import org.ternlang.studio.service.tree.TreeBuilder;
 import org.ternlang.studio.service.tree.TreeContext;
 import org.ternlang.studio.service.tree.TreeContextManager;
-import org.springframework.stereotype.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/tree.*")
 public class ProjectTreeResource implements Resource {

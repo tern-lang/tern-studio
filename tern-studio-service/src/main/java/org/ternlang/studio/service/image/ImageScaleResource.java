@@ -13,8 +13,6 @@ import javax.imageio.ImageReader;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -27,10 +25,11 @@ import org.ternlang.studio.resource.ContentTypeResolver;
 import org.ternlang.studio.resource.FileResolver;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/img/theme/.*.png")
 public class ImageScaleResource implements Resource {

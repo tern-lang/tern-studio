@@ -4,12 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ternlang.studio.project.Workspace;
+import org.ternlang.studio.resource.action.annotation.Component;
+
 import lombok.AllArgsConstructor;
 
-import org.ternlang.studio.project.Workspace;
-import org.springframework.stereotype.Component;
-
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @AllArgsConstructor
 public class ProcessConfigurationLoader {

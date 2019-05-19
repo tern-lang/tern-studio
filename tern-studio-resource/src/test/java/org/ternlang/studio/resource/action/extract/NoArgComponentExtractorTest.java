@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.ternlang.studio.resource.action.Context;
 import org.ternlang.studio.resource.action.HashContext;
-import org.ternlang.studio.resource.action.annotation.Component;
+import org.ternlang.studio.resource.action.annotation.Payload;
 import org.ternlang.studio.resource.action.annotation.QueryParam;
 import org.ternlang.studio.resource.action.build.ComponentBuilder;
 import org.ternlang.studio.resource.action.build.ConstructorScanner;
@@ -14,22 +14,12 @@ import org.ternlang.studio.resource.action.build.DependencySystem;
 import org.ternlang.studio.resource.action.build.MapSystem;
 import org.ternlang.studio.resource.action.build.MockRequest;
 import org.ternlang.studio.resource.action.build.MockResponse;
-import org.ternlang.studio.resource.action.extract.ComponentExtractor;
-import org.ternlang.studio.resource.action.extract.CookieExtractor;
-import org.ternlang.studio.resource.action.extract.Extractor;
-import org.ternlang.studio.resource.action.extract.HeaderExtractor;
-import org.ternlang.studio.resource.action.extract.ModelExtractor;
-import org.ternlang.studio.resource.action.extract.Parameter;
-import org.ternlang.studio.resource.action.extract.PartExtractor;
-import org.ternlang.studio.resource.action.extract.QueryExtractor;
-import org.ternlang.studio.resource.action.extract.RequestExtractor;
-import org.ternlang.studio.resource.action.extract.ResponseExtractor;
 
 import junit.framework.TestCase;
 
 public class NoArgComponentExtractorTest extends TestCase {
 
-   @Component
+   @Payload
    public static class Query {
 
       public final String x;

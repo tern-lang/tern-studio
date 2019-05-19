@@ -5,8 +5,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.ternlang.studio.resource.action.annotation.GET;
 import org.ternlang.studio.resource.action.annotation.Ignore;
 import org.ternlang.studio.resource.action.annotation.Verb;
@@ -14,14 +12,17 @@ import org.ternlang.studio.resource.action.extract.Extractor;
 import org.ternlang.studio.resource.action.extract.Parameter;
 import org.ternlang.studio.resource.action.extract.ParameterBuilder;
 
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+
 public class MethodScanner extends ConstructorScanner {
 
    public MethodScanner(DependencySystem source, List<Extractor> extractors) {
       super(source, extractors);
    }
 
-   public MultiValueMap<String, MethodDispatcher> createDispatchers(Class<?> type) throws Exception {
-      MultiValueMap<String, MethodDispatcher> dispatchers = new LinkedMultiValueMap<String, MethodDispatcher>();
+   public Multimap<String, MethodDispatcher> createDispatchers(Class<?> type) throws Exception {
+      Multimap<String, MethodDispatcher> dispatchers = LinkedHashMultimap.create();
 
       if (type != null) {
          ComponentType componentType = ComponentType.resolveType(type);
@@ -42,7 +43,7 @@ public class MethodScanner extends ConstructorScanner {
                   if(dispatcher == null) {
                      throw new IllegalStateException("Could not resolve for " + pattern + " on " + method);
                   }
-                  dispatchers.add(pattern, dispatcher);
+                  dispatchers.put(pattern, dispatcher);
                }
             }
             type = type.getSuperclass();

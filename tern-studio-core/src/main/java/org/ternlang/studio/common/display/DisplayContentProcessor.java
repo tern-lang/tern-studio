@@ -12,9 +12,8 @@ import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
 import org.ternlang.studio.resource.ContentTypeResolver;
 import org.ternlang.studio.resource.FileResolver;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class DisplayContentProcessor {
    

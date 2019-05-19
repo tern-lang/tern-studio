@@ -10,13 +10,12 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.ternlang.common.thread.ThreadPool;
+import org.ternlang.studio.resource.action.annotation.Component;
+
 import lombok.extern.slf4j.Slf4j;
 
-import org.ternlang.common.thread.ThreadPool;
-import org.springframework.stereotype.Component;
-
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class TextMatchScanner {
    

@@ -10,12 +10,11 @@ import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/type.*")
 public class SearchTypeResource implements Resource {

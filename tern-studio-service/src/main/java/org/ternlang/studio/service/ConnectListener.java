@@ -10,11 +10,10 @@ import lombok.AllArgsConstructor;
 import org.simpleframework.http.Path;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
+import org.ternlang.studio.resource.action.annotation.Component;
 import org.ternlang.studio.service.command.CommandListener;
 import org.ternlang.studio.service.command.ExecuteCommand;
-import org.springframework.stereotype.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @AllArgsConstructor
 public class ConnectListener {

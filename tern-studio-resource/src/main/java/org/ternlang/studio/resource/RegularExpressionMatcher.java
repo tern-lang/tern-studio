@@ -8,11 +8,10 @@ import java.util.Map;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.springframework.stereotype.Component;
 import org.ternlang.common.LeastRecentlyUsedMap;
 import org.ternlang.studio.resource.action.ActionMatcher;
+import org.ternlang.studio.resource.action.annotation.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class RegularExpressionMatcher implements ResourceMatcher {
 

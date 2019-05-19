@@ -10,12 +10,11 @@ import org.simpleframework.http.socket.service.RouterContainer;
 import org.simpleframework.transport.SocketProcessor;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
-import org.springframework.stereotype.Component;
 import org.ternlang.studio.resource.ResourceMatcher;
 import org.ternlang.studio.resource.ResourcePathRouter;
 import org.ternlang.studio.resource.ResourceSystem;
+import org.ternlang.studio.resource.action.annotation.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class RestServerBuilder {
    

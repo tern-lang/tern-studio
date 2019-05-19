@@ -36,18 +36,12 @@
       <version>1.4.6</version>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.simpleframework</groupId>
       <artifactId>simple-xml</artifactId>
-      <version>2.7.1</version>
     </dependency>
     <dependency>
       <groupId>org.simpleframework</groupId>
       <artifactId>simple-http</artifactId>
-      <version>6.0.1</version>
     </dependency>
     <dependency>
       <groupId>com.kodedu.pty4j</groupId>
@@ -72,19 +66,11 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.6</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>1.9.5</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

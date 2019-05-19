@@ -5,8 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import org.springframework.core.io.ClassPathResource;
-
 public class ClassPathReader {
 
    public static byte[] findResource(String path) throws Exception {
@@ -31,13 +29,17 @@ public class ClassPathReader {
    }
 
    public static InputStream findResourceAsStream(String path) throws Exception {
-      ClassLoader loader = ClassPathResource.class.getClassLoader();
-      String location = path;
-
-      if (location.startsWith("/")) {
-         location = path.substring(1);
+      ClassLoader loader = ClassPathReader.class.getClassLoader();
+      InputStream stream = loader.getResourceAsStream(path);
+      
+      if(stream == null) {
+         if (path.startsWith("/")) {
+            path = path.substring(1);
+         } else {
+            path = "/" + path;
+         }
       }
-      return new ClassPathResource(location, loader).getInputStream();
+      return loader.getResourceAsStream(path);
    }
 
    public static Reader findResourceAsReader(String path) throws Exception {

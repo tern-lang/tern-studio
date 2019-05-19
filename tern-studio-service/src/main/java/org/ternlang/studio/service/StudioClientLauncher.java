@@ -5,16 +5,15 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.ternlang.studio.common.ProgressManager;
 import org.ternlang.studio.project.HomeDirectory;
+import org.ternlang.studio.resource.action.annotation.Component;
+import org.ternlang.studio.resource.action.annotation.Value;
 import org.ternlang.ui.ClientContext;
 import org.ternlang.ui.ClientControl;
 import org.ternlang.ui.ClientProvider;
 
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class StudioClientLauncher {    
    
@@ -27,9 +26,9 @@ public class StudioClientLauncher {
    private final boolean debug;
    
    public StudioClientLauncher(
-         @org.ternlang.studio.resource.action.annotation.Value("${directory}") @Value("${directory}") File directory, 
-         @org.ternlang.studio.resource.action.annotation.Value("${server-only}") @Value("${server-only}") boolean disabled, 
-         @org.ternlang.studio.resource.action.annotation.Value("${client-debug}") @Value("${client-debug}") boolean debug)
+         @Value("${directory}") File directory, 
+         @Value("${server-only}") boolean disabled, 
+         @Value("${client-debug}") boolean debug)
    {
       this.reference = new AtomicReference<ClientControl>();
       this.directory = directory;

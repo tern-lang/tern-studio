@@ -14,8 +14,7 @@ import javax.annotation.PostConstruct;
 
 import org.simpleframework.http.Path;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+
 import org.ternlang.common.thread.ThreadPool;
 import org.ternlang.studio.common.FileDirectorySource;
 import org.ternlang.studio.common.ProgressManager;
@@ -26,6 +25,8 @@ import org.ternlang.studio.project.config.ProjectConfiguration;
 import org.ternlang.studio.project.config.WorkspaceConfiguration;
 import org.ternlang.studio.project.decompile.Decompiler;
 import org.ternlang.studio.project.generate.ConfigFileSource;
+import org.ternlang.studio.resource.action.annotation.Component;
+import org.ternlang.studio.resource.action.annotation.Value;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -35,7 +36,6 @@ import ch.qos.logback.core.FileAppender;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class Workspace implements FileDirectorySource {
 
@@ -48,10 +48,10 @@ public class Workspace implements FileDirectorySource {
    
    public Workspace(
          ConfigFileSource source,
-         @org.ternlang.studio.resource.action.annotation.Value("${directory}") @Value("${directory}") File root, 
-         @org.ternlang.studio.resource.action.annotation.Value("${log-file}") @Value("${log-file}") File logFile, 
-         @org.ternlang.studio.resource.action.annotation.Value("${log-level}") @Value("${log-level}") String level, 
-         @org.ternlang.studio.resource.action.annotation.Value("${mode}") @Value("${mode}") ProjectMode mode) 
+         @Value("${directory}") File root, 
+         @Value("${log-file}") File logFile, 
+         @Value("${log-level}") String level, 
+         @Value("${mode}") ProjectMode mode) 
    {
       this.reader = new ConfigurationReader(this);
       this.pool = new ThreadPool(10);

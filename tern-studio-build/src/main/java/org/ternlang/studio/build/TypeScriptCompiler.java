@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.ternlang.studio.agent.log.ConsoleLog;
 import org.ternlang.studio.agent.log.Log;
 import org.ternlang.studio.agent.log.LogLevel;
@@ -14,12 +12,13 @@ import org.ternlang.studio.agent.log.LogLogger;
 import org.ternlang.studio.agent.log.TraceLogger;
 import org.ternlang.studio.build.console.ConsoleListener;
 import org.ternlang.studio.build.console.ConsoleManager;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
 
 import com.google.javascript.jscomp.CompilationLevel;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class TypeScriptCompiler {
    

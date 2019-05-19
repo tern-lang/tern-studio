@@ -8,9 +8,8 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
 
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class FileManager {
    

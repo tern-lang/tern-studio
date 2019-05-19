@@ -3,15 +3,12 @@ package org.ternlang.studio.service.complete;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.stereotype.Component;
 import org.ternlang.studio.project.Project;
+import org.ternlang.studio.resource.action.annotation.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import ch.qos.logback.core.net.ObjectWriter;
-
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class SourceFormatter {
 

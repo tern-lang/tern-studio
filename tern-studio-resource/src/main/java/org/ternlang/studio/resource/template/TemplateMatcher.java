@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.springframework.stereotype.Component;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourceMatcher;
 

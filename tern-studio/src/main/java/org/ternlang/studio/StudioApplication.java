@@ -6,8 +6,6 @@ import java.util.jar.Manifest;
 
 import javax.swing.UIManager;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.ternlang.studio.agent.cli.CommandLine;
 import org.ternlang.studio.agent.cli.CommandLineBuilder;
 import org.ternlang.studio.agent.runtime.MainClassValue;
@@ -25,7 +23,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-@SpringBootApplication
 public class StudioApplication {
 
    private static final String ABOUT_NAME = "Tern Develop";

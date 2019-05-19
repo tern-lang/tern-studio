@@ -1,14 +1,13 @@
 package org.ternlang.studio.project;
 
-import static org.springframework.core.io.support.ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX;
-
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,9 +22,6 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.StringUtils;
@@ -35,8 +31,11 @@ import org.ternlang.studio.agent.local.LocalProcess;
 import org.ternlang.studio.agent.runtime.MainScriptValue;
 import org.ternlang.studio.project.generate.ClassPathConfigFile;
 import org.ternlang.studio.project.generate.ClassPathFileGenerator;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.ternlang.studio.resource.boot.PathMatchingClassScanner;
+
+import io.github.classgraph.ClassInfo;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ArchiveBuilder {
@@ -56,14 +55,14 @@ public class ArchiveBuilder {
       new ArchivePath("grammar.txt", false)
    };
    
-   private final PathMatchingResourcePatternResolver resolver;
+   private final PathMatchingClassScanner resolver;
    private final ClassPathFileGenerator generator;
    private final FileExtension extension;
    private final ProjectContext context;
    private final Project project;
 
    public ArchiveBuilder(Project project, ProjectContext context) {
-      this.resolver = new PathMatchingResourcePatternResolver(); 
+      this.resolver = new PathMatchingClassScanner(); 
       this.generator = new ClassPathFileGenerator();
       this.extension = new FileExtension();
       this.project = project;
@@ -178,10 +177,12 @@ public class ArchiveBuilder {
       for(ArchivePath path : RUNTIME_PACKAGES) {
          String prefix = path.getPath();
          String pattern = path.getPattern();
-         Resource[] resources = resolver.getResources(CLASSPATH_ALL_URL_PREFIX + pattern);
+         Iterator<ClassInfo> resources = resolver.findClasses(pattern);
           
-         for(Resource resource : resources) {
-            String target = resource.getURI().toString();
+         while(resources.hasNext()) {
+            ClassInfo info = resources.next();
+            URL resource = info.getClasspathElementURL();
+            String target = resource.toString();
             int index = target.indexOf(prefix);
             
             if(index != -1) {
@@ -191,7 +192,7 @@ public class ArchiveBuilder {
                if(!file.getParentFile().exists()) {
                   file.getParentFile().mkdirs();
                }
-               InputStream input = resource.getInputStream();
+               InputStream input = resource.openStream();
                
                try {
                   log.info("Extracting {}", relativePath);
@@ -276,7 +277,7 @@ public class ArchiveBuilder {
       
       public String getPattern(){
          if(classes) {
-            return prefix + "/**/*.class";
+            return prefix.replace("/", ".") + ".*";
          }
          return prefix;
       }

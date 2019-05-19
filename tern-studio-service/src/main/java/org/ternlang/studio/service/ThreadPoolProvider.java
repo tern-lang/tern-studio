@@ -1,18 +1,17 @@
 package org.ternlang.studio.service;
 
 import org.ternlang.common.thread.ThreadPool;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.ternlang.core.Bug;
+import org.ternlang.studio.resource.action.annotation.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
-@Configuration
+@Bug("Should be @Provider")
+@Component
 public class ThreadPoolProvider extends ThreadPool {
    
    public ThreadPoolProvider() {
       super(10);
    }
 
-   @Bean
    public ThreadPool getPool() {
       return new ThreadPool(10);
    }

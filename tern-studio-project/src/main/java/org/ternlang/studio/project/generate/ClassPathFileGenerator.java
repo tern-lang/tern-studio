@@ -4,16 +4,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.ternlang.studio.project.FileSystem;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.config.DependencyFile;
 import org.ternlang.studio.project.config.ProjectConfiguration;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ClassPathFileGenerator implements ConfigFileGenerator {
    

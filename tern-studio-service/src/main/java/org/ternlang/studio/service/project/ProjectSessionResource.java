@@ -2,20 +2,20 @@ package org.ternlang.studio.service.project;
 
 import java.io.PrintStream;
 
-import lombok.extern.slf4j.Slf4j;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Protocol;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
-import org.springframework.stereotype.Component;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
 import org.ternlang.studio.resource.SessionConstants;
+import org.ternlang.studio.resource.action.annotation.Component;
 import org.ternlang.studio.service.StudioClientLauncher;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/session/.*")
 public class ProjectSessionResource implements Resource {

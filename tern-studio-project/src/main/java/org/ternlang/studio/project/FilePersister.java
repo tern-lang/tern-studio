@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import org.ternlang.studio.common.ClassPathReader;
+import org.ternlang.studio.resource.ClassPathReader;
 
 public class FilePersister {
 

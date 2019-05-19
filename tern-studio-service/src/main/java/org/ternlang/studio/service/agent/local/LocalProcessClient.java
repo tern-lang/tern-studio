@@ -3,17 +3,16 @@ package org.ternlang.studio.service.agent.local;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import lombok.SneakyThrows;
-
 import org.ternlang.studio.agent.local.LocalMessageProducer;
 import org.ternlang.studio.agent.local.message.AttachRequest;
 import org.ternlang.studio.agent.local.message.AttachResponse;
 import org.ternlang.studio.agent.local.message.DetachRequest;
 import org.ternlang.studio.agent.local.message.DetachResponse;
 import org.ternlang.studio.project.config.ProcessConfiguration;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
+import lombok.SneakyThrows;
+
 @Component
 public class LocalProcessClient {
    

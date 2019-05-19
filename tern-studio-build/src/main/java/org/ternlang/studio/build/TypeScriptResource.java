@@ -10,10 +10,9 @@ import org.simpleframework.http.Response;
 import org.ternlang.studio.common.display.DisplayResourceMatcher;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
 
 @Component
-@org.ternlang.studio.resource.action.annotation.Component
 @ResourcePath("/.*.js")
 public class TypeScriptResource implements Resource {
    

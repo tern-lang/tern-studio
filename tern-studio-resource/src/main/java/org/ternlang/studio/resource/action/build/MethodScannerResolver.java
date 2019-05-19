@@ -1,6 +1,7 @@
 package org.ternlang.studio.resource.action.build;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -13,10 +14,11 @@ import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.MultiValueMap;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
 import org.ternlang.studio.resource.action.Context;
+
+import com.google.common.collect.Multimap;
 
 public class MethodScannerResolver implements MethodResolver {
 
@@ -141,11 +143,11 @@ public class MethodScannerResolver implements MethodResolver {
          Set<Class> components = finder.getComponents();
 
          for (Class component : components) {
-            MultiValueMap<String, MethodDispatcher> extracted = scanner.createDispatchers(component);
+            Multimap<String, MethodDispatcher> extracted = scanner.createDispatchers(component);
             Set<String> patterns = extracted.keySet();
 
             for (String pattern : patterns) {
-               List<MethodDispatcher> dispatchers = extracted.get(pattern);
+               Collection<MethodDispatcher> dispatchers = extracted.get(pattern);
 
                if (!dispatchers.isEmpty()) {
                   Match match = new Match(dispatchers, pattern);
@@ -193,12 +195,12 @@ public class MethodScannerResolver implements MethodResolver {
 
    private static class Match implements Comparable<Match> {
 
-      private final List<MethodDispatcher> dispatchers;
+      private final Collection<MethodDispatcher> dispatchers;
       private final String expression;
       private final Pattern pattern;
       private final int length;
 
-      public Match(List<MethodDispatcher> dispatchers, String pattern) {
+      public Match(Collection<MethodDispatcher> dispatchers, String pattern) {
          this.pattern = Pattern.compile(pattern);
          this.length = pattern.length();
          this.dispatchers = dispatchers;
@@ -209,7 +211,7 @@ public class MethodScannerResolver implements MethodResolver {
          return pattern.pattern();
       }
 
-      public List<MethodDispatcher> actions() {
+      public Collection<MethodDispatcher> actions() {
          return dispatchers;
       }
 

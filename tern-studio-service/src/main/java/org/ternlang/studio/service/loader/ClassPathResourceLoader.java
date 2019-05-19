@@ -3,10 +3,9 @@ package org.ternlang.studio.service.loader;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.ternlang.studio.common.ClassPathReader;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.ClassPathReader;
+import org.ternlang.studio.resource.action.annotation.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ClassPathResourceLoader {
    

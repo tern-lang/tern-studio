@@ -6,9 +6,8 @@ import java.io.IOException;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
 import org.ternlang.studio.project.Workspace;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class TreeContextManager {
 

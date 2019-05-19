@@ -15,11 +15,10 @@ import org.simpleframework.transport.Channel;
 import org.ternlang.studio.agent.event.ProcessEventListener;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
+import org.ternlang.studio.resource.action.annotation.Component;
 import org.ternlang.studio.service.ProcessManager;
 import org.ternlang.studio.service.agent.worker.WorkerProcessBeginListener;
-import org.springframework.stereotype.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath(".*:\\d+/connect/.+")
 public class ConnectTunnelResource implements Resource {

@@ -9,8 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.io.IOUtils;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
@@ -20,10 +18,11 @@ import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/archive/.*")
 public class ProjectArchiveResource implements Resource {

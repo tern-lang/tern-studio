@@ -4,7 +4,6 @@ import static org.simpleframework.http.Protocol.UPGRADE;
 import static org.simpleframework.http.Protocol.WEBSOCKET;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
@@ -12,11 +11,10 @@ import org.simpleframework.http.Response;
 import org.simpleframework.http.socket.service.DirectRouter;
 import org.simpleframework.http.socket.service.Router;
 import org.simpleframework.http.socket.service.Service;
-import org.springframework.stereotype.Component;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
+import org.ternlang.studio.resource.action.annotation.Component;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ResourcePathRouter implements Router {
    

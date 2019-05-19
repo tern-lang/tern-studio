@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.simpleframework.transport.Channel;
 import org.ternlang.studio.agent.event.ProcessEventFilter;
 import org.ternlang.studio.agent.event.ProcessEventListener;
@@ -16,6 +14,8 @@ import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.project.config.ProcessConfiguration;
 import org.ternlang.studio.project.config.ProcessConfigurationLoader;
+import org.ternlang.studio.resource.action.annotation.Component;
+import org.ternlang.studio.resource.action.annotation.Value;
 import org.ternlang.studio.service.command.AttachCommand;
 import org.ternlang.studio.service.command.BreakpointsCommand;
 import org.ternlang.studio.service.command.BrowseCommand;
@@ -24,11 +24,10 @@ import org.ternlang.studio.service.command.ExecuteCommand;
 import org.ternlang.studio.service.command.RemoteDebugCommand;
 import org.ternlang.studio.service.command.StepCommand;
 import org.ternlang.studio.service.command.StepCommand.StepType;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 public class ProcessManager implements ProcessRemoteController {
    
@@ -38,7 +37,7 @@ public class ProcessManager implements ProcessRemoteController {
    private final ProcessPool pool;
    private final Workspace workspace;
 
-   public ProcessManager(ProcessConfigurationLoader loader, ProcessConfiguration configuration, ProcessLauncher launcher, ProcessNameFilter filter, Workspace workspace, @org.ternlang.studio.resource.action.annotation.Value("${agent-pool}") @Value("${agent-pool}") int capacity) throws Exception {
+   public ProcessManager(ProcessConfigurationLoader loader, ProcessConfiguration configuration, ProcessLauncher launcher, ProcessNameFilter filter, Workspace workspace, @Value("${agent-pool}") int capacity) throws Exception {
       this.connections = new ConcurrentHashMap<String, ProcessConnection>();
       this.pool = new ProcessPool(configuration, launcher, filter, workspace, capacity);
       this.configuration = configuration;

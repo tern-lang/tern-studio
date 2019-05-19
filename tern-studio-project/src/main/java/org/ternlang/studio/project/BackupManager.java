@@ -19,15 +19,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.ternlang.common.DateFormatter;
+import org.ternlang.studio.project.config.WorkspaceConfiguration;
+import org.ternlang.studio.resource.action.annotation.Component;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.stereotype.Component;
-import org.ternlang.common.DateFormatter;
-import org.ternlang.studio.project.config.WorkspaceConfiguration;
-
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @AllArgsConstructor
 public class BackupManager {

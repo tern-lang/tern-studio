@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.simpleframework.http.Path;
-import org.simpleframework.http.Protocol;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
@@ -23,12 +22,11 @@ import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/history.*")
 public class ProjectHistoryResource implements Resource {

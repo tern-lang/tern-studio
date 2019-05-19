@@ -2,8 +2,6 @@ package org.ternlang.studio.service.complete;
 
 import java.io.PrintStream;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -21,13 +19,14 @@ import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
-import org.springframework.stereotype.Component;
+import org.ternlang.studio.resource.action.annotation.Component;
 
 import com.google.gson.Gson;
 
+import lombok.extern.slf4j.Slf4j;
+
 // /complete/<project>
 @Slf4j
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/complete.*")
 public class CompletionResource implements Resource {

@@ -7,14 +7,13 @@ import java.io.PrintStream;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.springframework.stereotype.Component;
 import org.ternlang.studio.common.display.DisplayModelResolver;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
+import org.ternlang.studio.resource.action.annotation.Component;
 import org.ternlang.studio.resource.template.TemplateEngine;
 import org.ternlang.studio.resource.template.TemplateModel;
 
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/project/.*")
 public class ProjectResource implements Resource {

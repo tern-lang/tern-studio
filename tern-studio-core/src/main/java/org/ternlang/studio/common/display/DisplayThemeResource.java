@@ -5,14 +5,13 @@ import java.io.PrintStream;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
-import org.springframework.stereotype.Component;
 import org.ternlang.studio.resource.Resource;
 import org.ternlang.studio.resource.ResourcePath;
+import org.ternlang.studio.resource.action.annotation.Component;
 
 import com.google.gson.Gson;
 
 // /theme/<project>
-@org.ternlang.studio.resource.action.annotation.Component
 @Component
 @ResourcePath("/display/.*")
 public class DisplayThemeResource implements Resource {
