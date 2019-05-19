@@ -24,10 +24,14 @@ public class DecompileResource {
          @PathParam("module") String module,
          @PathParam("name") String name)
    {
-      FileResult result = service.decompile(project, 
-            jar + ".jar", 
-            module + "." + name);
-      
-      return result.getData();
+      try {
+         FileResult result = service.decompile(project, 
+               jar + ".jar", 
+               module + "." + name);
+         
+         return result.getData();
+      } catch(Exception e) {
+         return String.format("// could not decompile %s.%s", module, name).getBytes();
+      }
    }
 }

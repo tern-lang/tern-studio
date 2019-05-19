@@ -22,18 +22,18 @@ public class FileService {
    @SneakyThrows
    public FileResult findFile(String project, String path) {
       FileData file = cache.getFile(project, path);
-      String type = resolver.resolveType(path);
 
-      try {
-         byte[] resource = file.getByteArray();
-         long lastModified = file.getLastModified();
-
-         return new FileResult(type, resource, lastModified);
-      }catch(Exception e) {
-         byte[] resource = ("// No source found for " + path).getBytes();
-         long time = System.currentTimeMillis();
-         
-         return new FileResult(type, resource, time);
+      if(file != null) {
+         try {
+            String type = resolver.resolveType(path);
+            byte[] resource = file.getByteArray();
+            long lastModified = file.getLastModified();
+   
+            return new FileResult(type, resource, lastModified);
+         }catch(Exception e) {
+            return null;
+         }
       }
+      return null;
    }
 }

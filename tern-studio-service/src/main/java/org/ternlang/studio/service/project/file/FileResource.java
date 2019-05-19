@@ -25,9 +25,13 @@ public class FileResource {
          Response response)
    {
       FileResult result = service.findFile(project, path);
-      String type = result.getType();
       
-      response.setContentType(type);
-      return result.getData();
+      if(result != null) {
+         String type = result.getType();
+         
+         response.setContentType(type);
+         return result.getData();
+      }
+      return String.format("// could not find %s", path).getBytes();
    }
 }

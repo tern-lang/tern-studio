@@ -1,6 +1,7 @@
 package org.ternlang.studio.service.project.file;
 
 import org.simpleframework.http.Response;
+import org.simpleframework.http.Status;
 import org.ternlang.studio.resource.action.annotation.CacheControl;
 import org.ternlang.studio.resource.action.annotation.GET;
 import org.ternlang.studio.resource.action.annotation.Path;
@@ -25,9 +26,13 @@ public class DownloadResource {
          Response response)
    {
       FileResult result = service.findFile(project, path);
-      String type = result.getType();
-      
-      response.setContentType(type);
-      return result.getData();
+    
+      if(result != null) {
+         String type = result.getType();
+         response.setContentType(type);
+         return result.getData();
+      }
+      response.setStatus(Status.NOT_FOUND);
+      return String.format("// could not find %s", path).getBytes();
    }
 }
