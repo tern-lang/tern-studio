@@ -1,4 +1,4 @@
-package org.ternlang.studio.service.project;
+package org.ternlang.studio.service.project.command;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -14,10 +14,11 @@ import org.ternlang.studio.common.display.DisplayPersister;
 import org.ternlang.studio.project.BackupManager;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
-import org.ternlang.studio.resource.ResourcePath;
 import org.ternlang.studio.resource.SessionConstants;
 import org.ternlang.studio.resource.action.annotation.Component;
+import org.ternlang.studio.resource.action.annotation.WebSocket;
 import org.ternlang.studio.service.ConnectListener;
+import org.ternlang.studio.service.ProblemCollector;
 import org.ternlang.studio.service.ProcessManager;
 import org.ternlang.studio.service.StudioClientLauncher;
 import org.ternlang.studio.service.agent.local.LocalProcessClient;
@@ -31,21 +32,21 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@ResourcePath("/connect.*")
-public class ProjectScriptService implements Service {
+@WebSocket("/connect.*")
+public class CommandService implements Service {
 
    private final ConcurrentMap<String, CommandSession> commandSessions;
    private final StudioClientLauncher clientLauncher;
    private final DisplayPersister displayPersister;
    private final TreeContextManager treeManager;
-   private final ProjectProblemFinder problemFinder;
+   private final ProblemCollector problemFinder;
    private final ConnectListener connectListener;
    private final LocalProcessClient debugService;
    private final ProcessManager processManager;
    private final BackupManager backupManager;
    private final Workspace workspace;
    
-   public ProjectScriptService(
+   public CommandService(
          StudioClientLauncher clientLauncher,
          ProcessManager processManager, 
          ConnectListener connectListener, 
@@ -57,7 +58,7 @@ public class ProjectScriptService implements Service {
          ThreadPool pool) 
    {
       this.commandSessions = new ConcurrentHashMap<String, CommandSession>();
-      this.problemFinder = new ProjectProblemFinder(workspace, pool);
+      this.problemFinder = new ProblemCollector(workspace, pool);
       this.displayPersister = displayPersister;
       this.treeManager = treeManager;
       this.backupManager = backupManager;

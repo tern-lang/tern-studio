@@ -9,15 +9,17 @@ import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.ternlang.studio.common.display.DisplayModelResolver;
 import org.ternlang.studio.project.Workspace;
-import org.ternlang.studio.resource.Resource;
-import org.ternlang.studio.resource.ResourcePath;
-import org.ternlang.studio.resource.action.annotation.Component;
+import org.ternlang.studio.resource.action.annotation.GET;
+import org.ternlang.studio.resource.action.annotation.Path;
 import org.ternlang.studio.resource.template.TemplateEngine;
 import org.ternlang.studio.resource.template.TemplateModel;
 
-@Component
-@ResourcePath("/")
-public class ProjectSelectResource implements Resource {
+import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+
+@Path("/")
+@AllArgsConstructor
+public class SelectProjectResource {
    
    private static final String SELECT_RESOURCE = "select.vm";
    
@@ -25,14 +27,10 @@ public class ProjectSelectResource implements Resource {
    private final TemplateEngine engine;
    private final Workspace workspace;
    
-   public ProjectSelectResource(DisplayModelResolver resolver, Workspace workspace, TemplateEngine engine) {
-      this.resolver = resolver;
-      this.workspace = workspace;
-      this.engine = engine;
-   }
-   
-   @Override
-   public void handle(Request request, Response response) throws Exception {
+   @GET
+   @Path("$")
+   @SneakyThrows
+   public void select(Request request, Response response) {
       TemplateModel model = resolver.getModel();
       File root = workspace.getRoot();
       String name = root.getName();

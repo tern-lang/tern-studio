@@ -15,8 +15,8 @@ import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
-import org.ternlang.studio.resource.ResourcePath;
 import org.ternlang.studio.resource.action.annotation.Component;
+import org.ternlang.studio.resource.action.annotation.WebSocket;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@ResourcePath("/session/.*")
+@WebSocket("/session/.*")
 public class TerminalService implements Service {
 
    private final Workspace workspace;

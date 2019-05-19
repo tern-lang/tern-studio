@@ -2,15 +2,16 @@ package org.ternlang.studio.resource;
 
 import java.util.List;
 
+import org.ternlang.studio.resource.action.ActionMatcher;
 import org.ternlang.studio.resource.action.annotation.Component;
 
 @Component
 public class ResourceSystem {
 
-   private final RegularExpressionMatcher matcher;
    private final List<ResourceMatcher> matchers;
+   private final ActionMatcher matcher;
    
-   public ResourceSystem(RegularExpressionMatcher matcher, List<ResourceMatcher> matchers) {
+   public ResourceSystem(ActionMatcher matcher, List<ResourceMatcher> matchers) {
       this.matchers = matchers;
       this.matcher = matcher;
    }

@@ -10,32 +10,30 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 import org.apache.commons.io.IOUtils;
-import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
-import org.ternlang.studio.resource.Resource;
-import org.ternlang.studio.resource.ResourcePath;
-import org.ternlang.studio.resource.action.annotation.Component;
+import org.ternlang.studio.resource.action.annotation.GET;
+import org.ternlang.studio.resource.action.annotation.Path;
 
+import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
-@ResourcePath("/archive/.*")
-public class ProjectArchiveResource implements Resource {
+@Path("/archive")
+@AllArgsConstructor
+public class ArchiveResource {
 
    private final Workspace workspace;
-
-   public ProjectArchiveResource(Workspace workspace){
-      this.workspace = workspace;
-   }
-
-   @Override
-   public void handle(Request request, Response response) throws Throwable {
-      Path path = request.getPath();
+   
+   @GET
+   @Path(".*")
+   @SneakyThrows
+   public void handle(Request request, Response response) {
+      org.simpleframework.http.Path path = request.getPath();
       Project project = workspace.getByPath(path);
       String[] pathSegments = path.getSegments(); // /archive/<project>/<archive>/<main-script-path>
       String archiveName = pathSegments[2]; // <archive>

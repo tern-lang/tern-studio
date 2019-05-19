@@ -14,14 +14,15 @@ import org.simpleframework.http.socket.service.Service;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
 import org.ternlang.studio.resource.action.annotation.Component;
+import org.ternlang.studio.resource.action.annotation.WebSocket;
 
 @Component
-public class ResourcePathRouter implements Router {
+public class WebSocketRouter implements Router {
    
    private final Cache<String, Router> routes;
    private final List<Service> services;
    
-   public ResourcePathRouter(List<Service> services) {
+   public WebSocketRouter(List<Service> services) {
       this.routes = new LeastRecentlyUsedCache<String, Router>();
       this.services = services;
    }
@@ -39,7 +40,7 @@ public class ResourcePathRouter implements Router {
             if(router == null) {
                for(Service service : services) {
                   Class<?> type = service.getClass();
-                  ResourcePath label = type.getAnnotation(ResourcePath.class);
+                  WebSocket label = type.getAnnotation(WebSocket.class);
                   
                   if(label != null) {
                      String pattern = label.value();

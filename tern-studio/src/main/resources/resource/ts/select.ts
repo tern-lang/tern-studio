@@ -1,7 +1,7 @@
 import * as $ from "jquery"
 import {DialogBuilder} from "dialog"
 
-export module ProjectSelector {
+export module ProjectSelector {   
 
    export function showProjectDialog() {
       DialogBuilder.createTreeOpenDialog(function(dialogPathDetails, projectName) {
@@ -33,7 +33,7 @@ export module ProjectSelector {
       }, function() {
          setTimeout(showProjectDialog, 500);
       },
-      "Open Project", "Open", "");
+      "Open Project", "Open", "/");
    }
 }
 //ModuleSystem.registerModule("start", "Start module: start.js", null, Start.showProjectDialog, [ "common", "dialog", "tree", "spinner" ]);

@@ -29,7 +29,7 @@ define(["require", "exports", "dialog"], function (require, exports, dialog_1) {
                 }
             }, function () {
                 setTimeout(showProjectDialog, 500);
-            }, "Open Project", "Open", "");
+            }, "Open Project", "Open", "/");
         }
         ProjectSelector.showProjectDialog = showProjectDialog;
     })(ProjectSelector = exports.ProjectSelector || (exports.ProjectSelector = {}));

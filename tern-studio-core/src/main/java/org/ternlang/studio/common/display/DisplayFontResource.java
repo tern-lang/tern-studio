@@ -1,52 +1,23 @@
 package org.ternlang.studio.common.display;
 
-import java.io.PrintStream;
-import java.util.Map;
-import java.util.Set;
+import org.ternlang.studio.resource.action.annotation.GET;
+import org.ternlang.studio.resource.action.annotation.Path;
+import org.ternlang.studio.resource.action.annotation.Produces;
 
-import org.simpleframework.http.Request;
-import org.simpleframework.http.Response;
-import org.simpleframework.http.Status;
-import org.ternlang.studio.resource.Resource;
-import org.ternlang.studio.resource.ResourcePath;
-import org.ternlang.studio.resource.action.annotation.Component;
-
-import com.google.gson.Gson;
+import lombok.AllArgsConstructor;
 
 // /theme/<project>
-@Component
-@ResourcePath("/font/.*")
-public class DisplayFontResource implements Resource {
+@Path("/font")
+@AllArgsConstructor
+public class DisplayFontResource {
 
-   private final DisplayPersister displayPersister;
-   private final Gson gson;
+   private final DisplayFontService service;
 
-   public DisplayFontResource(DisplayPersister displayPersister) {
-      this.displayPersister = displayPersister;
-      this.gson = new Gson();
-   }
-
-   @Override
-   public void handle(Request request, Response response) throws Throwable {
-      DisplayDefinition display = displayPersister.readDefinition();
-      Map<String, String> availableFonts = display.getAvailableFonts();
-      PrintStream out = response.getPrintStream();
-      Set<String> styles = availableFonts.keySet();
-
-      response.setStatus(Status.OK);
-      response.setContentType("text/css");
-
-      for(String style : styles) {
-         String name = availableFonts.get(style);
-         String path = name.replace(" ", "");
-
-         out.println("@font-face {");
-         out.println("  font-family: '" + name + "';");
-         out.println("  src: url('/ttf/" + path + ".ttf') format('truetype');");
-         out.println("}");
-         out.println();
-      }
-      out.close();
+   @GET
+   @Path(".*")
+   @Produces("text/css")
+   public String style() throws Throwable {
+      return service.style();
    }
 
 }

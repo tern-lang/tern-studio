@@ -1,4 +1,4 @@
-package org.ternlang.studio.service.project;
+package org.ternlang.studio.service;
 
 import java.io.File;
 import java.util.Set;
@@ -16,19 +16,19 @@ import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 
 @Slf4j
-public class ProjectProblemFinder {
+public class ProblemCollector {
 
    private final FileProcessor<Problem> processor;
    private final FileAction<Problem> action;
    private final Workspace workspace;
    
-   public ProjectProblemFinder(Workspace workspace, ThreadPool pool) {
+   public ProblemCollector(Workspace workspace, ThreadPool pool) {
       this.action = new CompileAction(workspace);
       this.processor = new FileProcessor<Problem>(action, pool);
       this.workspace = workspace;
    }
    
-   public Set<Problem> compileProject(Path path) throws Exception {
+   public Set<Problem> collectProblems(Path path) throws Exception {
       Project project = workspace.createProject(path);
       String name = project.getName();
       File directory = project.getBasePath();

@@ -3,12 +3,7 @@ package org.ternlang.studio.resource.action.build;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
-import org.ternlang.studio.resource.action.annotation.CONNECT;
-import org.ternlang.studio.resource.action.annotation.DELETE;
-import org.ternlang.studio.resource.action.annotation.GET;
 import org.ternlang.studio.resource.action.annotation.Intercept;
-import org.ternlang.studio.resource.action.annotation.POST;
-import org.ternlang.studio.resource.action.annotation.PUT;
 import org.ternlang.studio.resource.action.annotation.Path;
 import org.ternlang.studio.resource.action.annotation.Payload;
 
@@ -19,14 +14,6 @@ public enum ComponentType {
 
          if (export != null) {
             return export.value();
-         }
-         if(element.isAnnotationPresent(GET.class) || 
-            element.isAnnotationPresent(POST.class) || 
-            element.isAnnotationPresent(PUT.class) ||
-            element.isAnnotationPresent(DELETE.class) ||
-            element.isAnnotationPresent(CONNECT.class))
-         {
-            return "/";
          }
          return null;
       }

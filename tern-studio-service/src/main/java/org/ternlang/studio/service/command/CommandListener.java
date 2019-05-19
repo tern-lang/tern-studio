@@ -28,10 +28,10 @@ import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.config.DependencyFile;
 import org.ternlang.studio.project.config.OperatingSystem;
 import org.ternlang.studio.project.config.ProjectConfiguration;
+import org.ternlang.studio.service.ProblemCollector;
 import org.ternlang.studio.service.ProcessManager;
 import org.ternlang.studio.service.StudioClientLauncher;
 import org.ternlang.studio.service.agent.local.LocalProcessClient;
-import org.ternlang.studio.service.project.ProjectProblemFinder;
 import org.ternlang.studio.service.tree.TreeContext;
 import org.ternlang.studio.service.tree.TreeContextManager;
 
@@ -41,7 +41,7 @@ public class CommandListener {
    private final StudioClientLauncher clientLauncher;
    private final DisplayPersister displayPersister;
    private final CommandEventForwarder forwarder;
-   private final ProjectProblemFinder problemFinder;
+   private final ProblemCollector problemFinder;
    private final LocalProcessClient debugService;
    private final TreeContextManager treeManager;
    private final CommandFilter commandFilter;
@@ -61,7 +61,7 @@ public class CommandListener {
    public CommandListener(
          StudioClientLauncher clientLauncher,
          ProcessManager processManager, 
-         ProjectProblemFinder problemFinder, 
+         ProblemCollector problemFinder, 
          DisplayPersister displayPersister,
          LocalProcessClient debugService,
          BackupManager backupManager, 
@@ -620,7 +620,7 @@ public class CommandListener {
             }
          }
          processManager.register(forwarder); // make sure we are registered
-         Set<Problem> problems = problemFinder.compileProject(path);
+         Set<Problem> problems = problemFinder.collectProblems(path);
 //         Map<String, TypeNode> nodes = loader.compileProject(path);
 //         Set<String> names = nodes.keySet();
 //         int index = 0;

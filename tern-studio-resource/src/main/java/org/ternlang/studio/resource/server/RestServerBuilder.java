@@ -11,7 +11,7 @@ import org.simpleframework.transport.SocketProcessor;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
 import org.ternlang.studio.resource.ResourceMatcher;
-import org.ternlang.studio.resource.ResourcePathRouter;
+import org.ternlang.studio.resource.WebSocketRouter;
 import org.ternlang.studio.resource.ResourceSystem;
 import org.ternlang.studio.resource.action.annotation.Component;
 
@@ -21,7 +21,7 @@ public class RestServerBuilder {
    private final ResourceMatcher matcher;
    private final Router router;
 
-   public RestServerBuilder(ResourceSystem system, ResourcePathRouter router) {
+   public RestServerBuilder(ResourceSystem system, WebSocketRouter router) {
       this.matcher = system.create();
       this.router = router;
    }

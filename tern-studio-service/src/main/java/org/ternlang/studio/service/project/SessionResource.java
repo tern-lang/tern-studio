@@ -2,33 +2,24 @@ package org.ternlang.studio.service.project;
 
 import java.io.PrintStream;
 
-import org.simpleframework.http.Path;
 import org.simpleframework.http.Protocol;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
-import org.ternlang.studio.resource.Resource;
-import org.ternlang.studio.resource.ResourcePath;
 import org.ternlang.studio.resource.SessionConstants;
-import org.ternlang.studio.resource.action.annotation.Component;
-import org.ternlang.studio.service.StudioClientLauncher;
+import org.ternlang.studio.resource.action.annotation.GET;
+import org.ternlang.studio.resource.action.annotation.Path;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.SneakyThrows;
 
-@Slf4j
-@Component
-@ResourcePath("/session/.*")
-public class ProjectSessionResource implements Resource {
+@Path("/session")
+public class SessionResource {
 
-   private final StudioClientLauncher launcher;
-
-   public ProjectSessionResource(StudioClientLauncher launcher) {
-      this.launcher = launcher;
-   }
-
-   @Override
-   public void handle(Request request, Response response) throws Throwable {
-      Path path = request.getPath();
+   @GET
+   @Path(".*")
+   @SneakyThrows
+   public void handle(Request request, Response response) {
+      org.simpleframework.http.Path path = request.getPath();
       String target = request.getTarget();
       String[] segments = path.getSegments();
       PrintStream stream = response.getPrintStream();

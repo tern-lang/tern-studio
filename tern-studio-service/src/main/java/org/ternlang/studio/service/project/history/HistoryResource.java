@@ -1,4 +1,5 @@
-package org.ternlang.studio.build;
+package org.ternlang.studio.service.project.history;
+
 
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -7,16 +8,14 @@ import org.ternlang.studio.resource.action.annotation.Path;
 
 import lombok.AllArgsConstructor;
 
-@Path("/js")
+@Path("/history.*")
 @AllArgsConstructor
-public class TypeScriptResource {
+public class HistoryResource {
+
+   private final HistoryService service;
    
-   private final TypeScriptService service;
-
    @GET
-   @Path(".*.js")
    public void handle(Request request, Response response) {
-      service.process(request, response);
+      service.handle(request, response);
    }
-
 }

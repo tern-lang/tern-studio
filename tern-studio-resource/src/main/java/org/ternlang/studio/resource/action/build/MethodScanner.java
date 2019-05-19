@@ -66,7 +66,7 @@ public class MethodScanner extends ConstructorScanner {
       if (typePath != null) {
          parentPath = formatter.formatPath(typePath);
       }
-      if (!methodPath.equals("/")) {
+      if (!methodPath.equals("") && !methodPath.equals("/")) {
          methodPath = formatter.formatPath(methodPath);  
       } else {
          methodPath = formatter.formatPath(methodName);
