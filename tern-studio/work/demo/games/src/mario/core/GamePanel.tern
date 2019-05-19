@@ -83,7 +83,7 @@ class GamePanel extends JPanel with Runnable {
       } catch (e: IOException){
          e.printStackTrace();
       }
-            
+      
       player = new MidiPlayer();
       var sequence: Sequence;
       var r: Random = new Random();

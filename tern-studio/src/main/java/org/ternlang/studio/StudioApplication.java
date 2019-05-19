@@ -63,7 +63,7 @@ public class StudioApplication {
       Map<String, Object> commands = local.getValues();
       Set<String> names = commands.keySet();
       Manifest manifest = ManifestLocator.getManifestFile(MainClassValue.APPLICATION_CLASS);
-      String mainClass = MainClassValue.getValue(manifest);
+      String mainClass = StudioApplication.class.getName();
       String version = VersionValue.getValue(manifest);
       String forkProperty = System.getProperty(ALLOW_FORK_PROPERTY, "true");
       String disableFork = String.format("-D%s=%s", ALLOW_FORK_PROPERTY, "false");
