@@ -9,7 +9,7 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Text;
 import org.simpleframework.xml.util.Dictionary;
 import org.simpleframework.xml.util.Entry;
-import org.ternlang.service.template.TemplateModel;
+import org.ternlang.service.resource.template.TemplateModel;
 
 @Root
 public class DisplayTheme {

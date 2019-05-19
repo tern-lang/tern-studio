@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ternlang.service.annotation.Component;
-import org.ternlang.service.template.TemplateModel;
+import org.ternlang.service.resource.template.TemplateModel;
 
 @Component
 public class DisplayModelResolver {

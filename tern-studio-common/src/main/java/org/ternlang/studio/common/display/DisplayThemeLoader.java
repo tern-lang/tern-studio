@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.simpleframework.xml.core.Persister;
-import org.ternlang.service.ClassPathReader;
 import org.ternlang.service.annotation.Component;
-import org.ternlang.service.template.TemplateModel;
+import org.ternlang.service.common.ClassPathReader;
+import org.ternlang.service.resource.template.TemplateModel;
 
 @Component
 public class DisplayThemeLoader {

@@ -20,7 +20,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.ternlang.service.ClassPathReader;
+import org.ternlang.service.common.ClassPathReader;
 
 import lombok.SneakyThrows;
 

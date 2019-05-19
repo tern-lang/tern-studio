@@ -6,7 +6,7 @@ import java.util.jar.Manifest;
 
 import javax.swing.UIManager;
 
-import org.ternlang.service.DependencySystemBuilder;
+import org.ternlang.service.DependencyApplication;
 import org.ternlang.studio.agent.cli.CommandLine;
 import org.ternlang.studio.agent.cli.CommandLineBuilder;
 import org.ternlang.studio.agent.runtime.MainClassValue;
@@ -41,8 +41,7 @@ public class StudioApplication {
 
       if (commandLine.isServerOnly()) {
          System.setProperty("java.awt.headless", "true");
-         //SpringApplication.run(StudioApplication.class, list);
-         DependencySystemBuilder.create("org.ternlang");
+         DependencyApplication.start("org.ternlang");
       } else {
          if (process.isForkRequired()) {
             forkTask.run();
@@ -52,8 +51,7 @@ public class StudioApplication {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             SplashScreen.getPanel().show(60000); // 1 minute
             SplashScreen.getPanel().update("Tern Studio " + version);
-            //SpringApplication.run(StudioApplication.class, list);
-            DependencySystemBuilder.create("org.ternlang");
+            DependencyApplication.start("org.ternlang");
          }
       }
    }

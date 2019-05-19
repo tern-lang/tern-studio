@@ -26,7 +26,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.ternlang.core.type.extend.FileExtension;
-import org.ternlang.service.PathMatchingClassScanner;
+import org.ternlang.service.common.ClassPathScanner;
 import org.ternlang.studio.agent.local.LocalJarProcess;
 import org.ternlang.studio.agent.local.LocalProcess;
 import org.ternlang.studio.agent.runtime.MainScriptValue;
@@ -55,14 +55,14 @@ public class ArchiveBuilder {
       new ArchivePath("grammar.txt", false)
    };
    
-   private final PathMatchingClassScanner resolver;
+   private final ClassPathScanner resolver;
    private final ClassPathFileGenerator generator;
    private final FileExtension extension;
    private final ProjectContext context;
    private final Project project;
 
    public ArchiveBuilder(Project project, ProjectContext context) {
-      this.resolver = new PathMatchingClassScanner(); 
+      this.resolver = new ClassPathScanner(); 
       this.generator = new ClassPathFileGenerator();
       this.extension = new FileExtension();
       this.project = project;

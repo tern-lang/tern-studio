@@ -4,7 +4,7 @@ import java.net.InetSocketAddress;
 
 import org.ternlang.service.annotation.Component;
 import org.ternlang.service.annotation.ComponentListener;
-import org.ternlang.service.server.RestServer;
+import org.ternlang.service.resource.server.ResourceServer;
 import org.ternlang.studio.common.ProgressManager;
 
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ public class StudioStartListener implements ComponentListener {
   
     private final StudioClientLauncher launcher;
     private final ProcessManager manager;
-    private final RestServer starter;
+    private final ResourceServer starter;
     
     @Override
     public void onReady() {

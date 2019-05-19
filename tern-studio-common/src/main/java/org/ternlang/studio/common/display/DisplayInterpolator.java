@@ -4,8 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.ternlang.service.annotation.Component;
-import org.ternlang.service.template.TemplateEngine;
-import org.ternlang.service.template.TemplateModel;
+import org.ternlang.service.resource.template.TemplateEngine;
+import org.ternlang.service.resource.template.TemplateModel;
 
 @Component
 public class DisplayInterpolator {
