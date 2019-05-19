@@ -20,12 +20,10 @@ public class HeaderExtractor extends StringConverterExtractor {
       if(annotation != null) {
          String name = annotation.value();
          String substitute = parameter.getDefault();
-         List<String> list = request.getValues(name);
+         String value = request.getValue(name);
          
-         if(list != null) {
-            if(!list.isEmpty()) {
-               return list;
-            }
+         if(value != null) {
+            return Arrays.asList(value);
          }
          if(substitute != null) {
             return Arrays.asList(substitute);

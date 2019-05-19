@@ -5,8 +5,8 @@ import java.nio.channels.ReadableByteChannel;
 
 import org.simpleframework.http.Query;
 import org.simpleframework.http.Request;
+import org.simpleframework.transport.Channel;
 import org.ternlang.studio.resource.action.Context;
-import org.ternlang.studio.resource.action.annotation.Inject;
 
 public class RequestExtractor implements Extractor<Object> {
 
@@ -20,6 +20,9 @@ public class RequestExtractor implements Extractor<Object> {
       }
       if (type == Query.class) {
          return request.getQuery();
+      }
+      if (type == Channel.class) {
+         return request.getChannel();
       }
       if (type == InputStream.class) {
          return request.getInputStream();
@@ -38,6 +41,9 @@ public class RequestExtractor implements Extractor<Object> {
          return true;
       }
       if (type == Query.class) {
+         return true;
+      }
+      if (type == Channel.class) {
          return true;
       }
       if (type == InputStream.class) {

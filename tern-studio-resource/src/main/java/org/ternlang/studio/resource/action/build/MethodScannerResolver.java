@@ -30,10 +30,12 @@ public class MethodScannerResolver implements MethodResolver {
    private final List<Match> matches;
    private final ComponentFinder finder;
    private final MethodScanner scanner;
-
+   private final PathResolver resolver;
+   
    public MethodScannerResolver(MethodScanner scanner, ComponentFinder finder) {
       this.cache = new LeastRecentlyUsedCache<String, MatchGroup>(1000);
       this.matches = new LinkedList<Match>();
+      this.resolver = new PathResolver();
       this.scanner = scanner;
       this.finder = finder;
    }
@@ -119,7 +121,7 @@ public class MethodScannerResolver implements MethodResolver {
    }
 
    private synchronized MatchGroup match(Context context) throws Exception {
-      String normalized = target(context);
+      String normalized = resolver.resolve(context);
 
       if (!cache.contains(normalized)) {
          List<Match> matches = matches();
@@ -158,18 +160,6 @@ public class MethodScannerResolver implements MethodResolver {
          order(matches);
       }
       return matches;
-   }
-
-   private synchronized String target(Context context) throws Exception {
-      Request request = context.getRequest();
-      Path path = request.getPath();
-      String normalized = path.getPath();
-      String method = request.getMethod();
-      
-      if (method.equals(CONNECT)) { // connect uses domain:port rather than path
-         return request.getTarget();
-      }
-      return normalized;
    }
 
    private synchronized void order(List<Match> matches) throws Exception {

@@ -19,7 +19,8 @@ public class ByteArrayWriter implements BodyWriter<byte[]> {
    public void write(Context context, byte[] result) throws Exception {
       Response response = context.getResponse();
       OutputStream output = response.getOutputStream();
-
+      
+      response.setContentLength(result.length);
       output.write(result);
    }
 }

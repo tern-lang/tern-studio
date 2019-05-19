@@ -20,7 +20,7 @@ public class ClassPathParser {
          int length = path.length();
          
          if(path.endsWith(extension)) {
-            type = path.substring(1, length -6);
+            type = path.substring(0, length -6);
             type = type.replace('/', '.');
             
             cache.put(path, type);

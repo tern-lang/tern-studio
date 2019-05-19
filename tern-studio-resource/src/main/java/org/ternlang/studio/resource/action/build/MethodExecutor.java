@@ -11,6 +11,7 @@ import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.ternlang.core.Bug;
 import org.ternlang.studio.resource.action.Context;
 import org.ternlang.studio.resource.action.extract.ParameterBuilder;
 import org.ternlang.studio.resource.action.validate.Validation;
@@ -21,12 +22,14 @@ public class MethodExecutor {
    private static final Logger LOG = LoggerFactory.getLogger(MethodExecutor.class);
 
    private final ParameterBuilder extractor;
+   private final PathResolver resolver;
    private final MethodMatcher matcher;
    private final MethodHeader header;
    private final Validator validator;
    private final Method method;
 
    public MethodExecutor(MethodMatcher matcher, MethodHeader header, ParameterBuilder extractor, Validator validator, Method method) {
+      this.resolver = new PathResolver();
       this.extractor = extractor;
       this.validator = validator;
       this.matcher = matcher;
@@ -73,6 +76,7 @@ public class MethodExecutor {
       return MIN_VALUE;
    }
 
+   @Bug("what happens if uncommitted???")
    private Object invoke(Object value, Context context) throws Exception {
       Object[] arguments = extractor.extract(context);
       Object result = method.invoke(value, arguments);
@@ -90,8 +94,7 @@ public class MethodExecutor {
    private void evaluate(Object value, Context context) throws Exception {
       Response response = context.getResponse();
       Request request = context.getRequest();
-      Path path = request.getPath();
-      String normalized = path.getPath();
+      String normalized = resolver.resolve(context);
       Map<String, String> parameters = matcher.evaluate(normalized);
       Map attributes = request.getAttributes();
 
