@@ -3,7 +3,7 @@ package org.ternlang.studio.core;
 import java.net.InetSocketAddress;
 
 import org.ternlang.service.annotation.Component;
-import org.ternlang.service.annotation.ComponentListener;
+import org.ternlang.service.common.ComponentListener;
 import org.ternlang.service.resource.server.ResourceServer;
 import org.ternlang.studio.common.ProgressManager;
 
