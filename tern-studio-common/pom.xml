@@ -22,7 +22,7 @@
     </dependency>
     <dependency>
       <groupId>org.ternlang</groupId>
-      <artifactId>tern-service</artifactId>
+      <artifactId>tern-service-resource</artifactId>
       <version>1.4.6</version>
     </dependency>
     <dependency>

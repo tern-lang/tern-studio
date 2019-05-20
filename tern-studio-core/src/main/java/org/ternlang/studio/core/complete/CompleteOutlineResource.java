@@ -1,11 +1,11 @@
 package org.ternlang.studio.core.complete;
 
-import org.ternlang.service.annotation.Body;
-import org.ternlang.service.annotation.Consumes;
-import org.ternlang.service.annotation.POST;
-import org.ternlang.service.annotation.Path;
-import org.ternlang.service.annotation.PathParam;
-import org.ternlang.service.annotation.Produces;
+import org.ternlang.service.resource.annotation.Body;
+import org.ternlang.service.resource.annotation.Consumes;
+import org.ternlang.service.resource.annotation.POST;
+import org.ternlang.service.resource.annotation.Path;
+import org.ternlang.service.resource.annotation.PathParam;
+import org.ternlang.service.resource.annotation.Produces;
 import org.ternlang.studio.index.complete.CompletionCompiler;
 import org.ternlang.studio.index.complete.CompletionOutlineResponse;
 import org.ternlang.studio.index.complete.CompletionRequest;

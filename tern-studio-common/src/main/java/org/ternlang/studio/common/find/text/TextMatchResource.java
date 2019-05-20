@@ -4,11 +4,11 @@ import java.io.File;
 import java.util.List;
 
 import org.ternlang.service.annotation.DefaultValue;
-import org.ternlang.service.annotation.GET;
-import org.ternlang.service.annotation.Path;
-import org.ternlang.service.annotation.PathParam;
-import org.ternlang.service.annotation.Produces;
-import org.ternlang.service.annotation.QueryParam;
+import org.ternlang.service.resource.annotation.GET;
+import org.ternlang.service.resource.annotation.Path;
+import org.ternlang.service.resource.annotation.PathParam;
+import org.ternlang.service.resource.annotation.Produces;
+import org.ternlang.service.resource.annotation.QueryParam;
 import org.ternlang.studio.common.FileDirectory;
 import org.ternlang.studio.common.FileDirectorySource;
 

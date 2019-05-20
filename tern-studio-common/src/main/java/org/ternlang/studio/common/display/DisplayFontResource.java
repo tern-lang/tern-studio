@@ -1,8 +1,8 @@
 package org.ternlang.studio.common.display;
 
-import org.ternlang.service.annotation.GET;
-import org.ternlang.service.annotation.Path;
-import org.ternlang.service.annotation.Produces;
+import org.ternlang.service.resource.annotation.GET;
+import org.ternlang.service.resource.annotation.Path;
+import org.ternlang.service.resource.annotation.Produces;
 
 import lombok.AllArgsConstructor;
 

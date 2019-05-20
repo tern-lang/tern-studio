@@ -6,9 +6,9 @@ import java.util.jar.Manifest;
 
 import javax.swing.UIManager;
 
-import org.ternlang.service.DependencyApplication;
 import org.ternlang.service.annotation.Import;
 import org.ternlang.service.annotation.Module;
+import org.ternlang.service.resource.DependencyApplication;
 import org.ternlang.studio.agent.cli.CommandLine;
 import org.ternlang.studio.agent.cli.CommandLineBuilder;
 import org.ternlang.studio.agent.runtime.MainClassValue;

@@ -1,10 +1,10 @@
 package org.ternlang.studio.core.project.file;
 
-import org.ternlang.service.annotation.CacheControl;
-import org.ternlang.service.annotation.GET;
-import org.ternlang.service.annotation.Path;
-import org.ternlang.service.annotation.PathParam;
-import org.ternlang.service.annotation.Produces;
+import org.ternlang.service.resource.annotation.CacheControl;
+import org.ternlang.service.resource.annotation.GET;
+import org.ternlang.service.resource.annotation.Path;
+import org.ternlang.service.resource.annotation.PathParam;
+import org.ternlang.service.resource.annotation.Produces;
 
 import lombok.AllArgsConstructor;
 

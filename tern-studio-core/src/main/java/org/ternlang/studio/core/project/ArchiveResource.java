@@ -13,8 +13,8 @@ import org.apache.commons.io.IOUtils;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
-import org.ternlang.service.annotation.GET;
-import org.ternlang.service.annotation.Path;
+import org.ternlang.service.resource.annotation.GET;
+import org.ternlang.service.resource.annotation.Path;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 
