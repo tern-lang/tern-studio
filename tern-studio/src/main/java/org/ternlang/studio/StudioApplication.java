@@ -7,6 +7,8 @@ import java.util.jar.Manifest;
 import javax.swing.UIManager;
 
 import org.ternlang.service.DependencyApplication;
+import org.ternlang.service.annotation.Import;
+import org.ternlang.service.annotation.Module;
 import org.ternlang.studio.agent.cli.CommandLine;
 import org.ternlang.studio.agent.cli.CommandLineBuilder;
 import org.ternlang.studio.agent.runtime.MainClassValue;
@@ -23,6 +25,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+@Module
+@Import(StudioApplication.class)
 public class StudioApplication {
 
    private static final String ABOUT_NAME = "Tern Develop";
@@ -38,10 +42,11 @@ public class StudioApplication {
       StudioCommandLine commandLine = process.getCommandLine();
       Runnable forkTask = process.getForkTask();
       String version = process.getVersion();
+      int port = commandLine.getPort();
 
       if (commandLine.isServerOnly()) {
          System.setProperty("java.awt.headless", "true");
-         DependencyApplication.start("org.ternlang");
+         DependencyApplication.start(port, StudioApplication.class);
       } else {
          if (process.isForkRequired()) {
             forkTask.run();
@@ -51,7 +56,7 @@ public class StudioApplication {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             SplashScreen.getPanel().show(60000); // 1 minute
             SplashScreen.getPanel().update("Tern Studio " + version);
-            DependencyApplication.start("org.ternlang");
+            DependencyApplication.start(port, StudioApplication.class);
          }
       }
    }

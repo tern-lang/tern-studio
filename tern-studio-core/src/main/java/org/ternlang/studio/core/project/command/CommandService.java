@@ -11,7 +11,7 @@ import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
 import org.ternlang.common.thread.ThreadPool;
 import org.ternlang.service.annotation.Component;
-import org.ternlang.service.annotation.WebSocket;
+import org.ternlang.service.annotation.Subscribe;
 import org.ternlang.service.resource.SessionConstants;
 import org.ternlang.studio.common.display.DisplayPersister;
 import org.ternlang.studio.core.ConnectListener;
@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@WebSocket("/connect.*")
+@Subscribe("/connect.*")
 public class CommandService implements Service {
 
    private final ConcurrentMap<String, CommandSession> commandSessions;
