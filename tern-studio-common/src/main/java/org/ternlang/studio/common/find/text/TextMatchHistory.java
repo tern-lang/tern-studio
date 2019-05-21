@@ -2,20 +2,20 @@ package org.ternlang.studio.common.find.text;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
-import org.ternlang.common.thread.ThreadPool;
 
 public class TextMatchHistory {
 
    private final Cache<String, ProjectHistory> cache; // reduce the set of files to look at
    private final ScheduledExecutorService service;
    
-   public TextMatchHistory(ThreadPool pool) {
+   public TextMatchHistory(Executor executor) {
       this.cache = new LeastRecentlyUsedCache<String, ProjectHistory>();
       this.service = new ScheduledThreadPoolExecutor(2);
    }

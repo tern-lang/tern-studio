@@ -2,11 +2,9 @@ package org.ternlang.studio.core;
 
 import java.io.File;
 import java.util.Set;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.Executor;
 
 import org.simpleframework.http.Path;
-import org.ternlang.common.thread.ThreadPool;
 import org.ternlang.studio.common.FileAction;
 import org.ternlang.studio.common.FileProcessor;
 import org.ternlang.studio.common.FileReader;
@@ -15,6 +13,8 @@ import org.ternlang.studio.common.ProblemFinder;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 public class ProblemCollector {
 
@@ -22,9 +22,9 @@ public class ProblemCollector {
    private final FileAction<Problem> action;
    private final Workspace workspace;
    
-   public ProblemCollector(Workspace workspace, ThreadPool pool) {
+   public ProblemCollector(Workspace workspace, Executor executor) {
       this.action = new CompileAction(workspace);
-      this.processor = new FileProcessor<Problem>(action, pool);
+      this.processor = new FileProcessor<Problem>(action, executor);
       this.workspace = workspace;
    }
    

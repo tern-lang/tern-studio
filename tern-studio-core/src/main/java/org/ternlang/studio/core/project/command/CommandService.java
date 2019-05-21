@@ -2,6 +2,7 @@ package org.ternlang.studio.core.project.command;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Executor;
 
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
@@ -9,7 +10,6 @@ import org.simpleframework.http.Response;
 import org.simpleframework.http.socket.FrameChannel;
 import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
-import org.ternlang.common.thread.ThreadPool;
 import org.ternlang.service.annotation.Component;
 import org.ternlang.service.resource.SessionConstants;
 import org.ternlang.service.resource.annotation.Subscribe;
@@ -55,10 +55,10 @@ public class CommandService implements Service {
          TreeContextManager treeManager, 
          DisplayPersister displayPersister,
          LocalProcessClient debugService,
-         ThreadPool pool) 
+         Executor executor) 
    {
       this.commandSessions = new ConcurrentHashMap<String, CommandSession>();
-      this.problemFinder = new ProblemCollector(workspace, pool);
+      this.problemFinder = new ProblemCollector(workspace, executor);
       this.displayPersister = displayPersister;
       this.treeManager = treeManager;
       this.backupManager = backupManager;

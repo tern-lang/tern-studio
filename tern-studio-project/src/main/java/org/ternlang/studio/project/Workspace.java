@@ -14,7 +14,6 @@ import javax.annotation.PostConstruct;
 
 import org.simpleframework.http.Path;
 import org.slf4j.LoggerFactory;
-
 import org.ternlang.common.thread.ThreadPool;
 import org.ternlang.service.annotation.Component;
 import org.ternlang.service.annotation.Value;
@@ -41,7 +40,7 @@ public class Workspace implements FileDirectorySource {
 
    private final ConfigurationReader reader;
    private final ProjectManager manager;
-   private final ThreadPool pool;
+   private final Executor executor;
    private final File logFile;
    private final String level;
    private final File root;
@@ -54,7 +53,7 @@ public class Workspace implements FileDirectorySource {
          @Value("${mode}") ProjectMode mode) 
    {
       this.reader = new ConfigurationReader(this);
-      this.pool = new ThreadPool(10);
+      this.executor = new ThreadPool(10);
       this.manager = new ProjectManager(reader, source, this, mode);
       this.logFile = logFile;
       this.level = level;
@@ -79,7 +78,7 @@ public class Workspace implements FileDirectorySource {
    }
    
    public Executor getExecutor(){
-      return pool;
+      return executor;
    }
    
    @Override

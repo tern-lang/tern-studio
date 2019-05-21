@@ -8,27 +8,24 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.ternlang.common.thread.ThreadPool;
 import org.ternlang.service.annotation.Component;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Component
 public class TextMatchScanner {
    
    private final TextMatchHistory history; // what is available in cache
    private final TextFileScanner scanner;
    private final TextMatchFinder finder;
-   private final ThreadPool pool;
+   private final Executor executor;
    
-   public TextMatchScanner(ThreadPool pool) {
+   public TextMatchScanner(Executor executor) {
       this.scanner = new TextFileScanner(); // e.g *.tern, *.txt
-      this.history = new TextMatchHistory(pool);
+      this.history = new TextMatchHistory(executor);
       this.finder = new TextMatchFinder();
-      this.pool = pool;
+      this.executor = executor;
    }
    
    public List<TextMatch> process(TextMatchQuery query) throws Exception {
@@ -45,7 +42,7 @@ public class TextMatchScanner {
          
          for(TextFile file : files) {
             TextMatchTask task = new TextMatchTask(finder, listener, query, file);
-            pool.execute(task);
+            executor.execute(task);
          }
          latch.await();
          
