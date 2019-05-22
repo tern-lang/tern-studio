@@ -8,25 +8,20 @@ import static org.ternlang.studio.project.config.WorkspaceConfiguration.TEMP_PAT
 
 import java.io.File;
 
-import javax.annotation.PostConstruct;
-
 import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.common.ComponentListener;
 import org.ternlang.studio.project.HomeDirectory;
-import org.ternlang.studio.project.Workspace;
 
 @Component
-public class SandBoxBuilder {
+public class SandBoxBuilder implements ComponentListener {
    
    private final JarFileBuilder builder;
-   private final Workspace workspace;
    
-   public SandBoxBuilder(ClassPathResourceLoader loader, Workspace workspace) {
+   public SandBoxBuilder(ClassPathResourceLoader loader) {
       this.builder = new JarFileBuilder(loader);
-      this.workspace = workspace;
    }
    
-   @PostConstruct
-   public void create() throws Exception {
+   public void onReady()  {
       File directory = HomeDirectory.getPath(TEMP_PATH);
       
       if(!directory.exists()) {
@@ -34,11 +29,15 @@ public class SandBoxBuilder {
       }
       File file = new File(directory, JAR_FILE);
 
-      builder.create(SandBoxLauncher.class)
-               .addResource(SandBoxClassLoader.class)
-               .addResource("/" + GRAMMAR_FILE)
-               .addResource("/" + IMPORT_FILE)
-               .addResource("/" + INSTRUCTION_FILE)
-               .saveFile(file);
+      try {
+         builder.create(SandBoxLauncher.class)
+                  .addResource(SandBoxClassLoader.class)
+                  .addResource("/" + GRAMMAR_FILE)
+                  .addResource("/" + IMPORT_FILE)
+                  .addResource("/" + INSTRUCTION_FILE)
+                  .saveFile(file);
+      } catch(Exception e) {
+         throw new IllegalStateException("Could not create " + file, e);
+      }
    }
 }

@@ -1,6 +1,7 @@
 package org.ternlang.studio.core.terminal;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -27,9 +28,8 @@ public class TerminalHelper {
         }
     }
 
-    public static synchronized void copyLibPty(Path dataDir) throws IOException {
-
-        Path donePath = dataDir.resolve(".DONE");
+    public static synchronized void copyLibPty(File dataDir) throws IOException {
+        Path donePath = dataDir.toPath().resolve(".DONE");
 
         if (Files.exists(donePath)) {
             return;
@@ -38,7 +38,7 @@ public class TerminalHelper {
         Set<String> nativeFiles = getNativeFiles();
 
         for (String nativeFile : nativeFiles) {
-            Path nativePath = dataDir.resolve(nativeFile);
+            Path nativePath = dataDir.toPath().resolve(nativeFile);
 
             if (Files.notExists(nativePath)) {
                 Files.createDirectories(nativePath.getParent());

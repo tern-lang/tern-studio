@@ -23,6 +23,9 @@ public class ClassPathParser {
             type = path.substring(0, length -6);
             type = type.replace('/', '.');
             
+            if(type.startsWith(".")) {
+               type = type.substring(1);
+            }
             cache.put(path, type);
          } else {
             type = path;
