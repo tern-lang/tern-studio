@@ -8,11 +8,11 @@ import java.util.zip.GZIPOutputStream;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Protocol;
 import org.simpleframework.http.Request;
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.resource.ContentTypeResolver;
+import org.simpleframework.module.resource.FileResolver;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.resource.ContentTypeResolver;
-import org.ternlang.service.resource.FileResolver;
 
 @Component
 public class DisplayContentProcessor {

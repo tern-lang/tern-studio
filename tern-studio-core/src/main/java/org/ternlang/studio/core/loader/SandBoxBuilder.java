@@ -10,7 +10,7 @@ import java.io.File;
 
 import javax.annotation.PostConstruct;
 
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.project.HomeDirectory;
 import org.ternlang.studio.project.Workspace;
 

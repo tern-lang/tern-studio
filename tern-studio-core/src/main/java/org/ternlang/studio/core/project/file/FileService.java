@@ -1,7 +1,7 @@
 package org.ternlang.studio.core.project.file;
 
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.resource.ContentTypeResolver;
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.resource.ContentTypeResolver;
 import org.ternlang.studio.project.FileCache;
 import org.ternlang.studio.project.FileData;
 import org.ternlang.studio.project.Workspace;

@@ -5,11 +5,11 @@ import java.io.InputStream;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.resource.Content;
-import org.ternlang.service.resource.FileResolver;
-import org.ternlang.service.resource.Resource;
-import org.ternlang.service.resource.ResourceMatcher;
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.resource.Content;
+import org.simpleframework.module.resource.FileResolver;
+import org.simpleframework.module.resource.Resource;
+import org.simpleframework.module.resource.ResourceMatcher;
 import org.ternlang.studio.common.FileDirectorySource;
 
 @Component

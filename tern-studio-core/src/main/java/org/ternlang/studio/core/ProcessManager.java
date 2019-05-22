@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.annotation.Value;
 import org.simpleframework.transport.Channel;
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.annotation.Value;
 import org.ternlang.studio.agent.event.ProcessEventFilter;
 import org.ternlang.studio.agent.event.ProcessEventListener;
 import org.ternlang.studio.agent.event.StepEvent;

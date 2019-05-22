@@ -6,8 +6,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.annotation.Value;
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.annotation.Value;
 import org.ternlang.studio.common.ProgressManager;
 import org.ternlang.studio.project.HomeDirectory;
 import org.ternlang.ui.ClientContext;

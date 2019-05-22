@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 
 @Component   
 public class ProcessConfiguration {

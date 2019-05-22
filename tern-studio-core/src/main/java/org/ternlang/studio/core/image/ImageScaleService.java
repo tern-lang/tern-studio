@@ -10,12 +10,12 @@ import javax.imageio.ImageReader;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.resource.Content;
+import org.simpleframework.module.resource.ContentTypeResolver;
+import org.simpleframework.module.resource.FileResolver;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.resource.Content;
-import org.ternlang.service.resource.ContentTypeResolver;
-import org.ternlang.service.resource.FileResolver;
 
 @Component
 public class ImageScaleService {

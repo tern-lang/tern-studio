@@ -1,12 +1,12 @@
 package org.ternlang.studio.core.complete;
 
-import org.ternlang.service.annotation.DefaultValue;
-import org.ternlang.service.resource.annotation.Body;
-import org.ternlang.service.resource.annotation.POST;
-import org.ternlang.service.resource.annotation.Path;
-import org.ternlang.service.resource.annotation.PathParam;
-import org.ternlang.service.resource.annotation.Produces;
-import org.ternlang.service.resource.annotation.QueryParam;
+import org.simpleframework.module.annotation.DefaultValue;
+import org.simpleframework.module.resource.annotation.Body;
+import org.simpleframework.module.resource.annotation.POST;
+import org.simpleframework.module.resource.annotation.Path;
+import org.simpleframework.module.resource.annotation.PathParam;
+import org.simpleframework.module.resource.annotation.Produces;
+import org.simpleframework.module.resource.annotation.QueryParam;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 

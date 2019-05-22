@@ -7,10 +7,10 @@ import java.io.PrintStream;
 
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.ternlang.service.resource.annotation.GET;
-import org.ternlang.service.resource.annotation.Path;
-import org.ternlang.service.resource.template.TemplateEngine;
-import org.ternlang.service.resource.template.TemplateModel;
+import org.simpleframework.module.resource.annotation.GET;
+import org.simpleframework.module.resource.annotation.Path;
+import org.simpleframework.module.resource.template.TemplateEngine;
+import org.simpleframework.module.resource.template.TemplateModel;
 import org.ternlang.studio.common.display.DisplayModelResolver;
 import org.ternlang.studio.project.Workspace;
 

@@ -11,7 +11,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 
 @Component
 public class TextMatchScanner {

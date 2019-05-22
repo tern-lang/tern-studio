@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
-import org.ternlang.service.resource.Resource;
+import org.simpleframework.module.resource.Resource;
 import org.ternlang.studio.common.FileDirectorySource;
 
 @Slf4j

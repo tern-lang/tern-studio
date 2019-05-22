@@ -1,6 +1,6 @@
 package org.ternlang.studio.core.agent.worker;
 
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.agent.worker.WorkerNameGenerator;
 import org.ternlang.studio.core.ProcessNameFilter;
 

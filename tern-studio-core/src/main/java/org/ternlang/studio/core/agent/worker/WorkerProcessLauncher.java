@@ -10,7 +10,7 @@ import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.agent.ProcessMode;
 import org.ternlang.studio.agent.worker.WorkerProcess;
 import org.ternlang.studio.core.ProcessDefinition;

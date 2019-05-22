@@ -13,8 +13,8 @@ import org.simpleframework.http.socket.FrameType;
 import org.simpleframework.http.socket.Reason;
 import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.resource.annotation.Subscribe;
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.resource.annotation.Subscribe;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 

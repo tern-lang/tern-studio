@@ -1,9 +1,9 @@
 package org.ternlang.studio.core.agent.local;
 
-import org.ternlang.service.resource.annotation.GET;
-import org.ternlang.service.resource.annotation.Path;
-import org.ternlang.service.resource.annotation.PathParam;
-import org.ternlang.service.resource.annotation.Produces;
+import org.simpleframework.module.resource.annotation.GET;
+import org.simpleframework.module.resource.annotation.Path;
+import org.simpleframework.module.resource.annotation.PathParam;
+import org.simpleframework.module.resource.annotation.Produces;
 import org.ternlang.studio.agent.local.message.AttachResponse;
 import org.ternlang.studio.agent.local.message.DetachResponse;
 

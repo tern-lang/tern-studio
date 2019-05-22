@@ -5,7 +5,7 @@ import java.io.StringWriter;
 import java.util.Map;
 import java.util.Set;
 
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 
 import lombok.AllArgsConstructor;
 

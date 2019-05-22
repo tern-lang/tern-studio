@@ -3,7 +3,7 @@ package org.ternlang.studio.core.agent.local;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.agent.local.LocalMessageProducer;
 import org.ternlang.studio.agent.local.message.AttachRequest;
 import org.ternlang.studio.agent.local.message.AttachResponse;

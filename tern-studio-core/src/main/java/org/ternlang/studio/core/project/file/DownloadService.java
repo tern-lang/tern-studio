@@ -1,6 +1,6 @@
 package org.ternlang.studio.core.project.file;
 
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 

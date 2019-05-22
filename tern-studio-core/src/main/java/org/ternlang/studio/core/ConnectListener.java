@@ -8,7 +8,7 @@ import java.util.Collections;
 import lombok.AllArgsConstructor;
 
 import org.simpleframework.http.Path;
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.core.command.CommandListener;
 import org.ternlang.studio.core.command.ExecuteCommand;
 import org.ternlang.studio.project.Project;

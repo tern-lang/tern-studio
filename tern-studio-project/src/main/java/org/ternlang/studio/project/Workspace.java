@@ -13,10 +13,10 @@ import java.util.concurrent.Executor;
 import javax.annotation.PostConstruct;
 
 import org.simpleframework.http.Path;
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.annotation.Value;
 import org.slf4j.LoggerFactory;
 import org.ternlang.common.thread.ThreadPool;
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.annotation.Value;
 import org.ternlang.studio.common.FileDirectorySource;
 import org.ternlang.studio.common.ProgressManager;
 import org.ternlang.studio.project.config.ConfigurationReader;

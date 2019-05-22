@@ -26,7 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.ternlang.service.common.ClassPathReader;
+import org.simpleframework.module.common.ClassPathReader;
 import org.ternlang.studio.common.ProgressManager;
 import org.ternlang.ui.WindowIcon;
 import org.ternlang.ui.WindowIconLoader;

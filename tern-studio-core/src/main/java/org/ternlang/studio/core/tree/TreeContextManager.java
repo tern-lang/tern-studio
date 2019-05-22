@@ -3,9 +3,9 @@ package org.ternlang.studio.core.tree;
 import java.io.File;
 import java.io.IOException;
 
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
-import org.ternlang.service.annotation.Component;
 import org.ternlang.studio.project.Workspace;
 
 @Component

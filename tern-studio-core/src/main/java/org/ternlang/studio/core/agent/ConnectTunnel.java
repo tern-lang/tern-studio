@@ -1,12 +1,12 @@
 package org.ternlang.studio.core.agent;
 
 import org.simpleframework.http.Request;
+import org.simpleframework.module.resource.annotation.CONNECT;
+import org.simpleframework.module.resource.annotation.HeaderParam;
+import org.simpleframework.module.resource.annotation.Path;
+import org.simpleframework.module.resource.annotation.PathParam;
 import org.simpleframework.transport.ByteWriter;
 import org.simpleframework.transport.Channel;
-import org.ternlang.service.resource.annotation.CONNECT;
-import org.ternlang.service.resource.annotation.HeaderParam;
-import org.ternlang.service.resource.annotation.Path;
-import org.ternlang.service.resource.annotation.PathParam;
 import org.ternlang.studio.core.agent.worker.WorkerProcessSubscriber;
 
 import lombok.AllArgsConstructor;

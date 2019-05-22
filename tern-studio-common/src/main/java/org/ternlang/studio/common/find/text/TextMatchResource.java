@@ -3,12 +3,12 @@ package org.ternlang.studio.common.find.text;
 import java.io.File;
 import java.util.List;
 
-import org.ternlang.service.annotation.DefaultValue;
-import org.ternlang.service.resource.annotation.GET;
-import org.ternlang.service.resource.annotation.Path;
-import org.ternlang.service.resource.annotation.PathParam;
-import org.ternlang.service.resource.annotation.Produces;
-import org.ternlang.service.resource.annotation.QueryParam;
+import org.simpleframework.module.annotation.DefaultValue;
+import org.simpleframework.module.resource.annotation.GET;
+import org.simpleframework.module.resource.annotation.Path;
+import org.simpleframework.module.resource.annotation.PathParam;
+import org.simpleframework.module.resource.annotation.Produces;
+import org.simpleframework.module.resource.annotation.QueryParam;
 import org.ternlang.studio.common.FileDirectory;
 import org.ternlang.studio.common.FileDirectorySource;
 

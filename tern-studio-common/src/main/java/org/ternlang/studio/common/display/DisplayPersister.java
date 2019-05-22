@@ -3,8 +3,8 @@ package org.ternlang.studio.common.display;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.simpleframework.module.annotation.Component;
 import org.simpleframework.xml.core.Persister;
-import org.ternlang.service.annotation.Component;
 import org.ternlang.studio.common.FileDirectorySource;
 
 import lombok.extern.slf4j.Slf4j;

@@ -19,8 +19,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.common.DateFormatter;
-import org.ternlang.service.annotation.Component;
 import org.ternlang.studio.project.config.WorkspaceConfiguration;
 
 import lombok.AllArgsConstructor;

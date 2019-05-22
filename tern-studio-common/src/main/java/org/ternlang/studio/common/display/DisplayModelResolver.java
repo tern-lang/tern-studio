@@ -3,8 +3,8 @@ package org.ternlang.studio.common.display;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.resource.template.TemplateModel;
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.resource.template.TemplateModel;
 
 @Component
 public class DisplayModelResolver {

@@ -1,6 +1,6 @@
 package org.ternlang.studio.core.complete;
 
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.index.IndexDatabase;
 import org.ternlang.studio.index.complete.CompletionCompiler;
 import org.ternlang.studio.index.complete.FindConstructorsInScope;

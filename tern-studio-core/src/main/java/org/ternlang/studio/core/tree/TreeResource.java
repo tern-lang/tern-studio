@@ -2,9 +2,9 @@ package org.ternlang.studio.core.tree;
 
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.ternlang.service.resource.annotation.GET;
-import org.ternlang.service.resource.annotation.Path;
-import org.ternlang.service.resource.annotation.QueryParam;
+import org.simpleframework.module.resource.annotation.GET;
+import org.simpleframework.module.resource.annotation.Path;
+import org.simpleframework.module.resource.annotation.QueryParam;
 
 import lombok.AllArgsConstructor;
 

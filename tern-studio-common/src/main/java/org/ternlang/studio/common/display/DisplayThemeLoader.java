@@ -5,10 +5,10 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.common.ClassPathReader;
+import org.simpleframework.module.resource.template.TemplateModel;
 import org.simpleframework.xml.core.Persister;
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.common.ClassPathReader;
-import org.ternlang.service.resource.template.TemplateModel;
 
 @Component
 public class DisplayThemeLoader {

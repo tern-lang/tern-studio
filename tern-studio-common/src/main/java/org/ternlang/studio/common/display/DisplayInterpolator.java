@@ -3,9 +3,9 @@ package org.ternlang.studio.common.display;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.resource.template.TemplateEngine;
-import org.ternlang.service.resource.template.TemplateModel;
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.resource.template.TemplateEngine;
+import org.simpleframework.module.resource.template.TemplateModel;
 
 @Component
 public class DisplayInterpolator {

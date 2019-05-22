@@ -4,10 +4,10 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ternlang.service.resource.template.PropertyBinder;
-import org.ternlang.service.resource.template.PropertyTemplateFilter;
-import org.ternlang.service.resource.template.StringTemplate;
-import org.ternlang.service.resource.template.TemplateModel;
+import org.simpleframework.module.resource.template.PropertyBinder;
+import org.simpleframework.module.resource.template.PropertyTemplateFilter;
+import org.simpleframework.module.resource.template.StringTemplate;
+import org.simpleframework.module.resource.template.TemplateModel;
 
 import junit.framework.TestCase;
 

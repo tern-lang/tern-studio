@@ -1,7 +1,7 @@
 package org.ternlang.studio.core;
 
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.common.ComponentListener;
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.common.ComponentListener;
 import org.ternlang.studio.common.ProgressManager;
 
 @Component

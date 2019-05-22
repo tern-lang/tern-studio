@@ -1,7 +1,7 @@
 package org.ternlang.studio.core.agent.worker;
 
+import org.simpleframework.module.annotation.Component;
 import org.simpleframework.transport.Channel;
-import org.ternlang.service.annotation.Component;
 import org.ternlang.studio.agent.ProcessMode;
 import org.ternlang.studio.agent.event.BeginEvent;
 import org.ternlang.studio.agent.event.ExitEvent;

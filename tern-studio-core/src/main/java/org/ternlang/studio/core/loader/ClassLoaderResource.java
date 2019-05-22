@@ -1,9 +1,9 @@
 package org.ternlang.studio.core.loader;
 
-import org.ternlang.service.resource.annotation.GET;
-import org.ternlang.service.resource.annotation.Path;
-import org.ternlang.service.resource.annotation.PathParam;
-import org.ternlang.service.resource.annotation.Produces;
+import org.simpleframework.module.resource.annotation.GET;
+import org.simpleframework.module.resource.annotation.Path;
+import org.simpleframework.module.resource.annotation.PathParam;
+import org.simpleframework.module.resource.annotation.Produces;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;

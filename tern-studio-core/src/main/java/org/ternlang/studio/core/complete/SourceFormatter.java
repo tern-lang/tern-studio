@@ -3,7 +3,7 @@ package org.ternlang.studio.core.complete;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.project.Project;
 
 import com.google.gson.Gson;

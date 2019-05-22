@@ -1,6 +1,6 @@
 package org.ternlang.studio.core.tree;
 
-import static org.ternlang.service.resource.SessionConstants.SESSION_ID;
+import static org.simpleframework.module.resource.SessionConstants.SESSION_ID;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -10,7 +10,7 @@ import org.simpleframework.http.Cookie;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.common.display.DisplayModelResolver;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;

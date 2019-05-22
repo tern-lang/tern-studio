@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.agent.log.ConsoleLog;
 import org.ternlang.studio.agent.log.Log;
 import org.ternlang.studio.agent.log.LogLevel;

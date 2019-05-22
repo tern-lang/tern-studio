@@ -3,8 +3,8 @@ package org.ternlang.studio.core.loader;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.ternlang.service.annotation.Component;
-import org.ternlang.service.common.ClassPathReader;
+import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.common.ClassPathReader;
 
 @Component
 public class ClassPathResourceLoader {

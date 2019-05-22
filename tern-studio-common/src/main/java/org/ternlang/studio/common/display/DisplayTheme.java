@@ -3,13 +3,13 @@ package org.ternlang.studio.common.display;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.simpleframework.module.resource.template.TemplateModel;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Text;
 import org.simpleframework.xml.util.Dictionary;
 import org.simpleframework.xml.util.Entry;
-import org.ternlang.service.resource.template.TemplateModel;
 
 @Root
 public class DisplayTheme {

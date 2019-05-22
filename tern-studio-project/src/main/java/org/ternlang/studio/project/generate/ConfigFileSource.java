@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.ternlang.service.annotation.Component;
+import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.project.FilePersister;
 import org.ternlang.studio.project.FileSystem;
 import org.ternlang.studio.project.Project;

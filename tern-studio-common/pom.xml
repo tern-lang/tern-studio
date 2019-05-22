@@ -21,9 +21,9 @@
       <version>1.4.6</version>
     </dependency>
     <dependency>
-      <groupId>org.ternlang</groupId>
-      <artifactId>tern-service-resource</artifactId>
-      <version>1.4.6</version>
+      <groupId>org.simpleframework</groupId>
+      <artifactId>simple-module-resource</artifactId>
+      <version>1.0.2</version>
     </dependency>
     <dependency>
       <groupId>org.ternlang</groupId>
