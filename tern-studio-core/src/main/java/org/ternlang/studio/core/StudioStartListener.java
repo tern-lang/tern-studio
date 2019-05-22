@@ -4,7 +4,7 @@ import java.net.InetSocketAddress;
 
 import org.simpleframework.module.annotation.Component;
 import org.simpleframework.module.common.ComponentListener;
-import org.simpleframework.module.resource.server.ResourceServer;
+import org.simpleframework.module.resource.container.ResourceServer;
 import org.ternlang.studio.common.ProgressManager;
 
 import lombok.AllArgsConstructor;

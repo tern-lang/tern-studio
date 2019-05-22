@@ -8,7 +8,7 @@ import javax.swing.UIManager;
 
 import org.simpleframework.module.annotation.Import;
 import org.simpleframework.module.annotation.Module;
-import org.simpleframework.module.resource.DependencyApplication;
+import org.simpleframework.module.resource.Application;
 import org.ternlang.studio.agent.cli.CommandLine;
 import org.ternlang.studio.agent.cli.CommandLineBuilder;
 import org.ternlang.studio.agent.runtime.MainClassValue;
@@ -46,7 +46,7 @@ public class StudioApplication {
 
       if (commandLine.isServerOnly()) {
          System.setProperty("java.awt.headless", "true");
-         DependencyApplication.start(port, StudioApplication.class);
+         Application.start(port, StudioApplication.class);
       } else {
          if (process.isForkRequired()) {
             forkTask.run();
@@ -56,7 +56,7 @@ public class StudioApplication {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             SplashScreen.getPanel().show(60000); // 1 minute
             SplashScreen.getPanel().update("Tern Studio " + version);
-            DependencyApplication.start(port, StudioApplication.class);
+            Application.start(port, StudioApplication.class);
          }
       }
    }
