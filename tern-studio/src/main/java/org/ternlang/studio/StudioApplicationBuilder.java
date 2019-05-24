@@ -8,11 +8,16 @@ import lombok.SneakyThrows;
 
 public class StudioApplicationBuilder implements ApplicationBuilder<StudioService> {
 
+   private static final String[] SEARCH_FILES = {
+         "ternd",
+         "tern-studio"
+      };
+   
    private ResourceServiceBuilder builder;
    private String[] arguments;
    
    public StudioApplicationBuilder() {
-      this.builder = new ResourceServiceBuilder();
+      this.builder = new ResourceServiceBuilder(SEARCH_FILES);
       this.arguments = new String[]{};
    }
    
@@ -23,7 +28,7 @@ public class StudioApplicationBuilder implements ApplicationBuilder<StudioServic
    }
    
    public StudioApplicationBuilder arguments(String[] arguments) {
-      this.arguments = arguments;
+      builder.arguments(arguments);
       return this;
    }
    

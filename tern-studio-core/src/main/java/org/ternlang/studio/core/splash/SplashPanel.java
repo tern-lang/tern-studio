@@ -1,4 +1,4 @@
-package org.ternlang.studio.core;
+package org.ternlang.studio.core.splash;
 
 import org.ternlang.studio.common.ProgressListener;
 

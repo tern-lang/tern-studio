@@ -1,4 +1,4 @@
-package org.ternlang.studio.core;
+package org.ternlang.studio.core.splash;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

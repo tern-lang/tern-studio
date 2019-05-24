@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.simpleframework.module.annotation.Component;
 import org.simpleframework.module.annotation.Value;
 import org.ternlang.studio.common.ProgressManager;
+import org.ternlang.studio.core.splash.SplashPanel;
+import org.ternlang.studio.core.splash.SplashScreen;
 import org.ternlang.studio.project.HomeDirectory;
 import org.ternlang.ui.ClientContext;
 import org.ternlang.ui.ClientControl;
