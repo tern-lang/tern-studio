@@ -16,8 +16,8 @@ public class TypeScriptResource {
 
    @GET
    @Path(".*.js")
-   public byte[] handle(Request request, Response response) {
-      return service.process(request, response);
+   public void handle(Request request, Response response) {
+      service.process(request, response);
    }
 
 }

@@ -22,22 +22,20 @@ public class TypeScriptService  {
       "target/classes/resource/js"
    };
 
-   private final DisplayResourceMatcher matcher;
    private final TypeScriptCompiler compiler;
    private final List<String> outputDirs;
    private final List<String> sourceFiles;
    private final File typescriptDir;
    
-   public TypeScriptService(TypeScriptCompiler compiler, DisplayResourceMatcher matcher) {
+   public TypeScriptService(TypeScriptCompiler compiler) {
       this.typescriptDir = new File(SOURCE_FOLDER);
       this.outputDirs = Arrays.asList(OUTPUT_FOLDERS);
       this.sourceFiles = Arrays.asList(SOURCE_PATTERNS);
       this.compiler = compiler;
-      this.matcher = matcher;
    }
 
    @SneakyThrows
-   public byte[] process(Request request, Response response)  {
+   public void process(Request request, Response response)  {
       if(typescriptDir.getAbsoluteFile().exists()) {
          for(String outputDir : outputDirs) {
             compiler.compile(typescriptDir.getCanonicalFile(), 
@@ -45,7 +43,6 @@ public class TypeScriptService  {
                              sourceFiles);
          }
       }
-      return matcher.getJavaScript(request, response);
    }
 
 }
