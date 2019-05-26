@@ -5,7 +5,7 @@ import static org.simpleframework.module.resource.SessionCookie.SESSION_ID;
 import org.simpleframework.module.ApplicationBuilder;
 import org.simpleframework.module.annotation.Import;
 import org.simpleframework.module.annotation.Module;
-import org.simpleframework.module.resource.server.ServerApplication;
+import org.simpleframework.module.resource.container.ServerApplication;
 
 @Module
 @Import(StudioApplication.class)
