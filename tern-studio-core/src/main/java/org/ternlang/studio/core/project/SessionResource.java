@@ -6,7 +6,7 @@ import org.simpleframework.http.Protocol;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
-import org.simpleframework.module.resource.SessionConstants;
+import org.simpleframework.module.resource.SessionCookie;
 import org.simpleframework.module.resource.annotation.GET;
 import org.simpleframework.module.resource.annotation.Path;
 
@@ -32,7 +32,7 @@ public class SessionResource {
 
          response.setStatus(Status.TEMPORARY_REDIRECT);
          response.setContentType("text/plain");
-         response.setCookie(SessionConstants.SESSION_ID, session);
+         response.setCookie(SessionCookie.SESSION_ID, session);
          response.setValue(Protocol.LOCATION, address);
          stream.println("Redirecting to " + address);
          response.close();

@@ -11,7 +11,7 @@ import org.simpleframework.http.socket.FrameChannel;
 import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.module.resource.SessionConstants;
+import org.simpleframework.module.resource.SessionCookie;
 import org.simpleframework.module.resource.annotation.Subscribe;
 import org.ternlang.studio.common.display.DisplayPersister;
 import org.ternlang.studio.core.ConnectListener;
@@ -78,7 +78,7 @@ public class CommandService implements Service {
       try {
          FrameChannel channel = connection.getChannel();
          Project project = workspace.createProject(path);
-         String value = SessionConstants.findOrCreate(request, response);
+         String value = SessionCookie.findOrCreate(request, response);
          CommandSession commandSession = commandSessions.computeIfAbsent(value, CommandSession::new);
          CommandClient commandClient = commandSession.createClient(channel, project);
 
