@@ -9,7 +9,7 @@ import static org.ternlang.studio.project.config.WorkspaceConfiguration.TEMP_PAT
 import java.io.File;
 
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.module.common.ComponentListener;
+import org.simpleframework.module.core.ComponentListener;
 import org.ternlang.studio.project.HomeDirectory;
 
 @Component

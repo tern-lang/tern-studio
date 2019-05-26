@@ -3,8 +3,7 @@ package org.ternlang.studio.core;
 import java.net.InetSocketAddress;
 
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.module.common.ComponentListener;
-import org.simpleframework.module.resource.container.ResourceServer;
+import org.simpleframework.module.core.ComponentListener;
 import org.ternlang.studio.common.ProgressManager;
 
 import lombok.AllArgsConstructor;
@@ -16,13 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 public class StudioStartListener implements ComponentListener {
   
     private final StudioClientLauncher launcher;
+    private final InetSocketAddress address;
     private final ProcessManager manager;
-    private final ResourceServer starter;
     
     @Override
     public void onReady() {
        try {
-          InetSocketAddress address = starter.start();
           int port = address.getPort();
           String host = "localhost"; //InetAddress.getLocalHost().getHostName();
           String project = String.format("http://%s:%s/", host, port);

@@ -25,7 +25,7 @@ import java.util.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.simpleframework.module.common.ClassPathScanner;
+import org.simpleframework.module.graph.ClassPathScanner;
 import org.ternlang.core.type.extend.FileExtension;
 import org.ternlang.studio.agent.local.LocalJarProcess;
 import org.ternlang.studio.agent.local.LocalProcess;
