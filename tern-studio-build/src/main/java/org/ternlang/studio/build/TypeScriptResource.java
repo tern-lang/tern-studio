@@ -3,12 +3,12 @@ package org.ternlang.studio.build;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.module.resource.annotation.GET;
-import org.simpleframework.module.resource.annotation.Intercept;
+import org.simpleframework.module.resource.annotation.Filter;
 import org.simpleframework.module.resource.annotation.Path;
 
 import lombok.AllArgsConstructor;
 
-@Intercept("/")
+@Filter("/")
 @AllArgsConstructor
 public class TypeScriptResource {
    
