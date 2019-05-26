@@ -2,10 +2,10 @@ package org.ternlang.studio;
 
 import static org.simpleframework.module.resource.SessionCookie.SESSION_ID;
 
-import org.simpleframework.module.ApplicationBuilder;
+import org.simpleframework.module.Application;
 import org.simpleframework.module.annotation.Import;
 import org.simpleframework.module.annotation.Module;
-import org.simpleframework.module.resource.container.ServerApplication;
+import org.simpleframework.module.resource.container.ServerDriver;
 
 @Module
 @Import(StudioApplication.class)
@@ -16,14 +16,15 @@ public class StudioApplication {
       StudioService service = builder.create();
       service.getCommandLine();
 
-      ApplicationBuilder.create(ServerApplication.class)
-         .withPath("ternd")
-         .withPath("tern-studio")
-         .withModule(StudioApplication.class)
-         .withArguments(list)
-         .withName("Apache/2.2.14")
-         .withCookie(SESSION_ID)
-         .withThreads(10)
+      Application.create(ServerDriver.class)
+         .path("..")
+         .file("ternd")
+         .file("tern-studio")
+         .module(StudioApplication.class)
+         .create(list)
+         .name("Apache/2.2.14")
+         .session(SESSION_ID)
+         .threads(10)
          .start();
 
    }

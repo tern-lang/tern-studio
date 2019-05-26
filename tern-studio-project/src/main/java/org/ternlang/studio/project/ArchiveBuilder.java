@@ -25,7 +25,7 @@ import java.util.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.simpleframework.module.graph.ClassPathScanner;
+import org.simpleframework.module.path.ClassNode;
 import org.ternlang.core.type.extend.FileExtension;
 import org.ternlang.studio.agent.local.LocalJarProcess;
 import org.ternlang.studio.agent.local.LocalProcess;
@@ -33,7 +33,6 @@ import org.ternlang.studio.agent.runtime.MainScriptValue;
 import org.ternlang.studio.project.generate.ClassPathConfigFile;
 import org.ternlang.studio.project.generate.ClassPathFileGenerator;
 
-import io.github.classgraph.ClassInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,14 +54,12 @@ public class ArchiveBuilder {
       new ArchivePath("grammar.txt", false)
    };
    
-   private final ClassPathScanner resolver;
    private final ClassPathFileGenerator generator;
    private final FileExtension extension;
    private final ProjectContext context;
    private final Project project;
 
    public ArchiveBuilder(Project project, ProjectContext context) {
-      this.resolver = new ClassPathScanner(); 
       this.generator = new ClassPathFileGenerator();
       this.extension = new FileExtension();
       this.project = project;
@@ -177,11 +174,16 @@ public class ArchiveBuilder {
       for(ArchivePath path : RUNTIME_PACKAGES) {
          String prefix = path.getPath();
          String pattern = path.getPattern();
-         Iterator<ClassInfo> resources = resolver.findClasses(pattern);
+         Iterator<ClassNode> resources = project.getWorkspace()
+               .getClassPath()
+               .getTypes()               
+               .stream()
+               .filter(info -> info.getName().matches(pattern))
+               .iterator();
           
          while(resources.hasNext()) {
-            ClassInfo info = resources.next();
-            URL resource = info.getClasspathElementURL();
+            ClassNode info = resources.next();
+            URL resource = info.getResource();
             String target = resource.toString();
             int index = target.indexOf(prefix);
             

@@ -1,13 +1,11 @@
 package org.ternlang.studio.build;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.module.resource.Resource;
 import org.ternlang.studio.common.display.DisplayResourceMatcher;
 
 import lombok.SneakyThrows;
@@ -39,7 +37,7 @@ public class TypeScriptService  {
    }
 
    @SneakyThrows
-   public void process(Request request, Response response)  {
+   public byte[] process(Request request, Response response)  {
       if(typescriptDir.getAbsoluteFile().exists()) {
          for(String outputDir : outputDirs) {
             compiler.compile(typescriptDir.getCanonicalFile(), 
@@ -47,12 +45,7 @@ public class TypeScriptService  {
                              sourceFiles);
          }
       }
-      Resource resource = matcher.match(request, response);
-      
-      if(resource == null) {
-         throw new IOException("Could not match " + request);
-      }
-      resource.handle(request, response);
+      return matcher.getJavaScript(request, response);
    }
 
 }

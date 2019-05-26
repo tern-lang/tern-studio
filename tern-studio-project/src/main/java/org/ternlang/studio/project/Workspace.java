@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
 import org.simpleframework.http.Path;
 import org.simpleframework.module.annotation.Component;
 import org.simpleframework.module.annotation.Value;
+import org.simpleframework.module.path.ClassPath;
 import org.slf4j.LoggerFactory;
 import org.ternlang.common.thread.ThreadPool;
 import org.ternlang.studio.common.FileDirectorySource;
@@ -41,12 +42,14 @@ public class Workspace implements FileDirectorySource {
    private final ConfigurationReader reader;
    private final ProjectManager manager;
    private final Executor executor;
+   private final ClassPath path;
    private final File logFile;
    private final String level;
    private final File root;
    
    public Workspace(
          ConfigFileSource source,
+         ClassPath path,
          @Value("${directory}") File root, 
          @Value("${log-file}") File logFile, 
          @Value("${log-level}") String level, 
@@ -57,7 +60,12 @@ public class Workspace implements FileDirectorySource {
       this.manager = new ProjectManager(reader, source, this, mode);
       this.logFile = logFile;
       this.level = level;
+      this.path = path;
       this.root = root;
+   }
+   
+   public ClassPath getClassPath() {
+      return path;
    }
    
    public File getRoot() {

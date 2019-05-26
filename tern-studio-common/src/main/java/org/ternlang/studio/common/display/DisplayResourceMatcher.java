@@ -2,32 +2,38 @@ package org.ternlang.studio.common.display;
 
 import java.io.InputStream;
 
-import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.simpleframework.module.annotation.Component;
 import org.simpleframework.module.resource.Content;
 import org.simpleframework.module.resource.FileResolver;
-import org.simpleframework.module.resource.Resource;
-import org.simpleframework.module.resource.ResourceMatcher;
+import org.simpleframework.module.resource.annotation.GET;
+import org.simpleframework.module.resource.annotation.Path;
 import org.ternlang.studio.common.FileDirectorySource;
 
-@Component
-public class DisplayResourceMatcher implements ResourceMatcher {
+import lombok.AllArgsConstructor;
+
+@Path("/")
+@AllArgsConstructor
+public class DisplayResourceMatcher {
 
    private final DisplayContentProcessor displayProcessor;
    private final FileResolver fileResolver;
    private final FileDirectorySource workspace;
-   
-   public DisplayResourceMatcher(DisplayContentProcessor displayProcessor, FileResolver fileResolver, FileDirectorySource workspace) {
-      this.displayProcessor = displayProcessor;
-      this.fileResolver = fileResolver;
-      this.workspace = workspace;
-   }
 
-   @Override
-   public Resource match(Request request, Response response) throws Exception {
-      Path path = request.getPath();
+   @GET
+   @Path("/css/.*.css")   
+   public byte[] getStyleSheet(Request request, Response response) throws Exception {
+      return match(request, response);  
+   }
+   
+   @GET
+   @Path("/js/.*.js")   
+   public byte[] getJavaScript(Request request, Response response) throws Exception {
+      return match(request, response);
+   }
+    
+   private byte[] match(Request request, Response response) throws Exception {
+      org.simpleframework.http.Path path = request.getPath();
       String target = path.getPath();
       Content content = fileResolver.resolveContent(target);
       
@@ -35,7 +41,7 @@ public class DisplayResourceMatcher implements ResourceMatcher {
          InputStream stream = content.getInputStream();
          
          if(stream != null) {
-            return new DisplayFileResource(displayProcessor, workspace);
+            return new DisplayFileResource(displayProcessor, workspace).handle(request, response);
          }
       }
       return null;

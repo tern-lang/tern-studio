@@ -3,11 +3,12 @@ package org.ternlang.studio.build;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.module.resource.annotation.GET;
+import org.simpleframework.module.resource.annotation.Intercept;
 import org.simpleframework.module.resource.annotation.Path;
 
 import lombok.AllArgsConstructor;
 
-@Path("/js")
+@Intercept("/")
 @AllArgsConstructor
 public class TypeScriptResource {
    
@@ -15,8 +16,8 @@ public class TypeScriptResource {
 
    @GET
    @Path(".*.js")
-   public void handle(Request request, Response response) {
-      service.process(request, response);
+   public byte[] handle(Request request, Response response) {
+      return service.process(request, response);
    }
 
 }

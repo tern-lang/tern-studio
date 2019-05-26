@@ -4,18 +4,15 @@ import static org.simpleframework.http.Protocol.CONTENT_ENCODING;
 import static org.simpleframework.http.Protocol.CONTENT_TYPE;
 import static org.simpleframework.http.Status.OK;
 
-import java.io.OutputStream;
-
-import lombok.extern.slf4j.Slf4j;
-
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
-import org.simpleframework.module.resource.Resource;
 import org.ternlang.studio.common.FileDirectorySource;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
-public class DisplayFileResource implements Resource {
+public class DisplayFileResource {
 
    private final DisplayContentProcessor displayProcessor;
    private final FileDirectorySource workspace;
@@ -30,11 +27,9 @@ public class DisplayFileResource implements Resource {
       this.workspace = workspace;
       this.status = status;
    }
-
-   @Override
-   public void handle(Request request, Response response) throws Exception {
+   
+   public byte[] handle(Request request, Response response) throws Exception {
       DisplayContent content = displayProcessor.create(request);
-      OutputStream output = response.getOutputStream();
       String type = content.getType();
       String path = content.getPath();
       String encoding = content.getEncoding();
@@ -53,7 +48,6 @@ public class DisplayFileResource implements Resource {
          response.setValue(CONTENT_ENCODING, encoding);
       }
       response.setContentLength(data.length);
-      output.write(data);
-      output.close();
+      return data;
    }
 }
