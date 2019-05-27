@@ -1,5 +1,7 @@
 package org.ternlang.studio.core.command;
 
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class ObjectCommandMarshaller<T extends Command> implements CommandMarshaller<T> {
@@ -8,7 +10,7 @@ public abstract class ObjectCommandMarshaller<T extends Command> implements Comm
    private final CommandType type;
    
    public ObjectCommandMarshaller(CommandType type) {
-      this.mapper = new ObjectMapper();
+      this.mapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
       this.type = type;
    }
 

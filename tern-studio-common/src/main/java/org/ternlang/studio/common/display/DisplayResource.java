@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 
 @Path("/")
 @AllArgsConstructor
-public class DisplayResourceMatcher {
+public class DisplayResource {
 
    private final DisplayContentProcessor displayProcessor;
    private final FileResolver fileResolver;
@@ -29,6 +29,12 @@ public class DisplayResourceMatcher {
    @GET
    @Path("/js/.*.js")   
    public byte[] getJavaScript(Request request, Response response) throws Exception {
+      return match(request, response);
+   }
+   
+   @GET
+   @Path("/ttf/.*.ttf")   
+   public byte[] getFont(Request request, Response response) throws Exception {
       return match(request, response);
    }
    

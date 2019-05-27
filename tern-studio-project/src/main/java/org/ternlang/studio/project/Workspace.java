@@ -14,6 +14,7 @@ import javax.annotation.PostConstruct;
 
 import org.simpleframework.http.Path;
 import org.simpleframework.module.annotation.Component;
+import org.simpleframework.module.annotation.DependsOn;
 import org.simpleframework.module.annotation.Value;
 import org.simpleframework.module.path.ClassPath;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ import org.ternlang.studio.project.config.DependencyFile;
 import org.ternlang.studio.project.config.ProjectConfiguration;
 import org.ternlang.studio.project.config.WorkspaceConfiguration;
 import org.ternlang.studio.project.decompile.Decompiler;
+import org.ternlang.studio.project.generate.ClassPathFileGenerator;
 import org.ternlang.studio.project.generate.ConfigFileSource;
 
 import ch.qos.logback.classic.Level;
@@ -37,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@DependsOn(ClassPathFileGenerator.class)
 public class Workspace implements FileDirectorySource {
 
    private final ConfigurationReader reader;

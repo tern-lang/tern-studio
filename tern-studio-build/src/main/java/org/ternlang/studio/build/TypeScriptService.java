@@ -6,7 +6,7 @@ import java.util.List;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.module.annotation.Component;
-import org.ternlang.studio.common.display.DisplayResourceMatcher;
+import org.ternlang.studio.common.display.DisplayResource;
 
 import lombok.SneakyThrows;
 

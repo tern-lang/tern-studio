@@ -27,6 +27,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.simpleframework.module.common.ClassPathReader;
+import org.simpleframework.module.common.ThreadBuilder;
 import org.ternlang.studio.common.ProgressManager;
 import org.ternlang.ui.WindowIcon;
 import org.ternlang.ui.WindowIconLoader;
@@ -83,14 +84,14 @@ public class SplashScreen {
 
       private final Future<SplashPanel> panel;
       private final BlockingQueue<Runnable> tasks;
+      private final ThreadBuilder builder;
       private final AtomicBoolean active;
       private final AtomicLong expiry;
-      private final Thread thread;
 
       public SplashPanelController(Future<SplashPanel> panel) {
          this.tasks = new ArrayBlockingQueue<Runnable>(1000);
+         this.builder = new ThreadBuilder(true);
          this.active = new AtomicBoolean();
-         this.thread = new Thread(this);
          this.expiry = new AtomicLong();
          this.panel = panel;
       }
@@ -181,7 +182,7 @@ public class SplashScreen {
 
       public void start() {
          if (active.compareAndSet(false, true)) {
-            thread.setName("SplashScreen");
+            Thread thread = builder.newThread(this);
             thread.start();
          }
       }
