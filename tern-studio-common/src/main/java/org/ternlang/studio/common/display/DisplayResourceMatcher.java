@@ -31,6 +31,12 @@ public class DisplayResourceMatcher {
    public byte[] getJavaScript(Request request, Response response) throws Exception {
       return match(request, response);
    }
+   
+   @GET
+   @Path("/img/.*.(gif|png|jpg|ico)")   
+   public byte[] getImage(Request request, Response response) throws Exception {
+      return match(request, response);
+   }
     
    private byte[] match(Request request, Response response) throws Exception {
       org.simpleframework.http.Path path = request.getPath();
