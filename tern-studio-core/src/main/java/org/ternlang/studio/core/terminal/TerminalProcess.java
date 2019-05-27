@@ -16,6 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.simpleframework.http.socket.FrameChannel;
 import org.ternlang.studio.project.HomeDirectory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pty4j.PtyProcess;
 import com.pty4j.WinSize;
 import com.sun.jna.Platform;
@@ -34,13 +35,15 @@ public class TerminalProcess implements TerminalListener {
    private BufferedReader errorReader;
    private BufferedWriter outputWriter;
    private FrameChannel channel;
+   private ObjectMapper mapper;
    private Executor executor;
    private File directory; // initial directory
 
-   public TerminalProcess(FrameChannel channel, File directory) {
+   public TerminalProcess(FrameChannel channel, ObjectMapper mapper, File directory) {
       this.commands = new LinkedBlockingQueue<>();
       this.executor = Executors.newFixedThreadPool(1);
       this.directory = directory;
+      this.mapper = mapper;
       this.channel = channel;
 
    }
@@ -93,8 +96,8 @@ public class TerminalProcess implements TerminalListener {
 
       onTerminalCommand("cd " + startPath + "\r");
 
-      new TerminalConsole(inputReader, channel).start();
-      new TerminalConsole(errorReader, channel).start();
+      new TerminalConsole(inputReader, channel, mapper).start();
+      new TerminalConsole(errorReader, channel, mapper).start();
    }
 
    public void onTerminalCommand(String command) {

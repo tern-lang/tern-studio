@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.simpleframework.http.socket.FrameChannel;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AllArgsConstructor;
 
@@ -16,6 +16,7 @@ public class TerminalConsole implements Runnable {
    
    private final BufferedReader reader;
    private final FrameChannel channel;
+   private final ObjectMapper mapper;
    
    public void start() {
       Thread thread = new Thread(this);
@@ -45,7 +46,7 @@ public class TerminalConsole implements Runnable {
       map.put("type", "TERMINAL_PRINT");
       map.put("text", text);
 
-      String message = new Gson().toJson(map);
+      String message = mapper.writeValueAsString(map);
 
       channel.send(message);
 

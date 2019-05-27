@@ -14,7 +14,7 @@
 	".*.htm": "text/html",
 	".*.sql": "text/sql",
 	".*.gitignore": "text/plain",
-	".*.jpg": "image/png",
+	".*.jpg": "image/jpeg",
 	".*.gif": "image/gif",
 	".*.css": "text/css",
 	".*.js": "text/javascript",

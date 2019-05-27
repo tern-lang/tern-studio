@@ -1,14 +1,14 @@
 package org.ternlang.studio.core.command;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class ObjectCommandMarshaller<T extends Command> implements CommandMarshaller<T> {
 
+   private final ObjectMapper mapper;
    private final CommandType type;
-   private final Gson gson;
    
    public ObjectCommandMarshaller(CommandType type) {
-      this.gson = new Gson();
+      this.mapper = new ObjectMapper();
       this.type = type;
    }
 
@@ -16,12 +16,22 @@ public abstract class ObjectCommandMarshaller<T extends Command> implements Comm
    public T toCommand(String text) {
       int offset = text.indexOf(':');
       String json = text.substring(offset + 1);
-      return (T)gson.fromJson(json, type.command);
+      
+      try {
+         return (T)mapper.readValue(json, type.command);
+      } catch(Exception e) {
+         throw new IllegalStateException("Could not parse " + json + " for " + type.command, e);
+      }
    }
 
    @Override
    public String fromCommand(T command) {
-      String json = gson.toJson(command);
-      return type + ":" + json;
+    String prefix = type + ":";
+    
+    try {  
+      return prefix + mapper.writeValueAsString(command);
+   } catch(Exception e) {
+      throw new IllegalStateException("Could not generate JSON for " + type.command, e);
+   }
    }
 }

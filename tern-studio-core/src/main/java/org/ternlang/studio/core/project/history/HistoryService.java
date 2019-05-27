@@ -22,8 +22,7 @@ import org.ternlang.studio.project.FileSystem;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
 
@@ -32,10 +31,10 @@ public class HistoryService {
 
    private final BackupManager manager;
    private final Workspace workspace;
-   private final Gson gson;
+   private final ObjectMapper mapper;
    
    public HistoryService(Workspace workspace, BackupManager manager){
-      this.gson = new GsonBuilder().setPrettyPrinting().create();
+      this.mapper = new ObjectMapper();
       this.workspace = workspace;
       this.manager = manager;
    }
@@ -67,7 +66,7 @@ public class HistoryService {
       
       files.add(0, currentFile);
       PrintStream stream = response.getPrintStream();
-      String text = gson.toJson(files);
+      String text = mapper.writeValueAsString(files);
       
       response.setContentType("application/json");
       stream.println(text);

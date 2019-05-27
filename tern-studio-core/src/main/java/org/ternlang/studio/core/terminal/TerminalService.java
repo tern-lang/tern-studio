@@ -18,8 +18,8 @@ import org.simpleframework.module.resource.annotation.Subscribe;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,8 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 public class TerminalService implements Service {
 
    private final Workspace workspace;
+   private final ObjectMapper mapper;
    
    public TerminalService(Workspace workspace) {
+      this.mapper = new ObjectMapper();
       this.workspace = workspace;
    }
    
@@ -49,7 +51,7 @@ public class TerminalService implements Service {
       }
       try {
          File directory = new File(root, suffix);
-         SessionController client = new SessionController(channel, directory);
+         SessionController client = new SessionController(channel, mapper, directory);
          
          channel.register(client);
       } catch(Exception e) {
@@ -59,14 +61,14 @@ public class TerminalService implements Service {
 
    private static class SessionController implements FrameListener {
 
+      private final TypeReference<Map<String, String>> reference;
       private final TerminalProcess process;
-      private final Type reference;
-      private final Gson mapper;
+      private final ObjectMapper mapper;
 
-      public SessionController(FrameChannel channel, File directory) {
-         this.reference = new TypeToken<Map<String, String>>() {}.getType();
-         this.process = new TerminalProcess(channel, directory);
-         this.mapper = new Gson();
+      public SessionController(FrameChannel channel, ObjectMapper mapper, File directory) {
+         this.reference = new TypeReference<Map<String, String>>() {};
+         this.process = new TerminalProcess(channel, mapper, directory);
+         this.mapper = mapper;
       }
 
       @Override
@@ -76,7 +78,7 @@ public class TerminalService implements Service {
          if (type.isText()) {
             try {
                String text = frame.getText();
-               Map<String, String> message = mapper.fromJson(text, reference);
+               Map<String, String> message = mapper.readValue(text, reference);
                String value = message.get("type");
 
                log.info("Terminal command: {}", text);

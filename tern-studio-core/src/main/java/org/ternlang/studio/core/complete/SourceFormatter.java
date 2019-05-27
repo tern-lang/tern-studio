@@ -6,27 +6,30 @@ import java.util.regex.Pattern;
 import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.project.Project;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.PrettyPrinter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class SourceFormatter {
 
    private static final String JSON_EXTENSION = ".json";
    private static final String XML_EXTENSION = ".xml";
-   
-   private final Gson gson;
-   
+
+   private final PrettyPrinter printer;
+   private final ObjectMapper mapper;
+
    public SourceFormatter(){
-      this.gson = new GsonBuilder().setPrettyPrinting().create();
+      this.printer = new DefaultPrettyPrinter();
+      this.mapper = new ObjectMapper();
    }
    
    public String format(Project project, String path, String source, int indent) throws Exception {
       String resource = path.toLowerCase();
       
       if(resource.endsWith(JSON_EXTENSION)) {
-         Object object = gson.fromJson(source, Object.class);
-         return gson.toJson(object);
+         Object object = mapper.readValue(source, Object.class);
+         return mapper.writer(printer).writeValueAsString(object);
       }
       Pattern pattern = Pattern.compile("^(\\s+)(.*)$");
       String lines[] = source.split("\\r?\\n");
