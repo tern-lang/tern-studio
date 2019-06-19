@@ -27,7 +27,7 @@ define(["require", "exports", "jquery", "w2ui", "./common", "tree", "editor", "e
                         historyRecords.push({
                             recid: historyIndex++,
                             resource: "<div class='historyPath'>" + recordResource.getFilePath() + "</div>",
-                            date: common_1.Common.formatTimeMillis(currentRecord.date),
+                            date: common_1.Common.formatDateWithPattern(currentRecord.date, 'EEEE, MMMM d, yyyy HH:mm:ss'),
                             time: currentRecord.timeStamp,
                             script: recordResource.getResourcePath() // /resource/<project>/blah/file.tern
                         });

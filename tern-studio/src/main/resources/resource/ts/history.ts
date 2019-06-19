@@ -36,7 +36,7 @@ export module History {
                historyRecords.push({ 
                   recid: historyIndex++,
                   resource: "<div class='historyPath'>" + recordResource.getFilePath() + "</div>", // /blah/file.tern
-                  date: Common.formatTimeMillis(currentRecord.date),
+                  date: Common.formatDateWithPattern(currentRecord.date, 'EEEE, MMMM d, yyyy HH:mm:ss'),
                   time: currentRecord.timeStamp,
                   script: recordResource.getResourcePath() // /resource/<project>/blah/file.tern
                });

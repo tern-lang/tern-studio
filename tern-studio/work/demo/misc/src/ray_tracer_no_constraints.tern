@@ -2,7 +2,7 @@ import awt.Color as ImageColor;
 import awt.image.BufferedImage;
 import imageio.ImageIO;
 
-class Vec {
+class Vec { 
    const x;
    const y;
    const z;
