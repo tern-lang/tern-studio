@@ -141,7 +141,7 @@ export module ProblemManager {
       }
       if(Common.updateTableRecords(problemRecords, 'problems')) {
          highlightProblems(); // highlight them also      
-         //Project.showProblemsTab(); // focus the problems tab
+         Project.showProblemsTab(problemRecords.length); // focus the problems tab
          return true;
       }
       return false;

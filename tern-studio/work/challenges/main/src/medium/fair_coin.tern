@@ -1,0 +1,4 @@
+
+
+func fairToss(a, b) {  // a is biased so is b
+}

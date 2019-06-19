@@ -1,4 +1,2 @@
-class Foo<T>{
-   dump(a): T {}
-}
-new Foo<List>().dump(11).size();
+
+println();

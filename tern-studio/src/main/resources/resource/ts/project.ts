@@ -89,16 +89,33 @@ export module Project {
      }
    }
 
-   export function showProblemsTab() {
-      var perspective = determineProjectLayout();
+   export function showProblemsTab(errors) {
+      var problemLayout = findProblemsLayout();
+      var problemsTab = problemLayout.get('problemsTab');
       
-      if (perspective == "debug") {
-         w2ui['debugBottomTabLayout_main_tabs'].click('problemsTab');
-      } else if (perspective == "dialog") {
-         w2ui['dialogTabLayout_main_tabs'].click('problemsTab');
-      } else {
-         w2ui['exploreBottomTabLayout_main_tabs'].click('problemsTab');
+      if (problemsTab) {
+         if(errors > 0) {
+            problemsTab.caption = "<div class='problemsTabErrors' id='problemsTabTitle'>Problems</div>";
+            problemsTab.text = "<div class='problemsTabErrors' id='problemsTabTitle'>Problems</div>";
+         } else {
+            problemsTab.caption = "<div class='problemsTab' id='problemsTabTitle'>Problems</div>";
+            problemsTab.text = "<div class='problemsTab' id='problemsTabTitle'>Problems</div>";
+         }
+         problemLayout.refresh();
+         
       }
+   }
+
+   function findProblemsLayout() {
+        var perspective = determineProjectLayout();
+        
+        if (perspective == "debug") {
+            return w2ui['debugBottomTabLayout_main_tabs'];
+        } else if (perspective == "dialog") {
+            return w2ui['dialogTabLayout_main_tabs'];
+        } else {
+            return w2ui['exploreBottomTabLayout_main_tabs'];
+        }
    }
    
    function attachClickEvents() {
@@ -1597,6 +1614,7 @@ export module Project {
                                "          <option value='12px'>&nbsp;12px</option>\n"+
                                "          <option value='13px'>&nbsp;13px</option>\n"+
                                "          <option value='14px' selected='selected'>&nbsp;14px</option>\n"+
+                               "          <option value='15px'>&nbsp;15px</option>\n"+
                                "          <option value='16px'>&nbsp;16px</option>\n"+
                                "          <option value='18px'>&nbsp;18px</option>\n"+
                                "          <option value='20px'>&nbsp;20px</option>\n"+

@@ -1,0 +1,218 @@
+// https://leetcode.com/problems/cherry-pickup/
+
+
+const grids = [
+   [
+      [0]
+   ],
+   [
+      [0,1,-1],
+      [1,0,-1],
+      [1,1,1]],
+   [
+      [1,1,-1],
+      [1,-1,1],
+      [-1,1,1]
+   ],
+   [ 
+      [1,1,1,1,0,0,0], // 15
+      [0,0,0,1,0,0,0],
+      [0,0,0,1,0,0,1],
+      [1,0,0,1,0,0,0],
+      [0,0,0,1,0,0,0],
+      [0,0,0,1,0,0,0],
+      [0,0,0,1,1,1,1]
+   ],
+   [ 
+      [0,0,0,0,0,0,0], // 1
+      [0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1]
+   ],
+   [ 
+      [1,0,0,0,0,0,0], // 1
+      [0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0]
+   ]    
+];
+
+for(grid in grids) {
+   const max = cherryPickup(grid);
+   println(max);
+}
+
+func cherryPickup(grid) {
+   let origin = Position(0, 0);
+   let start = Move(0, 0);
+   let player = Player(origin, {});
+   let first = player.move(start, grid);
+   
+   return cherryPickup(grid, first);
+}
+
+func cherryPickup(grid, player) {
+   let comparator = (a, b) -> Integer.compare(b.cherries.length, a.cherries.length);
+   let queue = PriorityQueue(comparator);
+   let last = grid.length - 1;
+   let finished = [];
+   
+   queue.offer(player);
+   
+   while(!queue.isEmpty()) {
+      const next = queue.poll();
+      const children = movesPossible(next, grid); // how to memoize?
+      
+      for(child in children) {
+         const row = child.pos.row;
+         const col = child.pos.col;
+         
+         if(row == last && col == last) {
+            finished.add(child);
+         } else {
+            queue.offer(child);
+         }
+      }
+   } 
+   if(finished.length > 0){
+      Collections.sort(finished, comparator);
+   }
+   return countMax(finished);
+}
+
+func countMax(ordered) {
+   let max = 0;
+   
+   for(down in ordered) {
+      for(up in ordered) {
+         if(down != up) {
+            let merge = mergeCount(up.cherries, down.cherries, max);
+            
+            if(merge > max) {
+               max = merge;
+            }
+         }
+      }
+   }
+   return max;
+}
+
+func mergeCount(left, right, max) {
+   if(left.length > 0 && right.length > 0 && left.length + right.length > max) {
+      let total = {};         
+      
+      total.addAll(left);
+      total.addAll(right);
+      
+      return total.length;   
+   }
+   if(left.length > 0) {
+      return left.length;
+   }
+   return right.length;
+}
+
+func movesPossible(player, grid) {
+   const players = [];   
+   const changes = [[1, 0], [0, 1]]; // you only ever need one direction
+   const pos = player.pos;
+   
+   for(change in changes){
+      const rows = change[0];
+      const cols = change[1];
+      const move = Move(rows, cols);
+      const update = player.move(move, grid);
+      
+      if(update) {   
+         players.add(update);
+      }
+   }
+   return players;
+}
+
+class Player {
+   const cherries;   
+   const pos;   
+   
+   new(pos, cherries){
+      this.cherries = cherries;
+      this.pos = pos;
+   }
+   
+   update(next, grid) {
+      let value = grid[next.row][next.col];
+      let done = cherries;
+      
+      if(value == 1) {
+         let key = (grid.length * next.row) - (grid.length - next.col); // flat offset
+         
+         done = {};
+         done.addAll(cherries);
+         done.add(key); // offset
+      }
+      return done;
+   }
+   
+   
+   move(move, grid) {
+      let last = grid.length -1;
+      let next = move.move(pos, grid);
+      
+      if(next) {
+         let done = update(next, grid);
+         
+         if(next.row <= last && next.col <= last) {
+            return Player(next, done);
+         }
+      }
+      return null;
+   }
+}
+
+class Move {
+   const rows;
+   const cols;
+   
+   new(rows, cols) {
+      this.rows = rows;
+      this.cols = cols;
+   }
+   
+   move(pos, grid) {
+      let row = pos.row + rows;
+      let col = pos.col + cols;
+      
+      if(row >= grid.length || row < 0) {
+         return null;
+      }
+      if(col >= grid.length || col < 0) {
+         return null;
+      }
+      let value = grid[row][col];
+      
+      if(value != -1) {
+         return Position(row, col);
+      }
+      return null;
+   }
+}
+
+class Position {
+   const row;
+   const col;
+   
+   new(row, col) {
+      this.row = row;
+      this.col = col;
+   }
+   
+   override toString() {
+      return "${row}x${col}";
+   }
+}

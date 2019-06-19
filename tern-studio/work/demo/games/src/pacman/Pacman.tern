@@ -2,14 +2,14 @@
 
 import java.awt.BorderLayout;
 
-import javax.swing.JFrame;
+import javax.swing.JFrame; 
 import javax.swing.Timer;
 
 /* This class contains the entire game... most of the game logic is in the Board class but this
    creates the gui and captures mouse and keyboard input, as well as controls the game states */
 class Pacman extends JFrame {
 
-   /* Create a new board */
+   /* Create a new board */   
    private let board: Board;
    private let panel: BoardPanel;
    private let controller: GameController;

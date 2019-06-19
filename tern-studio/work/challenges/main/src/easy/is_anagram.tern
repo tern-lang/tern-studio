@@ -1,0 +1,15 @@
+
+assert isAnagram("wall", "all");
+assert isAnagram("the morse code", "here come dots");
+assert isAnagram("the eys", "they see");
+
+func isAnagram(source, test) {
+   for(i in 0 to test.length - 1) {
+      let char = test.charAt(i);
+      
+      if(source.indexOf(char) == -1) {
+         return false;
+      }
+   }
+   return true;
+}

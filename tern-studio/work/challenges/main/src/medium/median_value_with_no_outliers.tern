@@ -1,0 +1,19 @@
+
+
+
+
+class Average {
+
+   const values;
+   const size;
+   
+   new(size){
+      this.values = [];
+      this.size = size;
+   }
+   
+   
+   public calc(value) {
+               
+   }
+}

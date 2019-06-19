@@ -24,7 +24,7 @@ export module History {
       var resource = editorPath.getProjectPath();
       
       $.ajax({
-         url: '/history/' + Common.getProjectName() + '/' + resource,
+         url: '/history/' + Common.getProjectName() + resource,
          success: function (currentRecords) {
             var historyRecords = [];
             var historyIndex = 1;
@@ -36,7 +36,7 @@ export module History {
                historyRecords.push({ 
                   recid: historyIndex++,
                   resource: "<div class='historyPath'>" + recordResource.getFilePath() + "</div>", // /blah/file.tern
-                  date: currentRecord.date,
+                  date: Common.formatTimeMillis(currentRecord.date),
                   time: currentRecord.timeStamp,
                   script: recordResource.getResourcePath() // /resource/<project>/blah/file.tern
                });

@@ -43,6 +43,12 @@ public class DisplayResource {
    public byte[] getImage(Request request, Response response) throws Exception {
       return match(request, response);
    }
+   
+   @GET
+   @Path("/favicon.ico")   
+   public byte[] getIcon(Request request, Response response) throws Exception {
+      return match(request, response);
+   }
     
    private byte[] match(Request request, Response response) throws Exception {
       org.simpleframework.http.Path path = request.getPath();

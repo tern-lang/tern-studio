@@ -42,3 +42,15 @@
 	margin-left: -10px;
 	z-index: 1009;
 }
+
+.problemsTabErrors {	
+	background-image: url('${IMAGE_FOLDER}/stop.png');	
+	background-size: contain;	
+	background-position: left bottom;
+	background-repeat: no-repeat;
+	padding-top: 3px;
+	padding-bottom: 2px;
+	padding-left: 22px; /* Or size of icon + spacing */
+	margin-left: -10px;
+	z-index: 1009;
+}

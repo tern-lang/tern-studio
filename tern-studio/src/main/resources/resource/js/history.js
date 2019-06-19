@@ -17,7 +17,7 @@ define(["require", "exports", "jquery", "w2ui", "./common", "tree", "editor", "e
             }
             var resource = editorPath.getProjectPath();
             $.ajax({
-                url: '/history/' + common_1.Common.getProjectName() + '/' + resource,
+                url: '/history/' + common_1.Common.getProjectName() + resource,
                 success: function (currentRecords) {
                     var historyRecords = [];
                     var historyIndex = 1;
@@ -27,7 +27,7 @@ define(["require", "exports", "jquery", "w2ui", "./common", "tree", "editor", "e
                         historyRecords.push({
                             recid: historyIndex++,
                             resource: "<div class='historyPath'>" + recordResource.getFilePath() + "</div>",
-                            date: currentRecord.date,
+                            date: common_1.Common.formatTimeMillis(currentRecord.date),
                             time: currentRecord.timeStamp,
                             script: recordResource.getResourcePath() // /resource/<project>/blah/file.tern
                         });

@@ -1,0 +1,25 @@
+
+
+let cache = LeastRecentlyUsedCache();
+
+class LeastRecentlyUsedCache {
+
+      
+
+   cache(k, v) {
+   }
+
+   fetch(k) {
+   }
+   
+   class Node {
+      let next: Node;
+      let prev: Node;
+      let value;
+      
+      new(value) {
+         this.value = value;
+      }
+   }
+}
+

@@ -8,13 +8,14 @@ import org.simpleframework.module.resource.annotation.Path;
 
 import lombok.AllArgsConstructor;
 
-@Path("/history.*")
+@Path("/history")
 @AllArgsConstructor
 public class HistoryResource {
 
    private final HistoryService service;
    
    @GET
+   @Path("/.*")
    public void handle(Request request, Response response) {
       service.handle(request, response);
    }

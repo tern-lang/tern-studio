@@ -1,4 +1,4 @@
-define(["require", "exports", "w2ui", "common", "socket", "tree", "editor"], function (require, exports, w2ui_1, common_1, socket_1, tree_1, editor_1) {
+define(["require", "exports", "w2ui", "common", "socket", "tree", "editor", "project"], function (require, exports, w2ui_1, common_1, socket_1, tree_1, editor_1, project_1) {
     "use strict";
     var ProblemManager;
     (function (ProblemManager) {
@@ -107,7 +107,7 @@ define(["require", "exports", "w2ui", "common", "socket", "tree", "editor"], fun
             }
             if (common_1.Common.updateTableRecords(problemRecords, 'problems')) {
                 highlightProblems(); // highlight them also      
-                //Project.showProblemsTab(); // focus the problems tab
+                project_1.Project.showProblemsTab(problemRecords.length); // focus the problems tab
                 return true;
             }
             return false;

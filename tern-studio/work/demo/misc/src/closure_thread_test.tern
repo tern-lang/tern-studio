@@ -20,5 +20,4 @@ list.stream()
     .filter((s) -> s.startsWith("c"))
     .map(s -> s.toUpperCase())
     .sorted()
-    .forEach(s: String -> println(s));
-   
+    .forEach((s: String) -> println(s));
