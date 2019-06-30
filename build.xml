@@ -1,26 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project> 
-   <property file="build.properties"/>
-   <echo message="${build.version}"/>
-   <echo message="${maven.home}"/>
-   <echo message="${java.home}"/>
-   <echo message="${ant.home}"/>
-   <exec executable="${maven.home}\bin\mvn.cmd">
+<project default="build-all">
+
+  <property file="build.properties" />
+  <property name="download.path" value="../tern-site/tern-lang.org/download" />
+  <echo message="${build.version}" />
+  <echo message="${maven.home}" />
+  <echo message="${java.home}" />
+  <echo message="${ant.home}" />
+
+  <target name="build-all">
+    <mkdir dir="${download.path}/mac" />
+    <mkdir dir="${download.path}/linux" />
+    <mkdir dir="${download.path}/windows" />
+    <mkdir dir="${download.path}/local" />
+    <antcall target="build-mac" />
+    <antcall target="build-linux" />
+    <antcall target="build-windows" />
+  </target>
+
+  <target name="build-windows">
+    <antcall target="build-os">
+      <param name="build.os" value="windows" />
+    </antcall>
+    <ant inheritAll="false" antfile="../tern-build/dist/windows/ternd/build.xml" />
+    <ant inheritAll="false" antfile="../tern-build/dist/windows/tern/build.xml" />
+    <delete file="${download.path}/ternd-windows.zip" />
+    <zip destfile="${download.path}/ternd-windows.zip" basedir="${download.path}/windows" includes="*.exe,*.ini,*.vim,*.ico,*.jar,README.txt" />
+    <copy file="${download.path}/windows/tern.exe" tofile="${download.path}/local/tern.exe" overwrite="true" />
+    <copy file="${download.path}/windows/ternd.exe" tofile="${download.path}/local/ternd.exe" overwrite="true" />
+    <copy file="${download.path}/windows/tern.jar" tofile="${download.path}/local/tern.jar" overwrite="true" />
+    <copy file="${download.path}/windows/ternd.jar" tofile="${download.path}/local/ternd.jar" overwrite="true" />
+    <exec executable="ternd.exe" dir="${download.path}/local" />
+  </target>
+
+  <target name="build-linux">
+    <antcall target="build-os">
+      <param name="build.os" value="linux" />
+    </antcall>
+    <delete file="${download.path}/ternd-linux.tar" />
+    <delete file="${download.path}/ternd-linux.tar.gz" />
+    <tar destfile="${download.path}/ternd-linux.tar" basedir="${download.path}/linux" includes="*.ini,*.vim,*.ico,*.jar,README.txt" />
+    <gzip destfile="${download.path}/ternd-linux.tar.gz" src="${download.path}/ternd-linux.tar" />
+    <delete file="${download.path}/ternd-linux.tar" />
+  </target>
+
+  <target name="build-mac">
+    <antcall target="build-os">
+      <param name="build.os" value="mac" />
+    </antcall>
+    <delete file="${download.path}/ternd-mac.zip" />
+    <zip destfile="${download.path}/ternd-mac.zip" basedir="${download.path}/mac" includes="*.ini,*.vim,*.ico,*.jar,README.txt" />
+  </target>
+
+  <target name="build-os">
+    <echo message="Building for ${build.os}" />
+    <antcall target="build-ui">
+      <param name="build.os" value="${build.os}" />
+    </antcall>
+    <antcall target="build-studio">
+      <param name="build.os" value="${build.os}" />
+    </antcall>
+  </target>
+
+  <target name="build-ui">
+    <echo message="Building UI for ${build.os}" />
+    <replace file="../tern-ui/tern-ui/pom.xml" token="jcef-windows" value="jcef-${build.os}" />
+    <replace file="../tern-ui/tern-ui/pom.xml" token="jcef-linux" value="jcef-${build.os}" />
+    <replace file="../tern-ui/tern-ui/pom.xml" token="jcef-mac" value="jcef-${build.os}" />
+    <exec dir="../tern-ui" executable="${maven.home}\bin\mvn.cmd">
       <arg value="clean" />
       <arg value="install" />
       <arg value="-DskipTests" />
-   </exec>
-   <delete file="../tern-site/tern-lang.org/download/ternd.jar" />
-   <copy file="tern-studio/target/ternd.jar" tofile="../tern-site/tern-lang.org/download/ternd.jar" overwrite="true" />
-   <exec executable="${ant.home}\bin\ant.bat">
+    </exec>
+  </target>
+
+  <target name="build-studio">
+    <echo message="Building studio for ${build.os}" />
+    <exec executable="${maven.home}\bin\mvn.cmd">
+      <arg value="clean" />
+      <arg value="install" />
+      <arg value="-DskipTests" />
+    </exec>
+    <delete file="${download.path}/${build.os}/ternd.jar" />
+    <copy file="tern-studio/target/ternd.jar" tofile="${download.path}/${build.os}/ternd.jar" overwrite="true" />
+    <exec executable="${ant.home}\bin\ant.bat">
       <arg value="-f" />
       <arg value="tern-studio-agent\build.xml" />
-   </exec>
-   <delete file="../tern-site/tern-lang.org/download/tern.jar" />
-   <copy file="tern-studio-agent/target/tern.jar" tofile="../tern-site/tern-lang.org/download/tern.jar" overwrite="true" />
-   <!-- this part is optional -->
-   <ant inheritAll="false" antfile="../tern-build/dist/ternd/build.xml"/>
-   <ant inheritAll="false" antfile="../tern-build/dist/tern/build.xml"/>
-   <!--- end optional -->
-   <exec executable="ternd.exe" dir="../tern-site/tern-lang.org/download"/>        
+    </exec>
+    <delete file="${download.path}/${build.os}/tern.jar" />
+    <copy file="tern-studio-agent/target/tern.jar" tofile="${download.path}/${build.os}/tern.jar" overwrite="true" />
+  </target>
+
 </project>
