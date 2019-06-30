@@ -30,6 +30,8 @@
     <copy file="${download.path}/windows/ternd.exe" tofile="${download.path}/local/ternd.exe" overwrite="true" />
     <copy file="${download.path}/windows/tern.jar" tofile="${download.path}/local/tern.jar" overwrite="true" />
     <copy file="${download.path}/windows/ternd.jar" tofile="${download.path}/local/ternd.jar" overwrite="true" />
+    <delete file="${download.path}/windows/ternd.jar" />
+    <delete file="${download.path}/windows/tern.jar" />
     <exec executable="ternd.exe" dir="${download.path}/local" />
   </target>
 
@@ -42,6 +44,8 @@
     <tar destfile="${download.path}/ternd-linux.tar" basedir="${download.path}/linux" includes="*.ini,*.vim,*.ico,*.jar,README.txt" />
     <gzip destfile="${download.path}/ternd-linux.tar.gz" src="${download.path}/ternd-linux.tar" />
     <delete file="${download.path}/ternd-linux.tar" />
+    <delete file="${download.path}/linux/ternd.jar" />
+    <delete file="${download.path}/linux/tern.jar" />
   </target>
 
   <target name="build-mac">
@@ -50,6 +54,8 @@
     </antcall>
     <delete file="${download.path}/ternd-mac.zip" />
     <zip destfile="${download.path}/ternd-mac.zip" basedir="${download.path}/mac" includes="*.ini,*.vim,*.ico,*.jar,README.txt" />
+    <delete file="${download.path}/mac/ternd.jar" />
+    <delete file="${download.path}/mac/tern.jar" />
   </target>
 
   <target name="build-os">
