@@ -1,2 +1,31 @@
+import util.concurrent.locks.ReentrantLock;
+import util.concurrent.locks.Lock;
+import util.concurrent.locks.Condition;
 
-println();
+let lock: Lock = ReentrantLock();
+let condition: Condition = lock.newCondition();
+let condition2: Condition = lock.newCondition();
+let thread = Thread(-> {
+   try {
+      lock.lock();
+      println("before await: "+ Date());
+      condition.await();   
+      println("after await: "+ Date());
+   } finally {
+      lock.unlock();
+   }
+});
+
+thread.start();
+
+Thread(-> {
+   try {
+      Thread.sleep(10000);
+      lock.lock();
+      condition2.signal();
+   } finally {
+      lock.unlock();
+   }
+}).start();
+
+thread.join();

@@ -3,10 +3,11 @@ import io.FileReader;
 import io.BufferedReader;
 
 @Foo
-@Snuh
+@Snuh(name: "Foo", category: 10)
 trait Searcher {
    search(text);
 }
+
 
 function search(searcher: Searcher, text) {
    var results = searcher.search(text);

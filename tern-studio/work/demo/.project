@@ -8,7 +8,12 @@
       <path>misc/src</path>
       <path>misc/assets</path>
    </source> 
-   <dependencies>   
+   <dependencies> 
+      <dependency>
+          <groupId>redis.clients</groupId>
+          <artifactId>jedis</artifactId>
+          <version>3.0.1</version>
+      </dependency>
       <dependency> 
           <groupId>org.apache.kafka</groupId>
           <artifactId>kafka-streams</artifactId>

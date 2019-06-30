@@ -6,6 +6,8 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
      */
     var FileEditorView = (function () {
         function FileEditorView(editorPanel) {
+            this._editorBreakpointManager = new FileEditorBreakpointManager(this);
+            this._editorHighlightManager = new FileEditorHighlightManager(this);
             this._editorPanel = editorPanel;
             this._editorHistory = {}; // store all editor context
             this._editorMarkers = {};
@@ -35,6 +37,12 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             return new FileEditorHistory(-1, null, null, null, null // let the original be the same
             );
         };
+        FileEditorView.prototype.getEditorBreakpointManager = function () {
+            return this._editorBreakpointManager;
+        };
+        FileEditorView.prototype.getEditorHighlightManager = function () {
+            return this._editorHighlightManager;
+        };
         FileEditorView.prototype.getEditorResource = function () {
             return this._editorResource;
         };
@@ -53,6 +61,221 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         return FileEditorView;
     }());
     exports.FileEditorView = FileEditorView;
+    var FileEditorBreakpointManager = (function () {
+        function FileEditorBreakpointManager(editorView) {
+            this._editorView = editorView;
+        }
+        FileEditorBreakpointManager.prototype.getEditorView = function () {
+            return this._editorView;
+        };
+        FileEditorBreakpointManager.prototype.clearEditorBreakpoint = function (row) {
+            var session = this.getEditorView().getEditorPanel().getSession();
+            var breakpoints = session.getBreakpoints();
+            var line = parseInt(row);
+            for (var breakpoint in breakpoints) {
+                if (breakpoints.hasOwnProperty(breakpoint)) {
+                    var breakpointLine = parseInt(breakpoint);
+                    if (breakpointLine == line) {
+                        session.clearBreakpoint(breakpointLine);
+                    }
+                }
+            }
+            this.showEditorBreakpoints();
+        };
+        FileEditorBreakpointManager.prototype.clearEditorBreakpoints = function () {
+            var session = this.getEditorView().getEditorPanel().getSession();
+            var breakpoints = session.getBreakpoints();
+            for (var breakpoint in breakpoints) {
+                if (breakpoints.hasOwnProperty(breakpoint)) {
+                    session.clearBreakpoint(breakpoint); // XXX is this correct
+                }
+            }
+        };
+        FileEditorBreakpointManager.prototype.showEditorBreakpoints = function () {
+            var allBreakpoints = this.getEditorView().getEditorBreakpoints();
+            var breakpointRecords = [];
+            var breakpointIndex = 1;
+            for (var filePath in allBreakpoints) {
+                if (allBreakpoints.hasOwnProperty(filePath)) {
+                    var breakpoints = allBreakpoints[filePath];
+                    for (var lineNumber in breakpoints) {
+                        if (breakpoints.hasOwnProperty(lineNumber)) {
+                            if (breakpoints[lineNumber] == true) {
+                                var resourcePathDetails = tree_1.FileTree.createResourcePath(filePath);
+                                var displayName = "<div class='breakpointEnabled'>" + resourcePathDetails.getProjectPath() + "</div>";
+                                breakpointRecords.push({
+                                    recid: breakpointIndex++,
+                                    name: displayName,
+                                    location: "Line " + lineNumber,
+                                    resource: resourcePathDetails.getProjectPath(),
+                                    line: parseInt(lineNumber),
+                                    script: resourcePathDetails.getResourcePath()
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            w2ui_1.w2ui['breakpoints'].records = breakpointRecords;
+            w2ui_1.w2ui['breakpoints'].refresh();
+            commands_1.Command.updateScriptBreakpoints(); // update the breakpoints
+        };
+        FileEditorBreakpointManager.prototype.setEditorBreakpoint = function (row, value) {
+            var allBreakpoints = this.getEditorView().getEditorBreakpoints();
+            var line = parseInt(row);
+            if (this.getEditorView().getEditorResource() != null) {
+                var session = this.getEditorView().getEditorPanel().getSession();
+                var resourceBreakpoints = allBreakpoints[this.getEditorView().getEditorResource().getFilePath()];
+                if (value) {
+                    session.setBreakpoint(line);
+                }
+                else {
+                    session.clearBreakpoint(line);
+                }
+                if (resourceBreakpoints == null) {
+                    resourceBreakpoints = {};
+                    allBreakpoints[this.getEditorView().getEditorResource().getFilePath()] = resourceBreakpoints;
+                }
+                resourceBreakpoints[line + 1] = value;
+            }
+            this.showEditorBreakpoints();
+        };
+        FileEditorBreakpointManager.prototype.toggleEditorBreakpoint = function (row) {
+            var allBreakpoints = this.getEditorView().getEditorBreakpoints();
+            if (this.getEditorView().getEditorResource() != null) {
+                var session = this.getEditorView().getEditorPanel().getSession();
+                var breakpoints = session.getBreakpoints();
+                var resourceBreakpoints = allBreakpoints[this.getEditorView().getEditorResource().getFilePath()];
+                var remove = false;
+                for (var breakpoint in breakpoints) {
+                    if (breakpoint == row) {
+                        remove = true;
+                        break;
+                    }
+                }
+                if (remove) {
+                    session.clearBreakpoint(row);
+                }
+                else {
+                    session.setBreakpoint(row);
+                }
+                var line = parseInt(row);
+                if (resourceBreakpoints == null) {
+                    resourceBreakpoints = {};
+                    resourceBreakpoints[line + 1] = true;
+                    allBreakpoints[this.getEditorView().getEditorResource().getFilePath()] = resourceBreakpoints;
+                }
+                else {
+                    if (resourceBreakpoints[line + 1] == true) {
+                        resourceBreakpoints[line + 1] = false;
+                    }
+                    else {
+                        resourceBreakpoints[line + 1] = true;
+                    }
+                }
+            }
+            this.showEditorBreakpoints();
+        };
+        return FileEditorBreakpointManager;
+    }());
+    exports.FileEditorBreakpointManager = FileEditorBreakpointManager;
+    var FileEditorHighlightManager = (function () {
+        function FileEditorHighlightManager(editorView) {
+            this._editorView = editorView;
+        }
+        FileEditorHighlightManager.prototype.getEditorView = function () {
+            return this._editorView;
+        };
+        FileEditorHighlightManager.prototype.clearEditorHighlights = function () {
+            var session = this.getEditorView().getEditorPanel().getSession();
+            var editorMarkers = this.getEditorView().getEditorMarkers();
+            var editorResource = this.getEditorView().getEditorResource();
+            //      if(editorResource) {
+            //         console.log("Clear highlights in " + editorResource.getResourcePath());
+            //      }
+            for (var editorLine in editorMarkers) {
+                if (editorMarkers.hasOwnProperty(editorLine)) {
+                    var marker = editorMarkers[editorLine];
+                    if (marker != null) {
+                        session.removeMarker(marker.getMarker());
+                        delete editorMarkers[editorLine];
+                    }
+                }
+            }
+        };
+        FileEditorHighlightManager.prototype.showEditorLine = function (line) {
+            var editor = this.getEditorView().getEditorPanel();
+            this.getEditorView().getEditorPanel().resize(true);
+            if (line > 1) {
+                var requestedLine = line - 1;
+                var currentLine = this.getCurrentLineForEditor();
+                if (currentLine != requestedLine) {
+                    this.getEditorView().getEditorPanel().scrollToLine(requestedLine, true, true, function () { });
+                    this.getEditorView().getEditorPanel().gotoLine(line); // move the cursor
+                    this.getEditorView().getEditorPanel().focus();
+                }
+            }
+            else {
+                this.getEditorView().getEditorPanel().scrollToLine(0, true, true, function () { });
+                this.getEditorView().getEditorPanel().focus();
+            }
+        };
+        FileEditorHighlightManager.prototype.clearEditorHighlight = function (line) {
+            var session = this.getEditorView().getEditorPanel().getSession();
+            var editorMarkers = this.getEditorView().getEditorMarkers();
+            var marker = editorMarkers[line];
+            if (marker != null) {
+                session.removeMarker(marker.getMarker());
+            }
+        };
+        FileEditorHighlightManager.prototype.createEditorHighlight = function (line, css) {
+            var Range = ace_1.ace.require('ace/range').Range;
+            var session = this.getEditorView().getEditorPanel().getSession();
+            var editorMarkers = this.getEditorView().getEditorMarkers();
+            var currentMarker = editorMarkers[line];
+            // clearEditorHighlight(line);
+            this.clearEditorHighlights(); // clear all highlights in editor
+            var marker = session.addMarker(new Range(line - 1, 0, line - 1, 1), css, "fullLine");
+            var editorMarker = new FileEditorMarker(line, css, marker);
+            editorMarkers[line] = editorMarker;
+            if (currentMarker) {
+                return currentMarker.getStyle() != css;
+            }
+            return false;
+        };
+        FileEditorHighlightManager.prototype.createMultipleEditorHighlights = function (lines, css) {
+            var Range = ace_1.ace.require('ace/range').Range;
+            var session = this.getEditorView().getEditorPanel().getSession();
+            var editorMarkers = this.getEditorView().getEditorMarkers();
+            var highlightsChanged = false;
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i];
+                var currentMarker = editorMarkers[line];
+                if (currentMarker) {
+                    if (currentMarker.getStyle() != css) {
+                        highlightsChanged = true;
+                    }
+                }
+                else {
+                    highlightsChanged = true;
+                }
+            }
+            // clearEditorHighlight(line);
+            this.clearEditorHighlights(); // clear all highlights in editor
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i];
+                var marker = session.addMarker(new Range(line - 1, 0, line - 1, 1), css, "fullLine");
+                var editorMarker = new FileEditorMarker(line, css, marker);
+                editorMarkers[line] = editorMarker;
+            }
+            return highlightsChanged;
+        };
+        FileEditorHighlightManager.prototype.getCurrentLineForEditor = function () {
+            return this.getEditorView().getEditorPanel().getSelectionRange().start.row;
+        };
+        return FileEditorHighlightManager;
+    }());
+    exports.FileEditorHighlightManager = FileEditorHighlightManager;
     var FileEditorMarker = (function () {
         function FileEditorMarker(line, style, marker) {
             this._style = style;
@@ -261,306 +484,126 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         return FileEditorBuffer;
     }());
     exports.FileEditorBuffer = FileEditorBuffer;
-    /**
-     * Groups all the editor functions and creates the FileEditorView that
-     * contains the state of the editor session.
-     */
-    var FileEditor;
-    (function (FileEditor) {
-        var editorView = null;
-        function createEditor() {
-            editorView = showEditor();
-            editorView.activateEditor();
-            socket_1.EventBus.createTermination(clearEditorHighlights); // create callback
-        }
-        FileEditor.createEditor = createEditor;
-        function clearEditorHighlights() {
-            var session = editorView.getEditorPanel().getSession();
-            var editorMarkers = editorView.getEditorMarkers();
-            var editorResource = editorView.getEditorResource();
-            //      if(editorResource) {
-            //         console.log("Clear highlights in " + editorResource.getResourcePath());
-            //      }
-            for (var editorLine in editorMarkers) {
-                if (editorMarkers.hasOwnProperty(editorLine)) {
-                    var marker = editorMarkers[editorLine];
-                    if (marker != null) {
-                        session.removeMarker(marker.getMarker());
-                        delete editorMarkers[editorLine];
-                    }
-                }
-            }
-        }
-        FileEditor.clearEditorHighlights = clearEditorHighlights;
-        function showEditorLine(line) {
-            var editor = editorView.getEditorPanel();
-            editorView.getEditorPanel().resize(true);
-            if (line > 1) {
-                var requestedLine = line - 1;
-                var currentLine = getCurrentLineForEditor();
-                if (currentLine != requestedLine) {
-                    editorView.getEditorPanel().scrollToLine(requestedLine, true, true, function () { });
-                    editorView.getEditorPanel().gotoLine(line); // move the cursor
-                    editorView.getEditorPanel().focus();
-                }
-            }
-            else {
-                editorView.getEditorPanel().scrollToLine(0, true, true, function () { });
-                editorView.getEditorPanel().focus();
-            }
-        }
-        FileEditor.showEditorLine = showEditorLine;
-        function clearEditorHighlight(line) {
-            var session = editorView.getEditorPanel().getSession();
-            var editorMarkers = editorView.getEditorMarkers();
-            var marker = editorMarkers[line];
-            if (marker != null) {
-                session.removeMarker(marker.getMarker());
-            }
-        }
-        function createEditorHighlight(line, css) {
-            var Range = ace_1.ace.require('ace/range').Range;
-            var session = editorView.getEditorPanel().getSession();
-            var editorMarkers = editorView.getEditorMarkers();
-            var currentMarker = editorMarkers[line];
-            // clearEditorHighlight(line);
-            clearEditorHighlights(); // clear all highlights in editor
-            var marker = session.addMarker(new Range(line - 1, 0, line - 1, 1), css, "fullLine");
-            var editorMarker = new FileEditorMarker(line, css, marker);
-            editorMarkers[line] = editorMarker;
-            if (currentMarker) {
-                return currentMarker.getStyle() != css;
-            }
-            return false;
-        }
-        FileEditor.createEditorHighlight = createEditorHighlight;
-        function createMultipleEditorHighlights(lines, css) {
-            var Range = ace_1.ace.require('ace/range').Range;
-            var session = editorView.getEditorPanel().getSession();
-            var editorMarkers = editorView.getEditorMarkers();
-            var highlightsChanged = false;
-            for (var i = 0; i < lines.length; i++) {
-                var line = lines[i];
-                var currentMarker = editorMarkers[line];
-                if (currentMarker) {
-                    if (currentMarker.getStyle() != css) {
-                        highlightsChanged = true;
-                    }
-                }
-                else {
-                    highlightsChanged = true;
-                }
-            }
-            // clearEditorHighlight(line);
-            clearEditorHighlights(); // clear all highlights in editor
-            for (var i = 0; i < lines.length; i++) {
-                var line = lines[i];
-                var marker = session.addMarker(new Range(line - 1, 0, line - 1, 1), css, "fullLine");
-                var editorMarker = new FileEditorMarker(line, css, marker);
-                editorMarkers[line] = editorMarker;
-            }
-            return highlightsChanged;
-        }
-        FileEditor.createMultipleEditorHighlights = createMultipleEditorHighlights;
-        function findAndReplaceTextInEditor() {
-            var state = currentEditorState();
-            var resource = state.getResource();
-            commands_1.Command.searchAndReplaceFiles(resource.getProjectPath());
-        }
-        FileEditor.findAndReplaceTextInEditor = findAndReplaceTextInEditor;
-        function findTextInEditor() {
-            var state = currentEditorState();
-            var resource = state.getResource();
-            commands_1.Command.searchFiles(resource.getProjectPath());
-        }
-        FileEditor.findTextInEditor = findTextInEditor;
-        function addEditorKeyBinding(keyBinding, actionFunction) {
-            editorView.getEditorPanel().commands.addCommand({
-                name: keyBinding.editor,
-                bindKey: {
-                    win: keyBinding.editor,
-                    mac: keyBinding.editor
-                },
-                exec: function (editor) {
-                    if (actionFunction) {
-                        actionFunction();
-                    }
-                }
+    var FileEditorBuilder;
+    (function (FileEditorBuilder) {
+        function createFileEditorView(elementName) {
+            var editor = ace_1.ace.edit(elementName);
+            var editorView = new FileEditorView(editor);
+            var autoComplete = createEditorAutoComplete(editorView);
+            editor.completers = [autoComplete];
+            // setEditorTheme("eclipse"); // set the default to eclipse
+            editor.getSession().setMode("ace/mode/tern");
+            editor.getSession().setTabSize(3);
+            editor.setReadOnly(false);
+            editor.setAutoScrollEditorIntoView(true);
+            editor.getSession().setUseSoftTabs(true);
+            //editor.setKeyboardHandler("ace/keyboard/vim");
+            editor.commands.removeCommand("replace"); // Ctrl-H
+            editor.commands.removeCommand("find"); // Ctrl-F
+            editor.commands.removeCommand("expandToMatching"); // Ctrl-Shift-M
+            editor.commands.removeCommand("expandtoline"); // Ctrl-Shift-L
+            // ################# DISABLE KEY BINDINGS ######################
+            // editor.keyBinding.setDefaultHandler(null); // disable all keybindings
+            // and allow Mousetrap to do it
+            // #############################################################
+            editor.setShowPrintMargin(false);
+            editor.setOptions({
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true
             });
-        }
-        FileEditor.addEditorKeyBinding = addEditorKeyBinding;
-        function clearEditorBreakpoint(row) {
-            var session = editorView.getEditorPanel().getSession();
-            var breakpoints = session.getBreakpoints();
-            var remove = false;
-            for (var breakpoint in breakpoints) {
-                session.clearBreakpoint(row);
+            editor.on("click", function (e) {
+                var options = editor.getOptions();
+                var type = typeof options;
+                var optionsUpdate = {};
+                console.log("Focus editor on click: options=[" + type + "] -> ", options);
+                editor.focus();
+                for (var key in options) {
+                    if (options.hasOwnProperty(key)) {
+                        optionsUpdate[key] = options[key];
+                    }
+                }
+                optionsUpdate['readOnly'] = false;
+                console.log("Update after click: ", optionsUpdate);
+                editor.setOptions(optionsUpdate);
+                editor.setReadOnly(false);
+            });
+            editor.on("guttermousedown", function (e) {
+                var target = e.domEvent.target;
+                if (target.className.indexOf("ace_gutter-cell") == -1) {
+                    return;
+                }
+                if (!editor.isFocused()) {
+                    return;
+                }
+                if (e.clientX > 25 + target.getBoundingClientRect().left) {
+                    return;
+                }
+                var row = e.getDocumentPosition().row;
+                // should be a getBreakpoints but does not seem to be there!!
+                editorView.getEditorBreakpointManager().toggleEditorBreakpoint(row);
+                e.stop();
+            });
+            // JavaFX has a very fast scroll speed
+            if (typeof java !== 'undefined') {
+                editor.setScrollSpeed(0.05); // slow down if its Java FX
             }
-            showEditorBreakpoints();
+            return editorView;
         }
-        function clearEditorBreakpoints() {
-            var session = editorView.getEditorPanel().getSession();
-            var breakpoints = session.getBreakpoints();
-            var remove = false;
-            for (var breakpoint in breakpoints) {
-                session.clearBreakpoint(breakpoint); // XXX is this correct
-            }
-        }
-        function showEditorBreakpoints() {
-            var allBreakpoints = editorView.getEditorBreakpoints();
-            var breakpointRecords = [];
-            var breakpointIndex = 1;
-            for (var filePath in allBreakpoints) {
-                if (allBreakpoints.hasOwnProperty(filePath)) {
-                    var breakpoints = allBreakpoints[filePath];
-                    for (var lineNumber in breakpoints) {
-                        if (breakpoints.hasOwnProperty(lineNumber)) {
-                            if (breakpoints[lineNumber] == true) {
-                                var resourcePathDetails = tree_1.FileTree.createResourcePath(filePath);
-                                var displayName = "<div class='breakpointEnabled'>" + resourcePathDetails.getProjectPath() + "</div>";
-                                breakpointRecords.push({
-                                    recid: breakpointIndex++,
-                                    name: displayName,
-                                    location: "Line " + lineNumber,
-                                    resource: resourcePathDetails.getProjectPath(),
-                                    line: parseInt(lineNumber),
-                                    script: resourcePathDetails.getResourcePath()
-                                });
+        FileEditorBuilder.createFileEditorView = createFileEditorView;
+        function createEditorAutoComplete(editorView) {
+            return {
+                getCompletions: function createAutoComplete(editor, session, pos, prefix, callback) {
+                    //             if (prefix.length === 0) { 
+                    //                callback(null, []); 
+                    //                return; 
+                    //             }
+                    var text = editor.getValue();
+                    var line = editor.session.getLine(pos.row);
+                    var resource = editorView.getEditorResource().getProjectPath();
+                    var complete = line.substring(0, pos.column);
+                    var message = JSON.stringify({
+                        resource: resource,
+                        line: pos.row + 1,
+                        complete: complete,
+                        source: text,
+                        prefix: prefix
+                    });
+                    $.ajax({
+                        contentType: 'application/json',
+                        data: message,
+                        dataType: 'json',
+                        success: function (response) {
+                            var expression = response.expression;
+                            if (expression) {
+                                var dotIndex = Math.max(0, expression.lastIndexOf('.') + 1);
+                                var tokens = response.tokens;
+                                var length = tokens.length;
+                                var suggestions = [];
+                                for (var token in tokens) {
+                                    if (tokens.hasOwnProperty(token)) {
+                                        var type = tokens[token];
+                                        if (common_1.Common.stringStartsWith(token, expression)) {
+                                            token = token.substring(dotIndex);
+                                        }
+                                        suggestions.push({ className: 'autocomplete_' + type, token: token, value: token, score: 300, meta: type });
+                                    }
+                                }
+                                callback(null, suggestions);
                             }
-                        }
-                    }
+                        },
+                        error: function () {
+                            console.log("Completion control failed");
+                        },
+                        processData: false,
+                        type: 'POST',
+                        url: '/complete/' + common_1.Common.getProjectName()
+                    });
                 }
-            }
-            w2ui_1.w2ui['breakpoints'].records = breakpointRecords;
-            w2ui_1.w2ui['breakpoints'].refresh();
-            commands_1.Command.updateScriptBreakpoints(); // update the breakpoints
+            };
         }
-        FileEditor.showEditorBreakpoints = showEditorBreakpoints;
-        function setEditorBreakpoint(row, value) {
-            var allBreakpoints = editorView.getEditorBreakpoints();
-            if (editorView.getEditorResource() != null) {
-                var session = editorView.getEditorPanel().getSession();
-                var resourceBreakpoints = allBreakpoints[editorView.getEditorResource().getFilePath()];
-                var line = parseInt(row);
-                if (value) {
-                    session.setBreakpoint(line);
-                }
-                else {
-                    session.clearBreakpoint(line);
-                }
-                if (resourceBreakpoints == null) {
-                    resourceBreakpoints = {};
-                    allBreakpoints[editorView.getEditorResource().getFilePath()] = resourceBreakpoints;
-                }
-                resourceBreakpoints[line + 1] = value;
-            }
-            showEditorBreakpoints();
-        }
-        function toggleEditorBreakpoint(row) {
-            var allBreakpoints = editorView.getEditorBreakpoints();
-            if (editorView.getEditorResource() != null) {
-                var session = editorView.getEditorPanel().getSession();
-                var resourceBreakpoints = allBreakpoints[editorView.getEditorResource().getFilePath()];
-                var breakpoints = session.getBreakpoints();
-                var remove = false;
-                for (var breakpoint in breakpoints) {
-                    if (breakpoint == row) {
-                        remove = true;
-                        break;
-                    }
-                }
-                if (remove) {
-                    session.clearBreakpoint(row);
-                }
-                else {
-                    session.setBreakpoint(row);
-                }
-                var line = parseInt(row);
-                if (resourceBreakpoints == null) {
-                    resourceBreakpoints = {};
-                    resourceBreakpoints[line + 1] = true;
-                    allBreakpoints[editorView.getEditorResource().getFilePath()] = resourceBreakpoints;
-                }
-                else {
-                    if (resourceBreakpoints[line + 1] == true) {
-                        resourceBreakpoints[line + 1] = false;
-                    }
-                    else {
-                        resourceBreakpoints[line + 1] = true;
-                    }
-                }
-            }
-            showEditorBreakpoints();
-        }
-        function resizeEditor() {
-            var width = document.getElementById('editor').offsetWidth;
-            var height = document.getElementById('editor').offsetHeight;
-            console.log("Resize editor " + width + "x" + height);
-            editorView.getEditorPanel().setAutoScrollEditorIntoView(true);
-            editorView.getEditorPanel().resize(true);
-            // editor.focus();
-        }
-        FileEditor.resizeEditor = resizeEditor;
-        //   export function resetEditor() {
-        //      var session = editorView.getEditorPanel().getSession();
-        //      var editorHistory: FileEditorHistory = editorView.getHistoryForResource(editorView.getEditorResource());      
-        //      var originalText: string =  editorHistory.getOriginalText();
-        //         
-        //      clearEditorHighlights();
-        //      //editorView.getEditorResource() = null;
-        //      editorView.getEditorPanel().setReadOnly(false);
-        //
-        //      if(originalText) {
-        //         session.setValue(originalText, 1);
-        //      } else {
-        //         session.setValue("", 1);
-        //      }
-        //      $("#currentFile").html("");
-        //   }
-        function clearEditor() {
-            var session = editorView.getEditorPanel().getSession();
-            for (var editorMarker in session.$backMarkers) {
-                session.removeMarker(editorMarker);
-            }
-            clearEditorHighlights(); // clear highlighting
-            var breakpoints = session.getBreakpoints();
-            var remove = false;
-            for (var breakpoint in breakpoints) {
-                session.clearBreakpoint(breakpoint);
-            }
-            $("#currentFile").html("");
-        }
-        function currentEditorState() {
-            var editorUndoState = currentEditorUndoState();
-            var editorPosition = currentEditorPosition();
-            var editorBuffer = currrentEditorBuffer();
-            var editorLastModified = -1;
-            var editorText = null;
-            if (editorBuffer) {
-                editorText = editorBuffer.getSource();
-                editorLastModified = editorBuffer.getLastModified();
-            }
-            return new FileEditorState(editorLastModified, editorView.getEditorBreakpoints(), editorView.getEditorResource(), editorUndoState, editorPosition, editorText, editorView.isEditorReadOnly());
-        }
-        FileEditor.currentEditorState = currentEditorState;
-        function currentEditorText() {
-            return editorView.getEditorPanel().getValue();
-        }
-        function currentEditorPosition() {
-            var scrollTop = editorView.getEditorPanel().getSession().getScrollTop();
-            var editorCursor = editorView.getEditorPanel().selection.getCursor();
-            if (editorCursor) {
-                return new FileEditorPosition(editorCursor.row, editorCursor.column, scrollTop);
-            }
-            return new FileEditorPosition(null, null, scrollTop);
-        }
-        function currentEditorUndoState() {
-            var session = editorView.getEditorPanel().getSession();
-            var manager = session.getUndoManager();
-            var undoStack = $.extend(true, {}, manager.$undoStack);
-            var redoStack = $.extend(true, {}, manager.$redoStack);
-            return new FileEditorUndoState(undoStack, redoStack, manager.dirtyCounter);
-        }
+    })(FileEditorBuilder = exports.FileEditorBuilder || (exports.FileEditorBuilder = {}));
+    var FileEditorModeMapper;
+    (function (FileEditorModeMapper) {
         function resolveEditorMode(resource) {
             var token = resource.toLowerCase();
             if (common_1.Common.stringEndsWith(token, ".tern")) {
@@ -622,7 +665,135 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             }
             return "ace/mode/text";
         }
-        FileEditor.resolveEditorMode = resolveEditorMode;
+        FileEditorModeMapper.resolveEditorMode = resolveEditorMode;
+    })(FileEditorModeMapper = exports.FileEditorModeMapper || (exports.FileEditorModeMapper = {}));
+    /**
+     * Groups all the editor functions and creates the FileEditorView that
+     * contains the state of the editor session.
+     */
+    var FileEditor;
+    (function (FileEditor) {
+        var editorView = null;
+        function createEditor() {
+            editorView = FileEditorBuilder.createFileEditorView("editor");
+            editorView.activateEditor();
+            socket_1.EventBus.createTermination(function () {
+                editorView.getEditorHighlightManager().clearEditorHighlights();
+            }); // create callback
+        }
+        FileEditor.createEditor = createEditor;
+        function clearEditorHighlights() {
+            editorView.getEditorHighlightManager().clearEditorHighlights();
+        }
+        FileEditor.clearEditorHighlights = clearEditorHighlights;
+        function showEditorLine(line) {
+            editorView.getEditorHighlightManager().showEditorLine(line);
+        }
+        FileEditor.showEditorLine = showEditorLine;
+        function clearEditorHighlight(line) {
+            editorView.getEditorHighlightManager().clearEditorHighlight(line);
+        }
+        FileEditor.clearEditorHighlight = clearEditorHighlight;
+        function createEditorHighlight(line, css) {
+            return editorView.getEditorHighlightManager().createEditorHighlight(line, css);
+        }
+        FileEditor.createEditorHighlight = createEditorHighlight;
+        function createMultipleEditorHighlights(lines, css) {
+            return editorView.getEditorHighlightManager().createMultipleEditorHighlights(lines, css);
+        }
+        FileEditor.createMultipleEditorHighlights = createMultipleEditorHighlights;
+        function findAndReplaceTextInEditor() {
+            var state = currentEditorState();
+            var resource = state.getResource();
+            commands_1.Command.searchAndReplaceFiles(resource.getProjectPath());
+        }
+        FileEditor.findAndReplaceTextInEditor = findAndReplaceTextInEditor;
+        function findTextInEditor() {
+            var state = currentEditorState();
+            var resource = state.getResource();
+            commands_1.Command.searchFiles(resource.getProjectPath());
+        }
+        FileEditor.findTextInEditor = findTextInEditor;
+        function addEditorKeyBinding(keyBinding, actionFunction) {
+            editorView.getEditorPanel().commands.addCommand({
+                name: keyBinding.editor,
+                bindKey: {
+                    win: keyBinding.editor,
+                    mac: keyBinding.editor
+                },
+                exec: function (editor) {
+                    if (actionFunction) {
+                        actionFunction();
+                    }
+                }
+            });
+        }
+        FileEditor.addEditorKeyBinding = addEditorKeyBinding;
+        function resizeEditor() {
+            var width = document.getElementById('editor').offsetWidth;
+            var height = document.getElementById('editor').offsetHeight;
+            console.log("Resize editor " + width + "x" + height);
+            editorView.getEditorPanel().setAutoScrollEditorIntoView(true);
+            editorView.getEditorPanel().resize(true);
+            // editor.focus();
+        }
+        FileEditor.resizeEditor = resizeEditor;
+        //   export function resetEditor() {
+        //      var session = editorView.getEditorPanel().getSession();
+        //      var editorHistory: FileEditorHistory = editorView.getHistoryForResource(editorView.getEditorResource());      
+        //      var originalText: string =  editorHistory.getOriginalText();
+        //         
+        //      clearEditorHighlights();
+        //      //editorView.getEditorResource() = null;
+        //      editorView.getEditorPanel().setReadOnly(false);
+        //
+        //      if(originalText) {
+        //         session.setValue(originalText, 1);
+        //      } else {
+        //         session.setValue("", 1);
+        //      }
+        //      $("#currentFile").html("");
+        //   }
+        function clearEditor() {
+            var session = editorView.getEditorPanel().getSession();
+            for (var editorMarker in session.$backMarkers) {
+                session.removeMarker(editorMarker);
+            }
+            editorView.getEditorHighlightManager().clearEditorHighlights(); // clear highlighting
+            editorView.getEditorBreakpointManager().clearEditorBreakpoints(); // clear highlighting
+            $("#currentFile").html("");
+        }
+        function currentEditorState() {
+            var editorUndoState = currentEditorUndoState();
+            var editorPosition = currentEditorPosition();
+            var editorBuffer = currrentEditorBuffer();
+            var editorLastModified = -1;
+            var editorText = null;
+            if (editorBuffer) {
+                editorText = editorBuffer.getSource();
+                editorLastModified = editorBuffer.getLastModified();
+            }
+            return new FileEditorState(editorLastModified, editorView.getEditorBreakpoints(), editorView.getEditorResource(), editorUndoState, editorPosition, editorText, editorView.isEditorReadOnly());
+        }
+        FileEditor.currentEditorState = currentEditorState;
+        function currentEditorText() {
+            return editorView.getEditorPanel().getValue();
+        }
+        function currentEditorPosition() {
+            var scrollTop = editorView.getEditorPanel().getSession().getScrollTop();
+            var editorCursor = editorView.getEditorPanel().selection.getCursor();
+            if (editorCursor) {
+                return new FileEditorPosition(editorCursor.row, editorCursor.column, scrollTop);
+            }
+            return new FileEditorPosition(null, null, scrollTop);
+        }
+        function currentEditorUndoState() {
+            var session = editorView.getEditorPanel().getSession();
+            var manager = session.getUndoManager();
+            var undoStack = $.extend(true, {}, manager.$undoStack);
+            var redoStack = $.extend(true, {}, manager.$redoStack);
+            return new FileEditorUndoState(undoStack, redoStack, manager.dirtyCounter);
+        }
         function saveEditorHistory() {
             var editorState = currentEditorState();
             if (!editorState.isReadOnly()) {
@@ -700,7 +871,7 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             var textToDisplay = resolveEditorTextToUse(fileResource);
             var session = editorView.getEditorPanel().getSession();
             var currentMode = session.getMode();
-            var actualMode = resolveEditorMode(resourcePath.getResourcePath());
+            var actualMode = FileEditorModeMapper.resolveEditorMode(resourcePath.getResourcePath());
             saveEditorHistory(); // save any existing history
             if (actualMode != currentMode) {
                 session.setMode({
@@ -726,7 +897,7 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
                     for (var lineNumber in breakpoints) {
                         if (breakpoints.hasOwnProperty(lineNumber)) {
                             if (breakpoints[lineNumber] == true) {
-                                setEditorBreakpoint(parseInt(lineNumber) - 1, true);
+                                editorView.getEditorBreakpointManager().setEditorBreakpoint(parseInt(lineNumber) - 1, true);
                             }
                         }
                     }
@@ -814,57 +985,6 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         function updateEditorTabMarkForResource(resource) {
             project_1.Project.markEditorTab(resource, isEditorChangedForPath(resource));
         }
-        function createEditorAutoComplete() {
-            return {
-                getCompletions: function createAutoComplete(editor, session, pos, prefix, callback) {
-                    //             if (prefix.length === 0) { 
-                    //                callback(null, []); 
-                    //                return; 
-                    //             }
-                    var text = editor.getValue();
-                    var line = editor.session.getLine(pos.row);
-                    var resource = editorView.getEditorResource().getProjectPath();
-                    var complete = line.substring(0, pos.column);
-                    var message = JSON.stringify({
-                        resource: resource,
-                        line: pos.row + 1,
-                        complete: complete,
-                        source: text,
-                        prefix: prefix
-                    });
-                    $.ajax({
-                        contentType: 'application/json',
-                        data: message,
-                        dataType: 'json',
-                        success: function (response) {
-                            var expression = response.expression;
-                            if (expression) {
-                                var dotIndex = Math.max(0, expression.lastIndexOf('.') + 1);
-                                var tokens = response.tokens;
-                                var length = tokens.length;
-                                var suggestions = [];
-                                for (var token in tokens) {
-                                    if (tokens.hasOwnProperty(token)) {
-                                        var type = tokens[token];
-                                        if (common_1.Common.stringStartsWith(token, expression)) {
-                                            token = token.substring(dotIndex);
-                                        }
-                                        suggestions.push({ className: 'autocomplete_' + type, token: token, value: token, score: 300, meta: type });
-                                    }
-                                }
-                                callback(null, suggestions);
-                            }
-                        },
-                        error: function () {
-                            console.log("Completion control failed");
-                        },
-                        processData: false,
-                        type: 'POST',
-                        url: '/complete/' + common_1.Common.getProjectName()
-                    });
-                }
-            };
-        }
         // XXX this should be in commands
         function formatEditorSource() {
             var text = editorView.getEditorPanel().getValue();
@@ -893,134 +1013,12 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             }
         }
         FileEditor.setEditorTheme = setEditorTheme;
-        function showEditor() {
-            var editor = ace_1.ace.edit("editor");
-            var autoComplete = createEditorAutoComplete();
-            editor.completers = [autoComplete];
-            // setEditorTheme("eclipse"); // set the default to eclipse
-            editor.getSession().setMode("ace/mode/tern");
-            editor.getSession().setTabSize(3);
-            editor.setReadOnly(false);
-            editor.setAutoScrollEditorIntoView(true);
-            editor.getSession().setUseSoftTabs(true);
-            //editor.setKeyboardHandler("ace/keyboard/vim");
-            editor.commands.removeCommand("replace"); // Ctrl-H
-            editor.commands.removeCommand("find"); // Ctrl-F
-            editor.commands.removeCommand("expandToMatching"); // Ctrl-Shift-M
-            editor.commands.removeCommand("expandtoline"); // Ctrl-Shift-L
-            // ################# DISABLE KEY BINDINGS ######################
-            // editor.keyBinding.setDefaultHandler(null); // disable all keybindings
-            // and allow Mousetrap to do it
-            // #############################################################
-            editor.setShowPrintMargin(false);
-            editor.setOptions({
-                enableBasicAutocompletion: true,
-                enableLiveAutocompletion: true
-            });
-            editor.on("click", function (e) {
-                var options = editor.getOptions();
-                var type = typeof options;
-                var optionsUpdate = {};
-                console.log("Focus editor on click: options=[" + type + "] -> ", options);
-                editor.focus();
-                for (var key in options) {
-                    if (options.hasOwnProperty(key)) {
-                        optionsUpdate[key] = options[key];
-                    }
-                }
-                optionsUpdate['readOnly'] = false;
-                console.log("Update after click: ", optionsUpdate);
-                editor.setOptions(optionsUpdate);
-                editor.setReadOnly(false);
-            });
-            editor.on("guttermousedown", function (e) {
-                var target = e.domEvent.target;
-                if (target.className.indexOf("ace_gutter-cell") == -1) {
-                    return;
-                }
-                if (!editor.isFocused()) {
-                    return;
-                }
-                if (e.clientX > 25 + target.getBoundingClientRect().left) {
-                    return;
-                }
-                var row = e.getDocumentPosition().row;
-                // should be a getBreakpoints but does not seem to be there!!
-                toggleEditorBreakpoint(row);
-                e.stop();
-            });
-            //
-            // THIS IS THE LINKS
-            //
-            // JavaFX has a very fast scroll speed
-            if (typeof java !== 'undefined') {
-                editor.setScrollSpeed(0.05); // slow down if its Java FX
-            }
-            return new FileEditorView(editor);
+        function showEditorBreakpoints() {
+            editorView.getEditorBreakpointManager().showEditorBreakpoints();
         }
-        //   function validEditorLink(string, col) { // see link.js (http://jsbin.com/jehopaja/4/edit?html,output)
-        //      if(KeyBinder.isControlPressed()) {
-        //         var tokenPatterns = [
-        //            "\\.[A-Z][a-zA-Z0-9]*;", // import type
-        //            "\\sas\\s+[A-Z][a-zA-Z0-9]*;", // import alias
-        //            "[a-zA-Z][a-zA-Z0-9]*\\s*\\.", // variable or type reference
-        //            "[a-z][a-zA-Z0-9]*\\s*[=|<|>|!|\-|\+|\*|\\/|%]", // variable
-        //                                                               // operation
-        //            "new\\s+[A-Z][a-zA-Z0-9]*\\s*\\(", // constructor call
-        //            "[a-zA-Z][a-zA-Z0-9]*\\s*\\(", // function or constructor call
-        //            "[A-Z][a-zA-Z0-9]*\\s*\\[", // type array reference
-        //            ":\\s*[A-Z][a-zA-Z0-9]*", // type constraint
-        //            "extends\\s+[A-Z][a-zA-Z0-9]*", // super class
-        //            "with\\s+[A-Z][a-zA-Z0-9]*" // implements trait
-        //         ];
-        //         for(var i = 0; i < tokenPatterns.length; i++) { 
-        //            var regExp = new RegExp(tokenPatterns[i], 'g'); // WE SHOULD CACHE
-        //                                                            // THE REGEX FOR
-        //                                                            // PERFORMANCE
-        //            var matchFound = null;
-        //            regExp.lastIndex = 0; // you have to reset regex to its start
-        //                                    // position
-        //            
-        //            string.replace(regExp, function(str) {
-        //                var offset = arguments[arguments.length - 2];
-        //                var length = str.length;
-        //                if (offset <= col && offset + length >= col) {
-        //                   var indexToken = editorView.editorCurrentTokens[str];
-        //                   
-        //                   if(indexToken != null) {
-        //                      matchFound = {
-        //                         start: offset,
-        //                         value: str
-        //                      };
-        //                   }
-        //                }
-        //            });
-        //            if(matchFound != null) {
-        //               return matchFound;
-        //            }
-        //         }
-        //      }
-        //      return null;
-        //   }
-        //   function openEditorLink(event) {
-        //      if(KeyBinder.isControlPressed()) {
-        //         var indexToken = editorView.editorCurrentTokens[event.value];
-        //         
-        //         if(indexToken != null) {
-        //            if(indexToken.resource != null) {
-        //               editorView.editorFocusToken = event.value;
-        //               window.location.hash = indexToken.resource;
-        //            }else {
-        //               showEditorLine(indexToken.line); 
-        //            }
-        //            // alert("Editor open ["+event.value+"] @ "+line);
-        //         }
-        //      }
-        //   }
+        FileEditor.showEditorBreakpoints = showEditorBreakpoints;
         function updateEditorFont(fontFamily, fontSize) {
-            var autoComplete = createEditorAutoComplete();
             var actualFont = formatFont(fontFamily);
-            editorView.getEditorPanel().completers = [autoComplete];
             editorView.getEditorPanel().setOptions({
                 enableBasicAutocompletion: true,
                 enableLiveAutocompletion: true,

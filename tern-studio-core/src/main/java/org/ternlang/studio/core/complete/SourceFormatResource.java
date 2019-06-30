@@ -21,7 +21,7 @@ public class SourceFormatResource {
    private final Workspace workspace;
 
    @POST
-   @Path("{project}/{path:.+}")
+   @Path("{project}/{path}")
    @Produces("text/plain")
    public String formatSource(
          @PathParam("project") String name, 
