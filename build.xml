@@ -32,7 +32,8 @@
     <copy file="${download.path}/windows/ternd.jar" tofile="${download.path}/local/ternd.jar" overwrite="true" />
     <delete file="${download.path}/windows/ternd.jar" />
     <delete file="${download.path}/windows/tern.jar" />
-    <exec executable="ternd.exe" dir="${download.path}/local" />
+    <echo message="${download.path}/local/ternd.exe"/>
+    <exec executable="${download.path}/local/ternd.exe" dir="${download.path}/local" />
   </target>
 
   <target name="build-linux">
