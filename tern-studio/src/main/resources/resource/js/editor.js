@@ -176,6 +176,23 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             }
             this.showEditorBreakpoints();
         };
+        FileEditorBreakpointManager.prototype.restoreResourceBreakpoints = function () {
+            var editorView = this.getEditorView();
+            if (editorView.getEditorResource()) {
+                var filePath = editorView.getEditorResource().getFilePath();
+                var allBreakpoints = editorView.getEditorBreakpoints();
+                var breakpoints = allBreakpoints[filePath];
+                if (breakpoints != null) {
+                    for (var lineNumber in breakpoints) {
+                        if (breakpoints.hasOwnProperty(lineNumber)) {
+                            if (breakpoints[lineNumber] == true) {
+                                this.setEditorBreakpoint(parseInt(lineNumber) - 1, true);
+                            }
+                        }
+                    }
+                }
+            }
+        };
         return FileEditorBreakpointManager;
     }());
     exports.FileEditorBreakpointManager = FileEditorBreakpointManager;
@@ -849,18 +866,12 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         function resolveEditorTextToUse(fileResource) {
             var encodedText = fileResource.getFileContent();
             var isReadOnly = fileResource.isHistorical() || fileResource.isError();
-            console.log("resource=[" + fileResource.getResourcePath().getResourcePath() +
-                "] modified=[" + fileResource.getTimeStamp() + "] length=[" + fileResource.getFileLength() + "] readonly=[" + isReadOnly + "]");
             if (!isReadOnly) {
-                var savedHistoryBuffer = getEditorBufferForResource(fileResource.getResourcePath().getResourcePath()); // load saved buffer
-                if (savedHistoryBuffer.getSource() && savedHistoryBuffer.getLastModified() > fileResource.getLastModified()) {
-                    console.log("LOAD FROM HISTORY diff=[" + (savedHistoryBuffer.getLastModified() - fileResource.getLastModified()) + "]");
-                    return savedHistoryBuffer.getSource();
+                var resourcePath = fileResource.getResourcePath().getResourcePath();
+                var workInProgressBuffer = getEditorBufferForResource(resourcePath); // load saved buffer
+                if (workInProgressBuffer.getSource() && workInProgressBuffer.getLastModified() > fileResource.getLastModified()) {
+                    return workInProgressBuffer.getSource();
                 }
-                console.log("IGNORE HISTORY: ", savedHistoryBuffer);
-            }
-            else {
-                console.log("IGNORE HISTORY WHEN READ ONLY");
             }
             return encodedText;
         }
@@ -889,20 +900,7 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             setReadOnly(isReadOnly);
             editorView.updateResourcePath(resourcePath, isReadOnly);
             problem_1.ProblemManager.highlightProblems(); // higlight problems on this resource
-            if (resourcePath != null && editorView.getEditorResource()) {
-                var filePath = editorView.getEditorResource().getFilePath();
-                var allBreakpoints = editorView.getEditorBreakpoints();
-                var breakpoints = allBreakpoints[filePath];
-                if (breakpoints != null) {
-                    for (var lineNumber in breakpoints) {
-                        if (breakpoints.hasOwnProperty(lineNumber)) {
-                            if (breakpoints[lineNumber] == true) {
-                                editorView.getEditorBreakpointManager().setEditorBreakpoint(parseInt(lineNumber) - 1, true);
-                            }
-                        }
-                    }
-                }
-            }
+            editorView.getEditorBreakpointManager().restoreResourceBreakpoints();
             project_1.Project.createEditorTab(); // update the tab name
             history_1.History.showFileHistory(); // update the history
             status_1.StatusPanel.showActiveFile(editorView.getEditorResource().getProjectPath());

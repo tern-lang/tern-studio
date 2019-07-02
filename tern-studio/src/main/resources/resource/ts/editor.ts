@@ -239,6 +239,26 @@ export class FileEditorBreakpointManager {
       }
       this.showEditorBreakpoints();
    }
+
+   public restoreResourceBreakpoints() {
+      const editorView = this.getEditorView();
+      
+      if (editorView.getEditorResource()) {
+            const filePath: string = editorView.getEditorResource().getFilePath();
+            const allBreakpoints = editorView.getEditorBreakpoints();
+            const breakpoints = allBreakpoints[filePath];
+      
+            if (breakpoints != null) {
+               for(var lineNumber in breakpoints) {
+                  if (breakpoints.hasOwnProperty(lineNumber)) {
+                     if (breakpoints[lineNumber] == true) {
+                        this.setEditorBreakpoint(parseInt(lineNumber) - 1, true);
+                     }
+                  }
+               }
+            }
+         }
+   }
 }
 
 export class FileEditorHighlightManager {
@@ -404,12 +424,12 @@ export class FileEditorHistory {
    }
    
    public restoreUndoManager(session: any, text: string) {
-      var manager = new ace.UndoManager();
+      const manager = new ace.UndoManager();
       
       if(text == this._savedText) { // text is the same text
          if(this._undoState) {
-            var undoStack = this._undoState.getUndoStack();
-            var redoStack = this._undoState.getRedoStack();
+            const undoStack = this._undoState.getUndoStack();
+            const redoStack = this._undoState.getRedoStack();
             
             for (var undoEntry in undoStack) {
                if (undoStack.hasOwnProperty(undoEntry)) {
@@ -448,8 +468,8 @@ export class FileEditorHistory {
    }
    
    public saveHistory(editorState: FileEditorState){ 
-      var source = editorState.getSource();
-      var currentText = editorState.getSource();
+      const source = editorState.getSource();
+      const currentText = editorState.getSource();
       
       this._savedText = currentText;
       this._lastModified = editorState.getLastModified();
@@ -1041,13 +1061,14 @@ export module FileEditor {
    export function getEditorBufferForResource(resource: string): FileEditorBuffer {
       const editorResource: FilePath = FileTree.createResourcePath(resource);
       const editorHistory: FileEditorHistory = editorView.getHistoryForResource(editorResource);
-      const lastModifiedTime: number = editorHistory.getLastModified();
-      
-      if(isEditorResourcePath(editorResource.getResourcePath())) {
+      const lastModifiedTime: number = editorHistory.getLastModified(); 
+      const resourcePath: string = editorResource.getResourcePath();
+
+      if(isEditorResourcePath(resourcePath)) {
          const editorText: string = currentEditorText();
          
          return new FileEditorBuffer(
-            lastModifiedTime,
+            lastModifiedTime, // should this time be now
             editorResource,
             editorText, // if its the current buffer then return it
             true
@@ -1062,34 +1083,28 @@ export module FileEditor {
    }
    
    function resolveEditorTextToUse(fileResource: FileResource) {
-      var encodedText: string = fileResource.getFileContent();
-      var isReadOnly = fileResource.isHistorical() || fileResource.isError();
-      
-      console.log("resource=[" + fileResource.getResourcePath().getResourcePath() + 
-            "] modified=[" + fileResource.getTimeStamp() + "] length=[" + fileResource.getFileLength() + "] readonly=[" + isReadOnly +"]");
+      const encodedText: string = fileResource.getFileContent();
+      const isReadOnly = fileResource.isHistorical() || fileResource.isError();
       
       if(!isReadOnly) {
-         var savedHistoryBuffer: FileEditorBuffer = getEditorBufferForResource(fileResource.getResourcePath().getResourcePath()); // load saved buffer
+         const resourcePath: string = fileResource.getResourcePath().getResourcePath();   
+         const workInProgressBuffer: FileEditorBuffer = getEditorBufferForResource(resourcePath); // load saved buffer
    
-         if(savedHistoryBuffer.getSource() && savedHistoryBuffer.getLastModified() > fileResource.getLastModified()) {
-            console.log("LOAD FROM HISTORY diff=[" + (savedHistoryBuffer.getLastModified() - fileResource.getLastModified()) + "]");
-            return savedHistoryBuffer.getSource();
+         if(workInProgressBuffer.getSource() && workInProgressBuffer.getLastModified() >= fileResource.getLastModified()) {
+            return workInProgressBuffer.getSource();
          }
-         console.log("IGNORE HISTORY: ", savedHistoryBuffer);
-      } else {
-         console.log("IGNORE HISTORY WHEN READ ONLY");
-      }
+      } 
       return encodedText;
    }
    
    export function updateEditor(fileResource: FileResource) { // why would you ever ignore an update here?
-      var resourcePath: FilePath = fileResource.getResourcePath();
-      var isReadOnly = fileResource.isHistorical() || fileResource.isError();
-      var realText: string = fileResource.getFileContent();
-      var textToDisplay = resolveEditorTextToUse(fileResource);
-      var session = editorView.getEditorPanel().getSession();
-      var currentMode = session.getMode();
-      var actualMode = FileEditorModeMapper.resolveEditorMode(resourcePath.getResourcePath());
+      const resourcePath: FilePath = fileResource.getResourcePath();
+      const isReadOnly = fileResource.isHistorical() || fileResource.isError();
+      const realText: string = fileResource.getFileContent();
+      const textToDisplay = resolveEditorTextToUse(fileResource);
+      const session = editorView.getEditorPanel().getSession();
+      const currentMode = session.getMode();
+      const actualMode = FileEditorModeMapper.resolveEditorMode(resourcePath.getResourcePath());
 
       saveEditorHistory(); // save any existing history
       
@@ -1109,22 +1124,7 @@ export module FileEditor {
       
       editorView.updateResourcePath(resourcePath, isReadOnly);
       ProblemManager.highlightProblems(); // higlight problems on this resource
-      
-      if (resourcePath != null && editorView.getEditorResource()) {
-         var filePath: string = editorView.getEditorResource().getFilePath();
-         var allBreakpoints = editorView.getEditorBreakpoints();
-         var breakpoints = allBreakpoints[filePath];
-   
-         if (breakpoints != null) {
-            for(var lineNumber in breakpoints) {
-               if (breakpoints.hasOwnProperty(lineNumber)) {
-                  if (breakpoints[lineNumber] == true) {
-                     editorView.getEditorBreakpointManager().setEditorBreakpoint(parseInt(lineNumber) - 1, true);
-                  }
-               }
-            }
-         }
-      }
+      editorView.getEditorBreakpointManager().restoreResourceBreakpoints();
       Project.createEditorTab(); // update the tab name
       History.showFileHistory(); // update the history
       StatusPanel.showActiveFile(editorView.getEditorResource().getProjectPath());  
