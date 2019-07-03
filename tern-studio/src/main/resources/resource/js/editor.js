@@ -854,9 +854,11 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             var editorResource = tree_1.FileTree.createResourcePath(resource);
             var editorHistory = editorView.getHistoryForResource(editorResource);
             var lastModifiedTime = editorHistory.getLastModified();
-            if (isEditorResourcePath(editorResource.getResourcePath())) {
+            var resourcePath = editorResource.getResourcePath();
+            if (isEditorResourcePath(resourcePath)) {
                 var editorText = currentEditorText();
-                return new FileEditorBuffer(lastModifiedTime, editorResource, editorText, // if its the current buffer then return it
+                return new FileEditorBuffer(lastModifiedTime, // should this time be now
+                editorResource, editorText, // if its the current buffer then return it
                 true);
             }
             return new FileEditorBuffer(lastModifiedTime, editorResource, editorHistory.getSavedText(), // if its the current buffer then return it
@@ -869,7 +871,7 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             if (!isReadOnly) {
                 var resourcePath = fileResource.getResourcePath().getResourcePath();
                 var workInProgressBuffer = getEditorBufferForResource(resourcePath); // load saved buffer
-                if (workInProgressBuffer.getSource() && workInProgressBuffer.getLastModified() > fileResource.getLastModified()) {
+                if (workInProgressBuffer.getSource() && workInProgressBuffer.getLastModified() >= fileResource.getLastModified()) {
                     return workInProgressBuffer.getSource();
                 }
             }

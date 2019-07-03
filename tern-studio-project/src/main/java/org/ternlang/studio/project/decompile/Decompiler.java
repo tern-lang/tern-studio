@@ -28,12 +28,31 @@ public class Decompiler {
       this.outputDir = new File(outputDir, DECOMPILE_DIRECTORY);
       this.includeComment = includeComment;
    }
-   
-   public String decompile(String jarFile, String className) throws Exception{
-      File extractedClassFile = extractClassFromJar(jarFile, className);
-      
+
+   public String decompile(String className) throws Exception{
+      String classResource = getClassFullPath(className);
+      URL classUrl = ClassLoader.getSystemResource(classResource);
+
+      if(classUrl != null) {
+         File extractedClassFile = extractClassFromURL(classUrl, className);
+         return decompile(extractedClassFile, className);
+      }
+      return "// could not decompile " + className;
+   }
+
+   public String decompile(String jarFile, String className) throws Exception {
+      File sourceJarFile = new File(jarFile);
+      File extractedClassFile = extractClassFromJar(sourceJarFile, className);
+
+      if (extractedClassFile != null) {
+         return decompile(extractedClassFile, className);
+      }
+      return "// could not decompile " + className;
+   }
+
+   private String decompile(File extractedClassFile, String className) throws Exception{
       if(extractedClassFile != null) {
-         decompileClasses(jarFile, extractedClassFile);
+         decompileClasses(extractedClassFile);
          String javaFile = getJavaFullPath(className);
          File rootDir = outputDir.getCanonicalFile();
          
@@ -63,10 +82,8 @@ public class Decompiler {
       return "// could not decompile " + className;
    }
    
-   private void decompileClasses(String jarFile, File extractedClassFile) throws Exception {  
-      File file = new File(jarFile);
-      
-      if(file.exists() && extractedClassFile.exists()) {
+   private void decompileClasses(File extractedClassFile) throws Exception {
+      if(extractedClassFile.exists()) {
          Map<String, Object> options = new HashMap<String, Object>();
          options.put("dgs", "1");
          File out = outputDir.getCanonicalFile();
@@ -75,30 +92,35 @@ public class Decompiler {
          decompiler.decompileContext();
       }
    }
-   
-   private File extractClassFromJar(String jarFile, String className) throws Exception {
-      File file = new File(jarFile);
-      
-      if(file.exists()) {
-         URL[] classPaths = new URL[]{file.toURI().toURL()};
+
+   private File extractClassFromURL(URL jarUrl, String className) throws Exception {
+      if(jarUrl != null) {
+         URL[] classPaths = new URL[]{jarUrl};
          ClassLoader loader = new URLClassLoader(classPaths,
-               ClassLoader.getSystemClassLoader().getParent());
+                 ClassLoader.getSystemClassLoader().getParent());
          String path = getClassFullPath(className);
          File outputFile = new File(outputDir, path).getCanonicalFile();
          InputStream stream = loader.getResourceAsStream(path);
-         
-         if(stream != null) {
+
+         if (stream != null) {
             outputFile.getParentFile().mkdirs();
             FileOutputStream out = new FileOutputStream(outputFile);
-            
+
             try {
                byte[] b = IOUtils.toByteArray(stream);
                out.write(b);
-            }finally {
+            } finally {
                out.close();
             }
             return outputFile;
          }
+      }
+      return null;
+   }
+   
+   private File extractClassFromJar(File jarFile, String className) throws Exception {
+      if(jarFile.exists()) {
+         return extractClassFromURL(jarFile.toURI().toURL(), className);
       }
       return null;
    }

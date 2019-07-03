@@ -1,6 +1,7 @@
 
-func main(){
-   [1,2,3,4,5].forEach(this::println);
-}
 
-main();
+let x: URL = ClassLoader.getSystemClassLoader().getResource("java/lang/String.class");
+let y: InputStream = x.openStream();
+
+println(x);
+println(y);

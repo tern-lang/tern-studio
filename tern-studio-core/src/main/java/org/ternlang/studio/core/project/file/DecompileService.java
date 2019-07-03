@@ -14,12 +14,22 @@ public class DecompileService {
    private final Workspace workspace;
    
    @SneakyThrows
-   public FileResult decompile(String projectName, String jarFile, String className) {
+   public FileResult decompile(String className) {
+      Decompiler decompiler = workspace.getDecompiler();
+      String source = decompiler.decompile(className);
+      byte[] data = source.getBytes();
+      long time = System.currentTimeMillis();
+      
+      return new FileResult("text/plain", data, time);
+   }
+
+   @SneakyThrows
+   public FileResult decompile(String jarFile, String className) {
       Decompiler decompiler = workspace.getDecompiler();
       String source = decompiler.decompile(jarFile, className);
       byte[] data = source.getBytes();
       long time = System.currentTimeMillis();
-      
+
       return new FileResult("text/plain", data, time);
    }
 }

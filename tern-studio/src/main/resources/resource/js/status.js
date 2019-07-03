@@ -13,7 +13,7 @@ define(["require", "exports", "jquery", "./common", "tree"], function (require, 
             processDetail += "<table border='0'>\n";
             processDetail += "<tr>\n";
             processDetail += "<td><div class='" + statusClass + "'></div></td>\n";
-            processDetail += "<td>" + processFile + "</td>\n";
+            processDetail += "<td>" + decodeURIComponent(processFile) + "</td>\n";
             processDetail += "</tr>";
             processDetail += "</table>";
             $("#process").html(processDetail); // ("+message.process+") "+message.duration+" milliseconds</i>");
@@ -39,7 +39,7 @@ define(["require", "exports", "jquery", "./common", "tree"], function (require, 
                     }
                     pathBreadcrumb += "'></div>";
                     pathBreadcrumb += "</td>\n<td style='white-space: nowrap;'>";
-                    pathBreadcrumb += segment;
+                    pathBreadcrumb += decodeURIComponent(segment);
                     pathBreadcrumb += "</td>\n";
                 }
             }

@@ -1,10 +1,12 @@
 
 
+
+
 annotation Module(name: String);
 annotation ManagedOperation(name: String, value: String);
 annotation ManagedResource(operation: ManagedOperation);
 
-@Module("foo")
+@ManagedResource("foo")
 class Service {
    
    get(@Param("name") name) {
