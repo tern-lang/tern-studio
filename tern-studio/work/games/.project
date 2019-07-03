@@ -1,7 +1,13 @@
 <project>
    <source>
       <path>mario/src</path>
-      <path>mario/assets</path>      
+      <path>mario/assets</path> 
+      <path>tetris/src</path>
+      <path>tetris/assets</path> 
+      <path>spaceinvaders/src</path>
+      <path>spaceinvaders/assets</path>
+      <path>pacman/src</path>
+      <path>pacman/assets</path> 
    </source>
    <dependencies>
       <dependency>

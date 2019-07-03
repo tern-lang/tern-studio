@@ -1,0 +1,54 @@
+import awt.Point;
+import awt.Point;
+import awt.Point;
+import awt.event.KeyEvent;
+import awt.event.KeyListener;
+import awt.Canvas;
+import awt.Color;
+import awt.Dimension;
+import awt.Font;
+import awt.Graphics;
+import awt.Graphics2D;
+import awt.Point;
+import awt.event.WindowAdapter;
+import awt.event.WindowEvent;
+import awt.image.BufferStrategy;
+import swing.JFrame;
+import swing.JPanel;
+import util.Arrays;
+import util.Map;
+import util.concurrent.ConcurrentHashMap;
+import util.Random;
+
+enum PieceType {
+   
+   O(0, Point(-1, 0), Point(0, 0),  Point(-1, -1), Point(0, -1)),
+   I(2, Point(-2, 0), Point(-1, 0), Point(0, 0),   Point(1, 0)),
+   S(2, Point(0, 0),  Point(1, 0),  Point(-1, -1), Point(0, -1)),
+   Z(2, Point(-1, 0), Point(0, 0),  Point(0, -1),  Point(1, -1)),
+   L(4, Point(-1, 0), Point(0, 0),  Point(1, 0),   Point(-1, -1)),
+   J(4, Point(-1, 0), Point(0, 0),  Point(1, 0),   Point(1, -1)),
+   T(4, Point(-1, 0), Point(0, 0),  Point(1, 0),   Point(0, -1));
+
+   static const random = new Random();
+   
+   var maxOrientations;
+   var points;
+
+   new(maxOrientations, p1, p2, p3, p4) {
+         this.maxOrientations = maxOrientations;
+         this.points = [p1, p2, p3, p4];
+   }
+
+   static getRandomPiece() {
+         return PieceType.values[random.nextInt(PieceType.values.size())];
+   }
+
+   getPoints() {
+         return points;
+   }
+
+   getMaxOrientations() {
+         return maxOrientations;
+   }
+}

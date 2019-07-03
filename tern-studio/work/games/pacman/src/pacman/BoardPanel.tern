@@ -1,0 +1,19 @@
+
+
+import java.awt.Graphics;
+
+import javax.swing.JPanel;
+
+class BoardPanel extends JPanel {
+
+   private const b: Board;
+   
+   public new(b: Board) {
+      this.b = b;
+   }
+   
+   public paint(g: Graphics) {
+      b.draw(g);
+   }
+}
+

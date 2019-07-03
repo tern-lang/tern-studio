@@ -1,0 +1,84 @@
+import awt.Point;
+import awt.Point;
+import awt.Point;
+import awt.event.KeyEvent;
+import awt.event.KeyListener;
+import awt.Canvas;
+import awt.Color;
+import awt.Dimension;
+import awt.Font;
+import awt.Graphics;
+import awt.Graphics2D;
+import awt.Point;
+import awt.event.WindowAdapter;
+import awt.event.WindowEvent;
+import awt.image.BufferStrategy;
+import swing.JFrame;
+import swing.JPanel;
+import util.Arrays;
+import util.Map;
+import util.concurrent.ConcurrentHashMap;
+import util.Random;
+
+class Piece {
+
+    var points;
+    var type;
+    var initialOrientation;
+
+    new(pieceType, points, initial) {
+        initialOrientation = initial;
+        this.points = points;
+        this.type = pieceType;
+    }
+
+    static getRandomPiece() {
+        var pieceType = PieceType.getRandomPiece();
+        return new Piece(pieceType, pieceType.getPoints(), true);
+    }
+
+    static getPiece(pieceType) {
+        return new Piece(pieceType, pieceType.getPoints(), true);
+    }
+
+    getType() {
+        return type;
+    }
+
+    getPoints() {
+        return points;
+    }
+
+    rotate() {
+        if (type.getMaxOrientations() == 0) {
+            return this;
+        } else if (type.getMaxOrientations() == 2) {
+            if (initialOrientation) {
+                return new Piece(type, rotateRight(points), false);
+            } else {
+                return new Piece(type, rotateLeft(points), true);
+            }
+        }
+        return new Piece(type, rotateRight(points), true);
+    }
+
+    rotateLeft(toRotate) {
+        return rotate(toRotate, 1, -1);
+    }
+
+    rotateRight(toRotate) {
+        return rotate(toRotate, -1, 1);
+    }
+
+    rotate(toRotate, x,  y) {
+        var rotated = new Point[4];
+
+        for (var i = 0; i < 4; i++) {
+            var temp = toRotate[i].x;
+            rotated[i] = new Point(x * toRotate[i].y, y * temp);
+        }
+
+        return rotated;
+    }
+
+}

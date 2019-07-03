@@ -1,0 +1,17 @@
+
+/**
+ * This is a very basic pacman.
+ *
+ * @author https://github.com/dtschust/javapacman
+ */
+func start() {
+   const p = new Pacman();
+   
+   try {
+      p.start();
+   } catch(e) {
+      e.printStackTrace();
+   }
+}
+
+start();

@@ -1,0 +1,137 @@
+import awt.Point;
+import awt.Point;
+import awt.Point;
+import awt.event.KeyEvent;
+import awt.event.KeyListener;
+import awt.Canvas;
+import awt.Color;
+import awt.Dimension;
+import awt.Font;
+import awt.Graphics;
+import awt.Graphics2D;
+import awt.Point;
+import awt.event.WindowAdapter;
+import awt.event.WindowEvent;
+import awt.image.BufferStrategy;
+import swing.JFrame;
+import swing.JPanel;
+import util.Arrays;
+import util.Map;
+import util.concurrent.ConcurrentHashMap;
+import util.Random;
+ 
+class Game {
+
+    var board;
+    var nextPiece;
+
+    var playing = false;
+    var paused = false;
+    var dropping = false;
+    var gameOver = false;
+
+    var freeFallIterations = 0;
+    var totalScore = 0;
+
+    new() {
+        board = new Board();
+    }
+
+    getBoardCells() {
+        return board.getBoardWithPiece();
+    }
+
+    getNextPiece() {
+        return nextPiece;
+    }
+
+    getIterationDelay() {
+        return (((11 - getLevel()) * 0.05) * 1000);
+    }
+
+    getScore() {
+        return ((21 + (3 * getLevel())) - freeFallIterations);
+    }
+
+    getTotalScore() {
+        return totalScore;
+    }
+
+    getLines() {
+        return board.getFullLines();
+    }
+
+    getLevel() {
+        if ((board.getFullLines() >= 1) && (board.getFullLines() <= 90)) {
+            return 1 + ((board.getFullLines() - 1) / 10);
+        } else if (board.getFullLines() >= 91) {
+            return 10;
+        } else {
+            return 1;
+        }
+    }
+
+    startGame() {
+        paused = false;
+        dropping = false;
+        nextPiece = Piece.getRandomPiece();
+        board.setCurrentPiece(Piece.getRandomPiece());
+        playing = true;
+    }
+
+    isPlaying() {
+        return playing;
+    }
+
+    isPaused() {
+        return paused;
+    }
+
+    isGameOver() {
+        return gameOver;
+    }
+
+    pauseGame() {
+        paused = !paused;
+    }
+
+    moveLeft() {
+        board.moveLeft();
+    }
+
+    moveRight() {
+        board.moveRight();
+    }
+
+    moveDown() {
+        if (!board.canCurrentPieceMoveDown()) {
+
+            if (freeFallIterations == 0) {
+                playing = false;
+                gameOver = true;
+            } else {
+                dropping = false;
+                board.setCurrentPiece(nextPiece);
+                nextPiece = Piece.getRandomPiece();
+                totalScore += getScore();
+                freeFallIterations = 0;
+            }
+        } else {
+            board.moveDown();
+            freeFallIterations++;
+        }
+    }
+
+    rotate() {
+        board.rotate();
+    }
+
+    drop() {
+        dropping = true;
+    }
+
+    isDropping() {
+        return dropping;
+    }
+
+}
