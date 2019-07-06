@@ -417,6 +417,10 @@ export module Common {
       return stringReplaceText(dateAndTime, "T", " ");
    }
    
+   export function createTimeStamp() {
+      return formatDateWithPattern(currentTime(), "yyyyMMddHHmmssS");
+   }
+   
    export function stringReplaceText(text, from, to) {
       if(text && from && to) {
          return text.split(from).join(to);

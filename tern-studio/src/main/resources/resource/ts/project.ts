@@ -69,7 +69,7 @@ export module Project {
 
    export function openDialogWindow(name, tabs) {
       var address = "/project/" + Common.getProjectName() + ";dialog?visible=" + name;
-      var dialog = Command.openChildWindow(address, name);
+      var dialog = Command.openChildWindow(address, true);
       var tabList = w2ui[tabs].panels[0].tabs.tabs;
       var title = document.title;
 
@@ -1862,7 +1862,7 @@ export module Project {
                   const projectPath: string = resourcePath.getProjectPath();
                   const editPath = "/project/" + Common.getProjectName() + ";edit" + projectPath + "?time=" + record.time;
                   
-                  Command.openChildWindow(editPath);
+                  Command.openChildWindow(editPath, false);
                }
                grid.selectNone();
                grid.refresh();

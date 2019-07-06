@@ -360,6 +360,10 @@ define(["require", "exports", "jquery", "w2ui"], function (require, exports, $, 
             return stringReplaceText(dateAndTime, "T", " ");
         }
         Common.formatTimeMillis = formatTimeMillis;
+        function createTimeStamp() {
+            return formatDateWithPattern(currentTime(), "yyyyMMddHHmmssS");
+        }
+        Common.createTimeStamp = createTimeStamp;
         function stringReplaceText(text, from, to) {
             if (text && from && to) {
                 return text.split(from).join(to);

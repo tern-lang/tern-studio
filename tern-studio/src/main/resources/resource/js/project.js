@@ -53,7 +53,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
         Project.createMainLayout = createMainLayout;
         function openDialogWindow(name, tabs) {
             var address = "/project/" + common_1.Common.getProjectName() + ";dialog?visible=" + name;
-            var dialog = commands_1.Command.openChildWindow(address, name);
+            var dialog = commands_1.Command.openChildWindow(address, true);
             var tabList = w2ui_1.w2ui[tabs].panels[0].tabs.tabs;
             var title = document.title;
             if (tabList.length <= 2) {
@@ -1671,7 +1671,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                             var resourcePath = tree_1.FileTree.createResourcePath(record.script);
                             var projectPath = resourcePath.getProjectPath();
                             var editPath = "/project/" + common_1.Common.getProjectName() + ";edit" + projectPath + "?time=" + record.time;
-                            commands_1.Command.openChildWindow(editPath);
+                            commands_1.Command.openChildWindow(editPath, false);
                         }
                         grid.selectNone();
                         grid.refresh();

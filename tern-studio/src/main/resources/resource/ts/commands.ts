@@ -27,7 +27,7 @@ export module Command {
       });
    }
 
-   export function openChildWindow(path) {
+   export function openChildWindow(path, useSession) {
       var host = window.document.location.hostname;
       var port = window.document.location.port;
       var scheme = window.document.location.protocol;
@@ -40,6 +40,9 @@ export module Command {
       }
       address += path;
 
+      if(!useSession) {
+         session = Common.createTimeStamp();
+      }
       EventBus.sendEvent("LAUNCH", {
          address: address,
          session: session

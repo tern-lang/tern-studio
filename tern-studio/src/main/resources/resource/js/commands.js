@@ -10,7 +10,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
             });
         }
         Command.openTreeFile = openTreeFile;
-        function openChildWindow(path) {
+        function openChildWindow(path, useSession) {
             var host = window.document.location.hostname;
             var port = window.document.location.port;
             var scheme = window.document.location.protocol;
@@ -21,6 +21,9 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                 address += port;
             }
             address += path;
+            if (!useSession) {
+                session = common_1.Common.createTimeStamp();
+            }
             socket_1.EventBus.sendEvent("LAUNCH", {
                 address: address,
                 session: session
