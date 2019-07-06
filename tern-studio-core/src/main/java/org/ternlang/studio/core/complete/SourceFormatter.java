@@ -250,26 +250,50 @@ public class SourceFormatter {
    
    private Set<SourceImport> resolveImports(String source) throws Exception {
       Pattern imports = Pattern.compile("import\\s+(.*)\\s*;\\s*$");
+      Pattern importGroups = Pattern.compile("import\\s+([a-zA-Z\\.\\_]+)\\.\\{(.*)\\}\\s*;\\s*$");
       String lines[] = source.split("\\r?\\n");
 
       if(lines.length > 0){
          Set<SourceImport> referenced = new TreeSet<SourceImport>();
 
          for(String line : lines) {
-            Matcher matcher = imports.matcher(line);
+            Matcher importMatcher = imports.matcher(line);
             
-            if(matcher.matches()) {
-               String type = matcher.group(1);
-               SourceImport sourceImport = resolveImport(type);
+            if(importMatcher.matches()) {
+               Matcher importGroupMatcher = importGroups.matcher(line);
                
-               if(sourceImport.isVerbatim()) {
-                  referenced.add(sourceImport);
-               } else {
-                  for(String other : lines) {
-                     String alias = sourceImport.getAlias();
+               if(importGroupMatcher.matches()) {
+                  String module = importGroupMatcher.group(1);
+                  String list = importGroupMatcher.group(2);
+                  String[] aliases = list.split(",");
+                  
+                  for(String alias : aliases) {
+                     String type = module.trim() + "." +  alias.trim();
+                     SourceImport sourceImport = resolveImport(type);
                      
-                     if(other.contains(alias) && !imports.matcher(other).matches()) {
+                     if(sourceImport.isVerbatim()) {
                         referenced.add(sourceImport);
+                     } else {
+                        for(String other : lines) {
+                           if(other.contains(alias) && !imports.matcher(other).matches()) {
+                              referenced.add(sourceImport);
+                           }
+                        }
+                     }
+                  }
+               } else {
+                  String type = importMatcher.group(1);
+                  SourceImport sourceImport = resolveImport(type);
+                  
+                  if(sourceImport.isVerbatim()) {
+                     referenced.add(sourceImport);
+                  } else {
+                     for(String other : lines) {
+                        String alias = sourceImport.getAlias();
+                        
+                        if(other.contains(alias) && !imports.matcher(other).matches()) {
+                           referenced.add(sourceImport);
+                        }
                      }
                   }
                }
