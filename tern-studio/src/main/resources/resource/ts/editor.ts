@@ -731,24 +731,6 @@ export module FileEditorBuilder {
          enableBasicAutocompletion: true,
          enableLiveAutocompletion: true
       });
-      editor.on("click", function(e) {
-         var options = editor.getOptions();    
-         var type = typeof options;
-         var optionsUpdate = {};
-
-         console.log("Focus editor on click: options=["+ type +"] -> ", options);
-         editor.focus();
-
-         for(var key in options) {
-            if(options.hasOwnProperty(key)) {
-                optionsUpdate[key] = options[key];
-            }
-         }
-         optionsUpdate['readOnly'] = false;
-         console.log("Update after click: ", optionsUpdate);
-         editor.setOptions(optionsUpdate);
-         editor.setReadOnly(false);
-      });
       editor.on("guttermousedown", function(e) {
          var target = e.domEvent.target;
          if (target.className.indexOf("ace_gutter-cell") == -1) {

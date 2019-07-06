@@ -26,60 +26,64 @@ export module KeyBinder {
    function isKeysDisabled() {
       return disable;
    }
+   
+   function isKeysEnabled() {
+      return !isKeysDisabled();
+   }
 
    export function bindKeys() {
       disableBrowserKeys();
       
       createKeyBinding("alt left", "Navigate Back", true, function() {
-         History.navigateBackward();
+         return isKeysEnabled() && History.navigateBackward();
       });
       createKeyBinding("alt right", "Navigate Forward", true, function() {
-         History.navigateForward();
+         return isKeysEnabled() && History.navigateForward();
       });
       createKeyBinding("ctrl n", "New File", true, function() {
-         Command.newFile(null);
+         return isKeysEnabled() && Command.newFile(null);
       });
       createKeyBinding("ctrl s", "Save File", true, function() {
-         Command.saveFile(null);
+         return isKeysEnabled() && Command.saveFile(null);
       });
       createKeyBinding("ctrl q", "Close File", true, function() {
-         Project.closeEditorTab();
+         return isKeysEnabled() && Project.closeEditorTab();
       });      
       createKeyBinding("ctrl shift s", "Search Types", true, function() {
-         Command.searchTypes();
+         return isKeysEnabled() && Command.searchTypes();
       });
       createKeyBinding("ctrl shift o", "Search Outline", true, function() {
-         Command.searchOutline();
+         return isKeysEnabled() && Command.searchOutline();
       });
       createKeyBinding("ctrl tab", "Format Source", true, function() {
-         FileEditor.formatEditorSource();
+         return isKeysEnabled() && FileEditor.formatEditorSource();
       });
       createKeyBinding("ctrl shift e", "Evaluate Expression", true, function() {
-         Command.evaluateExpression();
+         return isKeysEnabled() && Command.evaluateExpression();
       });
       createKeyBinding("ctrl shift m", "Toggle Full Screen", true, function() {
-         Project.toggleFullScreen();
+         return isKeysEnabled() && Project.toggleFullScreen();
       });
       createKeyBinding("ctrl shift l", "Switch Layout", true, function() {
-         Command.switchLayout()
+         return isKeysEnabled() && Command.switchLayout()
       });
       createKeyBinding("ctrl shift p", "Switch Project", true, function() {
-         Command.switchProject();
+         return isKeysEnabled() && Command.switchProject();
       });
       createKeyBinding("ctrl shift g", "Find Files", true, function() {
-         Command.findFileNames();
+         return isKeysEnabled() && Command.findFileNames();
       });
       createKeyBinding("ctrl shift h", "Global Search & Replace", true, function() {
-         Command.searchAndReplaceFiles();
+         return isKeysEnabled() && Command.searchAndReplaceFiles();
       });
       createKeyBinding("ctrl shift f", "Global Search", true, function() {
-         Command.searchFiles();
+         return isKeysEnabled() && Command.searchFiles();
       });
       createKeyBinding("ctrl h", "Search & Replace", true, function() {
-         FileEditor.findAndReplaceTextInEditor();
+         return isKeysEnabled() && FileEditor.findAndReplaceTextInEditor();
       });
       createKeyBinding("ctrl f", "Search", true, function() {
-         FileEditor.findTextInEditor();
+         return isKeysEnabled() && FileEditor.findTextInEditor();
       });
 
 //      createKeyBinding("ctrl c", true, function() {
@@ -123,35 +127,35 @@ export module KeyBinder {
 //         FileEditor.redoEditorChange();
 //      });
       createKeyBinding("ctrl r", "Run Script", true, function() {
-         Command.runScript();
+         return isKeysEnabled() && Command.runScript();
       });
       createKeyBinding("ctrl shift r", "Run Script With Arguments", true, function() {
-         Command.runScriptWithArguments();
+         return isKeysEnabled() && Command.runScriptWithArguments();
       });
       createKeyBinding("ctrl b", "Debug Script", true, function() {
-         Command.debugScript();
+         return isKeysEnabled() && Command.debugScript();
       });
       createKeyBinding("ctrl shift b", "Debug Script With Arguments", true, function() {
-         Command.debugScriptWithArguments();
+         return isKeysEnabled() && Command.debugScriptWithArguments();
       });     
       createKeyBinding("ctrl k", "Debug Remote Script", true, function() {
-         Command.attachRemoteDebugger();
+         return isKeysEnabled() && Command.attachRemoteDebugger();
       });
       createKeyBinding("f8", "Resume Script", true, function() {
          console.log("F8");
-         Command.resumeScript();
+         return isKeysEnabled() && Command.resumeScript();
       });
       createKeyBinding("f5", "Step In", true, function() {
          console.log("F5");
-         Command.stepInScript();
+         return isKeysEnabled() && Command.stepInScript();
       });
       createKeyBinding("f7", "Step Out", true, function() {
          console.log("F7");
-         Command.stepOutScript();
+         return isKeysEnabled() && Command.stepOutScript();
       });
       createKeyBinding("f6", "Step Over", true, function() {
          console.log("F6");
-         Command.stepOverScript();
+         return isKeysEnabled() && Command.stepOverScript();
       });
    }
    

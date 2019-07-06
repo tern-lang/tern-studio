@@ -1004,6 +1004,7 @@ export module Project {
          
          if(editTimeStamp) {
             FileExplorer.openTreeHistoryFile(resourcePath, editTimeStamp, function() {
+               KeyBinder.disableKeys();
                FileEditor.setReadOnly(true);
             });
          }

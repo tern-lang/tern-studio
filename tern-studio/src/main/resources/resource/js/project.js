@@ -877,6 +877,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                 updateEditorTabName();
                 if (editTimeStamp) {
                     explorer_1.FileExplorer.openTreeHistoryFile(resourcePath, editTimeStamp, function () {
+                        keys_1.KeyBinder.disableKeys();
                         editor_1.FileEditor.setReadOnly(true);
                     });
                 }

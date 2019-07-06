@@ -1,8 +1,7 @@
+// this is a test
 
+func foo(){
+   println("X");
+}
 
-
-let x: URL = ClassLoader.getSystemClassLoader().getResource("java/lang/String.class");
-let y: InputStream = x.openStream();
-
-println(x);
-println(y);
+foo();
