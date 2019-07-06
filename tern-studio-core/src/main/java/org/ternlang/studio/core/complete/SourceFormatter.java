@@ -112,7 +112,7 @@ public class SourceFormatter {
       int asIndex = type.lastIndexOf(" as ");
       
       if(asIndex != -1) {
-         return type.substring(dotIndex + 1, length).trim();
+         return type.substring(asIndex + 1, length).trim();
       }
       if(dotIndex != -1) {
          return type.substring(dotIndex + 1, length).trim();
