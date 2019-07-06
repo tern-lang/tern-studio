@@ -208,6 +208,7 @@ public class SourceFormatter {
          int count = group.size();
          
          if(count > 1) {
+            List<String> done = new ArrayList<String>();
             StringBuilder list = new StringBuilder();
             
             for(SourceImport entry : group) {
@@ -224,9 +225,12 @@ public class SourceFormatter {
                   String value = list.toString();
                   SourceImport groupImport = new SourceImport(value, value, value, false, true);
                   
+                  done.add(alias);
                   combined.add(groupImport);
                }
             }
+            list.setLength(0);
+            
             for(SourceImport entry : group) {
                String module = entry.getModule();
                String alias = entry.getAlias();
