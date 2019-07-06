@@ -154,7 +154,7 @@ class GamePanel extends JPanel with Runnable {
          if(!gameFreeze) {
             gameAction();
          }
-         let finish = System.currentTimeMillis();
+         let finish = System.currentTimeMillis();  
          let duration = finish - start;
          let slip = Math.max(0, duration - 8);
          

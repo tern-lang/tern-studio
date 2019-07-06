@@ -36,6 +36,7 @@ public class ProjectLayout {
          if(!resourcePath.exists()) {
             for(String path : paths) {
                File file = new File(projectPath, path + "/" + resource);
+               
                if(file.exists()) {
                   String relativePath = getRelativeFile(projectPath, file);
                   if(!relativePath.startsWith("/")) {
@@ -51,6 +52,9 @@ public class ProjectLayout {
    
    public String getDownloadPath(File projectPath, String resource) { // "/demo/mario/src/mario/MarioGame.tern" -> "/demo/mario/MarioGame.tern"
       if(resource != null) {
+         if(!resource.startsWith("/")) {
+            resource = "/" + resource;
+         }
          for(String path : paths) {
             path = path.replace("\\", "/");
             

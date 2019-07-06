@@ -14,7 +14,7 @@ class Player extends Mover {
    let desiredDirection;
 
    /* Keeps track of pellets eaten to determine end of game */
-   let pelletsEaten: Integer = 0;
+   let pelletsEaten: Integer = 0t;
 
    /* Last location */
    let lastX: Integer = 0;

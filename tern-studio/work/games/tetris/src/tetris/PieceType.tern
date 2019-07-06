@@ -36,19 +36,19 @@ enum PieceType {
    var points;
 
    new(maxOrientations, p1, p2, p3, p4) {
-         this.maxOrientations = maxOrientations;
-         this.points = [p1, p2, p3, p4];
+      this.maxOrientations = maxOrientations;
+      this.points = [p1, p2, p3, p4];
    }
 
    static getRandomPiece() {
-         return PieceType.values[random.nextInt(PieceType.values.size())];
+      return PieceType.values[random.nextInt(PieceType.values.size())];
    }
 
    getPoints() {
-         return points;
+      return points;
    }
 
    getMaxOrientations() {
-         return maxOrientations;
+      return maxOrientations;
    }
 }
