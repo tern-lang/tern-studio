@@ -1,5 +1,4 @@
 
-
 enum Phase {
    MENU,
    START,
@@ -9,9 +8,8 @@ enum Phase {
    GAME_OVER,
    WIN,
    DEMO;
-   
+
    public isPaused(): Boolean {
       return this == MENU || this == WIN || this == DEMO || this == GAME_OVER;
    }
 }
-

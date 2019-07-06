@@ -1,33 +1,31 @@
-
-
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.Scanner;
+import io.File;
+import io.PrintWriter;
+import util.Scanner;
 
 class Score {
-   
+
    private static const SCORE_FILE = "highScores.txt";
-   
+
    private let highScore: Integer;
 
    /*
-    * if the high scores have been cleared, we have to update the top of the
-    * screen to reflect that
-    */
+   * if the high scores have been cleared, we have to update the top of the
+   * screen to reflect that
+   */
    private let clearHighScores: Boolean;
-   
+
    public new() {
       initHighScores();
    }
-   
+
    public getHighScore(): Integer {
       return highScore;
    }
-   
+
    public setClearHighScores(clearHighScores: Boolean) {
       this.clearHighScores = clearHighScores;
    }
-   
+
    public isClearHighScore(): Boolean {
       return clearHighScores;
    }
@@ -35,7 +33,7 @@ class Score {
    /* Reads the high scores file and saves it */
    public initHighScores() {
       let file: File = new File(SCORE_FILE);
-      
+
       try {
          let sc = new Scanner(file);
          highScore = sc.nextInt();
@@ -45,8 +43,8 @@ class Score {
    }
 
    /*
-    * Writes the new high score to a file and sets flag to update it on screen
-    */
+   * Writes the new high score to a file and sets flag to update it on screen
+   */
    public updateScore(score: Integer) {
       try {
          let out = new PrintWriter(SCORE_FILE);
@@ -70,4 +68,3 @@ class Score {
       clearHighScores = true;
    }
 }
-

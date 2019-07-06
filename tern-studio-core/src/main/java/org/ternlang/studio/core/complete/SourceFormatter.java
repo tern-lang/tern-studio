@@ -2,9 +2,13 @@ package org.ternlang.studio.core.complete;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,7 +49,7 @@ public class SourceFormatter {
    
    private String formatSource(Project project, String path, String source, int indent) throws Exception {
       List<SourceLine> lines = resolveSourceLines(source);
-      String imports = resolveImports(source);
+      String imports = formatImports(source);
       String pad = "";
       
       for(int i = 0; i < indent; i++) {
@@ -125,29 +129,131 @@ public class SourceFormatter {
       int asIndex = type.lastIndexOf(" as ");
       
       if(asIndex != -1) {
-         String alias = type.substring(asIndex + 1, length).trim();
+         String alias = type.substring(asIndex + 4, length).trim();
          String qualified = type.substring(0, asIndex).trim();
          String resolved = resolver.resolveName(qualified);
          
-         return new SourceImport(resolved, alias, true);
+         if(dotIndex != -1) {
+            String module = type.substring(0, dotIndex).trim();
+            return new SourceImport(resolved, alias, module, true, false);
+         }
+         return new SourceImport(resolved, alias, "", true, false);
       }
       if(dotIndex != -1) {
+         String module = type.substring(0, dotIndex).trim();
          String alias = type.substring(dotIndex + 1, length).trim();
          String qualified = type.trim();
          String resolved = resolver.resolveName(qualified);
          
-         return new SourceImport(resolved, alias, false);
+         return new SourceImport(resolved, alias, module, false, false);
       }
-      return null;
+      return new SourceImport(type, type, type, false, true);
+   }
+
+   private String formatImports(String source) throws Exception {
+      Set<SourceImport> imports = resolveImports(source);
+      
+      if(!imports.isEmpty()) {
+         Set<String> done = new TreeSet<String>();
+         StringBuilder builder = new StringBuilder();
+         
+         for(SourceImport imported : imports) {
+            String type = imported.getType();
+            String alias = imported.getAlias();
+            
+            if(imported.isVerbatim()) {
+               builder.append(type);
+            } else {
+               if(done.add(alias)) {
+                  builder.append("import ");
+                  builder.append(type);
+                  
+                  if(imported.isAliased()) {
+                     builder.append(" as ");
+                     builder.append(alias);
+                  } 
+                  builder.append(";");
+               }
+            }
+            builder.append("\n");
+         }
+         return builder.toString();
+      }
+      return "";
    }
    
-   private String resolveImports(String source) throws Exception {
+   private Set<SourceImport> combineImports(Set<SourceImport> imports) throws Exception {
+      Set<SourceImport> combined = new LinkedHashSet<SourceImport>();
+      Map<String, Set<SourceImport>> groups = new TreeMap<String, Set<SourceImport>>();
+      Function<String, Set<SourceImport>> builder = (name) -> new LinkedHashSet<SourceImport>();
+      
+      for(SourceImport imported : imports) {
+         String key = imported.getModule();
+         Set<SourceImport> group = groups.computeIfAbsent(key, builder);
+      
+         group.add(imported);
+      }
+      Set<String> keys = groups.keySet();
+      
+      for(String key : keys) {
+         Set<SourceImport> group = groups.get(key);
+         int count = group.size();
+         
+         if(count > 1) {
+            StringBuilder list = new StringBuilder();
+            
+            for(SourceImport entry : group) {
+               String type = entry.getType();
+               String alias = entry.getAlias();
+               
+               if(entry.isAliased()) {
+                  list.append("import ");
+                  list.append(type);
+                  list.append(" as ");
+                  list.append(alias);
+                  list.append(";");
+               
+                  String value = list.toString();
+                  SourceImport groupImport = new SourceImport(value, value, value, false, true);
+                  
+                  combined.add(groupImport);
+               }
+            }
+            for(SourceImport entry : group) {
+               String module = entry.getModule();
+               String alias = entry.getAlias();
+               int length = list.length();
+               
+               if(!entry.isAliased()) {
+                  if(length == 0) {
+                     list.append("import ");
+                     list.append(module);
+                     list.append(".{");
+                  } else {
+                     list.append(", ");
+                  }
+                  list.append(alias);
+               }
+            }
+            list.append("};");
+            
+            String value = list.toString();
+            SourceImport groupImport = new SourceImport(value, value, value, false, true);
+            
+            combined.add(groupImport);
+         } else {
+            combined.addAll(group);
+         }
+      }
+      return combined;
+   }
+   
+   private Set<SourceImport> resolveImports(String source) throws Exception {
       Pattern imports = Pattern.compile("import\\s+(.*)\\s*;\\s*$");
       String lines[] = source.split("\\r?\\n");
 
       if(lines.length > 0){
-         Set<String> imported = new TreeSet<String>();
-         StringBuilder builder = new StringBuilder();
+         Set<SourceImport> referenced = new TreeSet<SourceImport>();
 
          for(String line : lines) {
             Matcher matcher = imports.matcher(line);
@@ -156,47 +262,55 @@ public class SourceFormatter {
                String type = matcher.group(1);
                SourceImport sourceImport = resolveImport(type);
                
-               if(sourceImport == null) {
-                  imported.add(line);
+               if(sourceImport.isVerbatim()) {
+                  referenced.add(sourceImport);
                } else {
                   for(String other : lines) {
-                     String real = sourceImport.getType();
                      String alias = sourceImport.getAlias();
                      
                      if(other.contains(alias) && !imports.matcher(other).matches()) {
-                        if(sourceImport.isAliased()) {
-                           imported.add("import " + real + " as " + alias + ";");
-                        } else {
-                           imported.add("import " + real + ";");
-                        }
+                        referenced.add(sourceImport);
                      }
                   }
                }
-            } 
+            }
          }
-         for(String line : imported) {
-            builder.append(line);
-            builder.append("\n");
-         }
-         return builder.toString();
+         return combineImports(referenced);
       }
-      return "";
+      return Collections.emptySet();
    }
    
-   private static class SourceImport {
+   private static class SourceImport implements Comparable<SourceImport> {
       
+      private final String module;
       private final String type;
       private final String alias;
       private final boolean aliased;
+      private final boolean verbatim;
       
-      public SourceImport(String type, String alias, boolean aliased) {
+      public SourceImport(String type, String alias, String module, boolean aliased, boolean verbatim) {
+         this.module = module;
          this.aliased = aliased;
+         this.verbatim = verbatim;
          this.type = type;
          this.alias = alias;
       }
       
+      @Override
+      public int compareTo(SourceImport other) {
+         return type.compareTo(other.type);
+      }
+      
+      public boolean isVerbatim() {
+         return verbatim;
+      }
+      
       public boolean isAliased() {
          return aliased;
+      }
+      
+      public String getModule() {
+         return module;
       }
 
       public String getType() {

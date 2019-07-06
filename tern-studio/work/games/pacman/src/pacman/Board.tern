@@ -1,16 +1,13 @@
-
-
-/* Drew Schuster */
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
+import awt.Color;
+import awt.Font;
+import awt.Graphics;
+import awt.Rectangle;
+import awt.image.BufferedImage;
 
 /*
- * This board class contains the player, ghosts, pellets, and most of the game
- * logic.
- */
+* This board class contains the player, ghosts, pellets, and most of the game
+* logic.
+*/
 class Board {
 
    /* Used to call sound effects */
@@ -22,22 +19,21 @@ class Board {
    let ghost3: Ghost;
    let ghost4: Ghost;
    let score: Score;
-   
+
    /* Phase of the game */
    let phase: Phase;
-   
+
    /* Timer is used for playing sound effects and animations */
    let timer: Long = System.currentTimeMillis();
 
    /*
-    * Dying is used to count frames in the dying animation. If it's non-zero,
-    * pacman is in the process of dying
-    */
+   * Dying is used to count frames in the dying animation. If it's non-zero,
+   * pacman is in the process of dying
+   */
    let dying: Integer = 0;
 
    /* Score information */
    let currScore: Integer;
-
 
    let numLives: Integer = 2;
 
@@ -81,11 +77,9 @@ class Board {
       this.gridSize = 20;
       this.phase = Phase.PLAY;
       this.titleScreen = true;
-      
+
       reset();
    }
-
-
 
    /* Reset occurs on a new game */
    public reset() {
@@ -115,11 +109,11 @@ class Board {
    }
 
    /*
-    * Function is called during drawing of the map. Whenever the a portion of
-    * the map is covered up with a barrier, the map and pellets arrays are
-    * updated accordingly to note that those are invalid locations to travel or
-    * put pellets
-    */
+   * Function is called during drawing of the map. Whenever the a portion of
+   * the map is covered up with a barrier, the map and pellets arrays are
+   * updated accordingly to note that those are invalid locations to travel or
+   * put pellets
+   */
    private updateMap(x: Integer, y: Integer, width: Integer, height: Integer) {
       for (let i = x / gridSize; i < x / gridSize + width / gridSize; i++) {
          for (let j = y / gridSize; j < y / gridSize + height / gridSize; j++) {
@@ -128,22 +122,21 @@ class Board {
          }
       }
    }
-   
-   
+
    public draw(gr: Graphics) {
       let rect: Rectangle = gr.getClipBounds();
       let original: BufferedImage = new BufferedImage(420, 460, BufferedImage.TYPE_INT_ARGB);
       let graphics: Graphics = original.createGraphics();
-   
+
       drawGame(graphics);
       gr.drawImage(original, 0, 0, rect.width, rect.height, null);
    }
-   
+
    private drawGame(g: Graphics) {
       /*
-       * If we're playing the dying animation, don't update the entire screen.
-       * Just kill the pacman
-       */
+      * If we're playing the dying animation, don't update the entire screen.
+      * Just kill the pacman
+      */
       if (dying > 0) {
          drawDead(g);
       } else if (titleScreen) {
@@ -156,12 +149,12 @@ class Board {
          /* If this is the game over screen, draw the game over screen and return */
          drawGameOver(g);
       } else {
-   
+
          /* If need to update the high scores, redraw the top menu bar */
          if (score.isClearHighScore()) {
             drawScore(g);
          }
-      
+
          /* Game initialization */
          if (phase == Phase.START) {
             drawBeginGame(g);
@@ -185,29 +178,29 @@ class Board {
             g.setFont(font);
             g.drawString("Score: " + (currScore) + "\t High Score: " + score.getHighScore(), 20, 10);         
          }
-      
+
          /* oops is set to true when pacman has lost a life */
          drawCollision(g);
-      
+
          /* Delete the players and ghosts */
          drawClearBoard(g);
-      
+
          /* Eat pellets */
          drawEatPellet(g);
-      
+
          /* Replace pellets that have been run over by ghosts */
          drawRunOverPellet(g);
-      
+
          /* Draw the ghosts */
          drawGhosts(g);
-      
+
          /* Draw the pacman */
          drawPlayer(g);
-      
+
          /*
-          * Draw the border around the game in case it was overwritten by ghost
-          * movement or something
-          */
+         * Draw the border around the game in case it was overwritten by ghost
+         * movement or something
+         */
          drawRect(g);
       }
    }
@@ -223,21 +216,21 @@ class Board {
 
    private drawCollision(g: Graphics) {
       let collision: Boolean = isCollision();
-   
+
       /* Kill the pacman */
       if (collision && !stopped) {
          /* 4 frames of death */
          dying = 4;
-   
+
          /* Play death sound effect */
          sounds.death();
          /* Stop any pacman eating sounds */
          sounds.nomNomStop();
-   
+
          /*
-          * Decrement lives, update screen to reflect that. And set appropriate
-          * flags and timers
-          */
+         * Decrement lives, update screen to reflect that. And set appropriate
+         * flags and timers
+         */
          numLives--;
          stopped = true;
          drawLives(g);
@@ -249,19 +242,19 @@ class Board {
       if (pellets[player.pelletX][player.pelletY] && phase == Phase.PLAYING) {
          lastPelletEatenX = player.pelletX;
          lastPelletEatenY = player.pelletY;
-     
+
          /* Play eating sound */
          sounds.nomNom();
-     
+
          /* Increment pellets eaten value to track for end game */
          player.pelletsEaten++;
-     
+
          /* Delete the pellet */
          pellets[player.pelletX][player.pelletY] = false;
-     
+
          /* Increment the score */
          currScore += 50;
-     
+
          /* Update the screen to reflect the new score */
          g.setColor(Color.BLACK);
          g.fillRect(0, 0, 600, 20);
@@ -271,12 +264,12 @@ class Board {
             g.drawString("DEMO MODE PRESS ANY KEY TO START A GAME\t High Score: " + score.getHighScore(), 20, 10);
          else
             g.drawString("Score: " + (currScore) + "\t High Score: " + score.getHighScore(), 20, 10);
-         
+
          if(isLastPelletEaten()) {
             return;
          }
       }
-   
+
       /* If we moved to a location without pellets, stop the sounds */
       else if ((player.pelletX != lastPelletEatenX || player.pelletY != lastPelletEatenY) || player.stopped) {
          /* Stop any pacman eating sounds */
@@ -308,7 +301,7 @@ class Board {
          /* Draw mouth open in appropriate direction */
          if (player.frameCount >= 10)
             player.frameCount = 0;
-   
+
          switch (player.currDirection) {
          case 'L':
             g.drawImage(ImageMap.PACMAN_LEFT, player.x, player.y, Color.BLACK, null);
@@ -346,7 +339,6 @@ class Board {
             player.frameCount++;
       }
    }
-   
 
    private drawBeginGame(g: Graphics) {
       reset();
@@ -413,7 +405,7 @@ class Board {
       g.setColor(Color.BLACK);
       g.fillRect(0, 0, 600, 600);
       g.drawImage(ImageMap.SPLASH, 0, 0, Color.BLACK, null);
-  
+
       /* Stop any pacman eating sounds */
       sounds.nomNomStop();
       phase = Phase.MENU;
@@ -422,11 +414,11 @@ class Board {
    private drawDead(g: Graphics) {
       /* Stop any pacman eating sounds */
       sounds.nomNomStop();
-  
+
       /* Draw the pacman */
       g.drawImage(ImageMap.PACMAN, player.x, player.y, Color.BLACK, null);
       g.setColor(Color.BLACK);
-  
+
       /* Kill the pacman */
       if (dying == 4)
          g.fillRect(player.x, player.y, 20, 7);
@@ -437,11 +429,11 @@ class Board {
       else if (dying == 1) {
          g.fillRect(player.x, player.y, 20, 20);
       }
-  
+
       /*
-       * Take .1 seconds on each frame of death, and then take 2 seconds for
-       * the const frame to allow for the sound effect to end
-       */
+      * Take .1 seconds on each frame of death, and then take 2 seconds for
+      * the const frame to allow for the sound effect to end
+      */
       let currTime: Long = System.currentTimeMillis();
       let temp;
       if (dying != 1)
@@ -460,9 +452,9 @@ class Board {
                   numLives = 2;
                else {
                   /*
-                   * Game over for player. If relevant, update high score.
-                   * Set gameOver flag
-                   */
+                  * Game over for player. If relevant, update high score.
+                  * Set gameOver flag
+                  */
                   if (currScore > score.getHighScore()) {
                      score.updateScore(currScore);
                   }
@@ -473,9 +465,9 @@ class Board {
       }
    }
    /*
-    * Draws the appropriate number of lives on the bottom left of the screen.
-    * Also draws the menu
-    */
+   * Draws the appropriate number of lives on the bottom left of the screen.
+   * Also draws the menu
+   */
    private drawLives(g: Graphics) {
       g.setColor(Color.BLACK);
 
@@ -495,11 +487,11 @@ class Board {
    }
 
    /*
-    * This function draws the board. The pacman board is really complicated and
-    * can only feasibly be done manually. Whenever I draw a wall, I call
-    * updateMap to invalidate those coordinates. This way the pacman and ghosts
-    * know that they can't traverse this area
-    */
+   * This function draws the board. The pacman board is really complicated and
+   * can only feasibly be done manually. Whenever I draw a wall, I call
+   * updateMap to invalidate those coordinates. This way the pacman and ghosts
+   * know that they can't traverse this area
+   */
    private drawBoard(g: Graphics) {
       g.setColor(Color.BLACK);
       g.fillRect(0, 0, 600, 600);
@@ -616,14 +608,14 @@ class Board {
    }
 
    /*
-    * Draws one individual pellet. Used to redraw pellets that ghosts have run
-    * over
-    */
+   * Draws one individual pellet. Used to redraw pellets that ghosts have run
+   * over
+   */
    private fillPellet(x: Integer, y: Integer, g: Graphics) {
       g.setColor(Color.YELLOW);
       g.fillOval(x * 20 + 28, y * 20 + 28, 4, 4);
    }
-   
+
    private isLastPelletEaten(): Boolean {
       /* If this was the last pellet */
       if (player.pelletsEaten == 173) {
@@ -671,4 +663,3 @@ class Board {
    }
 
 }
-

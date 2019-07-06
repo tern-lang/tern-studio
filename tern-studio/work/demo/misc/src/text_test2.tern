@@ -1,7 +1,4 @@
-// this is a test
 
-func foo(){
-   println("X");
-}
+import util.Set as Se;
 
-foo();
+println(Se.class);

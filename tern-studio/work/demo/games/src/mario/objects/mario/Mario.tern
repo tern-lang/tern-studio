@@ -1,55 +1,40 @@
 import awt.Point;
 import awt.event.KeyEvent;
 import awt.image.BufferedImage;
-import util.ArrayList;
-import util.LinkedList;
-import util.List;
-
-import sound.sampled.AudioFormat;
-
 import mario.core.GameRenderer;
-import mario.core.animation.Animation;
-import mario.core.animation.CollidableObject;
-import mario.core.sound.specific.MarioSoundManager10512Hz;
-import mario.core.sound.specific.MarioSoundManager22050Hz;
-import mario.core.tile.GameTile;
-import mario.core.tile.TileMap;
-import mario.objects.base.Collision;
-import mario.objects.base.Creature;
-import mario.objects.creatures.Coin;
-import mario.objects.creatures.Goomba;
-import mario.objects.creatures.Mushroom;
-import mario.objects.creatures.Platform;
-import mario.objects.creatures.RedKoopa;
-import mario.objects.creatures.RedShell;
-import mario.objects.creatures.Score;
+import mario.core.animation.{Animation, CollidableObject};
+import mario.core.sound.specific.{MarioSoundManager10512Hz, MarioSoundManager22050Hz};
+import mario.core.tile.{GameTile, TileMap};
+import mario.objects.base.{Collision, Creature};
+import mario.objects.creatures.{Coin, Goomba, Mushroom, Platform, RedKoopa, RedShell, Score};
 import mario.util.ImageManipulator;
-
+import sound.sampled.AudioFormat;
+import util.{LinkedList, List};
 
 /**
- * Mario is the main object in the game and is the center of the screen and attention at all
- * time. As a result, he is also the most complicated object in terms of animation, collision detection,
- * user input etc. 
- */
+* Mario is the main object in the game and is the center of the screen and attention at all
+* time. As a result, he is also the most complicated object in terms of animation, collision detection,
+* user input etc. 
+*/
 
 class Mario extends CollidableObject{
-   
+
    /* Static Constant Fields.
-    * Gravity:   Effects the amount of pull objects feel toward the ground. pixels/ms
-    * Friction:  Effects the amount of sliding an object displays before coming to a stop.
-    * S_X:       Starting X position of Mario.
-    * S_Y:       Starting Y position of Mario.
-    * S_DY:      Starting Dy of Mario.
-    * S_JH:      Effects the height of Mario's first jump.
-    * Anim_Time: The time between each of Mario's Animations. 
-    * 
-    * Terminal_Walking_Dx:  Max speed when Mario is walking.
-    * Terminal_R3unning_Dx:  Max speed when Mario is running.
-    * Terminal_Fall_Dy:     Max speed Mario can fall at.
-    * Walking_Dx_Inc:       The increase in speed per update when walking until terminal runnning is reached.
-    * Running_Dx_Inc:       The increase in speed per update when running until terminal walking is reached.
-    * Start_Run_Anim_Thres: The speed where mario switches to the running animation.
-    */
+   * Gravity:   Effects the amount of pull objects feel toward the ground. pixels/ms
+   * Friction:  Effects the amount of sliding an object displays before coming to a stop.
+   * S_X:       Starting X position of Mario.
+   * S_Y:       Starting Y position of Mario.
+   * S_DY:      Starting Dy of Mario.
+   * S_JH:      Effects the height of Mario's first jump.
+   * Anim_Time: The time between each of Mario's Animations. 
+   * 
+   * Terminal_Walking_Dx:  Max speed when Mario is walking.
+   * Terminal_R3unning_Dx:  Max speed when Mario is running.
+   * Terminal_Fall_Dy:     Max speed Mario can fall at.
+   * Walking_Dx_Inc:       The increase in speed per update when walking until terminal runnning is reached.
+   * Running_Dx_Inc:       The increase in speed per update when running until terminal walking is reached.
+   * Start_Run_Anim_Thres: The speed where mario switches to the running animation.
+   */
 
    public static const GRAVITY: Float = 0.0008f;
    public static const FRICTION: Float = 0.0004f;                   
@@ -66,10 +51,10 @@ class Mario extends CollidableObject{
    private static const TERMINAL_FALL_DY: Float = 0.22f;
    private static const STARTING_LIFE: Integer = 1;
    private static const ANIM_TIME: Integer = 125;
-   
+
    /* INITIAL_JUMP_HEIGHT + dx*JUMP_MULTIPLIER */
    private var jumpHeight: Float; 
-   
+
    /* Boolean variables used to identify which keys are pressed. */
    private var isDownHeld: Boolean = false;
    private var isRightHeld: Boolean = false;
@@ -89,7 +74,7 @@ class Mario extends CollidableObject{
    private var isJumping: Boolean = false;
    private var frictionLock: Boolean = false; 
    private var isInvisible: Boolean = false;
-   
+
    /* Animation variables. */
    private var walkLeft: Animation; 
    private var runLeft: Animation;  
@@ -105,30 +90,30 @@ class Mario extends CollidableObject{
    private var crouchRight: Animation; 
    private var changeRight: Animation; 
    private var currRightAnim: Animation; 
-   
+
    private var health: Integer = 0;
    private var grace: Integer = 0;
    private var platform: Platform;
    private var soundManager2: MarioSoundManager10512Hz;
-   
+
    public new(soundManager: MarioSoundManager22050Hz): super(STARTING_X, STARTING_Y, soundManager) {
-   
+
       setIsJumping(true);
       dy = STARTING_DY;
       jumpHeight = INITIAL_JUMP_HEIGHT;
       health = STARTING_LIFE;
       soundManager2 = new MarioSoundManager10512Hz(new AudioFormat(10512, 8, 1, true, true));
-      
+
       var l: BufferedImage[] = [ ImageManipulator.loadImage("/mario/mario/Mario_Big_Left_Still.png"), ImageManipulator.loadImage("/mario/mario/Mario_Big_Left_1.png"),
             ImageManipulator.loadImage("/mario/mario/Mario_Big_Left_2.png"), ImageManipulator.loadImage("/mario/mario/Mario_Big_Left_Run_1.png"),
             ImageManipulator.loadImage("/mario/mario/Mario_Big_Left_Run_2.png"), ImageManipulator.loadImage("/mario/mario/Mario_Big_Crouch_Left.png"),
             ImageManipulator.loadImage("/mario/mario/Mario_Big_Jump_Left.png"), ImageManipulator.loadImage("/mario/mario/Mario_Big_Change_Direction_Left.png") ];
-      
+
       var r: BufferedImage[] = [ null, null, null, null, null, null, null, null ];
       for(var i = 0; i < l.length; i++) {
          r[i] = ImageManipulator.horizontalFlip(l[i]); // Flip every image in l.
       }
-            
+
       // Create left animations.
       stillLeft = new Animation(ANIM_TIME).addFrame(l[0]);
       walkLeft = new Animation(ANIM_TIME).addFrame(l[1]).addFrame(l[2]);
@@ -136,7 +121,7 @@ class Mario extends CollidableObject{
       crouchLeft = new Animation(ANIM_TIME).addFrame(l[5]);
       jumpLeft = new Animation(ANIM_TIME).addFrame(l[6]);
       changeLeft = new Animation(ANIM_TIME).addFrame(l[7]);
-      
+
       // Create right animations.
       stillRight = new Animation(ANIM_TIME).addFrame(r[0]);
       walkRight = new Animation(ANIM_TIME).addFrame(r[1]).addFrame(r[2]);
@@ -144,47 +129,47 @@ class Mario extends CollidableObject{
       crouchRight = new Animation(ANIM_TIME).addFrame(r[5]);
       jumpRight = new Animation(ANIM_TIME).addFrame(r[6]);
       changeRight = new Animation(ANIM_TIME).addFrame(r[7]);
-      
+
       setAnimation(stillRight);
       currLeftAnim = walkLeft;
       currRightAnim = walkRight;
    }
-   
+
    public getHealth(): Integer {
       return health;
    }
-   
+
    public isInvisible(): Boolean {
       return isInvisible;
    }
-   
+
    public isOnSlopedTile(): Boolean { return onSlopedTile; }
 
    public setIsJumping(isJumping: Boolean) { this.isJumping = isJumping; }
 
    public isJumping(): Boolean { return isJumping; }
-   
+
    private slowSpeed(slowFactor: Integer) { setdX(getdX()/slowFactor);   }
-   
+
    private accelerateFall() { setdY(-getdY()/4); }
-   
+
    public isAbovePlatform(): Boolean { return isAbovePlatform; }
-   
+
    /**
-    * Debugging method used to print the status of mario with regards to platforms.
-    */
+   * Debugging method used to print the status of mario with regards to platforms.
+   */
    private platformStatus() {
-      
+
       if(isAbovePlatform) { System.out.println("Above a platform"); }
       if(isBelowPlatform) { System.out.println("Below a platform"); }
       if(isLeftOfPlatform) { System.out.println("Left of a platform"); }
       if(isRightOfPlatform) { System.out.println("Right of a platform"); }
    }
-   
+
    /**
-    * Fixes Y movement on tiles and platforms where animation height changes by setting the mario's y
-    * value to the difference between animation heights. 
-    */
+   * Fixes Y movement on tiles and platforms where animation height changes by setting the mario's y
+   * value to the difference between animation heights. 
+   */
    public setAnimation(newAnim: Animation) {
       if(currentAnimation() != null) {
          var currAnim: Animation = currentAnimation();
@@ -198,111 +183,111 @@ class Mario extends CollidableObject{
       }
       super.setAnimation(newAnim);
    }
-   
+
    /**
-    * Given the Float parameter oldX, oldY, newX, and newY this method returns the first 
-    * Platform in the TileMap map in which the sprite with the given parameters collides with
-    * in the X direction, if any. 
-    * 
-    * Note to self: the exact conditions for a collision are a little fuzzy....document this...
-    * 
-    * @modifies isLeftOfPlatform && isRightOfPlatform
-    * @return the Platform the sprite with the given parameters is colliding with in the X
-    * direction.
-    */
+   * Given the Float parameter oldX, oldY, newX, and newY this method returns the first 
+   * Platform in the TileMap map in which the sprite with the given parameters collides with
+   * in the X direction, if any. 
+   * 
+   * Note to self: the exact conditions for a collision are a little fuzzy....document this...
+   * 
+   * @modifies isLeftOfPlatform && isRightOfPlatform
+   * @return the Platform the sprite with the given parameters is colliding with in the X
+   * direction.
+   */
    private getPlatformCollisionX(map: TileMap, oldX: Float, oldY: Float, newX: Float, newY: Float): Platform {
-      
+
       for(var platform in map.platforms()) {
-          var width: Float = getWidth();
+         var width: Float = getWidth();
          var height: Float = getHeight();
-          var pX: Float = platform.getX();
-          var pY: Float = platform.getY();
-          var oldpX: Float = platform.getOldX();
-          var pWidth: Float = platform.getWidth();
-          var pHeight: Float = platform.getHeight();
-          
-          if(oldX + width <= oldpX && // This is needed to make transparant platforms work
-             !platform.canJumpThrough() &&
-             newX + width >= pX && newX + width <= pX + pWidth &&
-             pY + pHeight > oldY && pY < oldY + height
-             ) {
-             this.isLeftOfPlatform = true;
-             this.isRightOfPlatform = false;
-             return platform;
-          } else if (
-             oldX >= oldpX + pWidth && // This is needed to make transparant platforms work
-             !platform.canJumpThrough() &&
-             newX <= pX + pWidth && newX >= pX &&
-             pY + pHeight > oldY && pY < oldY + height
-             ) {
-             this.isRightOfPlatform = true;
-             this.isLeftOfPlatform = false;
-             return platform;
-          }
-       }
-       this.isRightOfPlatform = false;
-       this.isLeftOfPlatform = false;
-       return null;
+         var pX: Float = platform.getX();
+         var pY: Float = platform.getY();
+         var oldpX: Float = platform.getOldX();
+         var pWidth: Float = platform.getWidth();
+         var pHeight: Float = platform.getHeight();
+
+         if(oldX + width <= oldpX && // This is needed to make transparant platforms work
+            !platform.canJumpThrough() &&
+            newX + width >= pX && newX + width <= pX + pWidth &&
+            pY + pHeight > oldY && pY < oldY + height
+            ) {
+            this.isLeftOfPlatform = true;
+            this.isRightOfPlatform = false;
+            return platform;
+         } else if (
+            oldX >= oldpX + pWidth && // This is needed to make transparant platforms work
+            !platform.canJumpThrough() &&
+            newX <= pX + pWidth && newX >= pX &&
+            pY + pHeight > oldY && pY < oldY + height
+            ) {
+            this.isRightOfPlatform = true;
+            this.isLeftOfPlatform = false;
+            return platform;
+         }
+      }
+      this.isRightOfPlatform = false;
+      this.isLeftOfPlatform = false;
+      return null;
    }
-   
+
    /**
-    * Given the Float parameter oldX, oldY, newX, and newY this method returns the first 
-    * Platform in the TileMap map in which the sprite with the given parameters collides with
-    * in the Y direction, if any. 
-    * 
-    * Note to self: the exact conditions for a collision are a little fuzzy....document this...
-    * Vertically moving platforms aren't compatible with tiles, so don't use them in conjunction.
-    * 
-    * @modifies isLeftOfPlatform && isRightOfPlatform
-    * @return the Platform the sprite with the given parameters is colliding with in the X
-    * direction.
-    */
+   * Given the Float parameter oldX, oldY, newX, and newY this method returns the first 
+   * Platform in the TileMap map in which the sprite with the given parameters collides with
+   * in the Y direction, if any. 
+   * 
+   * Note to self: the exact conditions for a collision are a little fuzzy....document this...
+   * Vertically moving platforms aren't compatible with tiles, so don't use them in conjunction.
+   * 
+   * @modifies isLeftOfPlatform && isRightOfPlatform
+   * @return the Platform the sprite with the given parameters is colliding with in the X
+   * direction.
+   */
    private getPlatformCollisionY(map: TileMap, oldX: Float, oldY: Float, newX: Float, newY: Float): Platform {
       for(var platform in map.platforms()) {
-          var width: Float = getWidth();
-          var height: Float = getHeight();
-          var pX: Float = platform.getX();
-          var pY: Float = platform.getY();
-          var oldpY: Float = platform.getOldY();
-          var pWidth: Float = platform.getWidth();
-          var pHeight: Float = platform.getHeight(); 
-          
-          // some debug code:
-          // System.out.println((oldY + height) + " >= " + (pY));
-          // System.out.println(oldY + height);
-          // System.out.println((newY + height) + " <= " + (pY));
-          // System.out.println((newY + height) + " <= " + (pY + pHeight));
-          
-          if(//oldY + height <= pY && // This line makes vertical platforms buggy.
-             newY + height >= pY &&
-             newY + height <= pY + pHeight &&
-             oldX + width >= pX &&
-             oldX <= pX + pWidth &&
-             oldY + height <= oldpY) { 
-             this.isAbovePlatform = true;
-             this.isBelowPlatform = false;
-             return platform;
-          } else if(!platform.canJumpThrough()) {
-             if (oldY >= oldpY + pHeight && 
-                newY <= pY + pHeight &&
-                newY >= pY &&
-                 oldX + width >= pX &&
-                 oldX <= pX + pWidth) {
-                    this.isBelowPlatform = true;
-                    this.isAbovePlatform = false;
-                    return platform;
-                 }
-          }
-       }
-       this.isBelowPlatform = false;
-       this.isAbovePlatform = false;
-       return null;
+         var width: Float = getWidth();
+         var height: Float = getHeight();
+         var pX: Float = platform.getX();
+         var pY: Float = platform.getY();
+         var oldpY: Float = platform.getOldY();
+         var pWidth: Float = platform.getWidth();
+         var pHeight: Float = platform.getHeight(); 
+
+         // some debug code:
+         // System.out.println((oldY + height) + " >= " + (pY));
+         // System.out.println(oldY + height);
+         // System.out.println((newY + height) + " <= " + (pY));
+         // System.out.println((newY + height) + " <= " + (pY + pHeight));
+
+         if(//oldY + height <= pY && // This line makes vertical platforms buggy.
+            newY + height >= pY &&
+            newY + height <= pY + pHeight &&
+            oldX + width >= pX &&
+            oldX <= pX + pWidth &&
+            oldY + height <= oldpY) { 
+            this.isAbovePlatform = true;
+            this.isBelowPlatform = false;
+            return platform;
+         } else if(!platform.canJumpThrough()) {
+            if (oldY >= oldpY + pHeight && 
+               newY <= pY + pHeight &&
+               newY >= pY &&
+                  oldX + width >= pX &&
+                  oldX <= pX + pWidth) {
+                     this.isBelowPlatform = true;
+                     this.isAbovePlatform = false;
+                     return platform;
+                  }
+         }
+      }
+      this.isBelowPlatform = false;
+      this.isAbovePlatform = false;
+      return null;
    }
-   
+
    public update(map: TileMap, time: Float) {
-      
+
       jumpHeight = INITIAL_JUMP_HEIGHT - dx.abs()*JUMP_MULTIPLIER; 
-      
+
       if (!frictionLock && isLeftHeld && !isShiftHeld) {
          //toggleMovement(1);
          if (dx < -TERMINAL_WALKING_DX) {
@@ -350,14 +335,14 @@ class Mario extends CollidableObject{
             }
          }
       }
-   
+
       var lastFour: Boolean = grace%8 == 7 || grace%8 == 6 || grace%8 == 5 || grace%8 == 4;
       isInvisible = lastFour ? true : false;
       if(grace != 0) { grace--; }
-      
+
       // Apply gravity.
       if(getdY() < TERMINAL_FALL_DY) { setdY(getdY() + GRAVITY * time); } 
-      
+
       // Slowly reset offset values caused by slopes.
       if(getOffsetX() != 0) { setOffsetX(getOffsetX() - 1);} 
 
@@ -369,7 +354,7 @@ class Mario extends CollidableObject{
       var oldY: Float = getY();
       var newYCalc: Float = oldY + getdY()*time;
       //if(platform != null) { newYCalc = platform.getY() - getHeight(); }
-      
+
       // Calculate all the tile collisions.
       var xTile: List = GameRenderer.getTileCollisionAll(map, this, getX(), getY(), newXCalc, getY());
       var yTile: List = GameRenderer.getTileCollisionAll(map, this, getX(), getY(), getX(), newYCalc);
@@ -378,15 +363,15 @@ class Mario extends CollidableObject{
 
       var platformX: Platform = getPlatformCollisionX(map, oldX, oldY, newXCalc, newYCalc);
       var platformY: Platform = getPlatformCollisionY(map, oldX, oldY, newXCalc, newYCalc);
-      
+
       //this.platformStatus();
-      
+
       if(isAbovePlatform) {
          platform = platformY;
       } else {
          platform = null;
       }
-      
+
       // Manage collision in the X direction.
       if(oldX < 0) { // Collision with left side of map.
          setX(GameRenderer.tilesToPixels(0));
@@ -398,8 +383,8 @@ class Mario extends CollidableObject{
          if(numOfXTiles == 0) { // No tile collision in the X direction
             setX(newXCalc);
          } else if(numOfXTiles >= 1) { // Tile collision in the X direction. For now, only worry
-                                // about the first tile being collided with.
-            
+                                 // about the first tile being collided with.
+
             var xtp: Point = xTile.get(0); // xTilePoint
             var c: Collision = Creature.tileCollisionX(map.getTile(xtp.x, xtp.y), this);
             toggleMovement(1);
@@ -423,9 +408,9 @@ class Mario extends CollidableObject{
             }
          } 
       }
-      
+
       super.update(time); // Update mario's animation.
-      
+
       // Manage collision in the Y direction. 
       var upperCollision: Boolean = false; // will check if mario is above a tile
       if(oldY > GameRenderer.tilesToPixels(map.getHeight()) - getHeight()) { // Off the bottom of the map.
@@ -480,20 +465,20 @@ class Mario extends CollidableObject{
       }
       for(var c in toRemove) { tile.collidingCreatures().remove(c); }
    }   
-   
+
    // Determines what happens when mario collides with a creature.
    public playerCollision(map: TileMap, creature: Creature) {
-      
+
       // only check collision of creatures with this that are not sleeping, are on the screen, and are collidable
       if(!creature.isPlatform() && creature.isCollidable()) { 
          var collision: Boolean = isCollision(this, creature);
          if(collision && creature !instanceof Score) {
-         
+
             if(creature instanceof Coin) {
                creature.kill();
                soundManager.playCoin();
                map.creaturesToAdd().add(new Score(creature.getX().round(), creature.getY().round()+13));
-               
+
             } else if(creature instanceof Mushroom) {
                soundManager2.playCelebrate();
                creature.kill();
@@ -508,7 +493,7 @@ class Mario extends CollidableObject{
                creature.jumpedOn(); // kill goomba
                this.creatureHop();
                soundManager.playKick();
-               
+
             } else if(creature instanceof RedKoopa && isJumping() && getdY() > 0) {
                creature.jumpedOn();
                creatureHop();
@@ -516,12 +501,12 @@ class Mario extends CollidableObject{
                map.creaturesToAdd().add(new RedShell(creature.getX().round(), 
                      creature.getY().round()+13, map, soundManager, true));
             } else if(creature instanceof RedShell) {
-               
+
                if(this.isJumping() && this.getdY() > 0) {
                   creature!.jumpedOn(this.getdX() > 0, this.getdX());
                   creatureHop();
                   soundManager.playKick();   
-                  
+
                } else if(!isJumping() && !creature!.isMoving()) {
                   var right: Boolean = this.getdX() > 0;
                   creature!.jumpedOn(right, this.getdX());
@@ -541,7 +526,7 @@ class Mario extends CollidableObject{
          }
       }
    }
-   
+
    public getsDamaged() {
       if(grace == 0) {
          health--;
@@ -568,7 +553,7 @@ class Mario extends CollidableObject{
          setdY(jumpHeight/1.4f);
       }
    }
-   
+
    public toggleMovement(type: Integer) {
 
       if(type == 1) {
@@ -610,97 +595,95 @@ class Mario extends CollidableObject{
          }
       }
    }
-   
+
    public jump() {
       setIsJumping(true);
-       if(currentAnimation() == currLeftAnim || currentAnimation() == stillLeft || currentAnimation() == changeRight) {
-          setAnimation(jumpLeft);
-       }
-       if(currentAnimation() == currRightAnim || currentAnimation() == stillRight || currentAnimation() == changeLeft) {
-          setAnimation(jumpRight);
-       }
+      if(currentAnimation() == currLeftAnim || currentAnimation() == stillLeft || currentAnimation() == changeRight) {
+         setAnimation(jumpLeft);
+      }
+      if(currentAnimation() == currRightAnim || currentAnimation() == stillRight || currentAnimation() == changeLeft) {
+         setAnimation(jumpRight);
+      }
    }
 
-    public keyPressed(e: KeyEvent) {
-        var key: Integer = e.getKeyCode();
+   public keyPressed(e: KeyEvent) {
+         var key: Integer = e.getKeyCode();
 
-        if (key == KeyEvent.VK_LEFT) {
-          isLeftHeld = true;
-          if(!isDownHeld) {
-             setAnimation(currLeftAnim);
-          }
-        }
+         if (key == KeyEvent.VK_LEFT) {
+         isLeftHeld = true;
+         if(!isDownHeld) {
+            setAnimation(currLeftAnim);
+         }
+         }
 
-        if(key == KeyEvent.VK_RIGHT) {
-          isRightHeld = true;
-          if(!isDownHeld) {
-             setAnimation(currRightAnim);
-          }
-        }
-        
-        if(key == KeyEvent.VK_SHIFT) {
-           this.isShiftHeld = true;
-        }
-      
-        
-        if(key == KeyEvent.VK_DOWN) {
-           isDownHeld = true;
-           if(currentAnimation() == currLeftAnim || currentAnimation() == stillLeft || currentAnimation() == crouchLeft) {
-              setAnimation(crouchLeft);
-           }
-           if(currentAnimation() == currRightAnim || currentAnimation() == stillRight || currentAnimation() == crouchRight) {
-              setAnimation(crouchRight);
-           }
-        }
-        
-        if(key == KeyEvent.VK_SPACE) {   
-           if(!isJumping && !isSpaceHeld) {
-              isSpaceHeld = true;
-              soundManager.playJump();
-              isJumping = true;
-              dy = jumpHeight;
-           }
-        }
+         if(key == KeyEvent.VK_RIGHT) {
+         isRightHeld = true;
+         if(!isDownHeld) {
+            setAnimation(currRightAnim);
+         }
+         }
 
-    }
-    
-    public keyReleased(e: KeyEvent) {
-        var key: Integer = e.getKeyCode();
+         if(key == KeyEvent.VK_SHIFT) {
+            this.isShiftHeld = true;
+         }
 
-        if (key == KeyEvent.VK_LEFT) {
-           isLeftHeld = false;
-           if(!isJumping) {
-              setAnimation(stillLeft);
-           }
-           
-        }
+         if(key == KeyEvent.VK_DOWN) {
+            isDownHeld = true;
+            if(currentAnimation() == currLeftAnim || currentAnimation() == stillLeft || currentAnimation() == crouchLeft) {
+               setAnimation(crouchLeft);
+            }
+            if(currentAnimation() == currRightAnim || currentAnimation() == stillRight || currentAnimation() == crouchRight) {
+               setAnimation(crouchRight);
+            }
+         }
 
-        if(key == KeyEvent.VK_RIGHT) {
-           isRightHeld = false;
-           if(!isJumping) {
-              setAnimation(stillRight);
-           }
-        }
-        
-        if(key == KeyEvent.VK_SHIFT) {
-           this.isShiftHeld = false;
-        }
-        
-        // responsible for jumps of different heights
-        if(key == KeyEvent.VK_SPACE) {
-           isSpaceHeld = false;
-           dy = this.getdY()/2.5f;
-        }
+         if(key == KeyEvent.VK_SPACE) {   
+            if(!isJumping && !isSpaceHeld) {
+               isSpaceHeld = true;
+               soundManager.playJump();
+               isJumping = true;
+               dy = jumpHeight;
+            }
+         }
 
-        if(key == KeyEvent.VK_DOWN) {
-           isDownHeld = false;
-           if (currentAnimation() == crouchLeft || currentAnimation() == currLeftAnim || currentAnimation() == changeLeft) {
-              setAnimation(stillLeft);
-           } 
-           if (currentAnimation() == crouchRight || currentAnimation() == currRightAnim || currentAnimation() == changeRight) {
-              setAnimation(stillRight);
-           }
-        }
-    }
+   }
+
+   public keyReleased(e: KeyEvent) {
+         var key: Integer = e.getKeyCode();
+
+         if (key == KeyEvent.VK_LEFT) {
+            isLeftHeld = false;
+            if(!isJumping) {
+               setAnimation(stillLeft);
+            }
+
+         }
+
+         if(key == KeyEvent.VK_RIGHT) {
+            isRightHeld = false;
+            if(!isJumping) {
+               setAnimation(stillRight);
+            }
+         }
+
+         if(key == KeyEvent.VK_SHIFT) {
+            this.isShiftHeld = false;
+         }
+
+         // responsible for jumps of different heights
+         if(key == KeyEvent.VK_SPACE) {
+            isSpaceHeld = false;
+            dy = this.getdY()/2.5f;
+         }
+
+         if(key == KeyEvent.VK_DOWN) {
+            isDownHeld = false;
+            if (currentAnimation() == crouchLeft || currentAnimation() == currLeftAnim || currentAnimation() == changeLeft) {
+               setAnimation(stillLeft);
+            } 
+            if (currentAnimation() == crouchRight || currentAnimation() == currRightAnim || currentAnimation() == changeRight) {
+               setAnimation(stillRight);
+            }
+         }
+   }
 }
-

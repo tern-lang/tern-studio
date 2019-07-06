@@ -1,15 +1,13 @@
-
-
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import awt.event.KeyEvent;
+import awt.event.KeyListener;
+import awt.event.MouseAdapter;
+import awt.event.MouseEvent;
 
 class GameController extends MouseAdapter with KeyListener {
 
    private const p: Pacman;
    private const b: Board;
-   
+
    public new(p: Pacman, b: Board) {
       this.b = b;
       this.p = p;
@@ -24,9 +22,9 @@ class GameController extends MouseAdapter with KeyListener {
          return;
       }
       /*
-       * Pressing a key in the win screen or game over screen goes to the title
-       * screen
-       */
+      * Pressing a key in the win screen or game over screen goes to the title
+      * screen
+      */
       else if (b.winScreen || b.overScreen) {
          b.titleScreen = true;
          b.winScreen = false;
@@ -34,8 +32,8 @@ class GameController extends MouseAdapter with KeyListener {
          return;
       }
       /*
-       * Pressing a key during a demo kills the demo mode and starts a new game
-       */
+      * Pressing a key during a demo kills the demo mode and starts a new game
+      */
       else if (b.demo) {
          b.demo = false;
          /* Stop any pacman eating sounds */
@@ -64,9 +62,9 @@ class GameController extends MouseAdapter with KeyListener {
    }
 
    /*
-    * This function detects user clicks on the menu items on the bottom of the
-    * screen
-    */
+   * This function detects user clicks on the menu items on the bottom of the
+   * screen
+   */
    public override mousePressed(e: MouseEvent) {
       if (b.titleScreen || b.winScreen || b.overScreen) {
          /* If we aren't in the game where a menu is showing, ignore clicks */
@@ -101,4 +99,3 @@ class GameController extends MouseAdapter with KeyListener {
    public override keyReleased(e: KeyEvent) {
    }
 }
-
