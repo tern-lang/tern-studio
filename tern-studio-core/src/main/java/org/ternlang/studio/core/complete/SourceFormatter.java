@@ -208,7 +208,6 @@ public class SourceFormatter {
          int count = group.size();
          
          if(count > 1) {
-            List<String> done = new ArrayList<String>();
             StringBuilder list = new StringBuilder();
             
             for(SourceImport entry : group) {
@@ -225,7 +224,6 @@ public class SourceFormatter {
                   String value = list.toString();
                   SourceImport groupImport = new SourceImport(value, value, value, false, true);
                   
-                  done.add(alias);
                   combined.add(groupImport);
                }
             }
@@ -280,14 +278,15 @@ public class SourceFormatter {
                   String[] aliases = list.split(",");
                   
                   for(String alias : aliases) {
-                     String type = module.trim() + "." +  alias.trim();
+                     String token = alias.trim();
+                     String type = module.trim() + "." +  token;
                      SourceImport sourceImport = resolveImport(type);
                      
                      if(sourceImport.isVerbatim()) {
                         referenced.add(sourceImport);
                      } else {
                         for(String other : lines) {
-                           if(other.contains(alias) && !imports.matcher(other).matches()) {
+                           if(other.contains(token) && !imports.matcher(other).matches()) {
                               referenced.add(sourceImport);
                            }
                         }
