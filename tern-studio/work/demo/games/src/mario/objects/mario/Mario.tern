@@ -2,7 +2,7 @@ import awt.Point;
 import awt.event.KeyEvent;
 import awt.image.BufferedImage;
 import mario.core.GameRenderer;
-import mario.core.animation.{Animation, CollidableObject};
+import mario.core.animation.{Animation, CollidableObject, Frdddd};
 import mario.core.sound.specific.{MarioSoundManager10512Hz, MarioSoundManager22050Hz};
 import mario.core.tile.{GameTile, TileMap};
 import mario.objects.base.{Collision, Creature};

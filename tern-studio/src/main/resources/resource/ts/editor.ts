@@ -1249,25 +1249,8 @@ export module FileEditor {
       Project.markEditorTab(resource, isEditorChangedForPath(resource));
    }
    
-   // XXX this should be in commands
    export function formatEditorSource() {
-      const text: string = editorView.getEditorPanel().getValue();
-      const path: string = editorView.getEditorResource().getFilePath();
-      
-      $.ajax({
-         contentType: 'text/plain',
-         data: text,
-         success: function(result){
-            editorView.getEditorPanel().setReadOnly(false);
-            editorView.getEditorPanel().setValue(result, 1);
-         },
-         error: function(){
-             console.log("Format failed");
-         },
-         processData: false,
-         type: 'POST',
-         url: '/format/' + Common.getProjectName() + path
-     });
+      Command.formatEditorSource();
    }
    
    export function setEditorTheme(theme) {

@@ -21,6 +21,9 @@ import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class SourceFormatter {
 
@@ -40,11 +43,16 @@ public class SourceFormatter {
    public String format(Project project, String path, String source, int indent) throws Exception {
       String resource = path.toLowerCase();
       
-      if(resource.endsWith(JSON_EXTENSION)) {
-         Object object = mapper.readValue(source, Object.class);
-         return mapper.writer(printer).writeValueAsString(object);
+      try {
+         if(resource.endsWith(JSON_EXTENSION)) {
+            Object object = mapper.readValue(source, Object.class);
+            return mapper.writer(printer).writeValueAsString(object);
+         }
+         return formatSource(project, path, source, indent);
+      } catch(Exception e) {
+         log.info("Could not format source for {}", path, e);
       }
-      return formatSource(project, path, source, indent);
+      return source;
    }
    
    private String formatSource(Project project, String path, String source, int indent) throws Exception {

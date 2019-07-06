@@ -71,6 +71,39 @@ export module Command {
       }
    }
    
+   export function formatEditorSource() {
+      const state: FileEditorState = FileEditor.currentEditorState();
+      const originalText: string = state.getSource();
+      const resourcePath: FilePath = state.getResource();
+      const filePath: string = resourcePath.getFilePath();
+      
+      $.ajax({
+         contentType: 'text/plain',
+         data: originalText,
+         success: function(formattedText){
+            if(formattedText != originalText) {
+               const fileResource: FileResource = new FileResource(
+                     resourcePath, 
+                     "text/plain", 
+                     Common.currentTime(), 
+                     formattedText, 
+                     filePath, 
+                     false, 
+                     false);
+               
+               FileEditor.setReadOnly(false);
+               FileEditor.updateEditor(fileResource);
+            }
+         },
+         error: function(){
+             console.log("Format failed for " + filePath);
+         },
+         processData: false,
+         type: 'POST',
+         url: '/format/' + Common.getProjectName() + filePath
+     });
+   }
+   
    export function exploreDirectory(resourcePath: FilePath) {
       if(FileTree.isResourceFolder(resourcePath.getFilePath())) {
          var message = {

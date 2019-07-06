@@ -1006,24 +1006,8 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         function updateEditorTabMarkForResource(resource) {
             project_1.Project.markEditorTab(resource, isEditorChangedForPath(resource));
         }
-        // XXX this should be in commands
         function formatEditorSource() {
-            var text = editorView.getEditorPanel().getValue();
-            var path = editorView.getEditorResource().getFilePath();
-            $.ajax({
-                contentType: 'text/plain',
-                data: text,
-                success: function (result) {
-                    editorView.getEditorPanel().setReadOnly(false);
-                    editorView.getEditorPanel().setValue(result, 1);
-                },
-                error: function () {
-                    console.log("Format failed");
-                },
-                processData: false,
-                type: 'POST',
-                url: '/format/' + common_1.Common.getProjectName() + path
-            });
+            commands_1.Command.formatEditorSource();
         }
         FileEditor.formatEditorSource = formatEditorSource;
         function setEditorTheme(theme) {

@@ -49,6 +49,30 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
             }
         }
         Command.openTerminal = openTerminal;
+        function formatEditorSource() {
+            var state = editor_1.FileEditor.currentEditorState();
+            var originalText = state.getSource();
+            var resourcePath = state.getResource();
+            var filePath = resourcePath.getFilePath();
+            $.ajax({
+                contentType: 'text/plain',
+                data: originalText,
+                success: function (formattedText) {
+                    if (formattedText != originalText) {
+                        var fileResource = new explorer_1.FileResource(resourcePath, "text/plain", common_1.Common.currentTime(), formattedText, filePath, false, false);
+                        editor_1.FileEditor.setReadOnly(false);
+                        editor_1.FileEditor.updateEditor(fileResource);
+                    }
+                },
+                error: function () {
+                    console.log("Format failed for " + filePath);
+                },
+                processData: false,
+                type: 'POST',
+                url: '/format/' + common_1.Common.getProjectName() + filePath
+            });
+        }
+        Command.formatEditorSource = formatEditorSource;
         function exploreDirectory(resourcePath) {
             if (tree_1.FileTree.isResourceFolder(resourcePath.getFilePath())) {
                 var message = {
