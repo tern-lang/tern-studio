@@ -9,6 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.simpleframework.module.annotation.Component;
+import org.ternlang.core.Reserved;
+import org.ternlang.core.link.ImportPathResolver;
 import org.ternlang.studio.project.Project;
 
 import com.fasterxml.jackson.core.PrettyPrinter;
@@ -21,10 +23,12 @@ public class SourceFormatter {
    private static final String JSON_EXTENSION = ".json";
    private static final String XML_EXTENSION = ".xml";
 
+   private final ImportPathResolver resolver;
    private final PrettyPrinter printer;
    private final ObjectMapper mapper;
 
    public SourceFormatter(){
+      this.resolver = new ImportPathResolver(Reserved.IMPORT_FILE); 
       this.printer = new DefaultPrettyPrinter();
       this.mapper = new ObjectMapper();
    }
@@ -50,6 +54,10 @@ public class SourceFormatter {
       StringBuilder builder = new StringBuilder(imports);
       
       if(!lines.isEmpty()){
+         String previous = "";
+         
+         builder.append("\n");
+         
          for(SourceLine line : lines) {
             String prefix = line.getIndent();
             String remainder = line.getText();
@@ -68,8 +76,13 @@ public class SourceFormatter {
                } else {
                   builder.append(remainder);
                }
+               builder.append("\n");
+            } else {
+               if(!previous.isEmpty()) {
+                  builder.append("\n");
+               }
             }
-            builder.append("\n");
+            previous = remainder.trim();
          }
          return builder.toString();
       }
@@ -106,16 +119,24 @@ public class SourceFormatter {
       return Collections.emptyList();
    }
    
-   private String resolveType(String type) {
+   private SourceImport resolveImport(String type) {
       int length = type.length();
       int dotIndex = type.lastIndexOf(".");
       int asIndex = type.lastIndexOf(" as ");
       
       if(asIndex != -1) {
-         return type.substring(asIndex + 1, length).trim();
+         String alias = type.substring(asIndex + 1, length).trim();
+         String qualified = type.substring(0, asIndex).trim();
+         String resolved = resolver.resolveName(qualified);
+         
+         return new SourceImport(resolved, alias, true);
       }
       if(dotIndex != -1) {
-         return type.substring(dotIndex + 1, length).trim();
+         String alias = type.substring(dotIndex + 1, length).trim();
+         String qualified = type.trim();
+         String resolved = resolver.resolveName(qualified);
+         
+         return new SourceImport(resolved, alias, false);
       }
       return null;
    }
@@ -133,14 +154,21 @@ public class SourceFormatter {
             
             if(matcher.matches()) {
                String type = matcher.group(1);
-               String real = resolveType(type);
+               SourceImport sourceImport = resolveImport(type);
                
-               if(real == null) {
+               if(sourceImport == null) {
                   imported.add(line);
                } else {
                   for(String other : lines) {
-                     if(other.contains(real) && !imports.matcher(other).matches()) {
-                        imported.add(line);
+                     String real = sourceImport.getType();
+                     String alias = sourceImport.getAlias();
+                     
+                     if(other.contains(alias) && !imports.matcher(other).matches()) {
+                        if(sourceImport.isAliased()) {
+                           imported.add("import " + real + " as " + alias + ";");
+                        } else {
+                           imported.add("import " + real + ";");
+                        }
                      }
                   }
                }
@@ -153,6 +181,31 @@ public class SourceFormatter {
          return builder.toString();
       }
       return "";
+   }
+   
+   private static class SourceImport {
+      
+      private final String type;
+      private final String alias;
+      private final boolean aliased;
+      
+      public SourceImport(String type, String alias, boolean aliased) {
+         this.aliased = aliased;
+         this.type = type;
+         this.alias = alias;
+      }
+      
+      public boolean isAliased() {
+         return aliased;
+      }
+
+      public String getType() {
+         return type;
+      }
+
+      public String getAlias() {
+         return alias;
+      }
    }
    
    private static class SourceLine {

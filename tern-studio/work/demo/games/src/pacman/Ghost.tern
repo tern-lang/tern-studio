@@ -1,7 +1,5 @@
-
-
-import java.util.HashSet;
-import java.util.Set;
+import util.HashSet;
+import util.Set;
 
 /* Ghost class controls the ghost. */
 class Ghost extends Mover {
@@ -52,8 +50,8 @@ class Ghost extends Mover {
    }
 
    /*
-    * Determines if the location is one where the ghost has to make a decision
-    */
+   * Determines if the location is one where the ghost has to make a decision
+   */
    public isChoiceDest(): Boolean {
       if (x % gridSize == 0 && y % gridSize == 0) {
          return true;
@@ -154,4 +152,3 @@ class Ghost extends Mover {
       }
    }
 }
-

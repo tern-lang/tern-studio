@@ -1,8 +1,4 @@
-
-
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.net.URL;
+import awt.Image;
 import imageio.ImageIO;
 
 module ImageLoader {
@@ -12,4 +8,3 @@ module ImageLoader {
       return ImageIO.read(source);
    }
 }
-

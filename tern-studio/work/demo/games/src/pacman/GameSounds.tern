@@ -1,6 +1,4 @@
-
-
-import javax.sound.sampled.Clip;
+import sound.sampled.Clip;
 
 /* This class controls all sound effects*/
 class GameSounds {
@@ -52,4 +50,3 @@ class GameSounds {
       death.start();
    }
 }
-
