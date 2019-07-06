@@ -1167,6 +1167,11 @@ export module FileEditor {
       updateEditorTabMark(); // add a * to the name if its not in sync
    }
    
+   export function sneakyUpdateEditor(text: string) {
+      editorView.getEditorPanel().setReadOnly(false);
+      editorView.getEditorPanel().setValue(text, 1);
+   }
+   
    export function focusEditor() {
       editorView.getEditorPanel().focus();
       editorView.getEditorPanel().setReadOnly(false);

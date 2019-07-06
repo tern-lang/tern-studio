@@ -59,9 +59,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                 data: originalText,
                 success: function (formattedText) {
                     if (formattedText != originalText) {
-                        var fileResource = new explorer_1.FileResource(resourcePath, "text/plain", common_1.Common.currentTime(), formattedText, filePath, false, false);
-                        editor_1.FileEditor.setReadOnly(false);
-                        editor_1.FileEditor.updateEditor(fileResource);
+                        editor_1.FileEditor.sneakyUpdateEditor(formattedText);
                     }
                 },
                 error: function () {

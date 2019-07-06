@@ -932,6 +932,11 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             updateEditorTabMark(); // add a * to the name if its not in sync
         }
         FileEditor.updateEditor = updateEditor;
+        function sneakyUpdateEditor(text) {
+            editorView.getEditorPanel().setReadOnly(false);
+            editorView.getEditorPanel().setValue(text, 1);
+        }
+        FileEditor.sneakyUpdateEditor = sneakyUpdateEditor;
         function focusEditor() {
             editorView.getEditorPanel().focus();
             editorView.getEditorPanel().setReadOnly(false);

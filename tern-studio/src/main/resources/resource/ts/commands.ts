@@ -82,17 +82,7 @@ export module Command {
          data: originalText,
          success: function(formattedText){
             if(formattedText != originalText) {
-               const fileResource: FileResource = new FileResource(
-                     resourcePath, 
-                     "text/plain", 
-                     Common.currentTime(), 
-                     formattedText, 
-                     filePath, 
-                     false, 
-                     false);
-               
-               FileEditor.setReadOnly(false);
-               FileEditor.updateEditor(fileResource);
+               FileEditor.sneakyUpdateEditor(formattedText);
             }
          },
          error: function(){
