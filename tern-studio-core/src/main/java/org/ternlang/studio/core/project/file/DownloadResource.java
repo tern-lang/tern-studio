@@ -1,5 +1,6 @@
 package org.ternlang.studio.core.project.file;
 
+import org.simpleframework.http.Protocol;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
 import org.simpleframework.module.resource.annotation.CacheControl;
@@ -29,6 +30,9 @@ public class DownloadResource {
     
       if(result != null) {
          String type = result.getType();
+         long lastModified = result.getLastModified();
+         
+         response.setDate(Protocol.LAST_MODIFIED, lastModified);
          response.setContentType(type);
          return result.getData();
       }

@@ -1,5 +1,6 @@
 
 
+
 let x: URL = ClassLoader.getSystemClassLoader().getResource("java/lang/String.class");
 let y: InputStream = x.openStream();
 

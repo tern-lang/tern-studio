@@ -26,6 +26,18 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                     startFunction(); // start everything
                 });
             }
+            else if (perspective == "edit") {
+                if (!redirectEditLayout()) {
+                    createEditLayout(function () {
+                        console.log("Performing setup for editor layout");
+                        setupFunction(); // setup stuff
+                        activateEditLayout();
+                        startResizePoller(); // dynamically resize the editor
+                        attachClickEvents();
+                        startFunction(); // start everything
+                    });
+                }
+            }
             else {
                 createExploreLayout(function () {
                     console.log("Performing setup for explore layout");
@@ -186,15 +198,20 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
         function determineProjectLayout() {
             var debugToggle = ";debug";
             var dialogToggle = ";dialog";
+            var editToggle = ";edit";
             var locationPath = window.document.location.pathname;
             var locationHash = window.document.location.hash;
             var isDebug = locationPath.indexOf(debugToggle, locationPath.length - debugToggle.length) !== -1;
             var isDialog = locationPath.indexOf(dialogToggle, locationPath.length - dialogToggle.length) !== -1;
+            var isEdit = locationPath.indexOf(editToggle) !== -1;
             if (isDebug) {
                 return "debug";
             }
             if (isDialog) {
                 return "dialog";
+            }
+            if (isEdit) {
+                return "edit";
             }
             return "explore";
         }
@@ -302,6 +319,15 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                 fontName: fontFamily.value,
                 availableFonts: availableFonts
             };
+        }
+        function applyProjectThemeDirectly() {
+            $.get("/display/" + common_1.Common.getProjectName(), function (displayInfo) {
+                var fontSizeValue = displayInfo.fontSize + "px";
+                var fontFamilyValue = displayInfo.fontName;
+                var themeName = displayInfo.themeName;
+                editor_1.FileEditor.updateEditorFont(fontFamilyValue, fontSizeValue);
+                editor_1.FileEditor.setEditorTheme("ace/theme/" + themeName);
+            });
         }
         function applyProjectTheme() {
             $.get("/display/" + common_1.Common.getProjectName(), function (displayInfo) {
@@ -775,6 +801,122 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
             watchParentStatusFocus();
             activateTab(selectedTab + "Tab", "dialogTabLayout", false, false, "style='right: 0px;'");
             w2ui_1.w2ui['dialogTabLayout_main_tabs'].click(selectedTab + "Tab");
+        }
+        function createEditLayout(startFunction) {
+            var layoutEvents = ["createEditLayout"];
+            var layoutEventListener = common_1.Common.createSimpleStateMachineFunction("createEditLayout", function () {
+                console.log("Editor only layout fully rendered");
+                startFunction();
+            }, layoutEvents, 200);
+            var pstyle = 'background-color: ${PROJECT_BACKGROUND_COLOR}; overflow: hidden;';
+            var leftStyle = pstyle + " margin-top: 32px; border-top: 1px solid ${PROJECT_BORDER_COLOR};";
+            keys_1.KeyBinder.disableKeys();
+            createEditMainLayout(pstyle, layoutEventListener, layoutEvents);
+            validateLayout(layoutEvents, ["createEditLayout"]);
+            createProblemsTab();
+            createVariablesTab();
+            createProfilerTab();
+            createBreakpointsTab();
+            createDebugTab();
+            createThreadsTab();
+            createHistoryTab();
+            w2ui_1.w2ui['editMainLayout'].refresh();
+            layoutEventListener("createEditLayout"); // this allows the whole thing to initiate
+        }
+        function createEditMainLayout(layoutStyle, layoutEventListener, layoutEvents) {
+            layoutEvents.push("editMainLayout");
+            layoutEvents.push("editMainLayout#tabs");
+            $('#mainLayout').w2layout({
+                name: 'editMainLayout',
+                padding: 0,
+                panels: [{
+                        type: 'main',
+                        size: '100%',
+                        style: layoutStyle + 'border-top: 0px;',
+                        resizable: false,
+                        name: 'editTabs',
+                        tabs: {
+                            active: 'editTab',
+                            tabs: [{
+                                    id: 'editTab',
+                                    caption: "<div class='editTab' id='editFileName'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>",
+                                    content: "<div style='overflow: scroll; font-family: monospace;' id='edit'><div id='editParent'></div></div>",
+                                    closable: false
+                                }],
+                            onClose: function (event) {
+                                closeEditorTabForPath(event.target);
+                            },
+                            onRender: function (event) {
+                                layoutEventListener("editMainLayout#tabs");
+                            }
+                        }
+                    }, {
+                        type: 'bottom',
+                        size: '25px',
+                        resizable: false,
+                        style: layoutStyle,
+                        content: createBottomStatusContent()
+                    }],
+                onRender: function (event) {
+                    layoutEventListener("editMainLayout");
+                }
+            });
+        }
+        function activateEditLayout() {
+            applyProjectTheme();
+            watchParentStatusFocus();
+            activateTab("editTab", "editMainLayout", false, true, "style='right: 0px;'");
+            w2ui_1.w2ui['editMainLayout_main_tabs'].click("editTab");
+            applyProjectThemeDirectly();
+            updateEditLayoutDisplay();
+        }
+        function updateEditLayoutDisplay() {
+            var oneTimeFunction = common_1.Common.createOneTimeFunction(function () {
+                var editTimeStamp = common_1.Common.extractParameter("time");
+                var resourcePath = editor_1.FileEditor.currentEditorState().getResource().getResourcePath();
+                updateEditorTabName();
+                if (editTimeStamp) {
+                    explorer_1.FileExplorer.openTreeHistoryFile(resourcePath, editTimeStamp, function () {
+                        editor_1.FileEditor.setReadOnly(true);
+                    });
+                }
+            });
+            setInterval(function () {
+                var editorState = editor_1.FileEditor.currentEditorState();
+                if (editorState) {
+                    oneTimeFunction();
+                }
+            }, 100);
+        }
+        function redirectEditLayout() {
+            var projectLayout = determineProjectLayout();
+            if (projectLayout == "edit") {
+                var hash = window.document.location.hash;
+                var path = window.document.location.pathname;
+                if (!hash || !common_1.Common.stringStartsWith(hash, "#")) {
+                    var editIndex = path.indexOf(";edit");
+                    if (editIndex != -1) {
+                        var editTimeStamp = common_1.Common.extractParameter("time");
+                        var editPath = path.substring(editIndex + 5, path.length);
+                        var editLocation = "/project/" + common_1.Common.getProjectName() + ";edit";
+                        var host = window.document.location.hostname;
+                        var port = window.document.location.port;
+                        var scheme = window.document.location.protocol;
+                        var address = scheme + "//" + host;
+                        if ((port - parseFloat(port) + 1) >= 0) {
+                            address += ":";
+                            address += port;
+                        }
+                        if (editTimeStamp) {
+                            editLocation += "?time=" + editTimeStamp;
+                        }
+                        editLocation += "#" + editPath;
+                        document.location = address + editLocation;
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         function watchParentStatusFocus() {
             var statusFocus = null;
@@ -1525,9 +1667,10 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                         var sel = grid.getSelection();
                         if (sel.length == 1) {
                             var record = grid.get(sel[0]);
-                            explorer_1.FileExplorer.openTreeHistoryFile(record.script, record.time, function () {
-                                editor_1.FileEditor.showEditorLine(record.line);
-                            });
+                            var resourcePath = tree_1.FileTree.createResourcePath(record.script);
+                            var projectPath = resourcePath.getProjectPath();
+                            var editPath = "/project/" + common_1.Common.getProjectName() + ";edit" + projectPath + "?time=" + record.time;
+                            commands_1.Command.openChildWindow(editPath);
                         }
                         grid.selectNone();
                         grid.refresh();

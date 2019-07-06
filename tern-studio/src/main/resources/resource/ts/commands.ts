@@ -27,7 +27,7 @@ export module Command {
       });
    }
 
-   export function openChildWindow(path, name) {
+   export function openChildWindow(path) {
       var host = window.document.location.hostname;
       var port = window.document.location.port;
       var scheme = window.document.location.protocol;

@@ -501,6 +501,35 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         return FileEditorBuffer;
     }());
     exports.FileEditorBuffer = FileEditorBuffer;
+    var FileEditorContent = (function () {
+        function FileEditorContent(editorView, resourcePath, editorMode, editorText, isReadOnly, lastModified) {
+            this._editorView = editorView;
+            this._resourcePath = resourcePath;
+            this._editorMode = editorMode;
+            this._editorText = editorText;
+            this._isReadOnly = isReadOnly;
+            this._lastModified = lastModified;
+        }
+        FileEditorContent.prototype.isReadOnly = function () {
+            return this._isReadOnly;
+        };
+        FileEditorContent.prototype.getEditorView = function () {
+            return this._editorView;
+        };
+        FileEditorContent.prototype.getResourcePath = function () {
+            return this._resourcePath;
+        };
+        FileEditorContent.prototype.getEditorMode = function () {
+            return this._editorMode;
+        };
+        FileEditorContent.prototype.getEditorText = function () {
+            return this._editorText;
+        };
+        FileEditorContent.prototype.getLastModified = function () {
+            return this._lastModified;
+        };
+        return FileEditorContent;
+    }());
     var FileEditorBuilder;
     (function (FileEditorBuilder) {
         function createFileEditorView(elementName) {
@@ -824,17 +853,6 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
                 }
             }
         }
-        function createEditorUndoManager(session, textToDisplay, originalText, resource) {
-            var editorHistory = editorView.getHistoryForResource(resource);
-            editorView.getEditorPanel().setReadOnly(false);
-            editorView.getEditorPanel().setValue(textToDisplay, 1); // this causes a callback resulting in FileEditorHistory.touchHistory
-            editorHistory.updateHistory(textToDisplay, originalText);
-            editorHistory.restoreUndoManager(session, textToDisplay);
-        }
-        function createEditorWithoutUndoManager(textToDisplay) {
-            editorView.getEditorPanel().setReadOnly(false);
-            editorView.getEditorPanel().setValue(textToDisplay, 1); // this causes a callback resulting in FileEditorHistory.touchHistory
-        }
         function clearSavedEditorBuffer(resource) {
             var editorResource = tree_1.FileTree.createResourcePath(resource);
             var editorHistory = editorView.getHistoryForResource(editorResource);
@@ -865,42 +883,61 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             false);
         }
         FileEditor.getEditorBufferForResource = getEditorBufferForResource;
-        function resolveEditorTextToUse(fileResource) {
-            var encodedText = fileResource.getFileContent();
-            var isReadOnly = fileResource.isHistorical() || fileResource.isError();
-            if (!isReadOnly) {
-                var resourcePath = fileResource.getResourcePath().getResourcePath();
-                var workInProgressBuffer = getEditorBufferForResource(resourcePath); // load saved buffer
-                if (workInProgressBuffer.getSource() && workInProgressBuffer.getLastModified() >= fileResource.getLastModified()) {
-                    return workInProgressBuffer.getSource();
+        function resolveEditorContentFromHistory(fileResource) {
+            var newEditorText = fileResource.getFileContent();
+            var newReadOnly = fileResource.isHistorical() || fileResource.isError();
+            if (!newReadOnly) {
+                var newResourcePath = fileResource.getResourcePath();
+                var newResource = newResourcePath.getResourcePath();
+                var newLastModified = fileResource.getLastModified();
+                var currentEditorBuffer = getEditorBufferForResource(newResource); // load saved buffer
+                var currentEditorText_1 = currentEditorBuffer.getSource();
+                var currentLastModified = currentEditorBuffer.getLastModified();
+                if (currentEditorText_1 && currentLastModified >= newLastModified) {
+                    return currentEditorText_1;
                 }
             }
-            return encodedText;
+            return newEditorText;
         }
-        function updateEditor(fileResource) {
-            var resourcePath = fileResource.getResourcePath();
-            var isReadOnly = fileResource.isHistorical() || fileResource.isError();
-            var realText = fileResource.getFileContent();
-            var textToDisplay = resolveEditorTextToUse(fileResource);
+        function createEditorContent(fileResource) {
+            var newEditorText = resolveEditorContentFromHistory(fileResource); // this may be from history
+            var newResourcePath = fileResource.getResourcePath();
+            var newResource = newResourcePath.getResourcePath();
+            var newReadOnly = fileResource.isHistorical() || fileResource.isError();
+            var newEditorMode = FileEditorModeMapper.resolveEditorMode(newResource);
+            var newLastModified = fileResource.getLastModified();
+            return new FileEditorContent(editorView, newResourcePath, newEditorMode, newEditorText, newReadOnly, newLastModified);
+        }
+        function updateEditorContent(newEditorContent, fileResource) {
             var session = editorView.getEditorPanel().getSession();
             var currentMode = session.getMode();
-            var actualMode = FileEditorModeMapper.resolveEditorMode(resourcePath.getResourcePath());
-            saveEditorHistory(); // save any existing history
-            if (actualMode != currentMode) {
-                session.setMode({
-                    path: actualMode,
-                    v: Date.now()
-                });
+            var resourceText = fileResource.getFileContent();
+            var newMode = newEditorContent.getEditorMode();
+            var newEditorText = newEditorContent.getEditorText();
+            var newReadOnly = newEditorContent.isReadOnly();
+            var newResourcePath = newEditorContent.getResourcePath();
+            if (newMode != currentMode) {
+                session.setMode({ path: newMode, v: Date.now() });
             }
-            if (!isReadOnly) {
-                createEditorUndoManager(session, textToDisplay, realText, resourcePath); // restore any existing history      
+            if (!newReadOnly) {
+                var editorHistory = editorView.getHistoryForResource(newResourcePath);
+                editorView.getEditorPanel().setReadOnly(false);
+                editorView.getEditorPanel().setValue(newEditorText, 1); // this causes a callback resulting in FileEditorHistory.touchHistory
+                editorHistory.updateHistory(newEditorText, resourceText);
+                editorHistory.restoreUndoManager(session, newEditorText);
             }
             else {
-                createEditorWithoutUndoManager(textToDisplay);
+                editorView.getEditorPanel().setReadOnly(false);
+                editorView.getEditorPanel().setValue(newEditorText, 1); // this causes a callback resulting in FileEditorHistory.touchHistory
             }
+            setReadOnly(newReadOnly);
             clearEditor();
-            setReadOnly(isReadOnly);
-            editorView.updateResourcePath(resourcePath, isReadOnly);
+            editorView.updateResourcePath(newResourcePath, newReadOnly);
+        }
+        function updateEditor(fileResource) {
+            var newEditorContent = createEditorContent(fileResource);
+            saveEditorHistory(); // save any existing history
+            updateEditorContent(newEditorContent, fileResource);
             problem_1.ProblemManager.highlightProblems(); // higlight problems on this resource
             editorView.getEditorBreakpointManager().restoreResourceBreakpoints();
             project_1.Project.createEditorTab(); // update the tab name

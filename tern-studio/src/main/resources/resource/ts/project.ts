@@ -42,6 +42,17 @@ export module Project {
             attachClickEvents();
             startFunction(); // start everything
          });
+      } else if(perspective == "edit") {
+         if(!redirectEditLayout()) { // do we need to redirect?
+            createEditLayout(function() {
+               console.log("Performing setup for editor layout");
+               setupFunction(); // setup stuff
+               activateEditLayout();
+               startResizePoller(); // dynamically resize the editor
+               attachClickEvents();
+               startFunction(); // start everything
+            });
+         }
       } else {
          createExploreLayout(function() {
             console.log("Performing setup for explore layout");
@@ -208,10 +219,12 @@ export module Project {
    function determineProjectLayout() {
       var debugToggle = ";debug";
       var dialogToggle = ";dialog";
+      var editToggle = ";edit";
       var locationPath = window.document.location.pathname;
       var locationHash = window.document.location.hash;
       var isDebug = locationPath.indexOf(debugToggle, locationPath.length - debugToggle.length) !== -1;
       var isDialog = locationPath.indexOf(dialogToggle, locationPath.length - dialogToggle.length) !== -1;
+      var isEdit = locationPath.indexOf(editToggle) !== -1;
 
       if(isDebug) {
          return "debug";
@@ -219,6 +232,9 @@ export module Project {
       if(isDialog) {
         return "dialog";
       }
+      if(isEdit) {
+         return "edit";
+       }
       return "explore";
    }
    
@@ -337,6 +353,17 @@ export module Project {
          fontName: fontFamily.value,
          availableFonts: availableFonts
       };
+   }
+
+   function applyProjectThemeDirectly() {
+      $.get("/display/" + Common.getProjectName(), function(displayInfo) {
+         const fontSizeValue = displayInfo.fontSize + "px";
+         const fontFamilyValue = displayInfo.fontName;
+         const themeName = displayInfo.themeName;
+         
+         FileEditor.updateEditorFont(fontFamilyValue, fontSizeValue);
+         FileEditor.setEditorTheme("ace/theme/" + themeName);
+      });
    }
    
    function applyProjectTheme() {
@@ -484,11 +511,11 @@ export module Project {
    }
    
    function updateEditorTabName() {
-      var editorFileName = document.getElementById("editFileName");
+      const editorFileName = document.getElementById("editFileName");
       
       if(editorFileName != null){
-         var editorState: FileEditorState = FileEditor.currentEditorState();
-         
+         const editorState: FileEditorState = FileEditor.currentEditorState();
+      
          if(editorState != null && editorState.getResource() != null) {
             editorFileName.innerHTML = "<span title='" + editorState.getResource().getResourcePath() +"'>&nbsp;" + editorState.getResource().getFileName() + "&nbsp;</span>";
          }
@@ -888,6 +915,142 @@ export module Project {
       watchParentStatusFocus();
       activateTab(selectedTab + "Tab", "dialogTabLayout", false, false, "style='right: 0px;'");
       w2ui['dialogTabLayout_main_tabs'].click(selectedTab + "Tab");
+   }
+   
+   function createEditLayout(startFunction) {
+      var layoutEvents = ["createEditLayout"];
+      var layoutEventListener = Common.createSimpleStateMachineFunction("createEditLayout", function() {
+         console.log("Editor only layout fully rendered");
+         startFunction();
+      }, layoutEvents, 200);
+
+      var pstyle = 'background-color: ${PROJECT_BACKGROUND_COLOR}; overflow: hidden;';
+      var leftStyle = pstyle + " margin-top: 32px; border-top: 1px solid ${PROJECT_BORDER_COLOR};";
+
+      KeyBinder.disableKeys();
+      createEditMainLayout(pstyle, layoutEventListener, layoutEvents);
+
+      validateLayout(layoutEvents, ["createEditLayout"]);
+      
+      createProblemsTab();
+      createVariablesTab();
+      createProfilerTab();
+      createBreakpointsTab();
+      createDebugTab();
+      createThreadsTab();
+      createHistoryTab();
+      
+      w2ui['editMainLayout'].refresh();
+
+      layoutEventListener("createEditLayout"); // this allows the whole thing to initiate
+   }
+
+    function createEditMainLayout(layoutStyle, layoutEventListener, layoutEvents) {
+       layoutEvents.push("editMainLayout");
+       layoutEvents.push("editMainLayout#tabs");
+       
+       $('#mainLayout').w2layout({
+          name : 'editMainLayout',
+          padding : 0,
+          panels : [ {
+             type : 'main',
+             size : '100%',
+             style : layoutStyle + 'border-top: 0px;',
+             resizable : false,
+             name : 'editTabs',
+             tabs : {
+                active : 'editTab',
+                tabs : [ {
+                   id : 'editTab',
+                   caption : "<div class='editTab' id='editFileName'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>",
+                   content : "<div style='overflow: scroll; font-family: monospace;' id='edit'><div id='editParent'></div></div>",
+                   closable: false 
+                } ],
+                onClose : function(event) {
+                   closeEditorTabForPath(event.target);
+                },
+                onRender: function(event) {
+                   layoutEventListener("editMainLayout#tabs");
+                }
+             }
+          }, {
+             type : 'bottom',
+             size : '25px',
+             resizable : false,
+             style : layoutStyle,
+             content : createBottomStatusContent()
+          } ],
+          onRender: function(event) {
+             layoutEventListener("editMainLayout");
+          }
+       });
+    }
+   
+   function activateEditLayout() {
+      applyProjectTheme();
+      watchParentStatusFocus();
+      activateTab("editTab", "editMainLayout", false, true, "style='right: 0px;'");
+      w2ui['editMainLayout_main_tabs'].click("editTab");
+      applyProjectThemeDirectly();
+      updateEditLayoutDisplay();
+   }
+   
+   function updateEditLayoutDisplay() {
+      const oneTimeFunction = Common.createOneTimeFunction(function() {
+         const editTimeStamp = Common.extractParameter("time");
+         const resourcePath = FileEditor.currentEditorState().getResource().getResourcePath();
+         
+         updateEditorTabName();
+         
+         if(editTimeStamp) {
+            FileExplorer.openTreeHistoryFile(resourcePath, editTimeStamp, function() {
+               FileEditor.setReadOnly(true);
+            });
+         }
+      });
+      setInterval(function() {
+         const editorState: FileEditorState = FileEditor.currentEditorState();
+         
+         if(editorState) {
+            oneTimeFunction();
+         }
+      }, 100);
+   }
+   
+   function redirectEditLayout() {
+      const projectLayout: string = determineProjectLayout();
+   
+      if(projectLayout == "edit") {
+         const hash = window.document.location.hash;
+         const path = window.document.location.pathname;
+   
+         if(!hash || !Common.stringStartsWith(hash, "#")) {
+            const editIndex: number = path.indexOf(";edit");
+         
+            if(editIndex != -1) {
+               const editTimeStamp = Common.extractParameter("time");
+               const editPath: string = path.substring(editIndex + 5, path.length);
+               const editLocation: string = "/project/" + Common.getProjectName() + ";edit";
+               const host = window.document.location.hostname;
+               const port = window.document.location.port;
+               const scheme = window.document.location.protocol;
+               const address = scheme + "//" + host;
+               
+               if((port - parseFloat(port) + 1) >= 0) {
+                  address += ":";
+                  address += port;
+               }
+               if(editTimeStamp) {
+                  editLocation += "?time=" + editTimeStamp;
+               }
+               editLocation += "#" + editPath;
+               document.location = address + editLocation;
+               
+               return true;
+            }
+         }
+      }
+      return false;
    }
 
    function watchParentStatusFocus() {
@@ -1693,10 +1856,12 @@ export module Project {
             event.onComplete = function() {
                var sel = grid.getSelection();
                if (sel.length == 1) {
-                  var record = grid.get(sel[0]);
-                  FileExplorer.openTreeHistoryFile(record.script, record.time, function() {
-                     FileEditor.showEditorLine(record.line);  
-                  });
+                  const record = grid.get(sel[0]);
+                  const resourcePath: FilePath = FileTree.createResourcePath(record.script);
+                  const projectPath: string = resourcePath.getProjectPath();
+                  const editPath = "/project/" + Common.getProjectName() + ";edit" + projectPath + "?time=" + record.time;
+                  
+                  Command.openChildWindow(editPath);
                }
                grid.selectNone();
                grid.refresh();

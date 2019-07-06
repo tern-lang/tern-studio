@@ -5,14 +5,14 @@ var b = [1,2,3,4L];
 println(a.class);
 println(b.class);
 
-func([1,2,3,4]);
-func([1,2,3,'4']);
-func([1,2L,3.3d]);
-func([1,2L,'foo']);
-func(['blah',2L,'foo']);
+fun([1,2,3,4]);
+fun([1,2,3,'4']);
+fun([1,2L,3.3d]);
+fun([1,2L,'foo']);
+fun(['blah',2L,'foo']);
 
 function fun(x: Integer[]){
-   println("Iteger[]"+x);
+   println("Integer[]"+x);
 }
 
 function fun(x: String[]){

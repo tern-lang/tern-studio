@@ -17,14 +17,19 @@ export module Common {
    }
 
    export function getProjectName() { // total hack job
-      var title = document.title;
+      const title = document.title;
 
       if(title) {
         var trim = title.trim();
         var index = trim.lastIndexOf(" ");
 
         if(index != -1 && index != trim.length) {
-           return trim.substring(index + 1, trim.length);
+           trim = trim.substring(index + 1, trim.length);
+        }
+        index = trim.indexOf("/");
+        
+        if(index != -1 && index != trim.length) {
+           trim = trim.substring(0, index);
         }
         return trim;
       }

@@ -10,7 +10,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
             });
         }
         Command.openTreeFile = openTreeFile;
-        function openChildWindow(path, name) {
+        function openChildWindow(path) {
             var host = window.document.location.hostname;
             var port = window.document.location.port;
             var scheme = window.document.location.protocol;

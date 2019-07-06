@@ -20,7 +20,11 @@ define(["require", "exports", "jquery", "w2ui"], function (require, exports, $, 
                 var trim = title.trim();
                 var index = trim.lastIndexOf(" ");
                 if (index != -1 && index != trim.length) {
-                    return trim.substring(index + 1, trim.length);
+                    trim = trim.substring(index + 1, trim.length);
+                }
+                index = trim.indexOf("/");
+                if (index != -1 && index != trim.length) {
+                    trim = trim.substring(0, index);
                 }
                 return trim;
             }
