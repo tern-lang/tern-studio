@@ -1,7 +1,4 @@
-import awt.event.KeyEvent;
-import awt.event.KeyListener;
-import awt.event.MouseAdapter;
-import awt.event.MouseEvent;
+import awt.event.{KeyEvent, KeyListener, MouseAdapter, MouseEvent};
 
 class GameController extends MouseAdapter with KeyListener {
 

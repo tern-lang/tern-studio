@@ -1,32 +1,30 @@
+import awt.event.{KeyAdapter, KeyEvent};
+
 // An object used to bridge the gap between keyboard input and a basic sprite
 // Attach this object to the panel and pass a sprite in to call the sprites
 // keyboard methods. Each sprite which extends BasicSprite gains a set of methods
 // such that this object is compatible with any sprite that is a BasicSprite.
 
-import awt.event.KeyAdapter;
-import awt.event.KeyEvent;
-
 class SpriteListener extends KeyAdapter {
-   
+
    private let sprite;
-   
+
    public new(sprite) {
       this.sprite = sprite;
    }
-   
-   // do while key is released
-    public override keyReleased(e: KeyEvent) {
-        sprite.keyReleased(e);
-    }
 
-    // do while key is pressed down
-    public override keyPressed(e: KeyEvent) {
-        sprite.keyPressed(e);
-    } 
-    
-    public override keyTyped(e: KeyEvent) {
-        sprite.keyTyped(e);
-    } 
+   // do while key is released
+   public override keyReleased(e: KeyEvent) {
+         sprite.keyReleased(e);
+   }
+
+   // do while key is pressed down
+   public override keyPressed(e: KeyEvent) {
+         sprite.keyPressed(e);
+   } 
+
+   public override keyTyped(e: KeyEvent) {
+         sprite.keyTyped(e);
+   } 
 
 }
-

@@ -1,25 +1,21 @@
 import awt.Point;
-import awt.image.BufferedImage;
-
 import mario.core.tile.GameTile;
 
-
-
 class SlopedTile extends GameTile {
-   
+
    private let startingPoint;
    private let endingPoint;
    private let hasPositiveSlope;
-      
+
    public new(pixelX, pixelY, img, hasPositiveSlope):
          super(pixelX, pixelY, null, img){
-      
+
       setIsCollidable(false);
       setIsCollidable(true);
       setIsSloped(true);
-      
+
       this.hasPositiveSlope = hasPositiveSlope;
-      
+
       if(hasPositiveSlope) {
          startingPoint = new Point(pixelX, pixelY + 15);
          endingPoint = new Point(pixelX + 16, pixelY - 1);
@@ -28,19 +24,19 @@ class SlopedTile extends GameTile {
          endingPoint = new Point(pixelX + 16, pixelY + 14);
       }
    }
-   
+
    public getStartingPoint() {
       return startingPoint;
    }
-   
+
    public getEndingPoint() {
       return endingPoint;
    }
-   
+
    public hasPositiveSlope() {
       return hasPositiveSlope;
    }
-   
+
    private correlateY(pixelX) {
       if(pixelX >= endingPoint.x) {
          return endingPoint.y;
@@ -50,7 +46,7 @@ class SlopedTile extends GameTile {
          return (-1 * Math.floor(pixelX)) + startingPoint.x + startingPoint.y;
       }
    }
-   
+
    private correlateX(pixelY) {
       if(pixelY >= startingPoint.y) {
          return startingPoint.x;
@@ -60,7 +56,7 @@ class SlopedTile extends GameTile {
          return Math.floor(pixelY) - startingPoint.y + startingPoint.x;
       }
    }
-   
+
    public isWithin(pixelX, pixelY, deltaX, deltaY) {
       let xOnLine = correlateX(pixelY);
       let yOnLine = correlateY(pixelX);
@@ -83,4 +79,3 @@ class SlopedTile extends GameTile {
       }
    }
 }
-

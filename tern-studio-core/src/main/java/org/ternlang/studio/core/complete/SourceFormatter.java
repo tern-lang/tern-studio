@@ -135,7 +135,12 @@ public class SourceFormatter {
       int length = type.length();
       int dotIndex = type.lastIndexOf(".");
       int asIndex = type.lastIndexOf(" as ");
+      int starIndex = type.lastIndexOf("*");
       
+      if(starIndex != -1) {
+         String imported = String.format("import %s;", type);
+         return new SourceImport(imported, imported, imported, false, true);
+      }
       if(asIndex != -1) {
          String alias = type.substring(asIndex + 4, length).trim();
          String qualified = type.substring(0, asIndex).trim();

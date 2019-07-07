@@ -1,6 +1,5 @@
 import awt.BorderLayout;
-import swing.JFrame;
-import swing.Timer;
+import swing.{JFrame, Timer};
 
 /* This class contains the entire game... most of the game logic is in the Board class but this
    creates the gui and captures mouse and keyboard input, as well as controls the game states */

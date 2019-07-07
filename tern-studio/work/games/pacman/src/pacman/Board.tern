@@ -1,7 +1,4 @@
-import awt.Color;
-import awt.Font;
-import awt.Graphics;
-import awt.Rectangle;
+import awt.{Color, Font, Graphics, Rectangle};
 import awt.image.BufferedImage;
 
 /*

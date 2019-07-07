@@ -1,5 +1,4 @@
-import io.File;
-import io.PrintWriter;
+import io.{File, PrintWriter};
 import util.Scanner;
 
 class Score {

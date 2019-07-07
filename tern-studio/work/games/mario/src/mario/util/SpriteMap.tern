@@ -1,3 +1,5 @@
+import awt.image.BufferedImage;
+
 // Object responsible for dealing with and cutting up a BufferedImage into individual pieces
 // - Contains a BufferedImage spriteMap which is the image to be cut 
 // - Contains an array of BufferedImages, sprites[], which store the cut images
@@ -6,33 +8,27 @@
 // the number of columns, and the number of rows. Then call getSprites() on
 // the object to retrieve the array of cut images.
 
-import awt.Graphics2D;
-import awt.image.BufferedImage;
-import io.File;
-
-import imageio.ImageIO;
-
 class SpriteMap {
-   
-    private let spriteMap;
-    private let sprites; 
-    
-    public new(filename, c, r) {
-        loadSprites(filename, c, r);
-    }
-    
-    // returns the sprites array
+
+   private let spriteMap;
+   private let sprites; 
+
+   public new(filename, c, r) {
+         loadSprites(filename, c, r);
+   }
+
+   // returns the sprites array
    public getSprites() {
       return sprites;
    }
-    
-    // loads a BufferedImage into spriteSheet and then cuts the image
-    // into individual sprites based on amount of columns and rows
-    private loadSprites(filename, c, r) {
-       spriteMap = ImageManipulator.loadImage(filename);
-       sprites = splitSprites(c, r);
-    }
-   
+
+   // loads a BufferedImage into spriteSheet and then cuts the image
+   // into individual sprites based on amount of columns and rows
+   private loadSprites(filename, c, r) {
+      spriteMap = ImageManipulator.loadImage(filename);
+      sprites = splitSprites(c, r);
+   }
+
    // Splits a given sprite sheet into it's individual sprites and
    // returns the array containing each sprite from left to right, top to bottom.
    // This is acomplished by drawing a portion of the larger image onto a new BufferedImage
@@ -42,21 +38,20 @@ class SpriteMap {
       let pHeight = spriteMap.getHeight() / r; // height of each sprite
       let sprites = new BufferedImage[c*r];
       let n = 0; // used to count sprites
-      
+
       //int xOff = 0; if needed to adjust cutting precision
       let yOff = 0;
-   
+
       for(let y=0; y < r; y++) {
          for(let x = 0; x < c; x++) {
             sprites[n] = new BufferedImage(pWidth, pHeight, 2);
-                let g = sprites[n].createGraphics(); // retrieve graphics to draw onto the BufferedImage
-                // draws a portion of the spriteMap into sprites by directly drawing on the BufferedImage
-                g.drawImage(spriteMap, 0, 0, pWidth, pHeight, pWidth*x, pHeight*y, pWidth*x+pWidth, pHeight*y+pHeight-yOff, null); 
-                g.dispose();
-                n++; // next sprite
+               let g = sprites[n].createGraphics(); // retrieve graphics to draw onto the BufferedImage
+               // draws a portion of the spriteMap into sprites by directly drawing on the BufferedImage
+               g.drawImage(spriteMap, 0, 0, pWidth, pHeight, pWidth*x, pHeight*y, pWidth*x+pWidth, pHeight*y+pHeight-yOff, null); 
+               g.dispose();
+               n++; // next sprite
          }
       }
       return sprites;
    } 
 }
-

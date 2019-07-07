@@ -1,9 +1,4 @@
-
-import net.URL;
-
-import sound.sampled.AudioInputStream;
-import sound.sampled.AudioSystem;
-import sound.sampled.Clip;
+import sound.sampled.{AudioInputStream, AudioSystem, Clip};
 
 module ClipManager {
 
@@ -19,4 +14,3 @@ module ClipManager {
       }
    }
 }
-

@@ -1,23 +1,23 @@
-import swing.JFrame;
 import mario.core.GamePanel;
+import swing.JFrame;
 
 // This is the main entry point..
 
 class GameFrame extends JFrame {
-   
+
    private static const RESOLUTION_WIDTH = 420;
    private static const RESOLUTION_HEIGHT = 330;
-   
+
    private const panel;
    private const width;
    private const height;
-   
+
    public new(scale) {    
       this.panel = new GamePanel(RESOLUTION_WIDTH, RESOLUTION_HEIGHT, scale);
       this.width = RESOLUTION_WIDTH * scale;
       this.height = RESOLUTION_HEIGHT * scale;
    }
-   
+
    public start(){
       setSize(width, height);
       setResizable(false);
@@ -27,5 +27,3 @@ class GameFrame extends JFrame {
       setVisible(true);
    }
 }
-
-

@@ -1,32 +1,31 @@
 
-
 class SampleAverager {
    let  count;
    let samples;
    let index;
-   
+
    new(count){
       this.count = count;
       this.samples = [];
       this.index = 0;
    }
-   
+
    public average() {
       let total = 0.0;
-      
+
       for(value in samples) {
          total += value;
       }
       let average: Number = total / samples.length;
       return average.round(3);
    }
-   
+
    public sample(value: Number) {
       if(samples.length < count){
          samples.add(value);
       } else {
          samples.set(index++, value);
-         
+
          if(index >= samples.length) {
             index = 0;
          }

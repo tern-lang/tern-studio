@@ -1,16 +1,12 @@
-import awt.image.BufferedImage;
-
 import mario.core.animation.Animation;
-import mario.core.tile.TileMap;
 import mario.objects.base.Creature;
 import mario.util.ImageManipulator;
 
-
 class Mushroom extends Creature {
-   
+
    private let redMushroom;
    private let updateNum;
-   
+
    public new(pixelX, pixelY): super(pixelX, pixelY) {
       setIsItem(true);
       setIsAlwaysRelevant(true);
@@ -23,7 +19,7 @@ class Mushroom extends Creature {
       dy = -0.15f;
       dx = 0.07f;
    }
-   
+
    public updateCreature(map, time) {
       if(updateNum < 10) {
          setX(getX() + getdX()*time);
@@ -43,4 +39,3 @@ class Mushroom extends Creature {
       updateNum += 1;
    }
 }
-

@@ -1,39 +1,32 @@
-import awt.Point;
-import awt.image.BufferedImage;
-
 import mario.core.animation.Animation;
-import mario.core.sound.specific.MarioSoundManager22050Hz;
-import mario.core.tile.GameTile;
-import mario.core.tile.TileMap;
 import mario.objects.base.Creature;
 import mario.util.ImageManipulator;
 
-
 class RedShell extends Creature {
-   
+
    private let still;
    private let rotate;
    private let flip;
-   
+
    private let map;
    private let isMoving;
-   
+
    public new(x, y, map, soundManager, isStill):
       super(x, y, soundManager) {
-      
+
       this.map = map;
       setIsAlwaysRelevant(true);
-       
+
       let stay = ImageManipulator.loadImage("/mario/baddies/Red_Shell_1.png");
       let rotate_1 = ImageManipulator.loadImage("/mario/baddies/Red_Shell_2.png");
       let rotate_2 = ImageManipulator.loadImage("/mario/baddies/Red_Shell_3.png");
       let rotate_3 = ImageManipulator.loadImage("/mario/baddies/Red_Shell_4.png");
       let flipped = ImageManipulator.loadImage("/mario/baddies/Red_Shell_Flip.png");
-      
+
       still = new Animation();
       rotate = new Animation();
       flip = new Animation(-> kill());
-      
+
       still.addFrame(stay, 150);
       rotate.addFrame(rotate_1, 30);
       rotate.addFrame(stay, 30);
@@ -42,17 +35,17 @@ class RedShell extends Creature {
       rotate.addFrame(rotate_1, 30);
       flip.addFrame(flipped, 1200);
       flip.addFrame(flipped, 1200);
-      
+
       wakeUp();
       isMoving = false;
       setAnimation(still);
       dx = 0;
    }
-   
+
    public isMoving() {
       return isMoving;
    }
-   
+
    public xCollide(p) {
       super.xCollide(p);
       let tile = map.getTile(p.x, p.y);
@@ -63,7 +56,7 @@ class RedShell extends Creature {
          }
       }
    }
-   
+
    public flip() {
       setAnimation(flip);
       setIsFlipped(true);
@@ -71,7 +64,7 @@ class RedShell extends Creature {
       dy = -0.2f;
       dx = 0;
    }
-   
+
    // if you run or jump on the shell faster, the shell moves faster.
    public jumpedOn(fromRight, attackerSpeed) {
       if(isMoving) {
@@ -101,4 +94,3 @@ class RedShell extends Creature {
       }
    }
 }
-

@@ -1,14 +1,9 @@
-import awt.image.BufferedImage;
-
 import mario.core.animation.Animation;
-import mario.core.tile.TileMap;
 import mario.objects.base.Creature;
 import mario.util.ImageManipulator;
 
-
-
 class Platform extends Creature {
-   
+
    public let move;
    public let turn;
    public let isVertical = false;
@@ -20,7 +15,7 @@ class Platform extends Creature {
    public let oldY = 0f;
    public let oldDx = 0f;
    public let oldDy = 0f;
-   
+
    public new(pixelX, pixelY): super(pixelX, pixelY) {
       setIsAlwaysRelevant(true);
       setIsPlatform(true);
@@ -31,31 +26,31 @@ class Platform extends Creature {
       move = new Animation(2000).addFrame(red_platform);
       setAnimation(move);
    }
-   
+
    /**
-    * @return the oldX
-    */
+   * @return the oldX
+   */
    public getOldX() {
       return oldX;
    }
 
    /**
-    * @param oldX the oldX to set
-    */
+   * @param oldX the oldX to set
+   */
    public setOldX(oldX) {
       this.oldX = oldX;
    }
 
    /**
-    * @return the oldY
-    */
+   * @return the oldY
+   */
    public getOldY() {
       return oldY;
    }
 
    /**
-    * @param oldY the oldY to set
-    */
+   * @param oldY the oldY to set
+   */
    public setOldY(oldY) {
       this.oldY = oldY;
    }
@@ -66,30 +61,29 @@ class Platform extends Creature {
    public isHorizontal() {
       return isHorizontal;
    }
-   
+
    public isVertical() {
       return isVertical;
    }
-   
+
    public getLastdX() {
       return oldDx;
    }
-   
+
    public getLastdY() {
       return oldDy;
    }
-   
+
    public switchedVertical() {
       return switchedVertical;
    }
-   
+
    public switchedHorizontal() {
       return switchedHorizontal;
    }
-   
+
    public updateCreature(map, time) {
 
-      
       if(dx != 0) {
          isHorizontal = true;
       }
@@ -115,13 +109,13 @@ class Platform extends Creature {
       oldY = y;
       x = x + time*dx;
       y = y + time*dy;
-      
+
       if((oldDx > 0 && dx < 0) || (oldDx < 0 && dx > 0)) {
          this.switchedHorizontal = true;
       } else {
          this.switchedHorizontal = false;
       }
-      
+
       if((oldDy > 0 && dy < 0) || (oldDy < 0 && dy > 0)) {
          this.switchedVertical = true;
       } else {
@@ -129,8 +123,7 @@ class Platform extends Creature {
       }
       //dx = 0;
       //dy = 0;
-      
+
    }
 
 }
-

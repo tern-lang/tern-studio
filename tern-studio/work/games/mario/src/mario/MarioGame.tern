@@ -1,12 +1,9 @@
-
-import static lang.Integer.*; 
-
+import static lang.Integer.*;
 import mario.core.GameFrame;
-import mario.core.GamePanel;
 
 func start(scale) {
    let g = new GameFrame(scale);
-   
+
    try {
       g.start();
       sleep(MAX_VALUE);
@@ -16,5 +13,4 @@ func start(scale) {
 }
 
 start(2);
-  
-     
+

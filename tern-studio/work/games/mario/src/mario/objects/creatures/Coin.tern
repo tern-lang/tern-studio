@@ -1,14 +1,10 @@
 import awt.image.BufferedImage;
-
 import mario.core.animation.Animation;
-import mario.core.tile.TileMap;
 import mario.objects.base.Creature;
 import mario.util.ImageManipulator;
 
-
-
 class Coin extends Creature {
-   
+
    private static let c = [ 
       ImageManipulator.loadImage("/mario/items/Coin_5.png"), 
       ImageManipulator.loadImage("/mario/items/Coin_6.png"),
@@ -17,20 +13,20 @@ class Coin extends Creature {
    ];
    public static let turn = new Animation(150).addFrame(c[0]).addFrame(c[1]).addFrame(c[2]).addFrame(c[3]);
    // Alternate Animation;
-    //private static BufferedImage[] c = { loadImage("items/Coin_1.png"), loadImage("items/Coin_2.png"),
+   //private static BufferedImage[] c = { loadImage("items/Coin_1.png"), loadImage("items/Coin_2.png"),
    //   loadImage("items/Coin_3.png"), loadImage("items/Coin_4.png") };
-   
+
    //private let turn;
    private let shoot;
-   
+
    public new(pixelX, pixelY): super(pixelX, pixelY) {
       setIsItem(true);
-      
+
       //turn = new Animation(1000).addFrame(c[0]).addFrame(c[1]).addFrame(c[2]).addFrame(c[3]);
       shoot = new Animation(-> kill()).setDAL(120).addFrame(c[0]).addFrame(c[1]).addFrame(c[2]).addFrame(c[3]);
       setAnimation(turn);
    }
-   
+
 //   public draw(g, pixelX, pixelY) {
 //      float[] scales = { .6f, .6f, .6f, 8f};
 //      float[] offsets = new float[4];
@@ -52,7 +48,7 @@ class Coin extends Creature {
 //   public draw(g, pixelX, pixelY, offsetX, offsetY) {
 //      draw(g, pixelX + offsetX, pixelY + offsetY);   
 //   }
-   
+
    public updateCreature(map, time) {
       if(currentAnimation() == shoot) {
          super.update(time);
@@ -62,11 +58,10 @@ class Coin extends Creature {
          } 
       }
    }
-   
+
    public shoot() {
       setIsCollidable(false);
       setAnimation(shoot);
       dy = -0.3f;
    }
 }
-

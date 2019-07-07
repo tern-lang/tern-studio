@@ -1,32 +1,27 @@
-import awt.Point;
-import awt.image.BufferedImage;
-import util.Random;
-
 import mario.core.animation.Animation;
-import mario.core.sound.specific.MarioSoundManager22050Hz;
 import mario.objects.base.Creature;
 import mario.util.ImageManipulator;
-
+import util.Random;
 
 class RedKoopa extends Creature {
-   
+
    private let left;
    private let right;
    private let dead;
    private let flip;
    private let r;
-   
+
    public new(x, y, soundManager): super(x, y, soundManager) {
-      
+
       r = new Random();
-      
+
       let left_1 = ImageManipulator.loadImage("/mario/baddies/Koopa_Red_Left_1.png");
       let left_2 = ImageManipulator.loadImage("/mario/baddies/Koopa_Red_Left_2.png");
       let right_1 = ImageManipulator.loadImage("/mario/baddies/Koopa_Red_Right_1.png");
       let right_2 = ImageManipulator.loadImage("/mario/baddies/Koopa_Red_Right_2.png");
       let shell = ImageManipulator.loadImage("/mario/baddies/Red_Shell_1.png");
       let flipped = ImageManipulator.loadImage("/mario/baddies/Red_Shell_Flip.png");
-      
+
       left = new Animation(150).addFrame(left_1).addFrame(left_2);
       right = new Animation(150).addFrame(right_1).addFrame(right_2);
 
@@ -38,7 +33,7 @@ class RedKoopa extends Creature {
       flip.addFrame(flipped, 1200);
       setAnimation(left);
    }
-   
+
    public xCollide(p) {
       super.xCollide(p);
       if(currentAnimation() == left) {
@@ -47,7 +42,7 @@ class RedKoopa extends Creature {
          setAnimation(left);
       }
    }
-   
+
    public creatureXCollide() {
       if(dx > 0) {
          x = x - 2;
@@ -58,7 +53,7 @@ class RedKoopa extends Creature {
       }
       dx = -dx;
    }
-   
+
    public flip() {
       setAnimation(flip);
       setIsFlipped(true);
@@ -66,7 +61,7 @@ class RedKoopa extends Creature {
       dy = -0.2f;
       dx = 0;
    }
-   
+
    public wakeUp() {
       super.wakeUp();
       let rNum = r.nextInt(3);
@@ -78,11 +73,10 @@ class RedKoopa extends Creature {
             setAnimation(right);
          }
    }
-   
+
    public jumpedOn() {
       setAnimation(dead);
       setIsCollidable(false);
       dx = 0;
    }
 }
-

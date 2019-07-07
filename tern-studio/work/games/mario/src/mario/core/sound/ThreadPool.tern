@@ -1,64 +1,62 @@
-import util.LinkedList;
 import util.concurrent.Executors;
 
 /**
-    A thread pool is a group of a limited number of threads that
-    are used to execute tasks.
-    
-    Forrest's comments: still a little unclear about how this whole thing works,
-    basically my understanding is that it is a group of threads that run through a
-    linked list of tasks sent to the object, the threads execute each task as the threads
-    finish up with other tasks. 
+   A thread pool is a group of a limited number of threads that
+   are used to execute tasks.
+
+   Forrest's comments: still a little unclear about how this whole thing works,
+   basically my understanding is that it is a group of threads that run through a
+   linked list of tasks sent to the object, the threads execute each task as the threads
+   finish up with other tasks. 
 */
 abstract class ThreadPool {
 
-    private const taskExecutor;
-    
-    /**
-        Creates a new ThreadPool.
-        @param numThreads The number of threads in the pool.
-    */
-    public new(numThreads) {
-        this.taskExecutor = Executors.newFixedThreadPool(Math.max(10, numThreads),
+   private const taskExecutor;
+
+   /**
+         Creates a new ThreadPool.
+         @param numThreads The number of threads in the pool.
+   */
+   public new(numThreads) {
+         this.taskExecutor = Executors.newFixedThreadPool(Math.max(10, numThreads),
             task -> Thread(-> {
                   threadStarted();
-                  
+
                   try {
                      task.run();
                   } finally {
                      threadStopped();
                   }
             }));
-    }
+   }
 
-    /**
-        Requests a new task to run. This method returns
-        immediately, and the task executes on the next available
-        idle thread in this ThreadPool.
-        <p>Tasks start execution in the order they are received.
-        @param task The task to run. If null, no action is taken.
-        @throws IllegalStateException if this ThreadPool is
-        already closed.
-    */
-    public runTask(task) {
-       taskExecutor.execute(task);
-    }
-
-    
    /**
-    * Signals that a PooledThread has started. This method does nothing by
-    * default; subclasses should override to do any thread-specific startup
-    * tasks.
-    */
+         Requests a new task to run. This method returns
+         immediately, and the task executes on the next available
+         idle thread in this ThreadPool.
+         <p>Tasks start execution in the order they are received.
+         @param task The task to run. If null, no action is taken.
+         @throws IllegalStateException if this ThreadPool is
+         already closed.
+   */
+   public runTask(task) {
+      taskExecutor.execute(task);
+   }
+
+   /**
+   * Signals that a PooledThread has started. This method does nothing by
+   * default; subclasses should override to do any thread-specific startup
+   * tasks.
+   */
    public threadStarted() {
       // do nothing
    }
 
    /**
-    * Signals that a PooledThread has stopped. This method does nothing by
-    * default; subclasses should override to do any thread-specific cleanup
-    * tasks.
-    */
+   * Signals that a PooledThread has stopped. This method does nothing by
+   * default; subclasses should override to do any thread-specific cleanup
+   * tasks.
+   */
    public threadStopped() {
       // do nothing
    }

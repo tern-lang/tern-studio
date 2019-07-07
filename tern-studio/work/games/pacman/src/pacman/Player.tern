@@ -1,20 +1,17 @@
-
-
-import java.util.HashSet;
-import java.util.Set;
+import java.util.{HashSet, Set};
 
 /* This is the pacman object */
 class Player extends Mover {
    /*
-    * Direction is used in demoMode, currDirection and desiredDirection are used
-    * in non demoMode
-    */
+   * Direction is used in demoMode, currDirection and desiredDirection are used
+   * in non demoMode
+   */
    let direction;
    let currDirection;
    let desiredDirection;
 
    /* Keeps track of pellets eaten to determine end of game */
-   let pelletsEaten: Integer = 0t;
+   let pelletsEaten: Integer = 0;
 
    /* Last location */
    let lastX: Integer = 0;
@@ -49,9 +46,9 @@ class Player extends Mover {
    }
 
    /*
-    * This function is used for demoMode. It is copied from the Ghost class. See
-    * that for comments
-    */
+   * This function is used for demoMode. It is copied from the Ghost class. See
+   * that for comments
+   */
    public newDirection(): Character {
       let random: Integer = 0;
       let backwards: Character = 'U';
@@ -108,9 +105,9 @@ class Player extends Mover {
    }
 
    /*
-    * This function is used for demoMode. It is copied from the Ghost class. See
-    * that for comments
-    */
+   * This function is used for demoMode. It is copied from the Ghost class. See
+   * that for comments
+   */
    public isChoiceDest(): Boolean {
       if (x % gridSize == 0 && y % gridSize == 0) {
          return true;
@@ -119,9 +116,9 @@ class Player extends Mover {
    }
 
    /*
-    * This function is used for demoMode. It is copied from the Ghost class. See
-    * that for comments
-    */
+   * This function is used for demoMode. It is copied from the Ghost class. See
+   * that for comments
+   */
    public demoMove() {
       lastX = x;
       lastY = y;
@@ -190,9 +187,9 @@ class Player extends Mover {
          }
       }
       /*
-       * If we haven't moved, then move in the direction the pacman was headed
-       * anyway
-       */
+      * If we haven't moved, then move in the direction the pacman was headed
+      * anyway
+      */
       if (lastX == x && lastY == y) {
          switch (currDirection) {
          case 'L':
@@ -232,9 +229,9 @@ class Player extends Mover {
          stopped = true;
 
       /*
-       * Otherwise, clear the stopped flag and increment the frameCount for
-       * animation purposes
-       */
+      * Otherwise, clear the stopped flag and increment the frameCount for
+      * animation purposes
+      */
       else {
          stopped = false;
          frameCount++;
@@ -249,4 +246,3 @@ class Player extends Mover {
       }
    }
 }
-

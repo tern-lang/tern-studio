@@ -1,67 +1,56 @@
-import awt.Image;
-import awt.Toolkit;
+import awt.{Image, Toolkit};
 import awt.image.BufferedImage;
-import io.File;
-import io.IOException;
-import util.ArrayList;
-import util.Scanner;
-
-import imageio.ImageIO;
-
-import mario.core.sound.specific.MarioSoundManager22050Hz;
-import mario.core.tile.GameTile;
-import mario.core.tile.TileMap;
-import mario.objects.creatures.{ Coin, Goomba, Platform, RedKoopa, RedShell };
-import mario.objects.tiles.{ QuestionBlock, RotatingBlock, SlopedTile};
-import mario.util.SpriteMap;
-import mario.util.ImageManipulator;
-
+import mario.core.tile.{GameTile, TileMap};
+import mario.objects.creatures.{Coin, Goomba, Platform, RedKoopa, RedShell};
+import mario.objects.tiles.{QuestionBlock, RotatingBlock, SlopedTile};
+import mario.util.{ImageManipulator, SpriteMap};
+import util.{ArrayList, Scanner};
 
 class GameLoader {
-   
+
    private let plain;
    private let plainTiles;
-   
+
    private let sloped_image;
    private let grass_edge;
    private let grass_center;
-   
+
    public new() {
-       
+
       plain = new ArrayList();
       plainTiles = new SpriteMap("/mario/tiles/Plain_Tiles.png", 6, 17).getSprites();
-      
+
       for (let bImage in plainTiles) {
          plain.add(bImage);
       }
-      
+
       sloped_image = loadImage("/mario/items/Sloped_Tile.png");
       grass_edge = loadImage("/mario/items/Grass_Edge.png");
       grass_center = loadImage("/mario/items/Grass_Center.png");
    }
-   
+
    public loadImage(filename) {
       return ImageManipulator.loadImage(filename);
    }
-   
+
    public loadResource(filename) {
       return GameLoader.class.getModule().getContext().getManager().getInputStream(filename);
    }
-   
+
    // BufferedImage -> Image
    public static toImage(bufferedImage) {
-       return Toolkit.getDefaultToolkit().createImage(bufferedImage.getSource());
+      return Toolkit.getDefaultToolkit().createImage(bufferedImage.getSource());
    }
 
    // loads a tile map, given a map to load..
-    // use this to load the background and foreground. Note: the status of the tiles (ie collide etc)
-    // is irrelevant. Why? I don't check collision on maps other than the main map. 
-    public loadOtherMaps(filename)  {
+   // use this to load the background and foreground. Note: the status of the tiles (ie collide etc)
+   // is irrelevant. Why? I don't check collision on maps other than the main map. 
+   public loadOtherMaps(filename)  {
       // lines is a list of strings, each element is a row of the map
       let lines = new ArrayList();
       let width = 0;
       let height = 0;
-      
+
       // read in each line of the map into lines
       let reader = new Scanner(loadResource(filename));
       while(reader.hasNextLine()) {
@@ -72,13 +61,13 @@ class GameLoader {
          }
       }
       height = lines.size(); // number of elements in lines is the height
-      
+
       let newMap = new TileMap(width, height);
       for (let y=0; y < height; y++) {
          let line = lines.get(y);
          for (let x=0; x < line.length(); x++) {
             let ch = line.charAt(x);
-            
+
             if (ch == 'n') {
                newMap.setTile(x, y, plain.get(92));
             } else if (ch == 'm') {
@@ -96,14 +85,14 @@ class GameLoader {
       }
       return newMap;   
    }
-       
-    // Use this to load the main map
+
+   // Use this to load the main map
    public loadMap(filename, soundManager)  {
       // lines is a list of strings, each element is a row of the map
       let lines = new ArrayList();
       let width = 0;
       let height = 0;
-      
+
       // read in each line of the map into lines
       let reader = new Scanner(loadResource(filename));
       while(reader.hasNextLine()) {
@@ -114,7 +103,7 @@ class GameLoader {
          }
       }
       height = lines.size(); // number of elements in lines is the height
-      
+
       let newMap = new TileMap(width, height);
       for (let y=0; y < height; y++) {
          let line = lines.get(y);
@@ -176,4 +165,3 @@ class GameLoader {
    }
 
 }
-
