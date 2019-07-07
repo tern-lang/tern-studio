@@ -1,10 +1,8 @@
 package org.ternlang.studio.core;
 
 import java.io.File;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
-
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 import org.simpleframework.module.annotation.Component;
 import org.simpleframework.module.annotation.Value;
@@ -16,12 +14,16 @@ import org.ternlang.ui.ClientContext;
 import org.ternlang.ui.ClientControl;
 import org.ternlang.ui.ClientProvider;
 
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @Component
 public class StudioClientLauncher {    
    
    private static final String CLIENT_LOG = "/log/client.log";
    private static final String CLIENT_CACHE = "cache";   
+   private static final String COOKIE_CACHE = "cookies";   
 
    private final AtomicReference<ClientControl> reference;
    private final File directory;
@@ -61,10 +63,12 @@ public class StudioClientLauncher {
          final String path = root.getCanonicalPath();
          final File logFile = HomeDirectory.getPath(CLIENT_LOG);
          final File cachePath = HomeDirectory.getPath(CLIENT_CACHE);
+         final File cookiePath = HomeDirectory.getPath(COOKIE_CACHE, UUID.randomUUID().toString());
          final String title = directory.getCanonicalPath();
          final ClientContext context = new ClientContext()
             .setLogFile(logFile)
             .setCachePath(cachePath)
+            .setCookiePath(cookiePath)
             .setFolder(path)
             .setDebug(debug)            
             .setAddress(address)

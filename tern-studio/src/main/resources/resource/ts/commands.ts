@@ -32,7 +32,6 @@ export module Command {
       var port = window.document.location.port;
       var scheme = window.document.location.protocol;
       var address = scheme + "//" + host;
-      var session = Common.extractCookie("SESSID"); // hardcoded :(
 
       if((port - parseFloat(port) + 1) >= 0) {
          address += ":";
@@ -40,13 +39,18 @@ export module Command {
       }
       address += path;
 
-      if(!useSession) {
-         session = Common.createTimeStamp();
+      if(useSession) {
+         EventBus.sendEvent("LAUNCH", {
+            address: address,
+            session: Common.extractCookie("SESSID"); // hardcoded :(
+         });
+      } else {
+         EventBus.sendEvent("LAUNCH", {
+            address: address,
+            session: Common.createTimeStamp()
+         });
       }
-      EventBus.sendEvent("LAUNCH", {
-         address: address,
-         session: session
-      });
+
    }
    
       
@@ -56,7 +60,6 @@ export module Command {
 	      var port = window.document.location.port;
 	      var scheme = window.document.location.protocol;
 	      var address = scheme + "//" + host;
-	      var session = Common.extractCookie("SESSID"); // hardcoded :(
 	
 	      if((port - parseFloat(port) + 1) >= 0) {
 	         address += ":";
@@ -66,7 +69,7 @@ export module Command {
 	
 	      EventBus.sendEvent("LAUNCH", {
 	         address: address,
-	         session: session
+	         session: Common.extractCookie("SESSID"); // hardcoded :(
 	      });
       }
    }

@@ -15,19 +15,23 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
             var port = window.document.location.port;
             var scheme = window.document.location.protocol;
             var address = scheme + "//" + host;
-            var session = common_1.Common.extractCookie("SESSID"); // hardcoded :(
             if ((port - parseFloat(port) + 1) >= 0) {
                 address += ":";
                 address += port;
             }
             address += path;
-            if (!useSession) {
-                session = common_1.Common.createTimeStamp();
+            if (useSession) {
+                socket_1.EventBus.sendEvent("LAUNCH", {
+                    address: address,
+                    session: common_1.Common.extractCookie("SESSID")
+                });
             }
-            socket_1.EventBus.sendEvent("LAUNCH", {
-                address: address,
-                session: session
-            });
+            else {
+                socket_1.EventBus.sendEvent("LAUNCH", {
+                    address: address,
+                    session: common_1.Common.createTimeStamp()
+                });
+            }
         }
         Command.openChildWindow = openChildWindow;
         function openTerminal(resourcePath) {
@@ -36,7 +40,6 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                 var port = window.document.location.port;
                 var scheme = window.document.location.protocol;
                 var address = scheme + "//" + host;
-                var session = common_1.Common.extractCookie("SESSID"); // hardcoded :(
                 if ((port - parseFloat(port) + 1) >= 0) {
                     address += ":";
                     address += port;
@@ -44,7 +47,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                 address += "/terminal/" + common_1.Common.getProjectName() + resourcePath.getFilePath();
                 socket_1.EventBus.sendEvent("LAUNCH", {
                     address: address,
-                    session: session
+                    session: common_1.Common.extractCookie("SESSID")
                 });
             }
         }
