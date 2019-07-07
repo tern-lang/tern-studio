@@ -1,5 +1,4 @@
-import util.HashSet;
-import util.Set;
+import util.{HashSet, Set};
 
 /* This is the pacman object */
 class Player extends Mover {

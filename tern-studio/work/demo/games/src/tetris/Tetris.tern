@@ -1,12 +1,5 @@
-import awt.Canvas;
-import awt.Color;
-import awt.Dimension;
-import awt.Font;
-import awt.Graphics;
-import awt.Point;
-import awt.event.KeyListener;
-import awt.event.WindowAdapter;
-import awt.event.WindowEvent;
+import awt.{Canvas, Color, Dimension, Font, Graphics, Point};
+import awt.event.{KeyListener, WindowAdapter, WindowEvent};
 import awt.image.BufferStrategy;
 import swing.JFrame;
 
@@ -161,7 +154,6 @@ class Tetris {
          g.setColor(Color.YELLOW);
          g.drawString("GAME PAUSED", 350, 550);
    }
-
 
    drawPlayTetris(g) {
          var font = new Font("Dialog", Font.PLAIN, 16);

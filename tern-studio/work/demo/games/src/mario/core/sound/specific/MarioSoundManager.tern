@@ -1,20 +1,17 @@
 import io.File;
-import io.FileNotFoundException;
+import mario.core.sound.SoundManager;
+import sound.sampled.AudioFormat;
 import util.Scanner;
 
-import sound.sampled.AudioFormat;
-
-import mario.core.sound.SoundManager;
-
 class MarioSoundManager {
-   
+
    private static const var f1: AudioFormat = new AudioFormat(22050, 8, 1, true, true); // 22050 Hz.
    private static const var f2: AudioFormat = new AudioFormat(10512, 8, 1, true, true); // 10512 Hz.
    private static const var fileName: String = "sounds/mario_sounds.txt";
-   
+
    private var s1: SoundManager;
    private var s2: SoundManager;
-   
+
    class SoundRecord {
       public var name: String;
       public var location: String;
@@ -25,28 +22,26 @@ class MarioSoundManager {
          this.hz = hz;
       }
    }
-   
+
    public new() {
       s1 = new SoundManager(f1);
       s2 = new SoundManager(f2);
-      
+
       var s: Scanner = null;
       try {
          s = new Scanner(new File(fileName)); 
       } catch (e) {
          System.out.println(e);
       }
-      
+
       while(s.hasNextLine()) {
-         
+
          var line: String = s.nextLine();
          var ls: Scanner = new Scanner(line);
          var sr: SoundRecord = new SoundRecord(ls.next(), ls.next(), ls.nextInt());
 
       }
-      
-      
+
    }
 
 }
-

@@ -1,22 +1,18 @@
+import mario.core.sound.{Sound, SoundManager};
+import sound.sampled.AudioFormat;
 import util.Random;
 
-import sound.sampled.AudioFormat;
-
-import mario.core.sound.Sound;
-import mario.core.sound.SoundManager;
-
-
 class MarioSoundManager10512Hz extends SoundManager {
-   
+
    private var hurt1: Sound, hurt2, yahoo1, yahoo2;
 
    public new(format: AudioFormat): super(format) {
-       hurt1 = getSound("/mario/sounds/mario_ooh.wav");
-       hurt2 = getSound("/mario/sounds/mario_oh.wav");
-       yahoo1 = getSound("/mario/sounds/mario_waha.wav");
-       yahoo2 = getSound("/mario/sounds/mario_woohoo.wav");
+      hurt1 = getSound("/mario/sounds/mario_ooh.wav");
+      hurt2 = getSound("/mario/sounds/mario_oh.wav");
+      yahoo1 = getSound("/mario/sounds/mario_waha.wav");
+      yahoo2 = getSound("/mario/sounds/mario_woohoo.wav");
    }
-   
+
    public playHurt() {
       var r: Random = new Random();
       var rNum: Integer = r.nextInt(2);
@@ -26,7 +22,7 @@ class MarioSoundManager10512Hz extends SoundManager {
          play(hurt2);
       }
    }
-   
+
    public playCelebrate() {
       var r: Random = new Random();
       var rNum: Integer = r.nextInt(2);
@@ -37,4 +33,3 @@ class MarioSoundManager10512Hz extends SoundManager {
       }
    }
 }
-

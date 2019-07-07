@@ -1,5 +1,4 @@
-import util.HashSet;
-import util.Set;
+import util.{HashSet, Set};
 
 /* Ghost class controls the ghost. */
 class Ghost extends Mover {
