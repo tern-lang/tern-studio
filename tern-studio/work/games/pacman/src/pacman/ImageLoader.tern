@@ -4,7 +4,7 @@ import imageio.ImageIO;
 module ImageLoader {
 
    loadImage(path: String): Image {
-      let source: InputStream = ClipManager.getContext().getManager().getInputStream(path);
+      let source: InputStream = ImageLoader.getContext().getManager().getInputStream(path);
       return ImageIO.read(source);
    }
 }

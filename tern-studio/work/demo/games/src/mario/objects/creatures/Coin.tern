@@ -1,14 +1,11 @@
 import awt.image.BufferedImage;
-
 import mario.core.animation.Animation;
 import mario.core.tile.TileMap;
 import mario.objects.base.Creature;
 import mario.util.ImageManipulator;
 
-
-
 class Coin extends Creature {
-   
+
    private static var c: BufferedImage[] = [ 
       ImageManipulator.loadImage("/mario/items/Coin_5.png"), 
       ImageManipulator.loadImage("/mario/items/Coin_6.png"),
@@ -17,21 +14,21 @@ class Coin extends Creature {
    ];
    public static var turn: Animation = new Animation(150).addFrame(c[0]).addFrame(c[1]).addFrame(c[2]).addFrame(c[3]);
    // Alternate Animation;
-    //private static BufferedImage[] c = { loadImage("items/Coin_1.png"), loadImage("items/Coin_2.png"),
+   //private static BufferedImage[] c = { loadImage("items/Coin_1.png"), loadImage("items/Coin_2.png"),
    //   loadImage("items/Coin_3.png"), loadImage("items/Coin_4.png") };
-   
+
    //private var turn: Animation;
    private var shoot: Animation;
-   
+
    public new(pixelX: Integer, pixelY: Integer): super(pixelX, pixelY) {
 
       setIsItem(true);
-      
+
       //turn = new Animation(1000).addFrame(c[0]).addFrame(c[1]).addFrame(c[2]).addFrame(c[3]);
       shoot = new Animation(-> kill()).setDAL(120).addFrame(Coin.c[0]).addFrame(Coin.c[1]).addFrame(Coin.c[2]).addFrame(Coin.c[3]);
       setAnimation(Coin.turn);
    }
-   
+
 //   public draw(g: Graphics, pixelX: Integer, pixelY: Integer) {
 //      float[] scales = { .6f, .6f, .6f, 8f};
 //      float[] offsets = new float[4];
@@ -53,7 +50,7 @@ class Coin extends Creature {
 //   public draw(g: Graphics, pixelX: Integer, pixelY: Integer, offsetX: Integer, offsetY: Integer) {
 //      draw(g, pixelX + offsetX, pixelY + offsetY);   
 //   }
-   
+
    public updateCreature(map: TileMap, time: Integer) {
       if(currentAnimation() == shoot) {
          super.update(time);
@@ -63,11 +60,10 @@ class Coin extends Creature {
          } 
       }
    }
-   
+
    public shoot() {
       setIsCollidable(false);
       setAnimation(shoot);
       dy = -0.3f;
    }
 }
-

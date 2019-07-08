@@ -10,6 +10,9 @@ class ImageElement extends HtmlElement {
    }
    
    override render(indent: String, b: PrintStream) {
-      b.println("${indent}<img src='${link}' alt='${text}'>");
+      const style = `cursor: pointer;`;
+      const redirect = `document.location="${link}"; return false;`;
+      
+      b.println("${indent}<img src='${link}' style='${style}' onclick='${redirect}' alt='${text}'>");
    }
 }
