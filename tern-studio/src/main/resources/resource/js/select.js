@@ -21,15 +21,15 @@ define(["require", "exports", "jquery", "dialog", "common"], function (require, 
                     var sortedNames = [];
                     for (var projectName in projectMap) {
                         if (projectMap.hasOwnProperty(projectName)) {
-                            if (common_1.Common.stringStartsWith(projectName, text)) {
+                            if (common_1.Common.stringStartsWith(projectName, originalExpression)) {
                                 sortedNames.push(projectName);
                             }
                         }
                     }
                     sortedNames.sort();
                     if (isSubmit && isSubmit == true) {
-                        if (sortedNames.indexOf(text) == -1) {
-                            createNewProject(text); // create non-existing project
+                        if (sortedNames.indexOf(originalExpression) == -1) {
+                            createNewProject(originalExpression); // create non-existing project
                         }
                     }
                     for (var i = 0; i < sortedNames.length; i++) {
@@ -37,12 +37,12 @@ define(["require", "exports", "jquery", "dialog", "common"], function (require, 
                         var projectPath = projectMap[projectName_1];
                         var projectLink = createProjectLocation(projectName_1);
                         var projectNameCell = {
-                            text: projectName_1 + "&nbsp;&nbsp;",
+                            text: "<span style='cursor: pointer;'>" + projectName_1 + "&nbsp;&nbsp;</span>",
                             link: projectLink,
                             style: 'projectNode'
                         };
                         var projectPathCell = {
-                            text: "<i style='opacity: 0.5'>" + projectPath + "</i>",
+                            text: "<i style='opacity: 0.5; cursor: pointer;'>" + projectPath + "</i>",
                             link: projectLink,
                             style: 'folderNode'
                         };

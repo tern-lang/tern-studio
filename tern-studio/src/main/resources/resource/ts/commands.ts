@@ -42,7 +42,7 @@ export module Command {
       if(useSession) {
          EventBus.sendEvent("LAUNCH", {
             address: address,
-            session: Common.extractCookie("SESSID"); // hardcoded :(
+            session: Common.extractCookie("SESSID") // hardcoded :(
          });
       } else {
          EventBus.sendEvent("LAUNCH", {
@@ -69,7 +69,7 @@ export module Command {
 	
 	      EventBus.sendEvent("LAUNCH", {
 	         address: address,
-	         session: Common.extractCookie("SESSID"); // hardcoded :(
+	         session: Common.extractCookie("SESSID") // hardcoded :(
 	      });
       }
    }

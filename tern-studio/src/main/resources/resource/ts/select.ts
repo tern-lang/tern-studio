@@ -45,12 +45,12 @@ export module ProjectSelector {
                const projectPath = projectMap[projectName];
                const projectLink = createProjectLocation(projectName),
                const projectNameCell = {
-                  text: projectName + "&nbsp;&nbsp;",
+                  text: "<span style='cursor: pointer;'>" + projectName + "&nbsp;&nbsp;</span>",
                   link: projectLink,
-                  style: 'projectNode'
+                  style: 'projectNode'   
                };
                const projectPathCell = {
-                  text: "<i style='opacity: 0.5'>"+projectPath+"</i>",
+                  text: "<i style='opacity: 0.5; cursor: pointer;'>"+projectPath+"</i>",
                   link: projectLink,
                   style: 'folderNode'
                };

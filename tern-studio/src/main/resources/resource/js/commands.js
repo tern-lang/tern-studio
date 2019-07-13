@@ -23,7 +23,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
             if (useSession) {
                 socket_1.EventBus.sendEvent("LAUNCH", {
                     address: address,
-                    session: common_1.Common.extractCookie("SESSID")
+                    session: common_1.Common.extractCookie("SESSID") // hardcoded :(
                 });
             }
             else {
@@ -47,7 +47,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
                 address += "/terminal/" + common_1.Common.getProjectName() + resourcePath.getFilePath();
                 socket_1.EventBus.sendEvent("LAUNCH", {
                     address: address,
-                    session: common_1.Common.extractCookie("SESSID")
+                    session: common_1.Common.extractCookie("SESSID") // hardcoded :(
                 });
             }
         }
