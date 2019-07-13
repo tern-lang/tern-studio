@@ -439,14 +439,14 @@ export module Common {
       if(text && token && text.length >= token.length) {
          return text.slice(-token.length) == token;
       }
-      return false;
+      return token.length == 0 ? true : false;
    }
    
    export function stringStartsWith(text, token) {
       if(text && token && text.length >= token.length) {
          return text.substring(0, token.length) === token;
       }
-      return false;
+      return token.length == 0 ? true : false;
    }
    
    export function isMacintosh() {

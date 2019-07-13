@@ -5,10 +5,13 @@ import static org.ternlang.studio.project.config.WorkspaceConfiguration.WORKSPAC
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -44,6 +47,7 @@ public class Workspace implements FileDirectorySource {
 
    private final ConfigurationReader reader;
    private final ProjectManager manager;
+   private final Set<String> loaded;
    private final Executor executor;
    private final ClassPath path;
    private final File logFile;
@@ -58,6 +62,7 @@ public class Workspace implements FileDirectorySource {
          @Value("${log-level}") String level, 
          @Value("${mode}") ProjectMode mode) 
    {
+      this.loaded = new CopyOnWriteArraySet<String>();
       this.reader = new ConfigurationReader(this);
       this.executor = new ThreadPool(10);
       this.manager = new ProjectManager(reader, source, this, mode);
@@ -194,8 +199,6 @@ public class Workspace implements FileDirectorySource {
    }
    
    public List<Project> getProjects() {
-      List<Project> projects = new ArrayList<Project>();
-      
       try {
          File workspace = root.getCanonicalFile();
          
@@ -212,19 +215,21 @@ public class Workspace implements FileDirectorySource {
                      if(file.exists()) {
                         final Project project = createProject(name);
                         
-                        getExecutor().execute(new Runnable() {
-                           @Override
-                           public void run() {
-                              try {
-                                 String name = project.getName();
-
-                                 log.info("Loading project {}", name);
-                                 ProgressManager.getProgress().update("Loading project " + name);
-                                 project.getClassPath(); // resolve dependencies
-                                 project.getIndexDatabase().getTypeNodes(); // index all classes
-                              }catch(Throwable e) {}
-                           }
-                        });
+                        if(project != null && loaded.add(name)) {
+                           getExecutor().execute(new Runnable() {
+                              @Override
+                              public void run() {
+                                 try {
+                                    String name = project.getName();
+   
+                                    log.info("Loading project {}", name);
+                                    ProgressManager.getProgress().update("Loading project " + name);
+                                    project.getClassPath(); // resolve dependencies
+                                    project.getIndexDatabase().getTypeNodes(); // index all classes
+                                 }catch(Throwable e) {}
+                              }
+                           });
+                        }
                      }
                   }
                }
@@ -233,7 +238,13 @@ public class Workspace implements FileDirectorySource {
       }catch(Exception e) {
          throw new IllegalStateException("Could not get projects in directory " + root, e);
       }
-      return projects;
+      return loaded.stream()
+            .filter(Objects::nonNull)
+            .sorted()
+            .map(this::getByName)
+            .filter(Objects::nonNull)
+            .filter(Project::isValidProject)
+            .collect(Collectors.toList());
    }
    
    private void createDefaultWorkspace(File file) {

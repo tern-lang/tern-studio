@@ -18,6 +18,7 @@ import org.ternlang.studio.project.config.ClassPathExecutor;
 import org.ternlang.studio.project.config.ConfigurationClassLoader;
 import org.ternlang.studio.project.config.ConfigurationReader;
 import org.ternlang.studio.project.config.DependencyFile;
+import org.ternlang.studio.project.config.ProjectConfiguration;
 import org.ternlang.studio.project.generate.ConfigFileSource;
 
 public class Project implements FileDirectory {
@@ -90,6 +91,10 @@ public class Project implements FileDirectory {
    
    public IndexDatabase getIndexDatabase(){
       return context.getIndexDatabase();
+   }
+   
+   public boolean isValidProject() {
+      return getFileSystem().getFile(ProjectConfiguration.PROJECT_FILE).exists();
    }
    
    public boolean isLayoutPath(String resource) {

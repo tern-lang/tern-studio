@@ -10,3 +10,4 @@ tern-studio-project/\.classpath
 tern-studio-service/\.classpath
 tern-studio/\.classpath
 ./work
+GPUCache

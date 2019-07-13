@@ -204,7 +204,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
             }, 2);
         }
         DialogBuilder.createTreeOpenDialog = createTreeOpenDialog;
-        function createListDialog(listFunction, patternList, dialogTitle) {
+        function createListDialog(listFunction, patternList, dialogTitle, initialLoadText, closeFunction) {
             var windowHeight = $(window).height(); // returns height of browser viewport
             var windowWidth = $(window).width(); // returns width of browser viewport
             var dialogBody = createListDialogLayout();
@@ -212,6 +212,28 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
                 var element = document.getElementById('dialogPath');
                 element.contentEditable = "true";
                 element.focus();
+            };
+            var updateList = function (expressionText, isSubmit) {
+                var expressionPattern = null;
+                if (patternList) {
+                    expressionPattern = extractTextFromElement("dialogFolder");
+                }
+                listFunction(expressionText, expressionPattern, function (list, requestedExpression) {
+                    var currentExpression = extractTextFromElement("dialogPath");
+                    if (!requestedExpression || requestedExpression == currentExpression) {
+                        var content = createDialogListTable(list);
+                        if (content.content) {
+                            $("#dialog").html(content.content);
+                        }
+                        else {
+                            $("#dialog").html('');
+                        }
+                        // this is kind of crap, but we need to be sure the html is rendered before binding
+                        if (content.init) {
+                            setTimeout(content.init, 100); // register the init function to run 
+                        }
+                    }
+                }, isSubmit);
             };
             w2ui_1.w2popup.open({
                 title: dialogTitle,
@@ -229,33 +251,22 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
                 onOpen: function (event) {
                     setTimeout(function () {
                         dialogBody.init();
-                        $('#dialogPath').on('change keyup paste', function () {
+                        $('#dialogPath').on('change keyup paste', function (event) {
                             var expressionText = extractTextFromElement("dialogPath");
+                            if (isKeyReturn(event)) {
+                                updateList(expressionText, true); // submit text
+                            }
                             // add a delay before you execute
                             executeIfTextUnchanged(expressionText, "dialogPath", 300, function () {
-                                var expressionPattern = null;
-                                if (patternList) {
-                                    expressionPattern = extractTextFromElement("dialogFolder");
-                                }
-                                listFunction(expressionText, expressionPattern, function (list, requestedExpression) {
-                                    var currentExpression = extractTextFromElement("dialogPath");
-                                    if (!requestedExpression || requestedExpression == currentExpression) {
-                                        var content = createDialogListTable(list);
-                                        if (content.content) {
-                                            $("#dialog").html(content.content);
-                                        }
-                                        else {
-                                            $("#dialog").html('');
-                                        }
-                                        // this is kind of crap, but we need to be sure the html is rendered before binding
-                                        if (content.init) {
-                                            setTimeout(content.init, 100); // register the init function to run 
-                                        }
-                                    }
-                                });
+                                updateList(expressionText, false);
                             });
                         });
                         focusInput();
+                        if (initialLoadText || initialLoadText == "") {
+                            setTimeout(function () {
+                                updateList(initialLoadText, false);
+                            }, 100);
+                        }
                     }, 200);
                 },
                 onMax: function (event) {
@@ -271,12 +282,23 @@ define(["require", "exports", "jquery", "w2ui", "common", "commands", "variables
                     event.onComplete = function () {
                         focusInput();
                     };
+                },
+                onClose: function (event) {
+                    if (closeFunction) {
+                        closeFunction();
+                    }
                 }
             });
             $("#dialogSave").click(function () {
+                if (closeFunction) {
+                    closeFunction();
+                }
                 w2ui_1.w2popup.close();
             });
             $("#dialogCancel").click(function () {
+                if (closeFunction) {
+                    closeFunction();
+                }
                 w2ui_1.w2popup.close();
             });
         }

@@ -218,7 +218,7 @@ export module DialogBuilder {
       }, 2);  
    }       
    
-   export function createListDialog(listFunction, patternList, dialogTitle) { // listFunction(token): [a, b, c]
+   export function createListDialog(listFunction, patternList, dialogTitle, initialLoadText, closeFunction) { // listFunction(token): [a, b, c]
       var windowHeight = $(window).height();   // returns height of browser viewport
       var windowWidth = $(window).width();   // returns width of browser viewport
       var dialogBody = createListDialogLayout();
@@ -226,6 +226,30 @@ export module DialogBuilder {
          var element = document.getElementById('dialogPath');
          element.contentEditable = "true";
          element.focus();
+      };
+      var updateList = function(expressionText, isSubmit) {
+         var expressionPattern = null;
+         
+         if(patternList) {
+            expressionPattern = extractTextFromElement("dialogFolder");
+         }
+         listFunction(expressionText, expressionPattern, function(list, requestedExpression) {
+            var currentExpression = extractTextFromElement("dialogPath");
+            
+            if(!requestedExpression || requestedExpression == currentExpression) {
+               var content = createDialogListTable(list);
+               
+               if(content.content){
+                  $("#dialog").html(content.content);
+               }else {
+                  $("#dialog").html('');
+               }
+               // this is kind of crap, but we need to be sure the html is rendered before binding
+               if(content.init) {
+                  setTimeout(content.init, 100); // register the init function to run 
+               }
+            }
+         }, isSubmit); 
       };
       w2popup.open({
          title : dialogTitle,
@@ -243,36 +267,24 @@ export module DialogBuilder {
          onOpen : function(event) {
             setTimeout(function() {
                dialogBody.init();
-               $('#dialogPath').on('change keyup paste', function() {
-                  var expressionText = extractTextFromElement("dialogPath");
+               $('#dialogPath').on('change keyup paste', function(event) {
+                  const expressionText = extractTextFromElement("dialogPath");
                   
+                  if(isKeyReturn(event)) {
+                     updateList(expressionText, true); // submit text
+                  }
                   // add a delay before you execute
                   executeIfTextUnchanged(expressionText, "dialogPath", 300, function() {
-                     var expressionPattern = null;
-                     
-                     if(patternList) {
-                        expressionPattern = extractTextFromElement("dialogFolder");
-                     }
-                     listFunction(expressionText, expressionPattern, function(list, requestedExpression) {
-                        var currentExpression = extractTextFromElement("dialogPath");
-                        
-                        if(!requestedExpression || requestedExpression == currentExpression) {
-                           var content = createDialogListTable(list);
-                           
-                           if(content.content){
-                              $("#dialog").html(content.content);
-                           }else {
-                              $("#dialog").html('');
-                           }
-                           // this is kind of crap, but we need to be sure the html is rendered before binding
-                           if(content.init) {
-                              setTimeout(content.init, 100); // register the init function to run 
-                           }
-                        }
-                     });
+                     updateList(expressionText, false);
                   });
                });
                focusInput();
+               
+               if(initialLoadText || initialLoadText == "") { // if required render list
+                  setTimeout(function() {
+                     updateList(initialLoadText, false);
+                  }, 100);
+               }
             }, 200);
          },
          onMax : function(event) {
@@ -288,12 +300,23 @@ export module DialogBuilder {
             event.onComplete = function() {
                focusInput();
             };
+         },
+         onClose : function(event) {
+            if(closeFunction) {
+               closeFunction();
+            }
          }
       });
       $("#dialogSave").click(function() {
+         if(closeFunction) {
+            closeFunction();
+         }
          w2popup.close();
       });
       $("#dialogCancel").click(function() {
+         if(closeFunction) {
+            closeFunction();
+         }
          w2popup.close();
       });
    }
@@ -1021,7 +1044,7 @@ export module DialogBuilder {
          var value = inputField.innerHTML;
          
          if(value) {
-        	return Common.clearHtml(value);
+            return Common.clearHtml(value);
          }
       }
       return "";

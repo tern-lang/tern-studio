@@ -382,14 +382,14 @@ define(["require", "exports", "jquery", "w2ui"], function (require, exports, $, 
             if (text && token && text.length >= token.length) {
                 return text.slice(-token.length) == token;
             }
-            return false;
+            return token.length == 0 ? true : false;
         }
         Common.stringEndsWith = stringEndsWith;
         function stringStartsWith(text, token) {
             if (text && token && text.length >= token.length) {
                 return text.substring(0, token.length) === token;
             }
-            return false;
+            return token.length == 0 ? true : false;
         }
         Common.stringStartsWith = stringStartsWith;
         function isMacintosh() {
