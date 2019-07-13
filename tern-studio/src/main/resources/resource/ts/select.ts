@@ -15,7 +15,16 @@ export module ProjectSelector {
    }
    
    function createNewProject(projectName) {
-      document.location = createProjectLocation(projectName);
+      const address = createProjectLocation(projectName);
+      console.log("Creating new project " + projectName + " " + address);
+      document.location = address;
+   }
+
+   function openExistingProject(projectName) {
+      const address = createProjectLocation(projectName);
+      console.log("Opening project " + projectName + " " + address);
+      document.location = address;
+      
    }
    
    function findExistingProjects(text, onComplete, isSubmit) {
@@ -38,6 +47,8 @@ export module ProjectSelector {
             if(isSubmit && isSubmit == true) {
                if(sortedNames.indexOf(originalExpression) == -1) {
                   createNewProject(originalExpression); // create non-existing project
+               } else {
+                  openExistingProject(originalExpression);
                }
             }
             for (var i = 0; i < sortedNames.length; i++) {
@@ -72,8 +83,7 @@ export module ProjectSelector {
    export function showProjectTreeDialog() {
       DialogBuilder.createTreeOpenDialog(function(dialogPathDetails, projectName) {
          if(projectName != "" && projectName != null) {
-            console.log("Opening " + projectName + " " + address);
-            document.location = createProjectLocation(projectName);
+            openExistingProject(projectName);
          } else {
             setTimeout(showProjectDialog, 500);
          }
