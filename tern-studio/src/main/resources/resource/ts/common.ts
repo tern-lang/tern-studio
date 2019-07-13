@@ -449,6 +449,16 @@ export module Common {
       return token.length == 0 ? true : false;
    }
    
+   export function isStringBlank(text) {
+      if(text) { // is text is something
+         if(text == "") {
+            return true;
+         }
+         return false;
+      }
+      return true; // it is nothing
+   }
+   
    export function isMacintosh() {
       return navigator.platform.indexOf('Mac') > -1
     }

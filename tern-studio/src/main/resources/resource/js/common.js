@@ -392,6 +392,16 @@ define(["require", "exports", "jquery", "w2ui"], function (require, exports, $, 
             return token.length == 0 ? true : false;
         }
         Common.stringStartsWith = stringStartsWith;
+        function isStringBlank(text) {
+            if (text) {
+                if (text == "") {
+                    return true;
+                }
+                return false;
+            }
+            return true; // it is nothing
+        }
+        Common.isStringBlank = isStringBlank;
         function isMacintosh() {
             return navigator.platform.indexOf('Mac') > -1;
         }

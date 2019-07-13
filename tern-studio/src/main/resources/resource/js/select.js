@@ -35,11 +35,13 @@ define(["require", "exports", "jquery", "dialog", "common"], function (require, 
                     }
                     sortedNames.sort();
                     if (isSubmit && isSubmit == true) {
-                        if (sortedNames.indexOf(originalExpression) == -1) {
-                            createNewProject(originalExpression); // create non-existing project
-                        }
-                        else {
-                            openExistingProject(originalExpression);
+                        if (!common_1.Common.isStringBlank(originalExpression)) {
+                            if (sortedNames.indexOf(originalExpression) == -1) {
+                                createNewProject(originalExpression); // create non-existing project
+                            }
+                            else {
+                                openExistingProject(originalExpression);
+                            }
                         }
                     }
                     for (var i = 0; i < sortedNames.length; i++) {
