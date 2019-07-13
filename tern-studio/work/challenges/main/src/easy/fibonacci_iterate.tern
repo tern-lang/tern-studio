@@ -1,0 +1,34 @@
+
+
+
+let it = fib(31);
+
+while(it.hasNext()) {
+   println(it.next);
+}
+
+func fib(n) {
+   return FibIterator(n);
+}
+
+
+class FibIterator with Iterator {
+
+   let a = 1;
+   let b = 0;
+   let n = 0;
+   
+   new(n) {
+      this.n = n;
+   }
+
+   next() {
+      (a, b) = (b, a + b);
+      n--;
+      return a;
+   }
+   
+   hasNext() {
+      return n >= 0;
+   }
+}

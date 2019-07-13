@@ -126,12 +126,7 @@ export module VariableManager {
             //depth: variable.depth // seems to cause issues?
          });
       }
-      var variableGrid = w2ui[gridName];
-      
-      if(variableGrid != null) {
-         variableGrid.records = variableRecords;
-         variableGrid.refresh();
-      }
+      Common.updateTableRecords(variableRecords, gridName);
    }
    
    export function clearEvaluation() {

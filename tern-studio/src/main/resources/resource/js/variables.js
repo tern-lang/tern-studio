@@ -108,11 +108,7 @@ define(["require", "exports", "w2ui", "threads", "common", "commands"], function
                     expandable: variableExpandable == "true"
                 });
             }
-            var variableGrid = w2ui_1.w2ui[gridName];
-            if (variableGrid != null) {
-                variableGrid.records = variableRecords;
-                variableGrid.refresh();
-            }
+            common_1.Common.updateTableRecords(variableRecords, gridName);
         }
         function clearEvaluation() {
             expandEvaluationHistory = {};
