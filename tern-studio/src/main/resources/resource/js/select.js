@@ -49,7 +49,7 @@ define(["require", "exports", "jquery", "dialog", "common"], function (require, 
                         var projectPath = projectMap[projectName_1];
                         var projectLink = createProjectLocation(projectName_1);
                         var projectNameCell = {
-                            text: "<span style='cursor: pointer;'>" + projectName_1 + "&nbsp;&nbsp;</span>",
+                            text: "<b style='cursor: pointer;'>" + projectName_1 + "&nbsp;&nbsp;</b>",
                             link: projectLink,
                             style: 'projectNode'
                         };
