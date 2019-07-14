@@ -1,20 +1,16 @@
-import awt.image.BufferedImage;
-import util.Random;
-
 import mario.core.animation.Animation;
-import mario.core.sound.specific.MarioSoundManager22050Hz;
 import mario.objects.base.Creature;
 import mario.util.ImageManipulator;
-
+import util.Random;
 
 class Goomba extends Creature {
-   
+
    private let waddle;
    private let dead;
    private let flip;
-   
+
    public new(x, y, soundManager): super(x, y, soundManager) {
-      
+
       let w1 = ImageManipulator.loadImage("/mario/baddies/Goomba_Normal_1.png");
       let w2 = ImageManipulator.loadImage("/mario/baddies/Goomba_Normal_2.png");
       let smashed = ImageManipulator.loadImage("/mario/baddies/Goomba_Dead.png");
@@ -25,19 +21,19 @@ class Goomba extends Creature {
       flip = new Animation().addFrame(flipped).addFrame(flipped);
       setAnimation(waddle);
    }
-   
+
    public wakeUp() {
       let r = new Random();
       super.wakeUp();
       dx = r.nextInt(3) == 0 ? -0.03f : 0.03f;
    }
-   
+
    public jumpedOn() {
       setAnimation(dead);
       setIsCollidable(false);
       dx = 0;
    }
-   
+
    public flip() {
       setAnimation(flip);
       setIsFlipped(true);
@@ -46,4 +42,3 @@ class Goomba extends Creature {
       dx = 0;
    }
 }
-

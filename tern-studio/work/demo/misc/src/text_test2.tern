@@ -1,6 +1,13 @@
-import util.Set as Se;
-import util.{Locale, Map};
 
-println(Locale.class);
-println(Map.class);
-println(Se.class);
+
+module Mod {
+
+   runIt(n){
+      if(n-- > 0) {
+         return Mod.runIt(n);
+      }
+      return n;
+   }
+}
+
+println(Mod.runIt(10));
