@@ -10,4 +10,4 @@ module Mod {
    }
 }
 
-println(Mod.runIt(10));
+println(Mod.runIt(1000));

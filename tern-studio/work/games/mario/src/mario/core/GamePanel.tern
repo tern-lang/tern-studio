@@ -10,7 +10,7 @@ import mario.util.{ImageManipulator, SampleAverager};
 import sound.midi.Sequence;
 import sound.sampled.AudioFormat;
 import swing.{JPanel, JPopupMenu};
-import util.Random;
+import security.SecureRandom;
 
 /**
 * GamePanel extends Jpanel. Contains the main game loop.
@@ -40,6 +40,7 @@ class GamePanel extends JPanel with Runnable {
    private let renderer;
    private let manager;
    private let screen;
+   private let random;
 
    private let player;
    private let SM_22050_Hz;
@@ -57,12 +58,14 @@ class GamePanel extends JPanel with Runnable {
       mario = new Mario(SM_22050_Hz);
 
       try {
+         random = new SecureRandom();
          manager = new GameLoader();
          renderer = new GameRenderer();
+         //renderer.setBackground(ImageManipulator.loadImage("/mario/backgrounds/Dark_background.png"));
          renderer.setBackground(ImageManipulator.loadImage("/mario/backgrounds/background2.png"));
          //renderer.setBackground(ImageManipulator.loadImage("/mario/backgrounds/Icy_Background.png"));
          //renderer.setBackground(ImageManipulator.loadImage("/mario/backgrounds/swamp_background.png"));
-         map = manager.loadMap("/mario/maps/map2.txt", SM_22050_Hz); // use the ResourceManager to load the game map
+         map = manager.loadMap("/mario/maps/map${random.nextInt(5) + 1}.txt", SM_22050_Hz); // use the ResourceManager to load the game map
          //backgroundMap = manager.loadOtherMaps("backgroundMap.txt");
          //foregroundMap = manager.loadOtherMaps("foregroundMap.txt");
          map.setPlayer(mario); // set the games main player to mario
@@ -72,8 +75,7 @@ class GamePanel extends JPanel with Runnable {
 
       player = new MidiPlayer();
       let sequence;
-      let r = new Random();
-      let rNum = r.nextInt(4);
+      let rNum = random.nextInt(4);
       if(rNum == 0) {
          sequence = player.getSequence("/mario/sounds/smwovr2.mid");
             player.play(sequence, true);
