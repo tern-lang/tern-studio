@@ -3,6 +3,7 @@ package org.ternlang.studio.common.display;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.function.Predicate;
 import java.util.zip.GZIPOutputStream;
 
 import org.simpleframework.http.Path;
@@ -19,6 +20,7 @@ public class DisplayContentProcessor {
    
    private static final String ENCODING_TYPE = "gzip";
    private static final String TEXT_TYPE = "text";
+   private static final String JAVASCRIPT_TYPE = "application/javascript";
 
    private final Cache<String, DisplayContent> contentCache;
    private final DisplayInterpolator displayInterpolator;
@@ -53,12 +55,13 @@ public class DisplayContentProcessor {
       
       try {
          ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+         Predicate<String> filter = value -> type.startsWith(TEXT_TYPE) || type.startsWith(JAVASCRIPT_TYPE);
          OutputStream output = buffer;
          InputStream input = null;
          String encoding = null;
          double original = 0.0;
          
-         if(accept.contains(ENCODING_TYPE) && type.startsWith(TEXT_TYPE)) { // only compress text
+         if(accept.contains(ENCODING_TYPE) && filter.test(type)) { // only compress text
             input = displayInterpolator.interpolate(target); // interpolate all text files based on the selected theme
             output = new GZIPOutputStream(buffer);
             encoding = ENCODING_TYPE;
