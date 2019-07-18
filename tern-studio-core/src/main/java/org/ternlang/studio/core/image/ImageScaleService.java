@@ -12,7 +12,7 @@ import javax.imageio.stream.ImageInputStream;
 
 import org.simpleframework.module.annotation.Component;
 import org.simpleframework.module.resource.Content;
-import org.simpleframework.module.resource.ContentTypeResolver;
+import org.simpleframework.module.resource.MediaTypeResolver;
 import org.simpleframework.module.resource.FileResolver;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
@@ -23,10 +23,10 @@ public class ImageScaleService {
    private static final int SCALE_HEIGHT = 40;
 
    private final Cache<String, ScaledImage> scaledImages;
-   private final ContentTypeResolver typeResolver;
+   private final MediaTypeResolver typeResolver;
    private final FileResolver fileResolver;
 
-   public ImageScaleService(ContentTypeResolver typeResolver, FileResolver fileResolver) {
+   public ImageScaleService(MediaTypeResolver typeResolver, FileResolver fileResolver) {
       this.scaledImages = new LeastRecentlyUsedCache<String, ScaledImage>(200);
       this.typeResolver = typeResolver;
       this.fileResolver = fileResolver;

@@ -10,7 +10,7 @@ import org.simpleframework.http.Path;
 import org.simpleframework.http.Protocol;
 import org.simpleframework.http.Request;
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.module.resource.ContentTypeResolver;
+import org.simpleframework.module.resource.MediaTypeResolver;
 import org.simpleframework.module.resource.FileResolver;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
@@ -24,10 +24,10 @@ public class DisplayContentProcessor {
 
    private final Cache<String, DisplayContent> contentCache;
    private final DisplayInterpolator displayInterpolator;
-   private final ContentTypeResolver typeResolver;
+   private final MediaTypeResolver typeResolver;
    private final FileResolver fileResolver;
 
-   public DisplayContentProcessor(DisplayInterpolator displayInterpolator, FileResolver fileResolver, ContentTypeResolver typeResolver) {
+   public DisplayContentProcessor(DisplayInterpolator displayInterpolator, FileResolver fileResolver, MediaTypeResolver typeResolver) {
       this.contentCache = new LeastRecentlyUsedCache<String, DisplayContent>(1000);
       this.displayInterpolator = displayInterpolator;
       this.fileResolver = fileResolver;

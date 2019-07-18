@@ -1,7 +1,7 @@
 package org.ternlang.studio.core.project.file;
 
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.module.resource.ContentTypeResolver;
+import org.simpleframework.module.resource.MediaTypeResolver;
 import org.ternlang.studio.project.FileCache;
 import org.ternlang.studio.project.FileData;
 import org.ternlang.studio.project.Workspace;
@@ -11,10 +11,10 @@ import lombok.SneakyThrows;
 @Component
 public class FileService {
    
-   private final ContentTypeResolver resolver;
+   private final MediaTypeResolver resolver;
    private final FileCache cache;
 
-   public FileService(Workspace workspace, ContentTypeResolver resolver){
+   public FileService(Workspace workspace, MediaTypeResolver resolver){
       this.cache = new FileCache(workspace);
       this.resolver = resolver;
    }
