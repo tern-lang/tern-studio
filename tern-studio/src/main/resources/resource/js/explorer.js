@@ -239,6 +239,9 @@ define(["require", "exports", "jquery", "common", "socket", "tree", "editor", "c
                 if (contentType == "application/x-javascript") {
                     return false;
                 }
+                if (contentType == "application/javascript") {
+                    return false;
+                }
                 if (common_1.Common.stringStartsWith(contentType, "application")) {
                     return true;
                 }

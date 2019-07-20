@@ -284,6 +284,9 @@ export module FileExplorer {
          if(contentType == "application/x-javascript") {
             return false;
          }
+         if(contentType == "application/javascript") {
+            return false;
+         }
          if(Common.stringStartsWith(contentType, "application")) {
             return true;
          }
