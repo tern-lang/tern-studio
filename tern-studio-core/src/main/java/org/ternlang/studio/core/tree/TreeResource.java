@@ -4,6 +4,7 @@ import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.module.resource.annotation.GET;
 import org.simpleframework.module.resource.annotation.Path;
+import org.simpleframework.module.resource.annotation.Produces;
 import org.simpleframework.module.resource.annotation.QueryParam;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ public class TreeResource {
 
    @GET
    @Path("$")
+   @Produces("text/html")
    public void workspace(
          @QueryParam("id") String name,
          @QueryParam("expand") String expand,
@@ -29,6 +31,7 @@ public class TreeResource {
    
    @GET
    @Path("/.*")
+   @Produces("text/html")
    public void project(
          @QueryParam("id") String name,
          @QueryParam("expand") String expand,

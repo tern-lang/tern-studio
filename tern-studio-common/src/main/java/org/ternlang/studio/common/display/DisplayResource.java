@@ -8,6 +8,7 @@ import org.simpleframework.module.resource.Content;
 import org.simpleframework.module.resource.FileResolver;
 import org.simpleframework.module.resource.annotation.GET;
 import org.simpleframework.module.resource.annotation.Path;
+import org.simpleframework.module.resource.annotation.Produces;
 import org.ternlang.studio.common.FileDirectorySource;
 
 import lombok.AllArgsConstructor;
@@ -22,30 +23,35 @@ public class DisplayResource {
 
    @GET
    @Path("/css/.*.css")   
+   @Produces("text/css")
    public byte[] getStyleSheet(Request request, Response response) throws Exception {
       return match(request, response);  
    }
    
    @GET
    @Path("/js/.*.js")   
+   @Produces("application/javascript")
    public byte[] getJavaScript(Request request, Response response) throws Exception {
       return match(request, response);
    }
    
    @GET
    @Path("/ttf/.*.ttf")   
+   @Produces("font/ttf")
    public byte[] getFont(Request request, Response response) throws Exception {
       return match(request, response);
    }
    
    @GET
-   @Path("/img/.*.(gif|png|jpg|ico)")   
+   @Path("/img/.*.(gif|png|jpg|ico)")  
+   @Produces({"image/png", "image/jpeg", "image/gif", "image/x-icon"})
    public byte[] getImage(Request request, Response response) throws Exception {
       return match(request, response);
    }
    
    @GET
    @Path("/favicon.ico")   
+   @Produces({"image/x-icon"})   
    public byte[] getIcon(Request request, Response response) throws Exception {
       return match(request, response);
    }

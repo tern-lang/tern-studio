@@ -1,13 +1,8 @@
 
+let l = URL("http://localhost:8787/some/11/value")
+   .header("Accept", "application/*")
+   .get()
+   .response();
 
-module Mod {
-
-   runIt(n){
-      if(n-- > 0) {
-         return Mod.runIt(n);
-      }
-      return n;
-   }
-}
-
-println(Mod.runIt(1000));
+println(l);
+println(l.inputStream.reader.readText);

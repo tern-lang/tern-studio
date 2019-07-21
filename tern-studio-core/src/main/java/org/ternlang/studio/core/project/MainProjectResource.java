@@ -8,6 +8,7 @@ import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.module.resource.annotation.GET;
 import org.simpleframework.module.resource.annotation.Path;
+import org.simpleframework.module.resource.annotation.Produces;
 import org.simpleframework.module.resource.template.TemplateEngine;
 import org.simpleframework.module.resource.template.TemplateModel;
 import org.ternlang.studio.common.display.DisplayModelResolver;
@@ -27,6 +28,7 @@ public class MainProjectResource  {
    @GET
    @Path(".*")
    @SneakyThrows
+   @Produces("text/html")
    public void handle(Request request, Response response) {
       TemplateModel model = resolver.getModel();
       org.simpleframework.http.Path path = request.getPath(); // /project/<project-name>/<project-path>
@@ -41,7 +43,6 @@ public class MainProjectResource  {
       String text = engine.renderTemplate(model, PROJECT_RESOURCE);
       PrintStream stream = response.getPrintStream();
 
-      response.setContentType("text/html");
       stream.print(text);
       stream.close();
    }

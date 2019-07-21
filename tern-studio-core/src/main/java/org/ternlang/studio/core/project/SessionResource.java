@@ -9,6 +9,7 @@ import org.simpleframework.http.Status;
 import org.simpleframework.module.resource.SessionCookie;
 import org.simpleframework.module.resource.annotation.GET;
 import org.simpleframework.module.resource.annotation.Path;
+import org.simpleframework.module.resource.annotation.Produces;
 
 import lombok.SneakyThrows;
 
@@ -18,6 +19,7 @@ public class SessionResource {
    @GET
    @Path(".*")
    @SneakyThrows
+   @Produces("text/plain")
    public void handle(Request request, Response response) {
       org.simpleframework.http.Path path = request.getPath();
       String target = request.getTarget();
@@ -31,7 +33,6 @@ public class SessionResource {
          String address = String.format("http://%s%s", origin, launch);
 
          response.setStatus(Status.TEMPORARY_REDIRECT);
-         response.setContentType("text/plain");
          response.setCookie(SessionCookie.SESSION_ID, session);
          response.setValue(Protocol.LOCATION, address);
          stream.println("Redirecting to " + address);

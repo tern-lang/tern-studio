@@ -19,6 +19,7 @@ public class ConnectTunnelHandler {
    private static final String TIME_ZONE = "GMT";
    private static final String REQUEST = 
    "CONNECT %s:%s/connect/%s HTTP/1.1\r\n" +
+   "Accept: */*\r\n"+   
    "Host: %s:%s\r\n" +
    "Date: %s\r\n"+
    "\r\n";
