@@ -1029,6 +1029,7 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         FileEditor.showEditorBreakpoints = showEditorBreakpoints;
         function updateEditorFont(fontFamily, fontSize) {
             var actualFont = formatFont(fontFamily);
+            forceFontLoad(actualFont);
             editorView.getEditorPanel().setOptions({
                 enableBasicAutocompletion: true,
                 enableLiveAutocompletion: true,
@@ -1037,6 +1038,12 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             });
         }
         FileEditor.updateEditorFont = updateEditorFont;
+        function forceFontLoad(fontFamily) {
+            var fontLoadPanel = document.getElementById("fontLoadPanel");
+            if (fontLoadPanel != null) {
+                fontLoadPanel.style.fontFamily = fontFamily; // works on all browsers
+            }
+        }
         function formatFont(fontFamily) {
             var fontList = fontFamily.split(",");
             var actualFont = "";

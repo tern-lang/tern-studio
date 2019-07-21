@@ -1469,8 +1469,9 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
             return "<div id='status'>" +
                 "  <table width='100%' height='100%'>" +
                 "  <tr>" +
-                "    <td width='50%' align='left'><div id='process'></div></td>" +
-                "    <td width='50%' align='right'><div id='currentFile'></div></td>" +
+                "    <td width='40%' align='left'><div id='process'></div></td>" +
+                "    <td width='5%' align='left'><div id='fontLoadPanel' style='opacity: 0.1'>&nbsp;&nbsp;|&nbsp;&nbsp;</div></td>" +
+                "    <td width='55%' align='right'><div id='currentFile'></div></td>" +
                 "  </tr>" +
                 "  </table>" +
                 "</div>";

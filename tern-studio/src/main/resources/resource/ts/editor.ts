@@ -1273,13 +1273,22 @@ export module FileEditor {
    
    export function updateEditorFont(fontFamily, fontSize) {
       const actualFont = formatFont(fontFamily);
-
+     
+      forceFontLoad(actualFont);
       editorView.getEditorPanel().setOptions({
          enableBasicAutocompletion: true,
          enableLiveAutocompletion: true,
          fontFamily: actualFont,
          fontSize: fontSize
       });
+   }
+   
+   function forceFontLoad(fontFamily) {
+      var fontLoadPanel = document.getElementById("fontLoadPanel");
+      
+      if(fontLoadPanel != null) {
+         fontLoadPanel.style.fontFamily = fontFamily; // works on all browsers
+      }       
    }
 
    function formatFont(fontFamily) {
