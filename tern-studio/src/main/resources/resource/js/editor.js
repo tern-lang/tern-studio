@@ -1039,7 +1039,7 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         }
         FileEditor.updateEditorFont = updateEditorFont;
         function forceFontLoad(fontFamily) {
-            var fontLoadPanel = document.getElementById("fontLoadPanel");
+            var fontLoadPanel = document.getElementById("toolbarSeparator");
             if (fontLoadPanel != null) {
                 fontLoadPanel.style.fontFamily = fontFamily; // works on all browsers
             }

@@ -1284,7 +1284,7 @@ export module FileEditor {
    }
    
    function forceFontLoad(fontFamily) {
-      var fontLoadPanel = document.getElementById("fontLoadPanel");
+      var fontLoadPanel = document.getElementById("toolbarSeparator");
       
       if(fontLoadPanel != null) {
          fontLoadPanel.style.fontFamily = fontFamily; // works on all browsers
