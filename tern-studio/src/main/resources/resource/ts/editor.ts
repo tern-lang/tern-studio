@@ -1284,11 +1284,15 @@ export module FileEditor {
    }
    
    function forceFontLoad(fontFamily) {
-      var fontLoadPanel = document.getElementById("toolbarSeparator");
+      var toolbarSeparator = document.getElementById("toolbarSeparator");
+      var statusPanelSeparator = document.getElementById("statusPanelSeparator");
       
-      if(fontLoadPanel != null) {
-         fontLoadPanel.style.fontFamily = fontFamily; // works on all browsers
+      if(toolbarSeparator != null) {
+         toolbarSeparator.style.fontFamily = fontFamily; // works on all browsers
       }       
+      if(statusPanelSeparator != null) {
+         statusPanelSeparator.style.fontFamily = fontFamily; // works on all browsers
+      }
    }
 
    function formatFont(fontFamily) {

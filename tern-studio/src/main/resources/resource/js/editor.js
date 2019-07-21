@@ -1039,9 +1039,13 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
         }
         FileEditor.updateEditorFont = updateEditorFont;
         function forceFontLoad(fontFamily) {
-            var fontLoadPanel = document.getElementById("toolbarSeparator");
-            if (fontLoadPanel != null) {
-                fontLoadPanel.style.fontFamily = fontFamily; // works on all browsers
+            var toolbarSeparator = document.getElementById("toolbarSeparator");
+            var statusPanelSeparator = document.getElementById("statusPanelSeparator");
+            if (toolbarSeparator != null) {
+                toolbarSeparator.style.fontFamily = fontFamily; // works on all browsers
+            }
+            if (statusPanelSeparator != null) {
+                statusPanelSeparator.style.fontFamily = fontFamily; // works on all browsers
             }
         }
         function formatFont(fontFamily) {
