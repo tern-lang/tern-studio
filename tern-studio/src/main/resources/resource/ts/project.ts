@@ -386,6 +386,7 @@ export module Project {
                   var text = " " + displayInfo.availableFonts[name];
 
                   fontFamily.options[i] = new Option(text, name);
+                  fontFamily.options[i].innerHTML = "&nbsp;" + displayInfo.availableFonts[name]; 
                }
                fontFamily.value = displayInfo.fontName;
             }   

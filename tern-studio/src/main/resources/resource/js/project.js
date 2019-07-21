@@ -345,6 +345,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                             var name = orderedKeys[i];
                             var text = " " + displayInfo.availableFonts[name];
                             fontFamily.options[i] = new Option(text, name);
+                            fontFamily.options[i].innerHTML = "&nbsp;" + displayInfo.availableFonts[name];
                         }
                         fontFamily.value = displayInfo.fontName;
                     }
