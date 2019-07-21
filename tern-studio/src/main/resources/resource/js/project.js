@@ -1533,7 +1533,7 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                             + "      </tr>"
                             + "      </table>"
                             + "   </td>"
-                            + "   <td><div id='toolbarSeparator' style='opacity: 0.3'>|</div></td>"
+                            + "   <td><div id='toolbarSeparator' style='opacity: 0.2'>|</div></td>"
                             + "   <td>"
                             + "      <table id='toolbarDebug'>"
                             + "      <tr>"
