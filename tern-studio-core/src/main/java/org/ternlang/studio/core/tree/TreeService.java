@@ -1,6 +1,6 @@
 package org.ternlang.studio.core.tree;
 
-import static org.simpleframework.module.resource.SessionCookie.SESSION_ID;
+import static org.ternlang.studio.core.project.SessionCookie.SESSION_ID;
 
 import java.io.File;
 import java.io.PrintStream;

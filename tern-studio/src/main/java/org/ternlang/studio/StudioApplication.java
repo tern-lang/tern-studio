@@ -1,6 +1,6 @@
 package org.ternlang.studio;
 
-import static org.simpleframework.module.resource.SessionCookie.SESSION_ID;
+import static org.ternlang.studio.core.project.SessionCookie.SESSION_ID;
 
 import org.simpleframework.module.Application;
 import org.simpleframework.module.annotation.Import;
