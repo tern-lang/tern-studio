@@ -1,7 +1,7 @@
 package org.ternlang.studio.core.project.file;
 
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.module.resource.MediaTypeResolver;
+import org.simpleframework.resource.MediaTypeResolver;
 import org.ternlang.studio.project.FileCache;
 import org.ternlang.studio.project.FileData;
 import org.ternlang.studio.project.Workspace;

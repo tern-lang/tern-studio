@@ -4,11 +4,11 @@ import java.io.InputStream;
 
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.simpleframework.module.resource.Content;
-import org.simpleframework.module.resource.FileResolver;
-import org.simpleframework.module.resource.annotation.GET;
-import org.simpleframework.module.resource.annotation.Path;
-import org.simpleframework.module.resource.annotation.Produces;
+import org.simpleframework.resource.Content;
+import org.simpleframework.resource.FileResolver;
+import org.simpleframework.resource.annotation.GET;
+import org.simpleframework.resource.annotation.Path;
+import org.simpleframework.resource.annotation.Produces;
 import org.ternlang.studio.common.FileDirectorySource;
 
 import lombok.AllArgsConstructor;

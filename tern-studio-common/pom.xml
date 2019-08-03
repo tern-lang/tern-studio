@@ -22,7 +22,7 @@
     </dependency>
     <dependency>
       <groupId>org.simpleframework</groupId>
-      <artifactId>simple-module-resource</artifactId>
+      <artifactId>simple-resource</artifactId>
       <version>1.0.2</version>
     </dependency>
     <dependency>

@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.simpleframework.module.resource.annotation.GET;
-import org.simpleframework.module.resource.annotation.Path;
-import org.simpleframework.module.resource.annotation.Produces;
+import org.simpleframework.resource.annotation.GET;
+import org.simpleframework.resource.annotation.Path;
+import org.simpleframework.resource.annotation.Produces;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 

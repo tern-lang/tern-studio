@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
-import org.simpleframework.module.resource.template.TemplateModel;
+import org.simpleframework.resource.template.TemplateModel;
 import org.ternlang.studio.common.display.DisplayKey;
 
 public class TreeDirectory {

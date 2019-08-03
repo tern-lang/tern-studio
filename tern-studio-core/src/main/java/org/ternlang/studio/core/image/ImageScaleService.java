@@ -11,9 +11,9 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.module.resource.Content;
-import org.simpleframework.module.resource.MediaTypeResolver;
-import org.simpleframework.module.resource.FileResolver;
+import org.simpleframework.resource.Content;
+import org.simpleframework.resource.MediaTypeResolver;
+import org.simpleframework.resource.FileResolver;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
 

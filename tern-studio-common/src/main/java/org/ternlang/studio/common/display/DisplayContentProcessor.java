@@ -10,8 +10,8 @@ import org.simpleframework.http.Path;
 import org.simpleframework.http.Protocol;
 import org.simpleframework.http.Request;
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.module.resource.MediaTypeResolver;
-import org.simpleframework.module.resource.FileResolver;
+import org.simpleframework.resource.MediaTypeResolver;
+import org.simpleframework.resource.FileResolver;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
 

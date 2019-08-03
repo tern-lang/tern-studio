@@ -5,7 +5,7 @@ import static org.ternlang.studio.core.project.SessionCookie.SESSION_ID;
 import org.simpleframework.module.Application;
 import org.simpleframework.module.annotation.Import;
 import org.simpleframework.module.annotation.Module;
-import org.simpleframework.module.resource.container.ServerDriver;
+import org.simpleframework.resource.container.ServerDriver;
 
 @Module
 @Import(StudioApplication.class)

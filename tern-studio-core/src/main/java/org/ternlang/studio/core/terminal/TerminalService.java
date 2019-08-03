@@ -14,7 +14,7 @@ import org.simpleframework.http.socket.Reason;
 import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.module.resource.annotation.Subscribe;
+import org.simpleframework.resource.annotation.Subscribe;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 

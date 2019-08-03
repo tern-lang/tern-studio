@@ -2,8 +2,8 @@ package org.ternlang.studio.core.image;
 
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.simpleframework.module.resource.annotation.GET;
-import org.simpleframework.module.resource.annotation.Path;
+import org.simpleframework.resource.annotation.GET;
+import org.simpleframework.resource.annotation.Path;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;

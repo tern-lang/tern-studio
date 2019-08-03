@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.module.resource.template.TemplateModel;
+import org.simpleframework.resource.template.TemplateModel;
 
 @Component
 public class DisplayModelResolver {

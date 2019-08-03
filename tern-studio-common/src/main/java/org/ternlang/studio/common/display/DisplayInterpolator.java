@@ -4,8 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.module.resource.template.TemplateEngine;
-import org.simpleframework.module.resource.template.TemplateModel;
+import org.simpleframework.resource.template.TemplateEngine;
+import org.simpleframework.resource.template.TemplateModel;
 
 @Component
 public class DisplayInterpolator {

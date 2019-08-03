@@ -3,7 +3,7 @@ package org.ternlang.studio.common.display;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.simpleframework.module.resource.template.TemplateModel;
+import org.simpleframework.resource.template.TemplateModel;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;

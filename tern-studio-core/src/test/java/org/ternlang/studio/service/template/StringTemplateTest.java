@@ -4,10 +4,10 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.simpleframework.module.resource.template.PropertyBinder;
-import org.simpleframework.module.resource.template.PropertyTemplateFilter;
-import org.simpleframework.module.resource.template.StringTemplate;
-import org.simpleframework.module.resource.template.TemplateModel;
+import org.simpleframework.resource.template.PropertyBinder;
+import org.simpleframework.resource.template.PropertyTemplateFilter;
+import org.simpleframework.resource.template.StringTemplate;
+import org.simpleframework.resource.template.TemplateModel;
 
 import junit.framework.TestCase;
 

@@ -1,6 +1,6 @@
 package org.ternlang.studio.core.tree;
 
-import org.simpleframework.module.resource.template.TemplateModel;
+import org.simpleframework.resource.template.TemplateModel;
 import org.ternlang.studio.common.display.DisplayModelResolver;
 
 public class TreeBuilder {

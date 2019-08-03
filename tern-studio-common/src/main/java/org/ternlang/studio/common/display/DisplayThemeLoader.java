@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.simpleframework.module.annotation.Component;
 import org.simpleframework.module.common.ClassPathReader;
-import org.simpleframework.module.resource.template.TemplateModel;
+import org.simpleframework.resource.template.TemplateModel;
 import org.simpleframework.xml.core.Persister;
 
 @Component
