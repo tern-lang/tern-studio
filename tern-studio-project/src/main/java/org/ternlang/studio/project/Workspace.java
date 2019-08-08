@@ -13,14 +13,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
 import org.simpleframework.http.Path;
 import org.simpleframework.module.annotation.Component;
 import org.simpleframework.module.annotation.DependsOn;
 import org.simpleframework.module.annotation.Value;
 import org.simpleframework.module.path.ClassPath;
-import org.slf4j.LoggerFactory;
 import org.ternlang.common.thread.ThreadPool;
 import org.ternlang.studio.common.FileDirectorySource;
 import org.ternlang.studio.common.ProgressManager;
@@ -33,11 +30,6 @@ import org.ternlang.studio.project.decompile.Decompiler;
 import org.ternlang.studio.project.generate.ClassPathFileGenerator;
 import org.ternlang.studio.project.generate.ConfigFileSource;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import ch.qos.logback.core.FileAppender;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -70,6 +62,8 @@ public class Workspace implements FileDirectorySource {
       this.level = level;
       this.path = path;
       this.root = root;
+      
+      createWorkspace();
    }
    
    public ClassPath getClassPath() {
@@ -150,10 +144,9 @@ public class Workspace implements FileDirectorySource {
       }
    }
    
-   @PostConstruct
    public File createWorkspace() {
       try {
-         updateLogger();
+         WorkspaceLogger.create(logFile, level);
          return newWorkspace();
       }catch(Exception e) {
          throw new IllegalStateException("Could not create directory " + root, e);
@@ -172,31 +165,6 @@ public class Workspace implements FileDirectorySource {
       return directory;
    }
 
-   private void updateLogger() {
-      FileAppender appender = new FileAppender();
-      PatternLayoutEncoder encoder = new PatternLayoutEncoder();
-      
-      try {
-         Level logLevel = Level.valueOf(level);
-         Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-         String path = logFile.getCanonicalPath();
-         
-         appender.setContext(context);
-         appender.setName("workspace");
-         appender.setFile(path);
-         encoder.setContext(context);
-         encoder.setPattern("%d{\"yyyy/MM/dd HH:mm:ss,SSS\"} [%p] [%t] %C{0}.%M - %msg%n");
-         encoder.start();
-         appender.setEncoder(encoder);
-         appender.start();
-
-         logger.addAppender(appender);
-         logger.setLevel(logLevel);
-      }catch(Throwable e) {
-         
-      }
-   }
    
    public List<Project> getProjects() {
       try {

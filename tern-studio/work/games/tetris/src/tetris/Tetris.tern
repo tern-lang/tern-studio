@@ -5,7 +5,7 @@ import swing.JFrame;
 
 class Tetris {
 
-   var game = new Game();
+   var game = new GameState();
    var strategy;
 
    const BOARD_CORNER_X = 300;
@@ -47,7 +47,7 @@ class Tetris {
    gameLoop() {
          loop {
             if (keyboard.newGame()) {
-               game = new Game();
+               game = new GameState();
                game.startGame();
             }
             if (game.isPlaying()) {
@@ -231,14 +231,4 @@ class Tetris {
 
 }
 
-function start() {
-   var t = new Tetris();
 
-   try {
-      t.gameLoop();
-   } catch(e) {
-      e.printStackTrace();
-   }
-}
-
-start();
