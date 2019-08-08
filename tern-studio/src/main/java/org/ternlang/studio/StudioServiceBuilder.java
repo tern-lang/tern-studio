@@ -58,6 +58,15 @@ public class StudioServiceBuilder {
          System.out.println("--" + name + "=" + token);
          System.setProperty(name, token); // make available to configuration
       }
+      Map<String, String> environment = System.getenv();
+      Set<Map.Entry<String, String>> variables = environment.entrySet();
+      
+      for(Map.Entry<String, String> variable : variables) {
+         String name = variable.getKey();
+         String value = variable.getValue();
+         
+         System.out.println(name + "=" + value);
+      }
       if (line.isServerOnly()) {
          System.setProperty("java.awt.headless", "true");
       } else {
