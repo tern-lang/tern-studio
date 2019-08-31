@@ -1,0 +1,45 @@
+import net.Socket;
+import util.concurrent.TimeUnit;
+
+class TickTockClient {
+
+   const socket;
+
+   new(host, port) {
+      this.socket = Socket(host, port);
+   }
+
+   start(listener: (accuracy)) {
+      const input = socket.getInputStream();
+      const output = socket.getOutputStream();
+      const reader = DataInputStream(input);
+      const writer = DataOutputStream(output);
+
+      writer.writeLong(0);
+
+      loop {
+         const remoteTime = reader.readLong(); // read remote time
+         const accuracy = reader.readLong(); // read remote time
+         const localTime = System.currentTimeMillis(); // current local time
+         const adjustTime = Math.abs(remoteTime - localTime); // difference in time
+         const pingTime = (localTime - adjustTime) + 1000;
+         
+         if(adjustTime > 0) {
+            const sleep = Math.max(0, adjustTime - 20);
+
+            if(sleep > 0) {
+               Thread.sleep(sleep, 0); // sleep until 20 ms before time
+            }
+         }
+         loop {
+            const currentTime = System.currentTimeMillis();
+
+            if(currentTime >= pingTime) { // spin until difference is exact
+               writer.writeLong(remoteTime + 1000);
+               break;
+            }
+         }
+         listener(accuracy); // report on accuracy should be async
+      }
+   }
+}

@@ -1,0 +1,82 @@
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.pdfbox.text.PDFTextStripperByArea;
+import util.stream.Collectors;
+import java.io.File;
+import java.io.IOException;
+
+module Pdf2Text {
+
+   read(const file: String) {
+      const document = PDDocument.load(File(file));
+
+      if (!document.isEncrypted()) {
+	
+          const stripper = new PDFTextStripperByArea();
+          
+          stripper.setSortByPosition(true);
+
+          const tStripper = new PDFTextStripper();
+          return tStripper.getText(document).split("\\r?\\n");
+      }
+  }
+}
+
+class Printer {
+   let balance = 0;
+   let date;
+   let lines = [];
+   
+   update(const line) {
+      if(line.contains("BALANCE BROUGHT FORWARD")) {
+         println(line);
+         return;
+      }
+      if(line.contains("BALANCE CARRIED FORWARD")) {
+         return;
+      }
+      if(line.matches("^\\d+\\s+\\w+\\s+to\\s+\\d+\\s+\\w+\\s+20\\d\\d.*")) {
+         return; 
+      }
+      const startLine = line.matches("^(VIS|\\)\\)\\)|DD|SO|ATM|CR|DR)\\s.*");
+      
+      if(startLine) {
+         dump();
+      }
+      
+      if(line.matches("\\d+\\s+[A-Z]+[a-z]+\\s+.*")) {
+         date = line.replaceAll("(VIS|\\)\\)\\)|DD|SO|ATM|CR|DR)\\s.*", "");
+         lines.add(line);
+      } else {
+         if(lines.length > 0) {
+            lines.add(line);
+            
+            if(line.matches(".*\\d+\\.\\d\\d\\s*")) {
+               dump();
+            }
+         } else if(line.startsWith(")))") || line.matches("^(VIS|\\)\\)\\)|DD|SO|ATM|CR|DR)\\s.*")) {
+            lines.add(date);
+            lines.add(line);
+            
+            if(line.matches(".*\\d+\\.\\d\\d\\s*")) {
+               dump();
+            }
+         }
+      } 
+   }
+   
+   dump() {
+      if(!lines.isEmpty()) {
+         println(lines.stream().collect(Collectors.joining(" ")).replace("  ", " "));
+      }
+      lines.clear();
+   }
+}
+
+const printer = Printer();
+const lines = Pdf2Text.read("C:\\Work\\docs\\HSBC\\personal_account_statements\\2018\\sep.pdf");
+
+for(line in lines) {
+   println(line);
+   //printer.update(line.trim());
+}

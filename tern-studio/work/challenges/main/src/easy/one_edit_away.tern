@@ -1,0 +1,39 @@
+
+
+assert oneEdit("hello", "hell");
+assert oneEdit("hell", "hello");
+assert oneEdit("anyway", "any way");
+assert oneEdit("top shop", "to shop");
+
+func oneEdit(a, b) {
+   if(Math.abs(a.length - b.length) > 1) {
+      return false;
+   }
+   if(a.length < b.length) {
+      (a, b) = (b, a);
+   }
+   return compare(a, b, 0);
+}
+   
+func compare(a, b, count) {
+   if(count > 1) {
+      return false;
+   }
+   for(let i = 0; i < b.length; i++) {
+      if(a[i] != b[i]) {
+         if(compare(a.substring(i+1), b.substring(i), count + 1)) {
+            return true; // remove char
+         }
+         if(compare(a.substring(i), a[i] + b.substring(i+1), count+1)) {
+            return true; // replace char
+         }
+         if(compare(b[i] + a.substring(i+1), b.substring(i), count+1)) {
+            return true;
+         }
+      }
+   }
+   if(a.length > b.length) {
+      return compare(a, b + a[a.length - 1], count+1);
+   }
+   return true;
+}

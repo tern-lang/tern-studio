@@ -7,7 +7,9 @@ module ClipManager {
          let source: InputStream = ClipManager.getContext().getManager().getInputStream(path);
          let stream: AudioInputStream = AudioSystem.getAudioInputStream(source);
          let clip: Clip = AudioSystem.getClip();
+         
          clip.open(stream);
+         
          return clip;
       } catch(e) {
          throw new IllegalStateException("Could not load sound " + path, e);

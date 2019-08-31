@@ -1,0 +1,21 @@
+import net.{ServerSocket, Socket};
+
+class TickTockServer {
+
+   const server;
+   
+   new(port) {
+      this.server = ServerSocket(port);
+   }
+
+   start() {
+      Thread(-> accept()).start();
+   }
+
+   accept() {
+      loop{
+         const socket = server.accept();
+         Thread(TickTockAgent(socket)).start();
+      }
+   }
+}
