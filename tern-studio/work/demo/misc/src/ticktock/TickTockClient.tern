@@ -3,10 +3,12 @@ import util.concurrent.TimeUnit;
 
 class TickTockClient {
 
+   const averager;
    const socket;
 
    new(host, port) {
       this.socket = Socket(host, port);
+      this.averager = Averager(10);
    }
 
    start(listener: (accuracy)) {
@@ -21,11 +23,12 @@ class TickTockClient {
          const remoteTime = reader.readLong(); // read remote time
          const accuracy = reader.readLong(); // read remote time
          const localTime = System.currentTimeMillis(); // current local time
-         const adjustTime = Math.abs(remoteTime - localTime); // difference in time
-         const pingTime = (localTime - adjustTime) + 1000;
+         const currentDiff = Math.abs(remoteTime - localTime); // difference in time
+         const averageDiff = averager.update(currentDiff);
+         const pingTime = (localTime - averageDiff) + 1000;
          
-         if(adjustTime > 0) {
-            const sleep = Math.max(0, adjustTime - 20);
+         if(averageDiff > 0) {
+            const sleep = Math.max(0, averageDiff - 20);
 
             if(sleep > 0) {
                Thread.sleep(sleep, 0); // sleep until 20 ms before time
@@ -40,6 +43,46 @@ class TickTockClient {
             }
          }
          listener(accuracy); // report on accuracy should be async
+      }
+   }
+   
+   class Averager {
+   
+      const queue;
+      const capacity;
+      const samples;
+      
+      new(capacity) {
+         this.queue = PriorityQueue();
+         this.samples = ArrayDeque(capacity);
+         this.capacity = capacity;
+      }
+   
+      update(sample) {
+         if(samples.length >= capacity) {
+            samples.poll();
+         }
+         samples.offer(sample);
+         
+         return average();
+      }
+      
+      average() {
+         let ignore = Math.round(samples.length * 0.1);
+         let count = samples.length - (ignore * 2);
+         let total = 0;
+         
+         queue.clear();
+         queue.addAll(samples);
+         
+         for(i in 0 to ignore - 1) { // remove lowest 10%
+            queue.poll();
+         }
+         for(i in 0 to count - 1) { // ignore highest 10% 
+            total += queue.poll();
+         }
+         return total / count;
+      
       }
    }
 }
