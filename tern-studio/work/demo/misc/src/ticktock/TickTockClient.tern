@@ -21,11 +21,11 @@ class TickTockClient {
 
       loop {
          const remoteTime = reader.readLong(); // read remote time
-         const accuracy = reader.readLong(); // read remote time
+         const accuracy = reader.readLong(); // read remote accuracy
          const localTime = System.currentTimeMillis(); // current local time
          const currentDiff = Math.abs(remoteTime - localTime); // difference in time
-         const averageDiff = averager.update(currentDiff);
-         const pingTime = (localTime - averageDiff) + 1000;
+         const averageDiff = averager.update(currentDiff); // average difference 80th percentile
+         const pingTime = (localTime - averageDiff) + 1000; // what time will result in match
          
          if(averageDiff > 0) {
             const sleep = Math.max(0, averageDiff - 20);
