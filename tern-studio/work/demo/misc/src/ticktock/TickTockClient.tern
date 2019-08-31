@@ -8,7 +8,7 @@ class TickTockClient {
 
    new(host, port) {
       this.socket = Socket(host, port);
-      this.averager = Averager(10);
+      this.averager = Averager(20);
    }
 
    start(listener: (accuracy)) {
@@ -68,20 +68,20 @@ class TickTockClient {
       }
       
       average() {
-         let ignore = Math.round(samples.length * 0.1);
-         let count = samples.length - (ignore * 2);
+         let tenPercent = Math.round(samples.length * 0.1);
+         let eightyPercent = samples.length - (tenPercent * 2);
          let total = 0;
          
          queue.clear();
          queue.addAll(samples);
          
-         for(i in 0 to ignore - 1) { // remove lowest 10%
+         for(i in 0 to tenPercent - 1) { // remove lowest 10%
             queue.poll();
          }
-         for(i in 0 to count - 1) { // ignore highest 10% 
+         for(i in 0 to eightyPercent - 1) { // ignore highest 10% 
             total += queue.poll();
          }
-         return total / count;
+         return total / eightyPercent;
       
       }
    }
