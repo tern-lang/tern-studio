@@ -1,7 +1,0 @@
-function x(f: (a: String, b)) {
-   println('x(f: (a: String, b))->' + f(11,22));
-}
-function x(f: (a, b)) {
-   println('x(f: (a, b))->' + f(11,22));
-}
-x((a:String, b:String)->a+'='+b);

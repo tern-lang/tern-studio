@@ -1,9 +1,0 @@
-// var scanner = new Scanner(System.in);
-
-// while(scanner.hasNextLine()) {
-//    var line = scanner.nextLine();
-//    println(line);
-// }
-
-println(System.in);
-System.in.close();

@@ -1,9 +1,0 @@
-import test.TestCase;
-
-class IgnoreTest with TestCase {
-
-   @Ignore
-   testIgnoreAnnotation(){
-      assert 'x' == null; // this will fail
-   }
-}

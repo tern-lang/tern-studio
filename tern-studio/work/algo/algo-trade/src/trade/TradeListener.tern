@@ -1,5 +1,0 @@
-
-
-trait TradeListener {
-   onTrade(t: Trade);
-}

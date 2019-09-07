@@ -1,1 +1,0 @@
-## Contains some half arsed solutions to LeetCode problems

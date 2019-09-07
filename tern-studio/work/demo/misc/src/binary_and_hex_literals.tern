@@ -1,4 +1,0 @@
-println(0xff);
-println(0b1);
-println(0b11);
-println(0b111); 

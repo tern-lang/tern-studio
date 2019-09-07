@@ -1,5 +1,0 @@
-println("X");
-call();
-func call() {
-   call();
-}

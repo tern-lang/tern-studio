@@ -1,5 +1,0 @@
-
-let processor = CodeHighlightProcessor();
-let result = processor.process("RED(\"#ff0000\")");
-
-println(result);

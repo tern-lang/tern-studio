@@ -1,6 +1,0 @@
-
-enum GameStatus{
-   WAITING,
-   RUNNING,
-   OVER
-}

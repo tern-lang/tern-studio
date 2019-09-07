@@ -1,8 +1,0 @@
-// https://en.wikipedia.org/wiki/Dart_(programming_language)
-var fib = (n) -> (n > 2) ? (fib(n - 1) + fib(n - 2)) : 1;
-
-function main() {
-  print("fib(20) = ${fib(20)}");
-}
-
-main();

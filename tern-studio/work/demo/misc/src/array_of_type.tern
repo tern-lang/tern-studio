@@ -1,2 +1,0 @@
-var x = new String[22];
-println(x.length);

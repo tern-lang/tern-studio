@@ -1,3 +1,0 @@
-class X{
-}
-System.err.println(X.class.getModule());

@@ -1,8 +1,0 @@
-
-let l = URL("http://localhost:8787/some/11/value")
-   .header("Accept", "application/*")
-   .get()
-   .response();
-
-println(l);
-println(l.inputStream.reader.readText);

@@ -1,6 +1,0 @@
-var x=null;
-var y=10;
-var z =11;
-println(x??y);
-
-println(y+x??z);

@@ -1,8 +1,0 @@
-package org.ternscript.compile;
-
-%imports%
-
-public class %name%Test extends TestCase {
-   %sources%
-   %tests%
-}
