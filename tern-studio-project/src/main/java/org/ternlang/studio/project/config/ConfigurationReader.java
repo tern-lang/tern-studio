@@ -216,7 +216,7 @@ public class ConfigurationReader {
       private List<String> arguments;
       
       @Path("process")
-      @Element(name="time-limit")
+      @Element(name="time-limit", required=false)
       private long limit;
       
       public WorkspaceDefinition() {
