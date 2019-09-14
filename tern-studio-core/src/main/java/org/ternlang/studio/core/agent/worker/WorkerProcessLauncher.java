@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.simpleframework.module.annotation.Component;
 import org.ternlang.studio.agent.ProcessMode;
 import org.ternlang.studio.agent.worker.WorkerProcess;
@@ -18,6 +16,8 @@ import org.ternlang.studio.core.ProcessLauncher;
 import org.ternlang.studio.project.HomeDirectory;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.project.config.ProcessConfiguration;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -32,6 +32,7 @@ public class WorkerProcessLauncher implements ProcessLauncher {
    }
 
    public ProcessDefinition launch(ProcessConfiguration configuration) throws Exception {
+      long timeout = workspace.getTimeLimit();
       int port = configuration.getPort();
       String host = configuration.getHost();
       String level = "DEBUG";//workspace.getLogger();
@@ -64,6 +65,7 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       command.add("--name=" + name);
       command.add("--level=" + level);
       command.add("--mode=" + mode);
+      command.add("--timeout=" + timeout);
 
       ProcessBuilder builder = new ProcessBuilder(command);
       

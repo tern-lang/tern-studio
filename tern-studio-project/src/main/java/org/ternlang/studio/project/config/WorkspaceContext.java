@@ -11,12 +11,14 @@ public class WorkspaceContext implements WorkspaceConfiguration {
    private final List<String> arguments;
    private final RepositoryFactory factory;
    private final DependencyLoader loader;
+   private final long limit;
    
-   public WorkspaceContext(RepositoryFactory factory, DependencyLoader loader, Map<String, String> variables, List<String> arguments){
+   public WorkspaceContext(RepositoryFactory factory, DependencyLoader loader, Map<String, String> variables, List<String> arguments, long limit){
       this.variables = variables;
       this.arguments = arguments;
       this.loader = loader;
       this.factory = factory;
+      this.limit = limit;
    }
 
    @Override
@@ -35,5 +37,10 @@ public class WorkspaceContext implements WorkspaceConfiguration {
    @Override
    public List<String> getArguments() {
       return arguments;
+   }
+   
+   @Override
+   public long getTimeLimit() {
+      return limit;
    }
 }

@@ -15,10 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
@@ -31,14 +29,17 @@ import org.simpleframework.xml.core.Commit;
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.util.Dictionary;
 import org.simpleframework.xml.util.Entry;
+import org.sonatype.aether.RepositorySystem;
+import org.sonatype.aether.repository.RemoteRepository;
 import org.ternlang.studio.project.FileSystem;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.ProjectLayout;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.project.maven.RepositoryClient;
 import org.ternlang.studio.project.maven.RepositoryFactory;
-import org.sonatype.aether.RepositorySystem;
-import org.sonatype.aether.repository.RemoteRepository;
+
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ConfigurationReader {
@@ -72,19 +73,20 @@ public class ConfigurationReader {
                Map<String, String> variables = details.getEnvironmentVariables();
                List<String> arguments = details.getArguments();
                Set<String> repositories = locations.keySet();
+               long limit = details.getTimeLimit();
                
                for(String repository : repositories) {
                   String location = locations.get(repository);
                   log.info("Repository: '" + repository + "' -> '" + location + "'");
                }
-               configuration = new WorkspaceContext(factory, details, variables, arguments);
+               configuration = new WorkspaceContext(factory, details, variables, arguments, limit);
                workspaceReference.set(configuration);
                return configuration;
             }
          }catch(Exception e) {
             throw new IllegalStateException("Could not read configuration", e);
          }
-         return new WorkspaceContext(factory, null, EMPTY_MAP, EMPTY_LIST);
+         return new WorkspaceContext(factory, null, EMPTY_MAP, EMPTY_LIST, TimeUnit.DAYS.toMillis(2));
       }
       return configuration;
    }  
@@ -213,9 +215,14 @@ public class ConfigurationReader {
       @ElementList(entry="argument", required=false)
       private List<String> arguments;
       
+      @Path("process")
+      @Element(name="time-limit")
+      private long limit;
+      
       public WorkspaceDefinition() {
          this.environment = new Dictionary<VariableDefinition>();
          this.arguments = new ArrayList<String>();
+         this.limit = TimeUnit.DAYS.toMillis(2);
       }
       
       @Override
@@ -327,6 +334,10 @@ public class ConfigurationReader {
             return arguments;
          }
          return Collections.emptyList();
+      }
+      
+      public long getTimeLimit() {
+         return limit;
       }
    }
    

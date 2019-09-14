@@ -129,6 +129,14 @@ public class Workspace implements FileDirectorySource {
       return reader.loadWorkspaceConfiguration().getDependencies(dependencies);
    }
    
+   public long getTimeLimit() {
+      try {
+         return reader.loadWorkspaceConfiguration().getTimeLimit();
+      } catch(Exception e) {
+         throw new IllegalStateException("Could not resolve time limit", e);
+      }  
+   }
+   
    public File createFile(String name) {
       File file = new File(root, name);
       
