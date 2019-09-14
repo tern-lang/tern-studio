@@ -1,6 +1,7 @@
 package org.ternlang.studio.agent;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import org.ternlang.common.thread.ThreadPool;
 import org.ternlang.compile.ResourceCompiler;
@@ -15,6 +16,7 @@ import org.ternlang.core.trace.TraceInterceptor;
 import org.ternlang.studio.agent.core.ExecuteLatch;
 import org.ternlang.studio.agent.debug.BreakpointMatcher;
 import org.ternlang.studio.agent.debug.SuspendController;
+import org.ternlang.studio.agent.limit.TimeLimiter;
 import org.ternlang.studio.agent.profiler.TraceProfiler;
 
 public class ProcessContext {
@@ -22,6 +24,7 @@ public class ProcessContext {
    private final SuspendController controller;
    private final ResourceCompiler compiler;
    private final TraceProfiler profiler;
+   private final TimeLimiter limiter;
    private final BreakpointMatcher matcher;
    private final ExecuteLatch latch;
    private final ProcessStore store;
@@ -41,6 +44,7 @@ public class ProcessContext {
    
    public ProcessContext(ProcessMode mode, ProcessStore store, String process, int threads, int stack) {
       this.executor = new ThreadPool(threads < 5 ? 5 : threads, 100, stack);
+      this.limiter = new TimeLimiter(TimeUnit.DAYS.toMillis(2));
       this.latch = new ExecuteLatch(process);
       this.context = new StoreContext(store, executor);
       this.compiler = new ResourceCompiler(context);
@@ -67,6 +71,10 @@ public class ProcessContext {
    
    public PackageLinker getLinker() {
       return context.getLinker();
+   }
+   
+   public TimeLimiter getTimeLimiter() {
+      return limiter;
    }
    
    public TraceInterceptor getInterceptor() {

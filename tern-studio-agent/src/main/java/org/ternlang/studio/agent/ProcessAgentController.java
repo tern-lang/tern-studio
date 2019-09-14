@@ -19,6 +19,7 @@ import org.ternlang.studio.agent.event.PingEvent;
 import org.ternlang.studio.agent.event.ProcessEventAdapter;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.agent.event.StepEvent;
+import org.ternlang.studio.agent.limit.TimeLimiter;
 import org.ternlang.studio.agent.task.ProcessExecutor;
 
 public class ProcessAgentController extends ProcessEventAdapter {
@@ -38,6 +39,7 @@ public class ProcessAgentController extends ProcessEventAdapter {
       ExecuteData data = event.getData();
       Map<String, Map<Integer, Boolean>> breakpoints = event.getBreakpoints();
       List<String> arguments = event.getArguments();
+      TimeLimiter limiter = context.getTimeLimiter();
       BreakpointMatcher matcher = context.getMatcher();
       TraceInterceptor interceptor = context.getInterceptor();
       ProcessStore store = context.getStore();
@@ -54,6 +56,7 @@ public class ProcessAgentController extends ProcessEventAdapter {
       if(!data.isDebug()) {
          interceptor.clear(); // disable interceptors
       }
+      interceptor.register(limiter); // make sure time limit applies
       matcher.update(breakpoints);
       store.update(project); 
       executor.beginExecute(channel, project, resource, dependencies, arguments, debug);

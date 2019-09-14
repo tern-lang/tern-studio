@@ -20,7 +20,7 @@ import org.ternlang.studio.agent.debug.SuspendInterceptor;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.agent.event.ProcessEventTimer;
 import org.ternlang.studio.agent.event.RegisterEvent;
-import org.ternlang.studio.agent.limit.TimeLimitListener;
+import org.ternlang.studio.agent.limit.TimeLimiter;
 import org.ternlang.studio.agent.log.AsyncLog;
 import org.ternlang.studio.agent.log.ConsoleLog;
 import org.ternlang.studio.agent.log.Log;
@@ -59,7 +59,9 @@ public class ProcessAgent {
    }
    
    public ProcessClient start(final URI root, final Runnable task, final Model model, final Log log) throws Exception {
+      final long time = System.currentTimeMillis();
       final BreakpointMatcher matcher = context.getMatcher();
+      final TimeLimiter limiter = context.getTimeLimiter();
       final SuspendController controller = context.getController();
       final TraceInterceptor interceptor = context.getInterceptor();
       final TraceProfiler profiler = context.getProfiler();
@@ -74,7 +76,6 @@ public class ProcessAgent {
       
       try {
          final AsyncLog adapter = new AsyncLog(log, level);
-         final TimeLimitListener limiter = new TimeLimitListener(limit);
          final TraceLogger logger = new LogLogger(adapter, level);
          final CompileValidator validator = new CompileValidator(context);
          final ConnectionChecker checker = new ConnectionChecker(context, process);
@@ -90,6 +91,7 @@ public class ProcessAgent {
             .withSystem(system)
             .build();
          
+         limiter.expireAt(time + limit);
          interceptor.register(limiter);
          interceptor.register(profiler);
          interceptor.register(suspender);

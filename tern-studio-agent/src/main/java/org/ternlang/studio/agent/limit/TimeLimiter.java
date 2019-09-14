@@ -1,6 +1,7 @@
 package org.ternlang.studio.agent.limit;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.ternlang.common.thread.ThreadBuilder;
 import org.ternlang.core.scope.Scope;
@@ -8,18 +9,24 @@ import org.ternlang.core.trace.Trace;
 import org.ternlang.studio.agent.core.TerminateHandler;
 import org.ternlang.studio.agent.debug.TraceAdapter;
 
-public class TimeLimitListener extends TraceAdapter {
+public class TimeLimiter extends TraceAdapter {
    
    private final LimitExpiredTrigger trigger;
    private final ThreadBuilder builder;
    private final AtomicBoolean expired;
    private final AtomicBoolean started;
+   private final AtomicLong expiry;
    
-   public TimeLimitListener(long duration) {
+   public TimeLimiter(long duration) {
+      this.expiry = new AtomicLong(System.currentTimeMillis() + duration);
       this.expired = new AtomicBoolean();
-      this.trigger = new LimitExpiredTrigger(expired, duration);
+      this.trigger = new LimitExpiredTrigger(expiry, expired);
       this.builder = new ThreadBuilder();
       this.started = new AtomicBoolean();
+   }
+   
+   public void expireAt(long expiryTime) {
+      expiry.set(expiryTime);
    }
    
    @Override
@@ -43,11 +50,11 @@ public class TimeLimitListener extends TraceAdapter {
    private static class LimitExpiredTrigger implements Runnable {
       
       private final AtomicBoolean expired;
-      private final long expireTime;
+      private final AtomicLong expiry;
       
-      public LimitExpiredTrigger(AtomicBoolean expired, long duration) {
-         this.expireTime = System.currentTimeMillis() + duration;
+      public LimitExpiredTrigger(AtomicLong expiry, AtomicBoolean expired) {
          this.expired = expired;
+         this.expiry = expiry;
       }
       
       @Override
@@ -55,7 +62,8 @@ public class TimeLimitListener extends TraceAdapter {
          try {
             while(true) {
                long currentTime = System.currentTimeMillis();
-            
+               long expireTime = expiry.get();
+               
                if(currentTime >= expireTime) {
                   expired.set(true);
                   break;
