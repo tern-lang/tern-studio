@@ -13,6 +13,7 @@ public class ProblemCommand implements Command {
 
    private String project;
    private String description;
+   private String message;
    private String resource;
    private int line;
    private long time;

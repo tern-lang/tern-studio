@@ -74,6 +74,7 @@ public class CommandEventConverter {
       return ProblemCommand.builder()
             .project(name)
             .description(event.getDescription())
+            .message(event.getMessage())
             .time(System.currentTimeMillis())
             .line(event.getLine())
             .resource(path)

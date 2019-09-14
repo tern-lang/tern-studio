@@ -140,7 +140,7 @@ define(["require", "exports", "w2ui", "common", "socket", "tree", "editor", "pro
             var problems = w2ui_1.w2ui['problems'];
             var message = JSON.parse(text);
             var resourcePath = tree_1.FileTree.createResourcePath(message.resource);
-            var problemItem = new ProblemItem(resourcePath, message.line, message.description, "<div class='errorDescription'>" + message.description + "</div>", message.project, message.time);
+            var problemItem = new ProblemItem(resourcePath, message.line, message.message, "<div class='errorDescription' title='" + common_1.Common.escapeHtml(message.description) + "'>" + message.message + "</div>", message.project, message.time);
             if (message.line >= 0) {
                 console.log("Add problem '" + problemItem.getDescription() + "' at line '" + problemItem.getLine() + "'");
             }

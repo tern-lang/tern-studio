@@ -8,7 +8,7 @@ public class ConsoleFlusher {
    }
    
    public static void flushError(Throwable cause) {
-      String text = ExceptionBuilder.build(cause);
+      String text = ExceptionBuilder.buildAll(cause);
       System.err.println(text);
       System.err.flush(); // flush output to sockets
    }

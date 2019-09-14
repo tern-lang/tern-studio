@@ -23,8 +23,8 @@ import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.agent.event.ProfileEvent;
 import org.ternlang.studio.agent.event.ProgressEvent;
 import org.ternlang.studio.agent.event.ScriptErrorEvent;
-import org.ternlang.studio.agent.profiler.TraceProfiler;
 import org.ternlang.studio.agent.profiler.ProfileResult;
+import org.ternlang.studio.agent.profiler.TraceProfiler;
 
 public class ProgressReporter {
    
@@ -108,15 +108,17 @@ public class ProgressReporter {
       String process = context.getProcess();   
       
       for(VerifyError error : errors) {
-         Exception cause = error.getCause();
+         Throwable cause = error.getCause();
+         String description = ExceptionBuilder.buildRoot(cause);
          Trace trace = error.getTrace();
-         String description = cause.getMessage();
+         String message = cause.getMessage();
          String path = trace.getPath().toString();
          int line = trace.getLine();
          
          try {
             ScriptErrorEvent event = new ScriptErrorEvent.Builder(process)
-               .withDescription(description)
+               .withDescription(description)   
+               .withMessage(message)
                .withResource(path)
                .withLine(line)
                .build();
@@ -197,6 +199,5 @@ public class ProgressReporter {
       if(mode.isTerminateRequired()) {
          TerminateHandler.terminate("Task has finished executing"); // shutdown when finished
       }
-      
    }
 }

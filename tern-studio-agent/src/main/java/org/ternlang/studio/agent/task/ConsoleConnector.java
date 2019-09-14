@@ -34,7 +34,7 @@ public class ConsoleConnector implements ConnectionListener{
          System.setOut(output);
          System.setErr(error);
       }catch(Exception e) {
-         System.err.println(ExceptionBuilder.build(e));
+         System.err.println(ExceptionBuilder.buildAll(e));
       }
    }
    
@@ -44,7 +44,7 @@ public class ConsoleConnector implements ConnectionListener{
          System.setOut(originalOutput);
          System.setErr(originalError);
       }catch(Exception e) {
-         System.err.println(ExceptionBuilder.build(e));
+         System.err.println(ExceptionBuilder.buildAll(e));
       }
    }
    

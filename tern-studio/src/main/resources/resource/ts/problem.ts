@@ -181,8 +181,8 @@ export module ProblemManager {
    	var problemItem: ProblemItem = new ProblemItem(
             resourcePath,
    	      message.line,
-   	      message.description,
-   	      "<div class='errorDescription'>"+message.description+"</div>",
+   	      message.message,
+   	      "<div class='errorDescription' title='"+ Common.escapeHtml(message.description) + "'>"+message.message+"</div>",
    	      message.project,
    	      message.time
    	);
