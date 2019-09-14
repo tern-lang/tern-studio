@@ -46,6 +46,7 @@ public class CommandClient {
       ProblemCommand command = ProblemCommand.builder()
             .project(name)
             .description(description)
+            .message(description)
             .resource(resource)
             .time(time)
             .line(line)

@@ -148,6 +148,9 @@ public class CommandOptionParser {
          if(type == Integer.class) {
             return Integer.parseInt(value);
          }
+         if(type == Long.class) {
+            return Long.parseLong(value);
+         }
          if(type == URI.class) {
             if(!value.startsWith("http:") && !value.startsWith("https:")) {
                throw new IllegalStateException("Resource '" + value + "' is not a url");

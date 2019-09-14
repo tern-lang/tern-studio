@@ -4,6 +4,7 @@ import static java.util.Collections.EMPTY_LIST;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import org.ternlang.studio.agent.ProcessMode;
@@ -16,7 +17,8 @@ public enum WorkerOption implements CommandOption {
    PORT("p", "port", "download port", "\\d+", Integer.class),
    NAME("n", "name", "name of the process", ".+", String.class),
    LEVEL("l", "level", "log level", "(TRACE|DEBUG|INFO)", String.class, LogLevel.INFO),
-   MODE("m", "mode", "run mode to use", "(SCRIPT|SERVICE)", String.class, ProcessMode.SCRIPT);
+   MODE("m", "mode", "run mode to use", "(SCRIPT|SERVICE)", String.class, ProcessMode.SCRIPT),
+   TIMEOUT("t", "timeout", "time limit for the process", "\\d+", Long.class, TimeUnit.DAYS.toMillis(2));
 
    public final Pattern pattern;
    public final String description;

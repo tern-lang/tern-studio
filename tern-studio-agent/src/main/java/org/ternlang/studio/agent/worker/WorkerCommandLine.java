@@ -33,6 +33,10 @@ public class WorkerCommandLine {
       return "http://" + line.getValue(WorkerOption.HOST.name) + ":" + line.getValue(WorkerOption.PORT.name);
    }
    
+   public Long getTimeLimit() {
+      return (Long)line.getValue(WorkerOption.TIMEOUT.name);
+   }
+   
    public URI getDownloadURL() {
       return URI.create(getAddress() + DOWNLOAD_PATH);
    }

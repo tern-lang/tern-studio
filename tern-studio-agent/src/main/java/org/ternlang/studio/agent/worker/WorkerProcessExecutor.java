@@ -22,6 +22,7 @@ public class WorkerProcessExecutor {
       ProcessMode mode = line.getMode();
       String process = line.getName();
       LogLevel level = line.getLogLevel();
+      Long limit = line.getTimeLimit();
       
       if(process == null) {
          process = generator.getName();
@@ -29,7 +30,7 @@ public class WorkerProcessExecutor {
       WorkerStore store = new WorkerStore(download);
       Runnable listener = new TerminateListener(mode);
       ProcessContext context = new ProcessContext(mode, store, process);
-      ProcessAgent agent = new ProcessAgent(context, level);
+      ProcessAgent agent = new ProcessAgent(context, level, limit);
       
       agent.start(download, listener);
    }
