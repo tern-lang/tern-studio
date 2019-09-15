@@ -364,6 +364,47 @@ define(["require", "exports", "jquery", "w2ui"], function (require, exports, $, 
             return formatDateWithPattern(currentTime(), "yyyyMMddHHmmssS");
         }
         Common.createTimeStamp = createTimeStamp;
+        function formatDuration(durationMillis) {
+            var seconds = Math.floor(durationMillis / 1000);
+            var minutes = Math.floor(seconds / 60);
+            var hours = Math.floor(minutes / 60);
+            var days = Math.floor(hours / 24);
+            var description = "";
+            if (seconds > 0) {
+                hours = hours - (days * 24);
+                minutes = minutes - (days * 24 * 60) - (hours * 60);
+                seconds = seconds - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
+                if (days > 0) {
+                    description += days;
+                    description += " ";
+                    description += (days == 1) ? "day" : "days";
+                    description += " ";
+                }
+                if (hours > 0) {
+                    description += hours;
+                    description += " ";
+                    description += (hours == 1) ? "hour" : "hours";
+                    description += " ";
+                }
+                if (minutes > 0) {
+                    description += minutes;
+                    description += " ";
+                    description += (minutes == 1) ? "minute" : "minutes";
+                    description += " ";
+                }
+                if (seconds > 0) {
+                    description += seconds;
+                    description += " ";
+                    description += (seconds == 1) ? "second" : "seconds";
+                    description += " ";
+                }
+            }
+            else {
+                description = "0 seconds";
+            }
+            return description.trim();
+        }
+        Common.formatDuration = formatDuration;
         function stringReplaceText(text, from, to) {
             if (text && from && to) {
                 return text.split(from).join(to);

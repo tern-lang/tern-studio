@@ -16,8 +16,10 @@ public class TimeLimiter extends TraceAdapter {
    private final AtomicBoolean expired;
    private final AtomicBoolean started;
    private final AtomicLong expiry;
+   private final AtomicLong limit;
    
    public TimeLimiter() {
+      this.limit = new AtomicLong();
       this.expiry = new AtomicLong();
       this.expired = new AtomicBoolean();
       this.trigger = new LimitExpiredTrigger(expiry, expired);
@@ -25,12 +27,22 @@ public class TimeLimiter extends TraceAdapter {
       this.started = new AtomicBoolean();
    }
    
-   public void expireAt(long expiryTime) {
+   public TimeLimit getTimeLimit() {
+      long duration = limit.get();
+      long expiryTime = expiry.get();
+      
+      return new TimeLimit(expiryTime, duration);
+   }
+   
+   public void expireAfter(long duration) {
+      long time = System.currentTimeMillis();
+      
       if(started.compareAndSet(false, true)) {
          Thread thread = builder.newThread(trigger);
          thread.start();
       }
-      expiry.set(expiryTime);
+      limit.set(duration);
+      expiry.set(time + duration);
    }
    
    @Override

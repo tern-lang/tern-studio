@@ -38,9 +38,26 @@ export module DebugManager {
       private _debug: boolean;
       private _focus: boolean;
       private _memory: number;
+      private _expiry: number;
+      private _remaining: number;
       private _threads: number;
       
-      constructor(process: string, project: string, resource: string, system: string, pid: string, status: ProcessStatus, time: number, running: boolean, debug: boolean, focus: boolean, memory: number, threads: number) {
+      constructor(
+            process: string, 
+            project: string, 
+            resource: string, 
+            system: string, 
+            pid: string, 
+            status: ProcessStatus, 
+            time: number, 
+            running: boolean, 
+            debug: boolean, 
+            focus: boolean, 
+            memory: number,
+            expiry: number,
+            remaining: number,
+            threads: number) 
+      {
          this._process = process;
          this._resource = resource;
          this._system = system;
@@ -50,6 +67,8 @@ export module DebugManager {
          this._focus = focus;
          this._project = project;
          this._memory = memory;
+         this._expiry = expiry;
+         this._remaining = remaining;
          this._threads = threads;
          this._debug = debug;
          this._status = status;
@@ -88,6 +107,14 @@ export module DebugManager {
       
       public getMemory(): number {
          return this._memory;
+      }
+      
+      public getExpiry(): number {
+         return this._expiry;
+      }
+      
+      public getRemaining(): number {
+         return this._remaining;
       }
       
       public getThreads(): number {
@@ -173,11 +200,27 @@ export module DebugManager {
       showStatus();
    }
    
+   function calculateRemainingTimePercent(totalTime, usedTime) {
+      if(totalTime <= 0) {
+         return 100;
+      }
+      var remainingTime = totalTime - usedTime;
+      return Math.round((remainingTime / totalTime) * 100);
+   }
+   
+   function calculateUsedMemoryPercent(totalMemory, usedMemory) {
+      if(totalMemory <= 0) {
+         return 0;
+      }
+      return Math.round((usedMemory / totalMemory) * 100);
+   }
+   
    function createStatusProcess(socket, type, text) { // process is running
       var message = JSON.parse(text);
       var process: string = message.process;
-      var status: string = message.status;
-      var processMemory: number = Math.round((message.usedMemory / message.totalMemory) * 100);
+      var status: string = message.status;            
+      var processExpiry: number =  calculateRemainingTimePercent(message.totalTime, message.usedTime);
+      var processMemory: number = calculateUsedMemoryPercent(message.totalMemory, message.usedMemory);
       var processStatus: ProcessStatus = ProcessStatus[status];
       
       if(!status || !ProcessStatus.hasOwnProperty(status)) {
@@ -195,7 +238,9 @@ export module DebugManager {
          message.running, // is anything running
          message.debug,
          message.focus,
-         processMemory,
+         processMemory, // how much memory used as a %
+         processExpiry, // how much time remains as a %
+         message.totalTime == 0 ? null : Common.formatDuration(message.totalTime - message.usedTime),
          message.threads
       );
       var description: string = processInfo.getDescription();
@@ -290,9 +335,11 @@ export module DebugManager {
             
             if(statusProcessInfo != null) {
                var statusProject: string = statusProcessInfo.getProject();
+               var statusPlatform: string = statusProcessInfo.getSystem();
+               var statusId = "process_" + Common.escapeHtml(statusProcess);
                
                if(statusProject == Common.getProjectName() || statusProject == null) {
-                  var displayName = "<div class='debugIdleRecord'>"+statusProcess+"</div>";
+                  var displayName = "<div id='" + statusId + "' class='debugIdleRecord' title='" + statusPlatform + "'>"+statusProcess+"</div>";
                   var active = "&nbsp;<input type='radio'><label></label>";
                   var resourcePath = "";
                   var debugging: boolean = statusProcessInfo.isDebug();
@@ -306,13 +353,27 @@ export module DebugManager {
                      var resourcePathDetails: FilePath = FileTree.createResourcePath(statusProcessInfo.getResource());
                      
                      if(statusFocus == statusProcess && debugging) {
-                        displayName = "<div class='debugFocusRecord'>"+statusProcess+"</div>";
+                        displayName = "<div id='" + statusId + "' class='debugFocusRecord' title='" + statusPlatform + "'>"+statusProcess+"</div>";
                      } else {
-                        displayName = "<div class='debugRecord'>"+statusProcess+"</div>";               
+                        displayName = "<div id='" + statusId + "' class='debugRecord' title='" + statusPlatform + "'>"+statusProcess+"</div>";               
                      }
                      resourcePath = resourcePathDetails.getResourcePath();
                      running = true;
                   } 
+                  var expiryPercentage = Math.round(statusProcessInfo.getExpiry());
+                  var percentageTitle = statusProcessInfo.getRemaining() ? ('title="' + statusProcessInfo.getRemaining() + '"') : "";
+                  var percentageColor = "#b5bbbe";
+                  var percentageBar = "";
+                  
+                  if(statusProcessInfo.getResource() != null) {
+                     percentageColor = expiryPercentage < 20 ? "#ed6761" : "#8adb62";
+                  }
+
+                  percentageBar += "<!-- " + statusProcessInfo.getExpiry() + " -->";
+                  percentageBar += "<div " + percentageTitle + " style='padding-top: 2px; padding-bottom; 2px; padding-left: 5px; padding-right: 5px;'>";
+                  percentageBar += "<div style='height: 10px; background: " + percentageColor + "; width: "+expiryPercentage+"%;'></div>";
+                  percentageBar += "</div>";
+
                   statusRecords.push({
                      recid: statusIndex++,
                      name: displayName,
@@ -320,7 +381,7 @@ export module DebugManager {
                      process: statusProcess,
                      status: ProcessStatus[status],
                      running: running,
-                     system: statusProcessInfo.getSystem(),
+                     expiry: percentageBar,
                      pid: statusProcessInfo.getPid(),
                      resource: statusProcessInfo.getResource(),
                      focus: statusFocus == statusProcess,

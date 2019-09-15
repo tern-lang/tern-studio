@@ -24,6 +24,8 @@ public class StatusCommand implements Command {
    private boolean focus;
    private boolean running;
    private boolean debug;
+   private long totalTime;
+   private long usedTime;
    private long totalMemory;
    private long usedMemory;
    private int threads;

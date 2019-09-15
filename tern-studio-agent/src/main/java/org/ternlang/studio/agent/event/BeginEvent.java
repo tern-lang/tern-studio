@@ -12,6 +12,7 @@ public class BeginEvent implements StatusEvent {
    private final String project;
    private final String system;
    private final String pid;
+   private final long totalTime;
    private final long totalMemory;
    private final long usedMemory;
    private final int threads;
@@ -20,6 +21,7 @@ public class BeginEvent implements StatusEvent {
    private BeginEvent(Builder builder) {
       this.totalMemory = builder.totalMemory;
       this.usedMemory = builder.usedMemory;
+      this.totalTime = builder.totalTime;
       this.threads = builder.threads;
       this.resource = builder.resource;
       this.process = builder.process;
@@ -74,6 +76,16 @@ public class BeginEvent implements StatusEvent {
    public long getTotalMemory() {
       return totalMemory;
    }
+   
+   @Override
+   public long getTotalTime() {
+      return totalTime;
+   }
+
+   @Override
+   public long getUsedTime() {
+      return 0;
+   }
 
    @Override
    public int getThreads() {
@@ -93,6 +105,7 @@ public class BeginEvent implements StatusEvent {
       private String project;
       private String system;
       private String pid;
+      private long totalTime;
       private long totalMemory;
       private long usedMemory;
       private int threads;
@@ -147,6 +160,17 @@ public class BeginEvent implements StatusEvent {
       @Override
       public Builder withUsedMemory(long usedMemory){
          this.usedMemory = usedMemory;
+         return this;
+      }
+      
+      @Override
+      public Builder withTotalTime(long totalTime){
+         this.totalTime = totalTime;
+         return this;
+      }
+      
+      @Override
+      public Builder withUsedTime(long usedTime){
          return this;
       }
       

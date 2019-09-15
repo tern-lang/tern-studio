@@ -37,6 +37,8 @@ public class PongEventMarshaller<T extends PongEvent> implements ProcessEventMar
       if(input.readBoolean()) {
          String project = input.readUTF();
          String resource = input.readUTF();
+         long totalTime = input.readLong();
+         long usedTime = input.readLong();
          long totalMemory = input.readLong();
          long usedMemory = input.readLong();
          int threads = input.readInt();
@@ -47,6 +49,8 @@ public class PongEventMarshaller<T extends PongEvent> implements ProcessEventMar
             .withProject(project)
             .withResource(resource)
             .withStatus(ExecuteStatus.resolveStatus(status))
+            .withTotalTime(totalTime)
+            .withUsedTime(usedTime)
             .withTotalMemory(totalMemory)
             .withUsedMemory(usedMemory)
             .withThreads(threads)
@@ -69,6 +73,8 @@ public class PongEventMarshaller<T extends PongEvent> implements ProcessEventMar
       String project = event.getProject();
       String system = event.getSystem();
       String pid = event.getPid();
+      long totalTime = event.getTotalTime();
+      long usedTime = event.getUsedTime();
       long totalMemory = event.getTotalMemory();
       long usedMemory = event.getUsedMemory();
       int threads = event.getThreads();
@@ -82,6 +88,8 @@ public class PongEventMarshaller<T extends PongEvent> implements ProcessEventMar
          output.writeBoolean(true);
          output.writeUTF(project);
          output.writeUTF(resource);
+         output.writeLong(totalTime);
+         output.writeLong(usedTime);
          output.writeLong(totalMemory);
          output.writeLong(usedMemory);
          output.writeInt(threads);

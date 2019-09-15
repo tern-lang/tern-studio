@@ -2064,10 +2064,10 @@ export module Project {
             sortable : true,
             resizable : true
          }, {
-            field : 'system',
-            caption : 'System',
+            field : 'expiry',
+            caption : 'Expiry',
             size : '20%',
-            sortable : true,
+            sortable : false,
             resizable : true
          }, {
             field : 'pid',

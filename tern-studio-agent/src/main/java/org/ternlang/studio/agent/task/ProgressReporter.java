@@ -60,6 +60,8 @@ public class ProgressReporter {
                .withProject(project)
                .withResource(resource)
                .withStatus(COMPILING)
+               .withTotalTime(context.getTimeLimiter().getTimeLimit().getTimeout())
+               .withUsedTime(0)
                .withTotalMemory(Runtime.getRuntime().totalMemory())
                .withUsedMemory(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())
                .withThreads(Thread.getAllStackTraces().size()) // this might be expensive
@@ -83,6 +85,9 @@ public class ProgressReporter {
       long duration = latch.update(debug ? DEBUGGING : RUNNING);
       
       if(duration >= 0) {
+         long remainingTime = Math.max(0, context.getTimeLimiter().getTimeLimit().getExpiryTime() - System.currentTimeMillis());
+         long timeout = context.getTimeLimiter().getTimeLimit().getTimeout();
+         
          try {
             BeginEvent event = new BeginEvent.Builder(process)
                .withMode(context.getMode())
@@ -92,6 +97,8 @@ public class ProgressReporter {
                .withProject(project)
                .withResource(resource)
                .withStatus(debug ? DEBUGGING : RUNNING)
+               .withTotalTime(timeout)
+               .withUsedTime(timeout - remainingTime)
                .withTotalMemory(Runtime.getRuntime().totalMemory())
                .withUsedMemory(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())
                .withThreads(Thread.getAllStackTraces().size()) // this might be expensive
@@ -139,6 +146,8 @@ public class ProgressReporter {
       long duration = latch.update(TERMINATING);
       
       if(duration >= 0) {
+         long timeout = context.getTimeLimiter().getTimeLimit().getTimeout();
+         
          try {  
             ProgressEvent event = new ProgressEvent.Builder(process)
                .withPid(pid)
@@ -146,6 +155,8 @@ public class ProgressReporter {
                .withProject(project)
                .withResource(resource)
                .withStatus(TERMINATING)
+               .withUsedTime(timeout)
+               .withTotalTime(timeout)
                .withTotalMemory(Runtime.getRuntime().totalMemory())
                .withUsedMemory(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())
                .withThreads(Thread.getAllStackTraces().size()) // this might be expensive

@@ -1868,10 +1868,10 @@ define(["require", "exports", "jquery", "w2ui", "common", "console", "problem", 
                         sortable: true,
                         resizable: true
                     }, {
-                        field: 'system',
-                        caption: 'System',
+                        field: 'expiry',
+                        caption: 'Expiry',
                         size: '20%',
-                        sortable: true,
+                        sortable: false,
                         resizable: true
                     }, {
                         field: 'pid',

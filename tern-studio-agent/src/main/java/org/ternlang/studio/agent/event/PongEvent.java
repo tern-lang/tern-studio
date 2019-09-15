@@ -10,6 +10,8 @@ public class PongEvent implements StatusEvent {
    private final String resource;
    private final String system;
    private final String pid;
+   private final long totalTime;
+   private final long usedTime;
    private final long totalMemory;
    private final long usedMemory;
    private final int threads;
@@ -17,6 +19,8 @@ public class PongEvent implements StatusEvent {
    protected PongEvent(Builder<? extends PongEvent> builder) {
       this.totalMemory = builder.totalMemory;
       this.usedMemory = builder.usedMemory;
+      this.totalTime = builder.totalTime;
+      this.usedTime = builder.usedTime;
       this.threads = builder.threads;
       this.resource = builder.resource;
       this.process = builder.process;
@@ -67,6 +71,16 @@ public class PongEvent implements StatusEvent {
    }
 
    @Override
+   public long getUsedTime() {
+      return usedTime;
+   }
+
+   @Override
+   public long getTotalTime() {
+      return totalTime;
+   }
+   
+   @Override
    public int getThreads() {
       return threads;
    }
@@ -79,6 +93,8 @@ public class PongEvent implements StatusEvent {
       private String resource;
       private String system;
       private String pid;
+      private long totalTime;
+      private long usedTime;
       private long totalMemory;
       private long usedMemory;
       private int threads;
@@ -132,6 +148,18 @@ public class PongEvent implements StatusEvent {
       @Override
       public Builder<T> withUsedMemory(long usedMemory){
          this.usedMemory = usedMemory;
+         return this;
+      }
+      
+      @Override
+      public Builder<T> withTotalTime(long totalTime){
+         this.totalTime = totalTime;
+         return this;
+      }
+      
+      @Override
+      public Builder<T> withUsedTime(long usedTime){
+         this.usedTime = usedTime;
          return this;
       }
       

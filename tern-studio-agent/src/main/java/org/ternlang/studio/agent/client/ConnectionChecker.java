@@ -60,14 +60,19 @@ public class ConnectionChecker implements Closeable {
       long time = System.currentTimeMillis();
       
       try {
+         long remainingTime = Math.max(0, context.getTimeLimiter().getTimeLimit().getExpiryTime() - System.currentTimeMillis());
+         long timeout = context.getTimeLimiter().getTimeLimit().getTimeout();
+         
          PongEvent pong = new PongEvent.Builder(process)
             .withPid(pid)
             .withSystem(system)
             .withProject(project)
             .withResource(resource)
             .withStatus(status)
+            .withUsedTime(timeout - remainingTime)
+            .withTotalTime(timeout)
+            .withUsedMemory(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())
             .withTotalMemory(Runtime.getRuntime().totalMemory())
-            .withUsedMemory(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())
             .withThreads(Thread.getAllStackTraces().size()) // this might be expensive
             .build();
          

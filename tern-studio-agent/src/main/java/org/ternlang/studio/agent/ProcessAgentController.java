@@ -51,7 +51,6 @@ public class ProcessAgentController extends ProcessEventAdapter {
       String project = data.getProject();
       String resource = data.getResource();
       boolean debug = data.isDebug();
-      long time = System.currentTimeMillis();
       
       if(!target.equals(actual)) {
          throw new IllegalArgumentException("Process '" +actual+ "' received event for '"+target+"'");
@@ -60,7 +59,7 @@ public class ProcessAgentController extends ProcessEventAdapter {
          interceptor.clear(); // disable interceptors
       }
       interceptor.register(limiter); // make sure time limit applies
-      limiter.expireAt(time + timeout); // expire after timeout milliseconds
+      limiter.expireAfter(timeout); // expire after timeout milliseconds
       matcher.update(breakpoints);
       store.update(project); 
       executor.beginExecute(channel, project, resource, dependencies, arguments, debug);

@@ -10,6 +10,8 @@ public interface StatusEvent extends ProcessEvent {
    String getPid();
    long getUsedMemory();
    long getTotalMemory();
+   long getUsedTime();
+   long getTotalTime();
    int getThreads();
 
    public static interface Builder<T extends StatusEvent> {
@@ -21,6 +23,8 @@ public interface StatusEvent extends ProcessEvent {
       Builder<T> withThreads(int threads);
       Builder<T> withTotalMemory(long totalMemory);
       Builder<T> withUsedMemory(long usedMemory);
+      Builder<T> withTotalTime(long totalTime);
+      Builder<T> withUsedTime(long usedTime);
       T build();
    }
 }

@@ -143,6 +143,8 @@ public class CommandEventConverter {
             .system(event.getSystem())
             .project(event.getProject())
             .time(System.currentTimeMillis())
+            .totalTime(event.getTotalTime())
+            .usedTime(event.getUsedTime())
             .totalMemory(event.getTotalMemory())
             .usedMemory(event.getUsedMemory())
             .threads(event.getThreads())
