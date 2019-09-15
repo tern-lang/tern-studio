@@ -26,27 +26,20 @@ public class TimeLimiter extends TraceAdapter {
    }
    
    public void expireAt(long expiryTime) {
+      if(started.compareAndSet(false, true)) {
+         Thread thread = builder.newThread(trigger);
+         thread.start();
+      }
       expiry.set(expiryTime);
    }
    
    @Override
    public void traceBefore(Scope scope, Trace trace) {
-      if(started.compareAndSet(false, true)) {
-         Thread thread = builder.newThread(trigger);
-         thread.start();
-      }
       if(expired.get()) {
          TerminateHandler.terminate("Time limit expired");
       }
    }
-   
-   @Override
-   public void traceAfter(Scope scope, Trace trace) {
-      if(expired.get()) {
-         TerminateHandler.terminate("Time limit expired");
-      }
-   }
-   
+
    private static class LimitExpiredTrigger implements Runnable {
       
       private final AtomicBoolean expired;

@@ -59,8 +59,8 @@ public class ProcessAgentController extends ProcessEventAdapter {
       if(!data.isDebug()) {
          interceptor.clear(); // disable interceptors
       }
-      limiter.expireAt(time + timeout); // expire after timeout milliseconds
       interceptor.register(limiter); // make sure time limit applies
+      limiter.expireAt(time + timeout); // expire after timeout milliseconds
       matcher.update(breakpoints);
       store.update(project); 
       executor.beginExecute(channel, project, resource, dependencies, arguments, debug);

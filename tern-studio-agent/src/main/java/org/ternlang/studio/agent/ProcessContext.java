@@ -44,13 +44,13 @@ public class ProcessContext {
    
    public ProcessContext(ProcessMode mode, ProcessStore store, String process, int threads, int stack) {
       this.executor = new ThreadPool(threads < 5 ? 5 : threads, 100, stack);
-      this.limiter = new TimeLimiter(TimeUnit.DAYS.toMillis(2));
       this.latch = new ExecuteLatch(process);
       this.context = new StoreContext(store, executor);
       this.compiler = new ResourceCompiler(context);
       this.controller = new SuspendController();
       this.matcher = new BreakpointMatcher();
       this.profiler = new TraceProfiler();
+      this.limiter = new TimeLimiter();
       this.model = new EmptyModel();
       this.process = process;
       this.store = store;

@@ -36,18 +36,18 @@ public class ProcessAgent {
    private final LogLevel level;
    private final Model model;
    private final Log log;
-   private final long limit;
+   private final long timeout;
 
    public ProcessAgent(ProcessContext context, LogLevel level) {
       this(context, level, TimeUnit.DAYS.toMillis(5));
    }
    
-   public ProcessAgent(ProcessContext context, LogLevel level, long limit) {
+   public ProcessAgent(ProcessContext context, LogLevel level, long timeout) {
       this.model = new EmptyModel();
       this.log = new ConsoleLog();
+      this.timeout = timeout;
       this.context = context;
       this.level = level;
-      this.limit = limit;
    }
    
    public ProcessClient start(final URI root, final Runnable task) throws Exception {
@@ -79,7 +79,7 @@ public class ProcessAgent {
          final CompileValidator validator = new CompileValidator(context);
          final ConnectionChecker checker = new ConnectionChecker(context, process);
          final ProcessExecutor executor = new ProcessExecutor(context, checker, logger, mode, model);
-         final ProcessAgentController listener = new ProcessAgentController(context, checker, executor);
+         final ProcessAgentController listener = new ProcessAgentController(context, checker, executor, timeout);
          final ProcessEventTimer timer = new ProcessEventTimer(listener, logger);
          final ConnectTunnelClient client = new ConnectTunnelClient(timer, checker, logger);
          final ProcessEventChannel channel = client.connect(process, host, port);
