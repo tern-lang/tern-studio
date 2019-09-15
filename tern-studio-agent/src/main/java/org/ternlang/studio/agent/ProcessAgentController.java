@@ -27,11 +27,13 @@ public class ProcessAgentController extends ProcessEventAdapter {
    private final ProcessExecutor executor;
    private final ConnectionChecker checker;
    private final ProcessContext context;
+   private final long timeout;
    
-   public ProcessAgentController(ProcessContext context, ConnectionChecker checker, ProcessExecutor executor) throws Exception {
+   public ProcessAgentController(ProcessContext context, ConnectionChecker checker, ProcessExecutor executor, long timeout) throws Exception {
       this.executor = executor;
       this.checker = checker;
       this.context = context;
+      this.timeout = timeout;
    }
 
    @Override
@@ -49,6 +51,7 @@ public class ProcessAgentController extends ProcessEventAdapter {
       String project = data.getProject();
       String resource = data.getResource();
       boolean debug = data.isDebug();
+      long time = System.currentTimeMillis();
       
       if(!target.equals(actual)) {
          throw new IllegalArgumentException("Process '" +actual+ "' received event for '"+target+"'");
@@ -56,6 +59,7 @@ public class ProcessAgentController extends ProcessEventAdapter {
       if(!data.isDebug()) {
          interceptor.clear(); // disable interceptors
       }
+      limiter.expireAt(time + timeout); // expire after timeout milliseconds
       interceptor.register(limiter); // make sure time limit applies
       matcher.update(breakpoints);
       store.update(project); 

@@ -17,8 +17,8 @@ public class TimeLimiter extends TraceAdapter {
    private final AtomicBoolean started;
    private final AtomicLong expiry;
    
-   public TimeLimiter(long duration) {
-      this.expiry = new AtomicLong(System.currentTimeMillis() + duration);
+   public TimeLimiter() {
+      this.expiry = new AtomicLong();
       this.expired = new AtomicBoolean();
       this.trigger = new LimitExpiredTrigger(expiry, expired);
       this.builder = new ThreadBuilder();
@@ -64,7 +64,7 @@ public class TimeLimiter extends TraceAdapter {
                long currentTime = System.currentTimeMillis();
                long expireTime = expiry.get();
                
-               if(currentTime >= expireTime) {
+               if(expireTime > 0 && currentTime >= expireTime) {
                   expired.set(true);
                   break;
                }

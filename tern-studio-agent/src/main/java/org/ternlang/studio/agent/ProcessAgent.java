@@ -59,7 +59,6 @@ public class ProcessAgent {
    }
    
    public ProcessClient start(final URI root, final Runnable task, final Model model, final Log log) throws Exception {
-      final long time = System.currentTimeMillis();
       final BreakpointMatcher matcher = context.getMatcher();
       final TimeLimiter limiter = context.getTimeLimiter();
       final SuspendController controller = context.getController();
@@ -91,7 +90,6 @@ public class ProcessAgent {
             .withSystem(system)
             .build();
          
-         limiter.expireAt(time + limit);
          interceptor.register(limiter);
          interceptor.register(profiler);
          interceptor.register(suspender);
