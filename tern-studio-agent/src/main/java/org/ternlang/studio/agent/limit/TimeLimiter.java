@@ -4,12 +4,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.ternlang.common.thread.ThreadBuilder;
-import org.ternlang.core.scope.Scope;
-import org.ternlang.core.trace.Trace;
 import org.ternlang.studio.agent.core.TerminateHandler;
-import org.ternlang.studio.agent.debug.TraceAdapter;
 
-public class TimeLimiter extends TraceAdapter {
+public class TimeLimiter {
    
    private final LimitExpiredTrigger trigger;
    private final ThreadBuilder builder;
@@ -43,13 +40,6 @@ public class TimeLimiter extends TraceAdapter {
       }
       limit.set(duration);
       expiry.set(time + duration);
-   }
-   
-   @Override
-   public void traceBefore(Scope scope, Trace trace) {
-      if(expired.get()) {
-         TerminateHandler.terminate("Time limit expired");
-      }
    }
 
    private static class LimitExpiredTrigger implements Runnable {
