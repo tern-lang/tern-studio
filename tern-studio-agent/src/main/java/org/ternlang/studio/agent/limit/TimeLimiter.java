@@ -77,6 +77,8 @@ public class TimeLimiter extends TraceAdapter {
             }
          } catch(Exception e) {
             e.printStackTrace();
+         } finally {
+            TerminateHandler.terminate("Time limit expired");
          }
       }
    }
