@@ -15,5 +15,7 @@ public interface WorkspaceConfiguration {
    List<DependencyFile> getDependencies(List<Dependency> dependencies);
    Map<String, String> getEnvironmentVariables();
    List<String> getArguments();
+   String getSecurityPolicy();
+   boolean isSecurityEnabled();
    long getTimeLimit();
 }

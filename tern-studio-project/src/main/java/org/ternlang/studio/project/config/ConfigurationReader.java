@@ -6,6 +6,7 @@ import static org.ternlang.studio.project.config.ProjectConfiguration.PROJECT_FI
 import static org.ternlang.studio.project.config.WorkspaceConfiguration.WORKSPACE_FILE;
 
 import java.io.File;
+import java.io.FilePermission;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,6 +40,7 @@ import org.ternlang.studio.project.maven.RepositoryClient;
 import org.ternlang.studio.project.maven.RepositoryFactory;
 
 import lombok.Data;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -73,20 +75,22 @@ public class ConfigurationReader {
                Map<String, String> variables = details.getEnvironmentVariables();
                List<String> arguments = details.getArguments();
                Set<String> repositories = locations.keySet();
+               String policy = details.getSecurityPolicy();
+               boolean isSecurityEnabled = details.isSecurityEnabled();
                long limit = details.getTimeLimit();
                
                for(String repository : repositories) {
                   String location = locations.get(repository);
                   log.info("Repository: '" + repository + "' -> '" + location + "'");
                }
-               configuration = new WorkspaceContext(factory, details, variables, arguments, limit);
+               configuration = new WorkspaceContext(factory, details, variables, arguments, policy, isSecurityEnabled, limit);
                workspaceReference.set(configuration);
                return configuration;
             }
          }catch(Exception e) {
             throw new IllegalStateException("Could not read configuration", e);
          }
-         return new WorkspaceContext(factory, null, EMPTY_MAP, EMPTY_LIST, TimeUnit.DAYS.toMillis(2));
+         return new WorkspaceContext(factory, null, EMPTY_MAP, EMPTY_LIST, null, false, TimeUnit.DAYS.toMillis(2));
       }
       return configuration;
    }  
@@ -216,6 +220,14 @@ public class ConfigurationReader {
       private List<String> arguments;
       
       @Path("process")
+      @ElementList(name="security-policy", entry="grant")
+      private List<GrantPermission> permissions;
+      
+      @Path("process")
+      @Attribute(name="secure", required=false)
+      private boolean secure = true;
+      
+      @Path("process")
       @Element(name="time-limit", required=false)
       private long limit;
       
@@ -329,11 +341,64 @@ public class ConfigurationReader {
          return variables;
       }
       
+      public String getSecurityPolicy() {
+         if(permissions != null) {
+            StringBuilder builder = new StringBuilder();
+            
+            builder.append("grant {\n");
+            
+            for(GrantPermission permission : permissions) {
+               builder.append("   permission ");
+               builder.append(permission.permission);
+               builder.append(" ");
+               
+               if(permission.subject != null) {
+                  String subject = permission.subject.trim();
+                  String filePermission = FilePermission.class.getName();
+                  
+                  builder.append("\"");
+                  
+                  if(permission.permission.equalsIgnoreCase(filePermission)) {
+                     try {
+                        String doubleSlash = String.format("%s%s", File.separator, File.separator);
+                        String path = new File(subject).getCanonicalPath().replace(doubleSlash, File.separator);
+                        
+                        builder.append(path);
+                     } catch(Exception e) {
+                        builder.append(subject);
+                     }
+                  } else {
+                     builder.append(subject);
+                  }
+                  builder.append("\"");
+               }
+               if(permission.actions != null) {
+                  String actions = permission.actions.trim();
+                  
+                  if(permission.subject != null) {
+                     builder.append(", ");
+                  }
+                  builder.append(" \"");
+                  builder.append(actions);
+                  builder.append("\"");
+               }
+               builder.append(";\n");
+            }
+            builder.append("};");
+            return builder.toString();
+         }
+         return null;
+      }
+      
       public List<String> getArguments() {
          if(arguments != null) {
             return arguments;
          }
          return Collections.emptyList();
+      }
+      
+      public boolean isSecurityEnabled() {
+         return secure;
       }
       
       public long getTimeLimit() {
@@ -361,6 +426,20 @@ public class ConfigurationReader {
          RepositorySystem system = factory.newRepositorySystem();
          return new RepositoryClient(list, system, factory, path);
       }
+   }
+   
+   @Root
+   @Data
+   private static class GrantPermission {
+      
+      @Attribute
+      private String permission;
+      
+      @Attribute(required=false)
+      private String subject;
+      
+      @Text(required=false)
+      private String actions;
    }
    
    @Root

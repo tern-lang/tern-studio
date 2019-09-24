@@ -11,13 +11,17 @@ public class WorkspaceContext implements WorkspaceConfiguration {
    private final List<String> arguments;
    private final RepositoryFactory factory;
    private final DependencyLoader loader;
+   private final String policy;
+   private final boolean isSecure;
    private final long limit;
    
-   public WorkspaceContext(RepositoryFactory factory, DependencyLoader loader, Map<String, String> variables, List<String> arguments, long limit){
+   public WorkspaceContext(RepositoryFactory factory, DependencyLoader loader, Map<String, String> variables, List<String> arguments, String policy, boolean isSecure, long limit){
       this.variables = variables;
       this.arguments = arguments;
       this.loader = loader;
       this.factory = factory;
+      this.isSecure = isSecure;
+      this.policy = policy;
       this.limit = limit;
    }
 
@@ -37,6 +41,16 @@ public class WorkspaceContext implements WorkspaceConfiguration {
    @Override
    public List<String> getArguments() {
       return arguments;
+   }
+   
+   @Override
+   public String getSecurityPolicy() {
+      return policy;
+   }
+   
+   @Override
+   public boolean isSecurityEnabled() {
+      return isSecure;
    }
    
    @Override

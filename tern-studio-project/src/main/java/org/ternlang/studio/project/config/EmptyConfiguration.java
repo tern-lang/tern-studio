@@ -27,6 +27,16 @@ public class EmptyConfiguration implements WorkspaceConfiguration {
    }
    
    @Override
+   public String getSecurityPolicy() {
+      return null;
+   }
+
+   @Override
+   public boolean isSecurityEnabled() {
+      return false;
+   }
+   
+   @Override
    public long getTimeLimit() {
       return TimeUnit.DAYS.toMillis(2);
    }

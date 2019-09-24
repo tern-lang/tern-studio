@@ -32,6 +32,7 @@ public class WorkerProcessLauncher implements ProcessLauncher {
    }
 
    public ProcessDefinition launch(ProcessConfiguration configuration) throws Exception {
+      String policy = workspace.getSecurityPolicy();
       long timeout = workspace.getTimeLimit();
       int port = configuration.getPort();
       String host = configuration.getHost();
@@ -44,6 +45,7 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       String jarPath = jarFile.getCanonicalPath();
       String java = String.format("%s%sbin%sjava", javaHome, File.separatorChar, File.separatorChar);
       String classesUrl = String.format("http://%s:%s/class/", host, port);
+      String policyUrl = String.format("http://%s:%s/policy", host, port);
       Map<String, String> variables = configuration.getVariables();
       List<String> arguments = configuration.getArguments();
       String className = WorkerProcess.class.getCanonicalName();
@@ -54,6 +56,11 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       command.add("-XX:+IgnoreUnrecognizedVMOptions");
       command.add("--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED"); // add support for JDK 9+    
       command.addAll(arguments);  
+      
+      if(workspace.isSecurityEnabled()) {
+         command.add("-Djava.security.manager");
+         command.add("-Djava.security.policy=" + policyUrl);
+      }
       command.add("-jar");
       command.add(jarPath);
       command.add(classesUrl);

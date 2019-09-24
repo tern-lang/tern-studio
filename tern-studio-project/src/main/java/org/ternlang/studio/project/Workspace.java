@@ -129,6 +129,23 @@ public class Workspace implements FileDirectorySource {
       return reader.loadWorkspaceConfiguration().getDependencies(dependencies);
    }
    
+   public String getSecurityPolicy() {
+      try {
+         return reader.loadWorkspaceConfiguration().getSecurityPolicy();
+      } catch(Exception e) {
+         throw new IllegalStateException("Could not resolve security policy", e);
+      }  
+   }
+   
+   public boolean isSecurityEnabled() {
+      try {
+         return reader.loadWorkspaceConfiguration().isSecurityEnabled() && 
+               reader.loadWorkspaceConfiguration().getSecurityPolicy() != null;
+      } catch(Exception e) {
+         throw new IllegalStateException("Could not resolve security policy", e);
+      }  
+   }
+   
    public long getTimeLimit() {
       try {
          return reader.loadWorkspaceConfiguration().getTimeLimit();
