@@ -1,10 +1,13 @@
 package org.ternlang.studio.common.display;
 
 import java.io.File;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.simpleframework.module.annotation.Component;
 import org.simpleframework.xml.core.Persister;
+import org.ternlang.core.type.extend.FileExtension;
 import org.ternlang.studio.common.FileDirectorySource;
 
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +20,12 @@ public class DisplayPersister {
    
    private final AtomicReference<DisplayFile> reference;
    private final FileDirectorySource workspace;
+   private final FileExtension extension;
    private final Persister persister;
 
    public DisplayPersister(FileDirectorySource workspace) {
       this.reference = new AtomicReference<DisplayFile>();
+      this.extension = new FileExtension();
       this.persister = new Persister();
       this.workspace = workspace;
    }
@@ -58,7 +63,10 @@ public class DisplayPersister {
       public void saveDefinition(DisplayDefinition definition) {
          try {
             if(displayFile.exists()) {
-               persister.write(definition, displayFile);
+               StringWriter writer = new StringWriter();
+               persister.write(definition, writer);
+               String text = writer.toString();
+               extension.writeText(displayFile, text, "UTF-8");
                loadTime = displayFile.lastModified();
             }
          }catch(Exception e) {
