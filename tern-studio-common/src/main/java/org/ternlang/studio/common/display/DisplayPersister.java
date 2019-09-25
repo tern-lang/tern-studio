@@ -66,7 +66,9 @@ public class DisplayPersister {
                StringWriter writer = new StringWriter();
                persister.write(definition, writer);
                String text = writer.toString();
-               extension.writeText(displayFile, text, "UTF-8");
+               byte[] data = text.getBytes("UTF-8");
+               
+               extension.writeBytes(displayFile, data);
                loadTime = displayFile.lastModified();
             }
          }catch(Exception e) {
