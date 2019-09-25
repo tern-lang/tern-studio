@@ -359,14 +359,8 @@ public class ConfigurationReader {
                   builder.append("\"");
                   
                   if(permission.permission.equalsIgnoreCase(filePermission)) {
-                     try {
-                        String doubleSlash = String.format("%s%s", File.separator, File.separator);
-                        String path = new File(subject).getCanonicalPath().replace(doubleSlash, File.separator);
-                        
-                        builder.append(path);
-                     } catch(Exception e) {
-                        builder.append(subject);
-                     }
+                     // weird bug for file permissions, it requires forward slashes
+                     builder.append(subject.replace("\\\\", "\\").replace("\\", "/").replace("//", "/"));
                   } else {
                      builder.append(subject);
                   }

@@ -17,22 +17,18 @@ import org.ternlang.studio.project.HomeDirectory;
 import org.ternlang.studio.project.Workspace;
 import org.ternlang.studio.project.config.ProcessConfiguration;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 public class WorkerProcessLauncher implements ProcessLauncher {
    
    private final WorkerProcessNameFilter filter;
    private final Workspace workspace;
-   
-   public WorkerProcessLauncher(WorkerProcessNameFilter filter, Workspace workspace) {     
-      this.workspace = workspace;
-      this.filter = filter;
-   }
 
    public ProcessDefinition launch(ProcessConfiguration configuration) throws Exception {
-      String policy = workspace.getSecurityPolicy();
       long timeout = workspace.getTimeLimit();
       int port = configuration.getPort();
       String host = configuration.getHost();
