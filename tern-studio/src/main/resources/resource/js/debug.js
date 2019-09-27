@@ -158,7 +158,8 @@ define(["require", "exports", "jquery", "w2ui", "./common", "./socket", "./edito
                 processStatus = ProcessStatus.UNKNOWN; // when we have an error
                 console.warn("No such status " + status + " setting to " + ProcessStatus[processStatus]);
             }
-            var processInfo = statusProcesses[process] = new ProcessInfo(process, message.project, message.resource, message.system, message.pid, processStatus, message.time, message.running, // is anything running
+            var processInfo = statusProcesses[process] = new ProcessInfo(process, message.project, message.resource, message.system, message.pid, processStatus, new Date().getTime(), // message.time,                  
+            message.running, // is anything running
             message.debug, message.focus, processMemory, // how much memory used as a %
             processExpiry, // how much time remains as a %
             message.totalTime == 0 ? null : common_1.Common.formatDuration(message.totalTime - message.usedTime), message.threads);

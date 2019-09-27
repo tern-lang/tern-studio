@@ -234,7 +234,7 @@ export module DebugManager {
          message.system,
          message.pid,
          processStatus,
-         message.time,                  
+         new Date().getTime(), // message.time,                  
          message.running, // is anything running
          message.debug,
          message.focus,
