@@ -385,6 +385,18 @@ export module Common {
            yyyy = year + "",
            yy = yyyy.substr(2, 2);
        
+       pattern = pattern
+         .replace('hh', hh).replace('h', h)
+         .replace('HH', HH).replace('H', hour)
+         .replace('mm', mm).replace('m', minute)
+         .replace('ss', ss).replace('s', second)
+         .replace('S', miliseconds)
+         .replace('dd', dd).replace('d', day)
+         .replace('EEEE', EEEE).replace('EEE', EEE)
+         .replace('yyyy', yyyy)
+         .replace('yy', yy)
+         .replace('aaa', aaa);
+       
        // checks to see if month name will be used
        if (pattern.indexOf('MMM') > -1) {
           pattern = pattern
@@ -396,17 +408,7 @@ export module Common {
              .replace('MM', MM)
              .replace('M', M);
        }
-       return pattern
-         .replace('hh', hh).replace('h', h)
-         .replace('HH', HH).replace('H', hour)
-         .replace('mm', mm).replace('m', minute)
-         .replace('ss', ss).replace('s', second)
-         .replace('S', miliseconds)
-         .replace('dd', dd).replace('d', day)
-         .replace('EEEE', EEEE).replace('EEE', EEE)
-         .replace('yyyy', yyyy)
-         .replace('yy', yy)
-         .replace('aaa', aaa);
+       return pattern;
    }
    
    export function formatTimeMillis(timeInMillis) {
