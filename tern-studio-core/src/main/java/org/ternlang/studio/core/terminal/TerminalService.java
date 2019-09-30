@@ -1,7 +1,6 @@
 package org.ternlang.studio.core.terminal;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.util.Map;
 
 import org.simpleframework.http.Path;
