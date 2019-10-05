@@ -12,7 +12,7 @@
 	overflow: hidden;
 	background: url('${IMAGE_FOLDER}/down_arrow.png') no-repeat right ${SELECT_LIST_BACKGROUND_COLOR};
 	background-size: contain;
-	border: 1px solid #c0c0c0;
+	border: 1px solid ${BORDER_PANEL};
 	border-radius: 0px;
 	color: ${SELECT_LIST_FONT_COLOR};
 }
@@ -26,7 +26,7 @@
 	overflow: hidden;
 	background: url('${IMAGE_FOLDER}/down_arrow.png') no-repeat right ${SELECT_LIST_BACKGROUND_COLOR};
 	background-size: contain;
-	border: 1px solid #c0c0c0;
+	border: 1px solid ${BORDER_PANEL};
 	border-radius: 0px;
 	color: ${SELECT_LIST_FONT_COLOR};
 }
@@ -40,7 +40,7 @@
 	overflow: hidden;
 	background: url('${IMAGE_FOLDER}/down_arrow.png') no-repeat right ${SELECT_LIST_BACKGROUND_COLOR};
 	background-size: contain;
-	border: 1px solid #c0c0c0;
+	border: 1px solid ${BORDER_PANEL};
 	border-radius: 0px;
 	color: ${SELECT_LIST_FONT_COLOR};
 }

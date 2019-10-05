@@ -1,5 +1,9 @@
 <theme name="light" extend="base">
   <value key="IMAGE_FOLDER">/img/theme/light</value>
+  <value key="BORDER_PANEL">#c0c0c0</value>
+  <value key="BORDER_TAB_ACTIVE">#c0c0c0</value>
+  <value key="BORDER_TAB_INACTIVE">#c0c0c0</value>
+      
   <value key="PROJECT_FONT_COLOR">#000000</value>
   <value key="PROJECT_BACKGROUND_COLOR">#F5F5F5</value>
   <value key="PROJECT_MENU_COLOR">#F5F5F5</value>

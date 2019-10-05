@@ -1617,8 +1617,8 @@ button.btn-red.clicked {
 .w2ui-grid .w2ui-grid-body table .w2ui-head {
   margin: 0px;
   padding: 0px;
-  border-right: 1px solid #c5c5c5;
-  border-bottom: 1px solid #c5c5c5;
+  border-right: 1px solid #6d6061;
+  border-bottom: 1px solid #6d6061;
   color: #f0f0f0;
 /*  background-image: -webkit-linear-gradient(#f9f9f9, #e4e4e4);*/
 /*  background-image: -moz-linear-gradient(#f9f9f9, #e4e4e4);*/
@@ -1673,8 +1673,8 @@ button.btn-red.clicked {
   border-right: 5px solid transparent;
 }
 .w2ui-grid .w2ui-grid-body table td {
-  border-right: 1px solid #d6d5d7;
-  border-bottom: 0px solid #d6d5d7;
+  border-right: 1px solid #6d6061;
+  border-bottom: 0px solid #6d6061;
   cursor: default;
   overflow: hidden;
 }
@@ -2367,7 +2367,7 @@ button.btn-red.clicked {
   padding-bottom: 0px !important;
 }
 .w2ui-tabs table {
-  border-bottom: 1px solid silver;
+  border-bottom: 1px solid #6d6060;
   padding: 0px 7px;
 }
 .w2ui-tabs .w2ui-tab {
@@ -2375,8 +2375,8 @@ button.btn-red.clicked {
   text-align: center;
   color: #b0b0b0;
   background-color: #717171;
-  border: 1px solid #c0c0c0;
-  border-bottom: 1px solid silver;
+  border: 1px solid #928b8b;
+  border-bottom: 1px solid #6d6060;
   white-space: nowrap;
   margin: 1px 1px -1px 0px;
 
@@ -2386,7 +2386,7 @@ button.btn-red.clicked {
 .w2ui-tabs .w2ui-tab.active {
   color: #f0f0f0;
   background-color: #515151;
-  border: 1px solid #c0c0c0;
+  border: 1px solid #6d6060;
   border-bottom: 1px solid transparent;
 }
 .w2ui-tabs .w2ui-tab.closable {
