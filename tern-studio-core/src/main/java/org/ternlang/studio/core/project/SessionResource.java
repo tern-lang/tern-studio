@@ -9,6 +9,7 @@ import org.simpleframework.http.Status;
 import org.simpleframework.resource.annotation.GET;
 import org.simpleframework.resource.annotation.Path;
 import org.simpleframework.resource.annotation.Produces;
+import org.ternlang.studio.common.SessionCookie;
 
 import lombok.SneakyThrows;
 

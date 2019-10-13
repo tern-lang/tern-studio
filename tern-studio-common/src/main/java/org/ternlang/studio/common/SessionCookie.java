@@ -1,4 +1,4 @@
-package org.ternlang.studio.core.project;
+package org.ternlang.studio.common;
 
 import java.util.UUID;
 

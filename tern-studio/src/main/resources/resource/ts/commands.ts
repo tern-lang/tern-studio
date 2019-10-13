@@ -958,6 +958,7 @@ export module Command {
    
    export function updateDisplay(displayInfo) {
       if(EventBus.isSocketOpen()) {
+         displayInfo.session = Common.extractCookie("SESSID"); // hardcoded :(
          EventBus.sendEvent("DISPLAY_UPDATE", displayInfo); // update and save display
       }
    }

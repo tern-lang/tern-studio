@@ -11,6 +11,7 @@ import org.simpleframework.resource.annotation.Path;
 import org.simpleframework.resource.annotation.Produces;
 import org.simpleframework.resource.template.TemplateEngine;
 import org.simpleframework.resource.template.TemplateModel;
+import org.ternlang.studio.common.SessionCookie;
 import org.ternlang.studio.common.display.DisplayModelResolver;
 
 import lombok.AllArgsConstructor;
@@ -30,7 +31,8 @@ public class MainProjectResource  {
    @SneakyThrows
    @Produces("text/html")
    public void handle(Request request, Response response) {
-      TemplateModel model = resolver.getModel();
+      String session = SessionCookie.findOrCreate(request, response);
+      TemplateModel model = resolver.getModel(session);
       org.simpleframework.http.Path path = request.getPath(); // /project/<project-name>/<project-path>
       String projectPrefix = path.getPath(1, 2); // /<project-name>
       String projectDirectory = path.getPath(1); // /<project-name>

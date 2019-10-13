@@ -876,6 +876,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
         Command.switchLayout = switchLayout;
         function updateDisplay(displayInfo) {
             if (socket_1.EventBus.isSocketOpen()) {
+                displayInfo.session = common_1.Common.extractCookie("SESSID"); // hardcoded :(
                 socket_1.EventBus.sendEvent("DISPLAY_UPDATE", displayInfo); // update and save display
             }
         }

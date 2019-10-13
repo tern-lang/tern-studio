@@ -4156,7 +4156,7 @@ dom.importCssString(".normal-mode .ace_cursor{\
       }
       return raw;
     }
-    var searchPromptDesc = '(Javascript regexp)';
+    var searchPromptDesc = '';
     function showPrompt(cm, options) {
       var shortText = (options.prefix || '') + ' ' + (options.desc || '');
       var prompt = makePrompt(options.prefix, options.desc);

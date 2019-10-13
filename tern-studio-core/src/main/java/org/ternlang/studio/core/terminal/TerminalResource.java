@@ -11,6 +11,7 @@ import org.simpleframework.resource.annotation.GET;
 import org.simpleframework.resource.annotation.Path;
 import org.simpleframework.resource.template.TemplateEngine;
 import org.simpleframework.resource.template.TemplateModel;
+import org.ternlang.studio.common.SessionCookie;
 import org.ternlang.studio.common.display.DisplayModelResolver;
 import org.ternlang.studio.project.Workspace;
 
@@ -31,7 +32,8 @@ public class TerminalResource {
    @Path(".*")
    @SneakyThrows
    public void handle(Request request, Response response) {
-      TemplateModel model = resolver.getModel();
+      String session = SessionCookie.findOrCreate(request, response);
+      TemplateModel model = resolver.getModel(session);
       File root = workspace.getRoot();
       String name = root.getName();
       String version = VERSION.getValue();

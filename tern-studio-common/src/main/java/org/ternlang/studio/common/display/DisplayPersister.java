@@ -2,11 +2,15 @@ package org.ternlang.studio.common.display;
 
 import java.io.File;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.simpleframework.module.annotation.Component;
 import org.simpleframework.xml.core.Persister;
+import org.ternlang.common.Cache;
+import org.ternlang.common.LeastRecentlyUsedCache;
 import org.ternlang.core.type.extend.FileExtension;
 import org.ternlang.studio.common.FileDirectorySource;
 
@@ -18,48 +22,106 @@ public class DisplayPersister {
    
    private static final String DISPLAY_FILE = ".display";
    
-   private final AtomicReference<DisplayFile> reference;
+   private final AtomicReference<DisplayConfig> defaultConfig;
+   private final Cache<String, DisplayConfig> sessionConfig;
    private final FileDirectorySource workspace;
-   private final FileExtension extension;
    private final Persister persister;
 
    public DisplayPersister(FileDirectorySource workspace) {
-      this.reference = new AtomicReference<DisplayFile>();
-      this.extension = new FileExtension();
+      this.sessionConfig = new LeastRecentlyUsedCache<String, DisplayConfig>(2000);
+      this.defaultConfig = new AtomicReference<DisplayConfig>();
       this.persister = new Persister();
       this.workspace = workspace;
    }
    
-   public synchronized DisplayDefinition readDefinition(){
-      return getDisplayFile().readDefinition();
+   public synchronized DisplayDefinition readDefinition(String session){
+      return getDisplayFile(session).readDefinition();
    }
    
-   public synchronized void saveDefinition(DisplayDefinition definition) {
-      getDisplayFile().saveDefinition(definition);
+   public synchronized void saveDefinition(String session, DisplayDefinition definition) {
+      getDisplayFile(session).saveDefinition(definition);
    }
    
-   private synchronized DisplayFile getDisplayFile() {
-      DisplayFile displayFile = reference.get();
+   private synchronized DisplayConfig getDisplayFile(String session) {
+      DisplayConfig cacheConfig = sessionConfig.fetch(session);
       
-      if(displayFile == null) {
-         File file = workspace.createFile(DISPLAY_FILE);
-         displayFile = new DisplayFile(file);
-         reference.set(displayFile);
+      if(cacheConfig == null) {
+         DisplayConfig persistentConfig = defaultConfig.get();
+         
+         if(persistentConfig == null) {
+            File file = workspace.createFile(DISPLAY_FILE);
+            persistentConfig = new FileDisplayConfig(persister, file);
+            defaultConfig.set(persistentConfig);
+         }
+         DisplayDefinition defaultDefinition = persistentConfig.readDefinition();
+
+         if(session != null) {
+            DisplayDefinition localCopy = copyDefinition(defaultDefinition);
+            cacheConfig = new SessionDisplayConfig(session);
+            cacheConfig.saveDefinition(localCopy);
+            sessionConfig.cache(session, cacheConfig);
+         } else {
+            cacheConfig = persistentConfig;
+         }
       }
-      return displayFile;
+      return cacheConfig;
+   }
+   
+   private static DisplayDefinition copyDefinition(DisplayDefinition defaultDefinition) {
+      Map<String, String> defaultFonts = defaultDefinition.getAvailableFonts();
+      DisplayDefinition localCopy = new DisplayDefinition();
+      Map<String, String> availableFonts = new LinkedHashMap<String, String>(defaultFonts);
+      
+      localCopy.setAvailableFonts(Collections.unmodifiableMap(availableFonts));
+      localCopy.setThemeName(defaultDefinition.getThemeName());
+      localCopy.setLogoImage(defaultDefinition.getLogoImage());
+      localCopy.setConsoleCapacity(defaultDefinition.getConsoleCapacity());
+      localCopy.setFontName(defaultDefinition.getFontName());
+      localCopy.setFontSize(defaultDefinition.getFontSize());
+      
+      return localCopy;
+   }
+   
+   private static interface DisplayConfig {
+      void saveDefinition(DisplayDefinition definition);
+      DisplayDefinition readDefinition();
+   }
+   
+   private static class SessionDisplayConfig implements DisplayConfig {
+      
+      private final AtomicReference<DisplayDefinition> reference;
+      private final String session;
+      
+      public SessionDisplayConfig(String session) {
+         this.reference = new AtomicReference<DisplayDefinition>();
+         this.session = session;
+      }
+      
+      public void saveDefinition(DisplayDefinition definition) {
+         reference.set(definition);
+      }
+      
+      public DisplayDefinition readDefinition() {
+         return reference.get();
+      }
    }
 
-   private class DisplayFile {
+   private static class FileDisplayConfig implements DisplayConfig {
       
-      private AtomicReference<DisplayDefinition> reference;
-      private File displayFile;
+      private final AtomicReference<DisplayDefinition> reference;
+      private final FileExtension extension;
+      private final Persister persister;
+      private final File displayFile;
       private long loadTime;
       
-      public DisplayFile(File displayFile) {
+      public FileDisplayConfig(Persister persister, File displayFile) {
          this.reference = new AtomicReference<DisplayDefinition>();
+         this.extension = new FileExtension();
          this.displayFile = displayFile;
+         this.persister = persister;
       }
       
+      @Override
       public void saveDefinition(DisplayDefinition definition) {
          try {
             if(displayFile.exists()) {
@@ -77,6 +139,7 @@ public class DisplayPersister {
          reference.set(definition);
       }
       
+      @Override
       public DisplayDefinition readDefinition() {            
          DisplayDefinition definition = reference.get();
       

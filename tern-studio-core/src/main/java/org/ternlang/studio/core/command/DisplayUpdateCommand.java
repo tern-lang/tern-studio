@@ -15,6 +15,7 @@ public class DisplayUpdateCommand implements Command {
 
    private Map<String, String> availableFonts;
    private String project;
+   private String session;
    private String themeName;
    private String fontName;
    private int fontSize;

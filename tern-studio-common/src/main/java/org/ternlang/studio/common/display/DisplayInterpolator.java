@@ -18,8 +18,8 @@ public class DisplayInterpolator {
       this.engine = engine;
    }
 
-   public InputStream interpolate(String template) throws Exception {
-      TemplateModel model = modelResolver.getModel();
+   public InputStream interpolate(String session, String template) throws Exception {
+      TemplateModel model = modelResolver.getModel(session);
       String result = engine.renderTemplate(model, template);
       
       if(result == null) {

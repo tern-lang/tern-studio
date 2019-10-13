@@ -9,11 +9,13 @@ import java.util.zip.GZIPOutputStream;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Protocol;
 import org.simpleframework.http.Request;
+import org.simpleframework.http.Response;
 import org.simpleframework.module.annotation.Component;
-import org.simpleframework.resource.MediaTypeResolver;
 import org.simpleframework.resource.FileResolver;
+import org.simpleframework.resource.MediaTypeResolver;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
+import org.ternlang.studio.common.SessionCookie;
 
 @Component
 public class DisplayContentProcessor {
@@ -34,19 +36,20 @@ public class DisplayContentProcessor {
       this.typeResolver = typeResolver;
    }
 
-   public DisplayContent create(Request request) throws Exception {
+   public DisplayContent create(Request request, Response response) throws Exception {
       Path path = request.getPath();
       String target = path.getPath();
       DisplayContent content = contentCache.fetch(target); // THIS CACHE DOES NOT WORK WITH REGARDS THEME
       
       //if(content == null) {
-         content = compress(request);
+         content = compress(request, response);
         // contentCache.cache(target, content);
       //}
       return content;
    }
    
-   private DisplayContent compress(Request request) throws Exception {
+   private DisplayContent compress(Request request, Response response) throws Exception {
+      String session = SessionCookie.findOrCreate(request, response);
       Path path = request.getPath();
       String target = path.getPath();
       String type = typeResolver.resolveType(target);
@@ -62,7 +65,7 @@ public class DisplayContentProcessor {
          double original = 0.0;
          
          if(accept.contains(ENCODING_TYPE) && filter.test(type)) { // only compress text
-            input = displayInterpolator.interpolate(target); // interpolate all text files based on the selected theme
+            input = displayInterpolator.interpolate(session, target); // interpolate all text files based on the selected theme
             output = new GZIPOutputStream(buffer);
             encoding = ENCODING_TYPE;
          } else {

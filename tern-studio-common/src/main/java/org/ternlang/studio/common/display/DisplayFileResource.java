@@ -29,7 +29,7 @@ public class DisplayFileResource {
    }
    
    public byte[] handle(Request request, Response response) throws Exception {
-      DisplayContent content = displayProcessor.create(request);
+      DisplayContent content = displayProcessor.create(request, response);
       String type = content.getType();
       String path = content.getPath();
       String encoding = content.getEncoding();

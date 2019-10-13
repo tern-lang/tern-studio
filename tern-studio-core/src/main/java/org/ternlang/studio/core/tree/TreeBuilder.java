@@ -11,11 +11,11 @@ public class TreeBuilder {
       this.resolver = resolver;
    }
    
-   public String createTree(TreeContext context, String treeId, boolean foldersOnly, int folderDepth) throws Throwable {
+   public String createTree(TreeContext context, String session, String treeId, boolean foldersOnly, int folderDepth) throws Throwable {
       StringBuilder builder = new StringBuilder();
       builder.append("<div id=\""+treeId+"\">\n");
       builder.append("<ul id=\"treeData\" style=\"display: none;\">\n");
-      TemplateModel model = resolver.getModel();
+      TemplateModel model = resolver.getModel(session);
       TreeDirectory tree = new TreeDirectory(
                context,
                model,

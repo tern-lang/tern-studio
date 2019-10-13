@@ -17,12 +17,12 @@ public class DisplayModelResolver {
       this.loader = loader;
    }
    
-   public TemplateModel getModel() throws Exception {
-      return getModel(null);
+   public TemplateModel getModel(String session) throws Exception {
+      return getModel(session, null);
    }
 
-   public TemplateModel getModel(String name) throws Exception {
-      String theme = getTheme(name);
+   public TemplateModel getModel(String session, String name) throws Exception {
+      String theme = getTheme(session, name);
       TemplateModel model = loader.getModel(theme);
       Map<String, Object> attributes = model.getAttributes();
       DisplayKey[] keys = DisplayKey.values();
@@ -39,9 +39,9 @@ public class DisplayModelResolver {
       return new TemplateModel(copy);
    }
    
-   private String getTheme(String theme) throws Exception {
+   private String getTheme(String session, String theme) throws Exception {
       if(theme == null) {
-         DisplayDefinition definition = persister.readDefinition();
+         DisplayDefinition definition = persister.readDefinition(session);
          return definition.getThemeName();
       }
       return theme;

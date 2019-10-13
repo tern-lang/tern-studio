@@ -552,6 +552,7 @@ define(["require", "exports", "jquery", "ace", "w2ui", "common", "socket", "prob
             // editor.keyBinding.setDefaultHandler(null); // disable all keybindings
             // and allow Mousetrap to do it
             // #############################################################
+            //editor.setKeyboardHandler("ace/keyboard/vim");
             editor.setShowPrintMargin(false);
             editor.setOptions({
                 enableBasicAutocompletion: true,

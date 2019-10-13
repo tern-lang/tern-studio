@@ -726,6 +726,7 @@ export module FileEditorBuilder {
       // and allow Mousetrap to do it
       // #############################################################
       
+      //editor.setKeyboardHandler("ace/keyboard/vim");
       editor.setShowPrintMargin(false);
       editor.setOptions({
          enableBasicAutocompletion: true,

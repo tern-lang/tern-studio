@@ -15,8 +15,8 @@ public class DisplayFontService {
 
    private final DisplayPersister persister;
 
-   public String style() {
-      DisplayDefinition display = persister.readDefinition();
+   public String style(String session) {
+      DisplayDefinition display = persister.readDefinition(session);
       Map<String, String> fonts = display.getAvailableFonts();
       Set<String> styles = fonts.keySet();
       

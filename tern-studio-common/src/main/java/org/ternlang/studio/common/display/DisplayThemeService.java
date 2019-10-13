@@ -10,8 +10,8 @@ public class DisplayThemeService {
    
    private final DisplayPersister persister;
 
-   public DisplayDefinition theme() {
-      return persister.readDefinition();
+   public DisplayDefinition theme(String session) {
+      return persister.readDefinition(session);
    }
 
 }

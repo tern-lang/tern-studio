@@ -523,10 +523,11 @@ public class CommandListener {
       int fontSize = command.getFontSize();
       String fontName = command.getFontName();
       String themeName = command.getThemeName();
+      String session = command.getSession();
       Map<String, String> availableFonts = command.getAvailableFonts();
       
       try {
-         DisplayDefinition definition = displayPersister.readDefinition();
+         DisplayDefinition definition = displayPersister.readDefinition(session);
          
          if(definition != null) {
             if(fontName != null) {
@@ -541,7 +542,7 @@ public class CommandListener {
             if(availableFonts != null) {
                definition.setAvailableFonts(availableFonts);
             }
-            displayPersister.saveDefinition(definition);
+            displayPersister.saveDefinition(session, definition);
          }
       } catch(Exception e) {
          log.info("Error saving definition", e);
