@@ -72,13 +72,13 @@ public class WorkspaceLogger {
          
          policy.setMaxHistory(7); // 1 week by default
          policy.setTotalSizeCap(FileSize.valueOf("1GB"));
-         policy.setFileNamePattern(path + ".%d{yyyy-MM-dd}.log.zip");
+         policy.setFileNamePattern(path + ".%d{yyyy-MM-dd}.zip");
          
          return policy;
       } else {
          FixedWindowRollingPolicy policy = new FixedWindowRollingPolicy();
          
-         policy.setFileNamePattern(path + ".%i.log.zip");
+         policy.setFileNamePattern(path + ".%i.zip");
          policy.setMaxIndex(3);
          policy.setMinIndex(1);
          
