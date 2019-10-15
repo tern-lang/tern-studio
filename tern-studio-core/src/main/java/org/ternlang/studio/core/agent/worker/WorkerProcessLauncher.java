@@ -1,6 +1,7 @@
 package org.ternlang.studio.core.agent.worker;
 
 import static org.ternlang.studio.project.config.WorkspaceConfiguration.JAR_FILE;
+import static org.ternlang.studio.project.config.WorkspaceConfiguration.RUN_PATH;
 import static org.ternlang.studio.project.config.WorkspaceConfiguration.TEMP_PATH;
 
 import java.io.File;
@@ -36,8 +37,9 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       String name = filter.generate();
       String mode = ProcessMode.SCRIPT.name();
       String javaHome = System.getProperty("java.home");
-      File directory = HomeDirectory.getPath(TEMP_PATH);
-      File jarFile = new File(directory, JAR_FILE);
+      File tempPath = HomeDirectory.getPath(TEMP_PATH);
+      File jarFile = new File(tempPath, JAR_FILE);
+      File runPath = HomeDirectory.getPath(RUN_PATH);
       String jarPath = jarFile.getCanonicalPath();
       String java = String.format("%s%sbin%sjava", javaHome, File.separatorChar, File.separatorChar);
       String classesUrl = String.format("http://%s:%s/class/", host, port);
@@ -47,7 +49,6 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       String className = WorkerProcess.class.getCanonicalName();
       List<String> command = new ArrayList<String>();
       
-
       command.add(java);
       command.add("-XX:+IgnoreUnrecognizedVMOptions");
       command.add("--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED"); // add support for JDK 9+    
@@ -78,7 +79,8 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       }
       
       log.info(name + ": " +command);
-      builder.directory(directory);
+      runPath.mkdirs();
+      builder.directory(runPath);
       builder.redirectErrorStream(true);
       
       Process process = builder.start();

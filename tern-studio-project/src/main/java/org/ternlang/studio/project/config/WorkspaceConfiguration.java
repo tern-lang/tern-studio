@@ -10,6 +10,7 @@ public interface WorkspaceConfiguration {
    String INDEX_PATH = "index";
    String BACKUP_PATH = "backup";
    String TEMP_PATH = "temp";
+   String RUN_PATH = "run";
    String JAR_FILE = "agent.jar";
    
    List<DependencyFile> getDependencies(List<Dependency> dependencies);
