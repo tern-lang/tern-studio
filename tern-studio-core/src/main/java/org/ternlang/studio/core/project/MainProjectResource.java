@@ -27,7 +27,7 @@ public class MainProjectResource  {
    private final TemplateEngine engine;
 
    @GET
-   @Path(".*")
+   @Path("/[a-zA-Z].*")
    @SneakyThrows
    @Produces("text/html")
    public void handle(Request request, Response response) {

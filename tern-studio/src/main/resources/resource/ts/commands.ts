@@ -978,7 +978,7 @@ export module Command {
    }
    
    export function switchProject() {
-      document.location="/";
+      document.location="/project";
    }
 }
 

@@ -146,7 +146,7 @@ define(["require",
       "use strict";
       var path = window.location.pathname;
       
-      if(path == "/") {
+      if(path == "/" || path == "/project") {
          select.ProjectSelector.showProjectDialog();
       } else {         
          let setupFunction = function() {

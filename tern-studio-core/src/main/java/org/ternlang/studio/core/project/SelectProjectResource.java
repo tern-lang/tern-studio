@@ -30,7 +30,7 @@ public class SelectProjectResource {
    private final Workspace workspace;
    
    @GET
-   @Path("$")
+   @Path("($|project)")
    @SneakyThrows
    @Produces("text/html")
    public void select(Request request, Response response) {

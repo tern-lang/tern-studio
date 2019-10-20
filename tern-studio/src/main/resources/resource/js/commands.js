@@ -896,7 +896,7 @@ define(["require", "exports", "jquery", "common", "project", "alert", "socket", 
         }
         Command.refreshScreen = refreshScreen;
         function switchProject() {
-            document.location = "/";
+            document.location = "/project";
         }
         Command.switchProject = switchProject;
     })(Command = exports.Command || (exports.Command = {}));

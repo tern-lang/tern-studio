@@ -124,7 +124,7 @@ define(["require",
     socket, spinner, project, problem, explorer, editor, history, console, threads, debug, profiler, alert, select) {
     "use strict";
     var path = window.location.pathname;
-    if (path == "/") {
+    if (path == "/" || path == "/project") {
         select.ProjectSelector.showProjectDialog();
     }
     else {
