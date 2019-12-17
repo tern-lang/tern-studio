@@ -15,7 +15,7 @@ public class DisplayFontService {
 
    private final DisplayPersister persister;
 
-   public String style(String session) {
+   public String style(String session, boolean isWindows) {
       DisplayDefinition display = persister.readDefinition(session);
       Map<String, String> fonts = display.getAvailableFonts();
       Set<String> styles = fonts.keySet();
@@ -28,16 +28,27 @@ public class DisplayFontService {
             String name = fonts.get(style);
             String path = name.replace(" ", "");
    
-            writer.println("@font-face {");
-            writer.println("  font-family: '" + name + "';");
-            writer.println("  src: url('/ttf/" + path + ".ttf') format('truetype');");
-            writer.println("}");
-            writer.println();
+            if(!isAlreadyAvailable(isWindows, path)) {
+               writer.println("@font-face {");
+               writer.println("  font-family: '" + name + "';");
+               writer.println("  src: url('/ttf/" + path + ".ttf') format('truetype');");
+               writer.println("}");
+               writer.println();
+            }
          }
          writer.close();
          return builder.toString();
       }
       return "/* no fonts defined */";
+   }
+   
+   public boolean isAlreadyAvailable(boolean isWindows, String name) {
+      String token = name.toLowerCase();
+      
+      if(isWindows) {
+         return token.contains("lucida") || token.contains("consolas");
+      }
+      return false;
    }
 
 }
