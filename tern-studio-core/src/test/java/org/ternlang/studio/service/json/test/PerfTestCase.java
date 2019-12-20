@@ -1,4 +1,4 @@
-package org.ternlang.studio.service.json;
+package org.ternlang.studio.service.json.test;
 
 import java.lang.management.ManagementFactory;
 import java.text.DecimalFormat;

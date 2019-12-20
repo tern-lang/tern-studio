@@ -140,6 +140,7 @@ public class JsonParser extends StringParser {
             return;
          }            
       }
+      throw new IllegalStateException("Invalid text value");   
    }
    
    private void number(Name name, int sign) {
@@ -184,6 +185,7 @@ public class JsonParser extends StringParser {
          }            
          off++;
       }
+      throw new IllegalStateException("Invalid boolean value");  
    }
    
    private void none(Name name) {
@@ -201,6 +203,7 @@ public class JsonParser extends StringParser {
          }            
          off++;
       }
+      throw new IllegalStateException("Invalid null value");  
    }
    
    private void value(Name name) {
@@ -276,7 +279,7 @@ public class JsonParser extends StringParser {
       handler.onArrayEnd(name);
    }
    
-   private static class NameSlice implements Name {
+   private static class NameSlice extends Name {
       
       private final Slice slice = new Slice();    
       
@@ -287,6 +290,7 @@ public class JsonParser extends StringParser {
       
       public NameSlice with(char[] source, int off, int length) {
          slice.with(source, off, length);
+         hash = 0;
          return this;
       }
       

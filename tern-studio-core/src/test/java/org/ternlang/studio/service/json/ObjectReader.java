@@ -1,7 +1,5 @@
 package org.ternlang.studio.service.json;
 
-import java.util.Set;
-
 import org.ternlang.common.ArrayStack;
 import org.ternlang.studio.service.json.handler.AttributeHandler;
 import org.ternlang.studio.service.json.handler.BooleanValue;
@@ -16,7 +14,7 @@ public class ObjectReader {
    private final ObjectHandler handler;
    private final JsonParser parser;
    
-   public ObjectReader(FieldTree tree, Set<String> literals) {
+   public ObjectReader(FieldTree tree) {
       this.handler = new ObjectHandler(tree);
       this.parser = new JsonParser(handler);
    }
@@ -29,13 +27,13 @@ public class ObjectReader {
    
    private final class ObjectHandler implements AttributeHandler {
       
-      private final AttributeConverter converter;
+      private final TokenConverter converter;
       private final ArrayStack<FieldTree> stack;
       private final ArrayStack<Object> objects;
       private final FieldTree root;
       
       public ObjectHandler(FieldTree root) {
-         this.converter = new AttributeConverter();
+         this.converter = new TokenConverter();
          this.stack = new ArrayStack<FieldTree>();
          this.objects = new ArrayStack<Object>();
          this.root = root;
@@ -97,7 +95,7 @@ public class ObjectReader {
             FieldAccessor field = top.getAttribute(token);
             
             if(field == null) {
-               throw new IllegalStateException("Could not find " + token);
+               throw new IllegalStateException("Could not find " + name);
             }
             Class type = field.getType();
             Object converted = converter.convert(type, value);

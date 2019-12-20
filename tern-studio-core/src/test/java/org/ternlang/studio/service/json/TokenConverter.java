@@ -4,10 +4,10 @@ import java.io.File;
 import java.net.URI;
 import java.nio.file.Paths;
 
-class AttributeConverter {   
+class TokenConverter {   
 
-   public Object convert(Class type, CharSequence sequence) {
-      String value = sequence.toString();
+   public Object convert(Class type, CharSequence token) {
+      String value = token.toString();
       Class actual = convert(type);
 
       if(actual == String.class) {

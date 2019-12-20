@@ -65,7 +65,7 @@ class Trie<T> implements Iterable<T> {
       return (T)node.value;
    }
    
-   public void index(T value, String text) {
+   public void index(T value, CharSequence text) {
       root.insert(value, text);
    }
    
@@ -91,11 +91,11 @@ class Trie<T> implements Iterable<T> {
          return null;
       }
       
-      public void insert(Object object, String text) {
+      public void insert(Object object, CharSequence text) {
          insert(object, text, 0);
       }
       
-      private void insert(Object object, String text, int from) {
+      private void insert(Object object, CharSequence text, int from) {
          int length = text.length();
          
          if(from < length) {               

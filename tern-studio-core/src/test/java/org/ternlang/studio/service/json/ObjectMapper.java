@@ -1,7 +1,6 @@
 package org.ternlang.studio.service.json;
 
 import java.lang.reflect.Constructor;
-import java.util.Set;
 
 import org.ternlang.common.Cache;
 import org.ternlang.common.CopyOnWriteCache;
@@ -29,8 +28,7 @@ public class ObjectMapper {
       constructor.setAccessible(true);
       TypeIndexer indexer = new TypeIndexer(constructor);
       FieldTree tree = indexer.index();
-      Set<String> literals = tree.literals();
-      return new ObjectReader(tree, literals);
+      return new ObjectReader(tree);
    }
 
 }

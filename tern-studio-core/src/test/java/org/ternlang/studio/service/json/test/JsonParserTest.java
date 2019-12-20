@@ -1,5 +1,6 @@
-package org.ternlang.studio.service.json;
+package org.ternlang.studio.service.json.test;
 
+import org.ternlang.studio.service.json.JsonParser;
 import org.ternlang.studio.service.json.handler.AttributeHandler;
 import org.ternlang.studio.service.json.handler.BooleanValue;
 import org.ternlang.studio.service.json.handler.DecimalValue;

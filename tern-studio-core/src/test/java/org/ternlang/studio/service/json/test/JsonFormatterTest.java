@@ -1,4 +1,6 @@
-package org.ternlang.studio.service.json;
+package org.ternlang.studio.service.json.test;
+
+import org.ternlang.studio.service.json.JsonFormatter;
 
 import junit.framework.TestCase;
 

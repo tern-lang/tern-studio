@@ -10,21 +10,21 @@ class FieldTree {
    
    private final Trie<FieldAccessor> attributes;
    private final Trie<FieldTree> children;
-   private final Set<String> names;
+   private final Set<CharSequence> names;
    private final Constructor factory;
    
    public FieldTree(Constructor factory) {
-      this(factory, new HashSet<String>());
+      this(factory, new HashSet<CharSequence>());
    }
    
-   private FieldTree(Constructor factory, Set<String> names) {
+   private FieldTree(Constructor factory, Set<CharSequence> names) {
       this.attributes = new Trie<FieldAccessor>();
       this.children = new Trie<FieldTree>();
       this.factory = factory;
       this.names = names;
    }
    
-   public Set<String> literals() {
+   public Set<CharSequence> literals() {
       return Collections.unmodifiableSet(names);
    }
    
@@ -40,7 +40,7 @@ class FieldTree {
       }
    }
    
-   public FieldAccessor addAttribute(String name, Field field) {
+   public FieldAccessor addAttribute(CharSequence name, Field field) {
       Class type = field.getType();
       FieldAccessor accessor = attributes.match(name);
       
@@ -58,7 +58,7 @@ class FieldTree {
       return attributes.match(name);
    }
    
-   public FieldTree addChild(String name, Field field) {
+   public FieldTree addChild(CharSequence name, Field field) {
       Class type = field.getType();
       FieldTree tree = children.match(name);
       
