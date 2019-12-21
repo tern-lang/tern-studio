@@ -25,7 +25,7 @@ public class JsonFormatter {
    }
    
    private final StringBuilder builder;
-   private final JsonHandler handler;
+   private final FormatHandler handler;
    private final DocumentAssembler assembler;
    private final JsonParser parser;
    
@@ -35,7 +35,7 @@ public class JsonFormatter {
    
    public JsonFormatter(int capacity) {
       this.builder = new StringBuilder(capacity);
-      this.handler = new JsonHandler();
+      this.handler = new FormatHandler();
       this.assembler = new DirectAssembler(handler);
       this.parser = new JsonParser(assembler);
    }
@@ -45,24 +45,24 @@ public class JsonFormatter {
       consumer.accept(builder);
    }
    
-   private static class JsonHandler implements DocumentHandler {
+   private static class FormatHandler implements DocumentHandler {
    
       private StringBuilder builder;
       private String value;
       private int indent;
       
-      public JsonHandler() {
+      public FormatHandler() {
          this.builder = new StringBuilder(8192);
       }
       
       @Override
-      public void onBegin() {
+      public void begin() {
          indent = 0;
          builder.setLength(0);
       }
 
       @Override
-      public void onAttribute(Name name, Value value) {
+      public void attribute(Name name, Value value) {
          builder.append(INDENTS[indent]);
          
          if(!name.isEmpty()) {    
@@ -81,7 +81,7 @@ public class JsonFormatter {
       }
       
       @Override
-      public void onBlockBegin(Name name) {
+      public void blockBegin(Name name) {
          builder.append(INDENTS[indent++]);
          
          if(!name.isEmpty()) {      
@@ -94,7 +94,7 @@ public class JsonFormatter {
       }
       
       @Override
-      public void onBlockBegin(Name name, Name type) {
+      public void blockBegin(Name name, Name type) {
          builder.append(INDENTS[indent++]);
          
          if(!name.isEmpty()) {      
@@ -107,13 +107,13 @@ public class JsonFormatter {
       }
       
       @Override
-      public void onBlockEnd() {
+      public void blockEnd() {
          builder.append(INDENTS[--indent]);   
          builder.append("}\n");
       }
       
       @Override
-      public void onArrayBegin(Name name) {
+      public void arrayBegin(Name name) {
          builder.append(INDENTS[indent++]);
          
          if(!name.isEmpty()) {      
@@ -126,13 +126,13 @@ public class JsonFormatter {
       }
       
       @Override
-      public void onArrayEnd() {        
+      public void arrayEnd() {
          builder.append(INDENTS[--indent]);         
          builder.append("]\n");
       }
       
       @Override
-      public void onEnd() { 
+      public void end() {
          value = builder.toString();
       }
       

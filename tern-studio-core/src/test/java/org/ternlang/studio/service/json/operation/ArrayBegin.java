@@ -14,7 +14,7 @@ public class ArrayBegin extends Operation {
 
    @Override
    public void execute(DocumentHandler handler) {
-      handler.onArrayBegin(name);
+      handler.arrayBegin(name);
       
       if(pool != null) {
          pool.recycle(this);

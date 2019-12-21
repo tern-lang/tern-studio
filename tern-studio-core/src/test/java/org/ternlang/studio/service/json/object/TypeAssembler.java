@@ -38,7 +38,7 @@ public class TypeAssembler implements DocumentAssembler {
    
    @Override
    public void begin() {
-      handler.onBegin();
+      handler.begin();
    }
 
    @Override
@@ -155,7 +155,7 @@ public class TypeAssembler implements DocumentAssembler {
          Operation next = commit.pop();
          next.execute(handler);
       }
-      handler.onEnd();
+      handler.end();
       name.reset();
    }
 }

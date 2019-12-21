@@ -19,9 +19,9 @@ public class BlockBegin extends Operation {
    @Override
    public void execute(DocumentHandler handler) {
       if(!type.isEmpty()) {
-         handler.onBlockBegin(name, type);
+         handler.blockBegin(name, type);
       } else {
-         handler.onBlockBegin(name);
+         handler.blockBegin(name);
       }
       if(pool != null) {
          pool.recycle(this);

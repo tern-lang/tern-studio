@@ -10,9 +10,9 @@ import org.ternlang.studio.service.json.document.Name;
 import org.ternlang.studio.service.json.document.Value;
 
 public class ObjectReader {
-   
-   private final ObjectHandler handler;
+
    private final DocumentAssembler assembler;
+   private final ObjectHandler handler;
    private final JsonParser parser;
    
    public ObjectReader(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, String root, String type) {
@@ -23,7 +23,7 @@ public class ObjectReader {
    
    public <T> T read(String source) throws Exception {
       parser.parse(source);
-      return (T)handler.getObject();
+      return (T)handler.get();
    }
 
    private final class ObjectHandler implements DocumentHandler {
@@ -46,18 +46,18 @@ public class ObjectReader {
          this.root = root;
       }
       
-      public Object getObject() {
+      public Object get() {
          return reference.get();
       }
       
       @Override
-      public void onBegin() {
+      public void begin() {
          objects.clear();
          stack.clear();
       }
       
       @Override
-      public void onAttribute(Name name, Value value) {
+      public void attribute(Name name, Value value) {
          if(!name.isEmpty()) {
             CharSequence token = name.toText();
             FieldElement top = stack.peek();
@@ -78,9 +78,39 @@ public class ObjectReader {
             }
          }
       }
-      
+
       @Override
-      public void onBlockBegin(Name name, Name override) {
+      public void blockBegin(Name name) {
+         if(!name.isEmpty()) {
+            CharSequence token = name.toText();
+            FieldElement top = stack.peek();
+            Object object = objects.peek();
+
+            if(top == null) {
+               throw new IllegalStateException("Illegal JSON ending");
+            }
+            FieldAttribute field = top.attribute(token);
+
+            if(field != null) {
+               String type = field.getName();
+               FieldElement element = indexer.match(type);
+               Object value = builder.create(type);
+
+               objects.push(value);
+               stack.push(element);
+               field.setValue(object, value);
+            }
+         } else {
+            FieldElement element = indexer.match(root);
+            Object value = builder.create(root);
+
+            objects.push(value);
+            stack.push(element);
+         }
+      }
+
+      @Override
+      public void blockBegin(Name name, Name override) {
          CharSequence type = override.toText();
          Object value = builder.create(type);
 
@@ -109,37 +139,7 @@ public class ObjectReader {
       }
       
       @Override
-      public void onBlockBegin(Name name) {
-         if(!name.isEmpty()) {
-            CharSequence token = name.toText();
-            FieldElement top = stack.peek();
-            Object object = objects.peek();
-            
-            if(top == null) {
-               throw new IllegalStateException("Illegal JSON ending");
-            }
-            FieldAttribute field = top.attribute(token);
-
-            if(field != null) {
-               String type = field.getName();
-               FieldElement element = indexer.match(type);
-               Object value = builder.create(type);
-
-               objects.push(value);
-               stack.push(element);
-               field.setValue(object, value);
-            }
-         } else {
-            FieldElement element = indexer.match(root);
-            Object value = builder.create(root);
-            
-            objects.push(value);
-            stack.push(element);
-         }
-      }
-      
-      @Override
-      public void onBlockEnd() {
+      public void blockEnd() {
          Object value = objects.pop();
          
          reference.set(value);
@@ -147,17 +147,17 @@ public class ObjectReader {
       }
       
       @Override
-      public void onArrayBegin(Name name) {
+      public void arrayBegin(Name name) {
          
       }
       
       @Override
-      public void onArrayEnd() {
+      public void arrayEnd() {
          
       }
       
       @Override
-      public void onEnd() {
+      public void end() {
          if(!stack.isEmpty()) {
             throw new IllegalStateException("Illegal JSON ending");
          }

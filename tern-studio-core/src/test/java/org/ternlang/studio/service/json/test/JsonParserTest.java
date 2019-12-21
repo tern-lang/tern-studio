@@ -126,35 +126,35 @@ public class JsonParserTest extends PerfTestCase {
    private static class BlankHandler implements DocumentHandler {
 
       @Override
-      public void onBegin() {}
+      public void begin() {}
 
       @Override
-      public void onAttribute(Name name, Value value) {}
+      public void attribute(Name name, Value value) {}
 
       @Override
-      public void onBlockBegin(Name name) {}
+      public void blockBegin(Name name) {}
 
       @Override
-      public void onBlockBegin(Name name, Name type) {}
+      public void blockBegin(Name name, Name type) {}
       
       @Override
-      public void onBlockEnd() {}
+      public void blockEnd() {}
 
       @Override
-      public void onArrayBegin(Name name) {}
+      public void arrayBegin(Name name) {}
 
       @Override
-      public void onArrayEnd() {}
+      public void arrayEnd() {}
 
       @Override
-      public void onEnd() {}
+      public void end() {}
       
    }
    
    private static final DocumentHandler HANDLER = new BlankHandler() {
       
       @Override
-      public void onAttribute(Name name, Value value) {
+      public void attribute(Name name, Value value) {
          if (!name.isEmpty()) {
             System.err.println(name + "=" + value);
          } else {
@@ -163,7 +163,7 @@ public class JsonParserTest extends PerfTestCase {
       }
 
       @Override
-      public void onBlockBegin(Name name) {
+      public void blockBegin(Name name) {
          if (!name.isEmpty()) {
             System.err.print(name + ": ");
          }
@@ -171,12 +171,12 @@ public class JsonParserTest extends PerfTestCase {
       }
 
       @Override
-      public void onBlockEnd() {
+      public void blockEnd() {
          System.err.println("}");
       }
 
       @Override
-      public void onArrayBegin(Name name) {
+      public void arrayBegin(Name name) {
          if (!name.isEmpty()) {
             System.err.print(name + ": ");
          }
@@ -184,7 +184,7 @@ public class JsonParserTest extends PerfTestCase {
       }
 
       @Override
-      public void onArrayEnd() {
+      public void arrayEnd() {
          System.err.println("]");
       }
 

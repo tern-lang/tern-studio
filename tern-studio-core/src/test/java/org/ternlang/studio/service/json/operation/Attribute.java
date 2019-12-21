@@ -27,15 +27,15 @@ public class Attribute extends Operation {
    @Override
    public void execute(DocumentHandler handler) {
       if(!text.isEmpty()) {
-         handler.onAttribute(name, text);
+         handler.attribute(name, text);
       } else if(!bool.isEmpty()) {
-         handler.onAttribute(name, bool);
+         handler.attribute(name, bool);
       } else if(!decimal.isEmpty()) {
-         handler.onAttribute(name, decimal);
+         handler.attribute(name, decimal);
       } else if(!integer.isEmpty()) {
-         handler.onAttribute(name, integer);
+         handler.attribute(name, integer);
       } else if(!none.isEmpty()) {
-         handler.onAttribute(name, none);
+         handler.attribute(name, none);
       }
       if(pool != null) {
          pool.recycle(this);

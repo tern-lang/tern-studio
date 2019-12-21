@@ -12,7 +12,7 @@ public class BlockEnd extends Operation {
 
    @Override
    public void execute(DocumentHandler handler) { 
-      handler.onBlockEnd();
+      handler.blockEnd();
       
       if(pool != null) {
          pool.recycle(this);

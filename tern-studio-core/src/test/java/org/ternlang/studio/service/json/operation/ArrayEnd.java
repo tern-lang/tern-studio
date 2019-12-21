@@ -12,7 +12,7 @@ public class ArrayEnd extends Operation {
 
    @Override
    public void execute(DocumentHandler handler) {
-      handler.onArrayEnd();
+      handler.arrayEnd();
       
       if(pool != null) {
          pool.recycle(this);

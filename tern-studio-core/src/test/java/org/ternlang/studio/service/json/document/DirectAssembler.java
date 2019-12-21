@@ -22,7 +22,7 @@ public class DirectAssembler implements DocumentAssembler {
    
    @Override
    public void begin() {
-      handler.onBegin();
+      handler.begin();
    }
    
    @Override
@@ -116,7 +116,7 @@ public class DirectAssembler implements DocumentAssembler {
    
    @Override
    public void end() {
-      handler.onEnd();
+      handler.end();
    }
    
    private static class StaticAllocator extends OperationAllocator {
