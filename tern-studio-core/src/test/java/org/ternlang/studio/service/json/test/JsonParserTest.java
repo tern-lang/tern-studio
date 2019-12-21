@@ -3,6 +3,7 @@ package org.ternlang.studio.service.json.test;
 import org.ternlang.studio.service.json.DirectAssembler;
 import org.ternlang.studio.service.json.JsonAssembler;
 import org.ternlang.studio.service.json.JsonParser;
+import org.ternlang.studio.service.json.TypeAssembler;
 import org.ternlang.studio.service.json.handler.AttributeHandler;
 import org.ternlang.studio.service.json.handler.BooleanValue;
 import org.ternlang.studio.service.json.handler.DecimalValue;
@@ -58,8 +59,10 @@ public class JsonParserTest extends PerfTestCase {
    }
    
    public void testParserPerf() throws Exception {
-      parseSource("SOURCE_SMALL", SOURCE_SMALL);
-      parseSource("SOURCE_NORMAL", SOURCE_NORMAL);
+      parseSource("NORMAL SOURCE_SMALL", SOURCE_SMALL);
+      parseSource("NORMAL SOURCE_NORMAL", SOURCE_NORMAL);
+      parseSourceWithTypeAssembler("TYPE SOURCE_SMALL", SOURCE_SMALL, "name");
+      parseSourceWithTypeAssembler("TYPE SOURCE_NORMAL", SOURCE_NORMAL, "BeginString");
    }
    
    private void parseSource(String name, String source) throws Exception {
@@ -68,6 +71,34 @@ public class JsonParserTest extends PerfTestCase {
       final int iterations = 1000000;
       final AttributeHandler handler = new BlankHandler();   
       final JsonAssembler assembler = new DirectAssembler(handler);
+      final JsonParser parser = new JsonParser(assembler);
+      
+      parser.parse(source);
+      parser.parse(source);
+      
+      final Runnable task = new Runnable() {
+         
+         public void run() {
+            try {    
+               for(int i = 0; i < iterations; i++) {
+                  parser.parse(source);
+               }
+            } catch(Exception e) {
+               e.printStackTrace();               
+            }
+         }
+      };
+      timeRun(name + " iterations: " + iterations, task);
+   }
+   
+   
+   private void parseSourceWithTypeAssembler(String name, String source, String type) throws Exception {
+      System.err.println(source);
+      
+      final char[] token = type.toCharArray();
+      final int iterations = 5000000;
+      final AttributeHandler handler = new BlankHandler();   
+      final JsonAssembler assembler = new TypeAssembler(handler, token);
       final JsonParser parser = new JsonParser(assembler);
       
       parser.parse(source);

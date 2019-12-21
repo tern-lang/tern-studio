@@ -1,7 +1,6 @@
 package org.ternlang.studio.service.json;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.ternlang.common.ArrayStack;
 import org.ternlang.studio.service.json.handler.AttributeHandler;
@@ -12,26 +11,25 @@ import org.ternlang.studio.service.json.operation.BlockBegin;
 import org.ternlang.studio.service.json.operation.BlockEnd;
 import org.ternlang.studio.service.json.operation.Operation;
 import org.ternlang.studio.service.json.operation.OperationAllocator;
-import org.ternlang.studio.service.json.operation.OperationPool;
 import org.ternlang.studio.service.json.operation.Type;
 
 public class TypeAssembler implements JsonAssembler {
    
-   private final OperationAllocator allocator;
    private final AttributeHandler handler;
-   private final List<Operation> operations;
-   private final ArrayStack<Type> stack;
-   private final OperationPool pool;
+   private final OperationAllocator allocator;
+   private final ArrayStack<Operation> active;
+   private final ArrayStack<Operation> ready;
+   private final ArrayStack<Type> blocks;
    private final JsonState name;
    private final char[] type;
    
-   public TypeAssembler(AttributeHandler handler, OperationPool pool, char[] type) {
-      this.operations = new ArrayList<Operation>();
+   public TypeAssembler(AttributeHandler handler, char[] type) {
+      this.active = new ArrayStack<Operation>();
+      this.ready = new ArrayStack<Operation>();
       this.allocator = new OperationAllocator();
-      this.stack= new ArrayStack<Type>();
+      this.blocks= new ArrayStack<Type>();
       this.name = new JsonState();
       this.handler = handler;
-      this.pool = pool;
       this.type = type;
    }
    
@@ -50,7 +48,7 @@ public class TypeAssembler implements JsonAssembler {
       Attribute attribute = name.attribute(allocator);
       
       if(name.match(type, 0, type.length)) {
-         Type top = stack.peek();
+         Type top = blocks.peek();
          
          if(!top.isEmpty()) {
             throw new IllegalStateException("Duplicate attribute");
@@ -58,7 +56,7 @@ public class TypeAssembler implements JsonAssembler {
          top.with(source, off, length);
       }
       attribute.text(source, off, length);
-      operations.add(attribute);
+      active.push(attribute);
    }
 
    @Override
@@ -66,7 +64,7 @@ public class TypeAssembler implements JsonAssembler {
       Attribute attribute = name.attribute(allocator);
       
       attribute.decimal(source, off, length);
-      operations.add(attribute);
+      active.push(attribute);
    }
 
    @Override
@@ -74,7 +72,7 @@ public class TypeAssembler implements JsonAssembler {
       Attribute attribute = name.attribute(allocator);
       
       attribute.integer(source, off, length);
-      operations.add(attribute); 
+      active.push(attribute); 
    }
 
    @Override
@@ -82,7 +80,7 @@ public class TypeAssembler implements JsonAssembler {
       Attribute attribute = name.attribute(allocator);
       
       attribute.bool(source, off, length);
-      operations.add(attribute); 
+      active.push(attribute); 
    }
 
    @Override
@@ -90,7 +88,7 @@ public class TypeAssembler implements JsonAssembler {
       Attribute attribute = name.attribute(allocator);
       
       attribute.none(source, off, length);
-      operations.add(attribute); 
+      active.push(attribute); 
    }
 
    @Override
@@ -98,65 +96,58 @@ public class TypeAssembler implements JsonAssembler {
       Type type = allocator.type();
       BlockBegin begin = name.blockBegin(allocator);
       
-      stack.push(type);
-      operations.add(begin); 
+      blocks.push(type);
+      active.push(begin); 
    }
 
    @Override
    public void blockEnd() {
-      Type type = stack.pop();
-      
-      if(!type.isEmpty()) {
-         Slice slice = type.toToken();
-         int length = operations.size();
-         int index = length -1;
+      Type type = blocks.pop();
+
+      while(!active.isEmpty()) {
+         Operation next = active.pop();
+         ready.push(next);
          
-         while(index >= 0) {
-            Operation next = operations.get(index);
-            
-            if(next.isBegin()) {
+         if(next.isBegin()) {
+            if(!type.isEmpty()) {
+               Slice slice = type.toToken();
                BlockBegin begin = (BlockBegin)next;
                char[] source = slice.source();
                int off = slice.offset();
                int len = slice.length();
                
                begin.type(source, off, len);
-               break;
             }
-            index--;
+            break;
          }
-         while(index < length) {
-            Operation next = operations.get(index);
-            next.execute(handler);
-         }
-         while(index >= 0) {
-            Operation next = operations.remove(index);
-            
-            if(next.isBegin()) {
-               break;
-            }
-         }
+      }
+      while(!ready.isEmpty()) {
+         Operation next = ready.pop();
+         next.execute(handler);
       }
       BlockEnd end = allocator.blockEnd(); 
       
-      pool.recycle(type);
-      operations.add(end); 
+      end.execute(handler);
+      type.close(); // recycle it
    }
 
    @Override
    public void arrayBegin() {
       ArrayBegin begin = name.arrayBegin(allocator);
-      operations.add(begin); 
+      active.push(begin); 
    }
 
    @Override
    public void arrayEnd() {
       ArrayEnd end = allocator.arrayEnd();
-      operations.add(end); 
+      active.push(end); 
    }
    
    @Override
    public void end() {
+      if(!active.isEmpty()) {
+         throw new IllegalStateException("Operations not recycled");
+      }
       handler.onEnd();
    }
 }

@@ -3,12 +3,14 @@ package org.ternlang.studio.service.json.operation;
 import org.ternlang.studio.service.json.Slice;
 import org.ternlang.studio.service.json.handler.Name;
 
-public class Type extends Name {
+public class Type extends Name implements AutoCloseable {
 
+   private final OperationPool pool;
    private final Slice slice;  
    
-   public Type() {
+   public Type(OperationPool pool) {
       this.slice = new Slice();
+      this.pool = pool;
    }
    
    @Override
@@ -22,12 +24,20 @@ public class Type extends Name {
       return this;
    }
    
+   @Override
    public boolean isEmpty() {
       return slice.length() <= 0;
    }
    
    public void reset() {
       slice.reset();
+   }
+   
+   @Override
+   public void close() {
+      if(pool != null) {
+         pool.recycle(this);
+      }
    }
    
    @Override

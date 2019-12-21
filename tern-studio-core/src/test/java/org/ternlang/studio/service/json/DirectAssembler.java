@@ -135,7 +135,7 @@ public class DirectAssembler implements JsonAssembler {
          this.blockEnd = new BlockEnd(null);
          this.arrayBegin = new ArrayBegin(null);
          this.arrayEnd = new ArrayEnd(null);
-         this.type = new Type();  
+         this.type = new Type(null);  
       }
       
       @Override
