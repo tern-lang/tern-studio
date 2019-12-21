@@ -1,17 +1,30 @@
-package org.ternlang.studio.service.json;
+package org.ternlang.studio.service.json.object;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
-class FieldAccessor {
+public class FieldAccessor  {
 
+   private final Constructor factory;
    private final Field field;
+   private final Class type;
    
-   public FieldAccessor(Field field){
+   public FieldAccessor(Field field, Constructor factory){
+      this.type = field.getType();
+      this.factory = factory;
       this.field = field;
    }
    
    public Class getType() {
-      return field.getType();
+      return type;
+   }
+   
+   public Object getInstance() {
+      try {
+         return factory.newInstance();
+      } catch(Exception e) {
+         throw new IllegalStateException("Could not instantiate", e);
+      }
    }
    
    public Object getValue(Object source) {
@@ -29,5 +42,4 @@ class FieldAccessor {
          throw new IllegalStateException("Illegal access to " + field, e);
       }
    }
-
 }

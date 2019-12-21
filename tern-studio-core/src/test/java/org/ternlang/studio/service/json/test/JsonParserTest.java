@@ -3,7 +3,6 @@ package org.ternlang.studio.service.json.test;
 import org.ternlang.studio.service.json.DirectAssembler;
 import org.ternlang.studio.service.json.JsonAssembler;
 import org.ternlang.studio.service.json.JsonParser;
-import org.ternlang.studio.service.json.TypeAssembler;
 import org.ternlang.studio.service.json.handler.AttributeHandler;
 import org.ternlang.studio.service.json.handler.BooleanValue;
 import org.ternlang.studio.service.json.handler.DecimalValue;
@@ -11,6 +10,7 @@ import org.ternlang.studio.service.json.handler.IntegerValue;
 import org.ternlang.studio.service.json.handler.Name;
 import org.ternlang.studio.service.json.handler.NullValue;
 import org.ternlang.studio.service.json.handler.TextValue;
+import org.ternlang.studio.service.json.object.TypeAssembler;
 
 public class JsonParserTest extends PerfTestCase {
 

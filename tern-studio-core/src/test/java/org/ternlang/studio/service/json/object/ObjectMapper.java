@@ -1,4 +1,4 @@
-package org.ternlang.studio.service.json;
+package org.ternlang.studio.service.json.object;
 
 import java.lang.reflect.Constructor;
 

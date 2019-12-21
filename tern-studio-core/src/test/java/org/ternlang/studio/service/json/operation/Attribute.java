@@ -1,6 +1,6 @@
 package org.ternlang.studio.service.json.operation;
 
-import org.ternlang.studio.service.json.Slice;
+import org.ternlang.studio.service.json.common.Slice;
 import org.ternlang.studio.service.json.handler.AttributeHandler;
 import org.ternlang.studio.service.json.handler.BooleanValue;
 import org.ternlang.studio.service.json.handler.DecimalValue;

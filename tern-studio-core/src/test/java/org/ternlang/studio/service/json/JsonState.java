@@ -5,7 +5,7 @@ import org.ternlang.studio.service.json.operation.Attribute;
 import org.ternlang.studio.service.json.operation.BlockBegin;
 import org.ternlang.studio.service.json.operation.OperationAllocator;
 
-class JsonState {
+public class JsonState {
    
    private char[] source;
    private int off;

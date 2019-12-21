@@ -1,7 +1,7 @@
 package org.ternlang.studio.service.json.test;
 
-import org.ternlang.studio.service.json.ObjectMapper;
-import org.ternlang.studio.service.json.ObjectReader;
+import org.ternlang.studio.service.json.object.ObjectMapper;
+import org.ternlang.studio.service.json.object.ObjectReader;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 

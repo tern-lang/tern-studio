@@ -1,8 +1,11 @@
-package org.ternlang.studio.service.json;
+package org.ternlang.studio.service.json.object;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.ternlang.common.ArrayStack;
+import org.ternlang.studio.service.json.DirectAssembler;
+import org.ternlang.studio.service.json.JsonAssembler;
+import org.ternlang.studio.service.json.JsonParser;
 import org.ternlang.studio.service.json.handler.AttributeHandler;
 import org.ternlang.studio.service.json.handler.BooleanValue;
 import org.ternlang.studio.service.json.handler.DecimalValue;
@@ -34,12 +37,10 @@ public class ObjectReader {
       private final AtomicReference<Object> reference;
       private final ArrayStack<FieldTree> stack;
       private final ArrayStack<Object> objects;
-      private final TokenConverter converter;
       private final FieldTree root;
       
       public ObjectHandler(FieldTree root) {
          this.reference = new AtomicReference<Object>();
-         this.converter = new TokenConverter();
          this.stack = new ArrayStack<FieldTree>();
          this.objects = new ArrayStack<Object>();
          this.root = root;
@@ -57,35 +58,6 @@ public class ObjectReader {
       
       @Override
       public void onAttribute(Name name, TextValue value) {
-         CharSequence token = value.toToken();
-         onAttribute(name, token);
-      }
-      
-      @Override
-      public void onAttribute(Name name, IntegerValue value) {
-         CharSequence token = value.toToken();
-         onAttribute(name, token);
-      }
-      
-      @Override
-      public void onAttribute(Name name, DecimalValue value) {
-         CharSequence token = value.toToken();
-         onAttribute(name, token);
-      }
-      
-      @Override
-      public void onAttribute(Name name, BooleanValue value) {
-         CharSequence token = value.toToken();
-         onAttribute(name, token);
-      }
-      
-      @Override
-      public void onAttribute(Name name, NullValue value) {
-         CharSequence token = value.toToken();
-         onAttribute(name, token);
-      }    
-     
-      private void onAttribute(Name name, CharSequence value) {
          if(!name.isEmpty()) {
             CharSequence token = name.toToken();
             FieldTree top = stack.peek();
@@ -94,17 +66,90 @@ public class ObjectReader {
             if(top == null) {
                throw new IllegalStateException("Attribute '" + name + "' has not block");
             }
-            FieldAccessor field = top.getAttribute(token);
+            FieldElement field = top.getAttribute(token);
             
             if(field == null) {
                throw new IllegalStateException("Could not find '" + name + "'");
             }
-            Class type = field.getType();
-            Object converted = converter.convert(type, value);
-           
-            field.setValue(object, converted);
+            field.set(object, value);
          }
       }
+      
+      @Override
+      public void onAttribute(Name name, IntegerValue value) {
+         if(!name.isEmpty()) {
+            CharSequence token = name.toToken();
+            FieldTree top = stack.peek();
+            Object object = objects.peek();
+            
+            if(top == null) {
+               throw new IllegalStateException("Attribute '" + name + "' has not block");
+            }
+            FieldElement field = top.getAttribute(token);
+            
+            if(field == null) {
+               throw new IllegalStateException("Could not find '" + name + "'");
+            }
+            field.set(object, value);
+         }
+      }
+      
+      @Override
+      public void onAttribute(Name name, DecimalValue value) {
+         if(!name.isEmpty()) {
+            CharSequence token = name.toToken();
+            FieldTree top = stack.peek();
+            Object object = objects.peek();
+            
+            if(top == null) {
+               throw new IllegalStateException("Attribute '" + name + "' has not block");
+            }
+            FieldElement field = top.getAttribute(token);
+            
+            if(field == null) {
+               throw new IllegalStateException("Could not find '" + name + "'");
+            }
+            field.set(object, value);
+         }
+      }
+      
+      @Override
+      public void onAttribute(Name name, BooleanValue value) {
+         if(!name.isEmpty()) {
+            CharSequence token = name.toToken();
+            FieldTree top = stack.peek();
+            Object object = objects.peek();
+            
+            if(top == null) {
+               throw new IllegalStateException("Attribute '" + name + "' has not block");
+            }
+            FieldElement field = top.getAttribute(token);
+            
+            if(field == null) {
+               throw new IllegalStateException("Could not find '" + name + "'");
+            }
+            field.set(object, value);
+         }
+      }
+      
+      @Override
+      public void onAttribute(Name name, NullValue value) {
+         if(!name.isEmpty()) {
+            CharSequence token = name.toToken();
+            FieldTree top = stack.peek();
+            Object object = objects.peek();
+            
+            if(top == null) {
+               throw new IllegalStateException("Attribute '" + name + "' has not block");
+            }
+            FieldElement field = top.getAttribute(token);
+            
+            if(field == null) {
+               throw new IllegalStateException("Could not find '" + name + "'");
+            }
+            field.set(object, value);
+         }
+      }    
       
       @Override
       public void onBlockBegin(Name name, Name type) {
@@ -121,7 +166,7 @@ public class ObjectReader {
             if(top == null) {
                throw new IllegalStateException("Illegal JSON ending");
             }
-            FieldAccessor field = top.getAttribute(token);
+            FieldElement field = top.getAttribute(token);
             FieldTree child = top.getChild(token);
             Object value = child.getInstance();
             

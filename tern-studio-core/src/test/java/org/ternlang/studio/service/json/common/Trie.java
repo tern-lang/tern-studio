@@ -1,10 +1,10 @@
-package org.ternlang.studio.service.json;
+package org.ternlang.studio.service.json.common;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-class Trie<T> implements Iterable<T> {
+public class Trie<T> implements Iterable<T> {
    
    private static final int[] POSITION = new int[256];
    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-@";

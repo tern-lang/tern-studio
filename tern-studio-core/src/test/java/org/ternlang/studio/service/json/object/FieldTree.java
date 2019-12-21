@@ -1,4 +1,4 @@
-package org.ternlang.studio.service.json;
+package org.ternlang.studio.service.json.object;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -6,11 +6,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-class FieldTree {
+import org.ternlang.studio.service.json.common.Trie;
+
+public class FieldTree {
    
    private final Trie<FieldAccessor> attributes;
    private final Trie<FieldTree> children;
    private final Set<CharSequence> names;
+   private final TokenConverter converter;
    private final Constructor factory;
    
    public FieldTree(Constructor factory) {
@@ -18,6 +21,7 @@ class FieldTree {
    }
    
    private FieldTree(Constructor factory, Set<CharSequence> names) {
+      this.converter = new TokenConverter();
       this.attributes = new Trie<FieldAccessor>();
       this.children = new Trie<FieldTree>();
       this.factory = factory;
@@ -45,7 +49,7 @@ class FieldTree {
       FieldAccessor accessor = attributes.match(name);
       
       if(accessor == null) {
-         accessor = new FieldAccessor(field);  
+         accessor = new FieldAccessor(converter, field);  
          
          field.setAccessible(true);
          names.add(name);
