@@ -1,32 +1,13 @@
 package org.ternlang.studio.service.json;
 
 import org.ternlang.parse.StringParser;
-import org.ternlang.studio.service.json.handler.AttributeHandler;
-import org.ternlang.studio.service.json.handler.BooleanValue;
-import org.ternlang.studio.service.json.handler.DecimalValue;
-import org.ternlang.studio.service.json.handler.IntegerValue;
-import org.ternlang.studio.service.json.handler.Name;
-import org.ternlang.studio.service.json.handler.NullValue;
-import org.ternlang.studio.service.json.handler.TextValue;
 
 public class JsonParser extends StringParser {   
    
-   private final AttributeHandler handler;
-   private final DecimalSlice decimal;
-   private final IntegerSlice integer;
-   private final BooleanSlice bool;
-   private final NullSlice none;
-   private final TextSlice text;
-   private final NameSlice name;
+   private final JsonAssembler assembler;
    
-   public JsonParser(AttributeHandler handler) {
-      this.integer = new IntegerSlice();
-      this.decimal = new DecimalSlice();
-      this.bool = new BooleanSlice();
-      this.none = new NullSlice();
-      this.text = new TextSlice();
-      this.name = new NameSlice();    
-      this.handler = handler;      
+   public JsonParser(JsonAssembler assembler) {
+      this.assembler = assembler;     
    }
    
    @Override
@@ -36,10 +17,14 @@ public class JsonParser extends StringParser {
 
    @Override
    protected void parse() {
-      handler.onBegin();
-      pack();
-      process();
-      handler.onEnd();
+      assembler.begin();
+      
+      try {
+         pack();
+         process();
+      } finally {
+         assembler.end();
+      }
    }
    
    private void pack() {
@@ -79,54 +64,23 @@ public class JsonParser extends StringParser {
       }
    }
    
-   public void block() {
-      handler.onBlockBegin(null);
-      
-      while(off < count) {
-         if(skip("}")) {
-            break;
-         } else if(skip("\"")) {
-            attribute();
-         } else {
-            throw new IllegalStateException("Could not parse JSON");
-         }
-      }
-      handler.onBlockEnd(null);
-   }
-   
-   public void array() {
-      handler.onArrayBegin(null);
-      
-      while(off < count) {
-         if(skip("}")) {
-            break;
-         }
-         if(skip("\"")) {
-            attribute();
-         } else {
-            throw new IllegalStateException("Could not parse JSON");
-         }
-      }
-      handler.onArrayEnd(null);
-   }
-   
    private void attribute() {
-      Name name = name();
+      name();
       
       if(!skip(":")) {
          throw new IllegalStateException("Attribute must be followed by :");
       }
       if(skip("{")) {
-         block(name);
+         block();
       }else if(skip("[")) {
-         array(name);
+         array();
       } else {
-         value(name);
+         value();
       }
       skip(",");
    }
    
-   private void text(Name name) {
+   private void text() {
       int start = off;
             
       while(off < count) {
@@ -135,15 +89,14 @@ public class JsonParser extends StringParser {
          if(next == '\"' && source[off -1] != '\'') {
             int length = (off - start) - 1;
             
-            text.with(source, start, length);               
-            handler.onAttribute(name, text);
+            assembler.text(source, start, length);               
             return;
          }            
       }
       throw new IllegalStateException("Invalid text value");   
    }
    
-   private void number(Name name, int sign) {
+   private void number(int sign) {
       int start = off;
       int spot = 0;
       
@@ -154,11 +107,9 @@ public class JsonParser extends StringParser {
             int length = off - start;
             
             if(spot > 0) {
-               decimal.with(source, start + sign, length);
-               handler.onAttribute(name, decimal);
+               assembler.decimal(source, start + sign, length);
             } else {
-               integer.with(source, start + sign, length);
-               handler.onAttribute(name, integer);
+               assembler.integer(source, start + sign, length);
             }
             return;
          } else if(next == '.') {
@@ -170,7 +121,7 @@ public class JsonParser extends StringParser {
       }
    }
    
-   private void bool(Name name) {
+   private void bool() {
       int start = off;
       
       while(off < count) {
@@ -179,8 +130,7 @@ public class JsonParser extends StringParser {
          if(next == ']' || next == '}' || next == ',') {
             int length = off - start;
             
-            bool.with(source, start, length); 
-            handler.onAttribute(name, bool);
+            assembler.bool(source, start, length); 
             return;
          }            
          off++;
@@ -188,7 +138,7 @@ public class JsonParser extends StringParser {
       throw new IllegalStateException("Invalid boolean value");  
    }
    
-   private void none(Name name) {
+   private void none() {
       int start = off;
       
       while(off < count) {
@@ -197,8 +147,7 @@ public class JsonParser extends StringParser {
          if(next == ']' || next == '}' || next == ',') {
             int length = off - start;
             
-            none.with(source, start, length); 
-            handler.onAttribute(name, none);
+            assembler.none(source, start, length); 
             return;
          }            
          off++;
@@ -206,29 +155,29 @@ public class JsonParser extends StringParser {
       throw new IllegalStateException("Invalid null value");  
    }
    
-   private void value(Name name) {
+   private void value() {
       char value = source[off];
       
       if(value == '"') {
          off++;
-         text(name);
+         text();
       } else if(value == 't' || value == 'f') {
-         bool(name);
+         bool();
       } else if(value == 'n') {
-         none(name);
+         none();
       } else if(value == '-') {
          off++;
-         number(name, -1);         
+         number(-1);         
       } else {
          if(value >= '0' && value <= '9') {
-            number(name, 0);
+            number(0);
          } else {
-            throw new IllegalStateException("Could not parse value for " + name);
+            throw new IllegalStateException("Could not parse value");
          }
       }
    }
    
-   private Name name() {      
+   private void name() {      
       int pos = off;
       
       while(pos < count) {
@@ -239,14 +188,15 @@ public class JsonParser extends StringParser {
             int start = off;            
             
             off = pos;
-            return name.with(source, start, length);
+            assembler.name(source, start, length);
+            return;
          }
       }
       throw new IllegalStateException("Unexpected end of source");
    }
    
-   private void block(Name name) {
-      handler.onBlockBegin(name);
+   private void block() {
+      assembler.blockBegin();
       
       while(off < count) {
          if(skip("\"")) {
@@ -255,11 +205,11 @@ public class JsonParser extends StringParser {
             break;
          }
       }
-      handler.onBlockEnd(name);
+      assembler.blockEnd();
    }
    
-   private void array(Name name) {
-      handler.onArrayBegin(name);
+   private void array() {
+      assembler.arrayBegin();
       
       while(off < count) {
          char next = source[off++];
@@ -272,160 +222,10 @@ public class JsonParser extends StringParser {
             break;            
          } else {
             off--;
-            value(null);   
+            value();   
          }
          skip(",");
       }
-      handler.onArrayEnd(name);
-   }
-   
-   private static class NameSlice extends Name {
-      
-      private final Slice slice = new Slice();    
-      
-      @Override
-      public CharSequence toToken() {
-         return slice;
-      }
-      
-      public NameSlice with(char[] source, int off, int length) {
-         slice.with(source, off, length);
-         hash = 0;
-         return this;
-      }
-      
-      @Override
-      public String toString() {
-         return slice.toString();
-      }
-
-   }
-   
-   private static class TextSlice implements TextValue {
-      
-      private final Slice slice = new Slice();    
-      
-      @Override
-      public CharSequence toToken() {
-         return slice;
-      }
-      
-      public TextSlice with(char[] source, int off, int length) {
-         slice.with(source, off, length);
-         return this;
-      }
-      
-      @Override
-      public String toString() {
-         return slice.toString();
-      }
-   }
-   
-   private static class NullSlice implements NullValue {
-      
-      private final Slice slice = new Slice();    
-      
-      @Override
-      public CharSequence toToken() {
-         return slice;
-      }
-      
-      public NullSlice with(char[] source, int off, int length) {
-         slice.with(source, off, length);
-         return this;
-      }
-      
-      @Override
-      public String toString() {
-         return slice.toString();
-      }
-   }
-   
-   private static class BooleanSlice implements BooleanValue {
-      
-      private final Slice slice = new Slice(); 
-      private boolean value;
-      
-      @Override
-      public CharSequence toToken() {
-         return slice;
-      }
-
-      public BooleanSlice with(char[] source, int off, int length) {
-         slice.with(source, off, length);
-         return this;
-      }
-
-      @Override
-      public boolean toBoolean() {
-         return value;
-      }
-      
-      @Override
-      public String toString() {
-         return slice.toString();
-      }
-   }
-   
-   private static class IntegerSlice implements IntegerValue {
-      
-      private final Slice slice = new Slice(); 
-      private long value;
-      
-      @Override
-      public CharSequence toToken() {
-         return slice;
-      }
-
-      public IntegerSlice with(char[] source, int off, int length) {
-         slice.with(source, off, length);
-         return this;
-      }
-
-      @Override
-      public long toLong() {
-         return value;
-      }
-
-      @Override
-      public int toInteger() {
-         return (int)value;
-      }
-      
-      @Override
-      public String toString() {
-         return slice.toString();
-      }
-   }
-   
-   private static class DecimalSlice implements DecimalValue {
-      
-      private final Slice slice = new Slice(); 
-      private double value;
-      
-      @Override
-      public CharSequence toToken() {
-         return slice;
-      }
-     
-      public DecimalSlice with(char[] source, int off, int length) {
-         slice.with(source, off, length);
-         return this;
-      }
-
-      @Override
-      public double toDouble() {
-         return value;
-      }
-
-      @Override
-      public float toFloat() {
-         return (float)value;
-      }
-      
-      @Override
-      public String toString() {
-         return slice.toString();
-      }
+      assembler.arrayEnd();
    }
 }

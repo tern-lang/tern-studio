@@ -1,5 +1,7 @@
 package org.ternlang.studio.service.json;
 
+import java.util.function.Consumer;
+
 import org.ternlang.studio.service.json.handler.AttributeHandler;
 import org.ternlang.studio.service.json.handler.BooleanValue;
 import org.ternlang.studio.service.json.handler.DecimalValue;
@@ -24,12 +26,25 @@ public class JsonFormatter {
       }
    }
    
-   public String format(String json) {
-      JsonHandler handler = new JsonHandler();
-      JsonParser parser = new JsonParser(handler);
-      
+   private final StringBuilder builder;
+   private final JsonHandler handler;
+   private final JsonAssembler assembler;
+   private final JsonParser parser;
+   
+   public JsonFormatter() {
+      this(8192);
+   }
+   
+   public JsonFormatter(int capacity) {
+      this.builder = new StringBuilder(capacity);
+      this.handler = new JsonHandler();
+      this.assembler = new DirectAssembler(handler);
+      this.parser = new JsonParser(assembler);
+   }
+   
+   public void format(String json, Consumer<CharSequence> consumer) {
       parser.parse(json);
-      return handler.toString();
+      consumer.accept(builder);
    }
    
    private static class JsonHandler implements AttributeHandler {
@@ -81,7 +96,7 @@ public class JsonFormatter {
       private void onAttribute(Name name, CharSequence value) {
          builder.append(INDENTS[indent]);
          
-         if(name != null) {    
+         if(!name.isEmpty()) {    
             builder.append('"');
             builder.append(name);
             builder.append("\": \"");
@@ -100,7 +115,7 @@ public class JsonFormatter {
       public void onBlockBegin(Name name) {
          builder.append(INDENTS[indent++]);
          
-         if(name != null) {      
+         if(!name.isEmpty()) {      
             builder.append('"');
             builder.append(name);
             builder.append("\": {\n");
@@ -110,7 +125,20 @@ public class JsonFormatter {
       }
       
       @Override
-      public void onBlockEnd(Name name) {
+      public void onBlockBegin(Name name, Name type) {
+         builder.append(INDENTS[indent++]);
+         
+         if(!name.isEmpty()) {      
+            builder.append('"');
+            builder.append(name);
+            builder.append("\": {\n");
+         } else {
+            builder.append("{\n");
+         }
+      }
+      
+      @Override
+      public void onBlockEnd() {
          builder.append(INDENTS[--indent]);   
          builder.append("}\n");
       }
@@ -119,7 +147,7 @@ public class JsonFormatter {
       public void onArrayBegin(Name name) {
          builder.append(INDENTS[indent++]);
          
-         if(name != null) {      
+         if(!name.isEmpty()) {      
             builder.append('"');
             builder.append(name);
             builder.append("\": [\n");
@@ -129,7 +157,7 @@ public class JsonFormatter {
       }
       
       @Override
-      public void onArrayEnd(Name name) {        
+      public void onArrayEnd() {        
          builder.append(INDENTS[--indent]);         
          builder.append("]\n");
       }
@@ -143,7 +171,6 @@ public class JsonFormatter {
       public String toString() {
          return value;
       }
-
    }
 
 }

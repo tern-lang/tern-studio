@@ -12,6 +12,14 @@ public class Slice implements CharSequence {
       this.length = length;
       return this;
    }
+
+   public char[] source() {
+      return source;
+   }
+
+   public int offset() {
+      return off;
+   }
    
    @Override
    public int length() {      
@@ -31,6 +39,15 @@ public class Slice implements CharSequence {
          return slice.with(source, off + start, end - start);
       }
       return slice;
+   }
+   
+   public boolean isEmpty() {
+      return length == 0;
+   }
+   
+   public void reset() {
+      off = length = 0;
+      source = null;
    }
    
    @Override

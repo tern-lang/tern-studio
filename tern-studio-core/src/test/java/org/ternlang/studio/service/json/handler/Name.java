@@ -51,4 +51,5 @@ public abstract class Name {
    }
 
    public abstract CharSequence toToken();
+   public abstract boolean isEmpty();
 }

@@ -1,5 +1,7 @@
 package org.ternlang.studio.service.json;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.ternlang.common.ArrayStack;
 import org.ternlang.studio.service.json.handler.AttributeHandler;
 import org.ternlang.studio.service.json.handler.BooleanValue;
@@ -12,11 +14,13 @@ import org.ternlang.studio.service.json.handler.TextValue;
 public class ObjectReader {
    
    private final ObjectHandler handler;
+   private final JsonAssembler assembler;
    private final JsonParser parser;
    
    public ObjectReader(FieldTree tree) {
       this.handler = new ObjectHandler(tree);
-      this.parser = new JsonParser(handler);
+      this.assembler = new DirectAssembler(handler);
+      this.parser = new JsonParser(assembler);
    }
    
    public <T> T read(String source) throws Exception {
@@ -27,12 +31,14 @@ public class ObjectReader {
    
    private final class ObjectHandler implements AttributeHandler {
       
-      private final TokenConverter converter;
+      private final AtomicReference<Object> reference;
       private final ArrayStack<FieldTree> stack;
       private final ArrayStack<Object> objects;
+      private final TokenConverter converter;
       private final FieldTree root;
       
       public ObjectHandler(FieldTree root) {
+         this.reference = new AtomicReference<Object>();
          this.converter = new TokenConverter();
          this.stack = new ArrayStack<FieldTree>();
          this.objects = new ArrayStack<Object>();
@@ -40,17 +46,13 @@ public class ObjectReader {
       }
       
       public Object getObject() {
-         return objects.peek();
+         return reference.get();
       }
       
       @Override
       public void onBegin() {
-         Object object = root.getInstance();
-         
          objects.clear();
-         objects.push(object);
          stack.clear();
-         stack.push(root);
       }
       
       @Override
@@ -84,18 +86,18 @@ public class ObjectReader {
       }    
      
       private void onAttribute(Name name, CharSequence value) {
-         if(name != null) {
+         if(!name.isEmpty()) {
             CharSequence token = name.toToken();
             FieldTree top = stack.peek();
             Object object = objects.peek();
             
             if(top == null) {
-               throw new IllegalStateException("Illegal JSON ending");
+               throw new IllegalStateException("Attribute '" + name + "' has not block");
             }
             FieldAccessor field = top.getAttribute(token);
             
             if(field == null) {
-               throw new IllegalStateException("Could not find " + name);
+               throw new IllegalStateException("Could not find '" + name + "'");
             }
             Class type = field.getType();
             Object converted = converter.convert(type, value);
@@ -105,8 +107,13 @@ public class ObjectReader {
       }
       
       @Override
+      public void onBlockBegin(Name name, Name type) {
+         onBlockBegin(name);
+      }
+      
+      @Override
       public void onBlockBegin(Name name) {
-         if(name != null) {
+         if(!name.isEmpty()) {
             CharSequence token = name.toToken();
             FieldTree top = stack.peek();
             Object object = objects.peek();
@@ -121,15 +128,20 @@ public class ObjectReader {
             objects.push(value);
             stack.push(child);
             field.setValue(object, value);
+         } else {
+            Object object = root.getInstance();
+            
+            objects.push(object);
+            stack.push(root);
          }
       }
       
       @Override
-      public void onBlockEnd(Name name) {
-         if(name != null) {
-            objects.pop();
-            stack.pop();
-         }
+      public void onBlockEnd() {
+         Object value = objects.pop();
+         
+         reference.set(value);
+         stack.pop();
       }
       
       @Override
@@ -138,18 +150,15 @@ public class ObjectReader {
       }
       
       @Override
-      public void onArrayEnd(Name name) {
+      public void onArrayEnd() {
          
       }
       
       @Override
       public void onEnd() {
-         FieldTree top = stack.peek();
-         
-         if(top != root) {
+         if(!stack.isEmpty()) {
             throw new IllegalStateException("Illegal JSON ending");
          }
       }
-      
    }
 }

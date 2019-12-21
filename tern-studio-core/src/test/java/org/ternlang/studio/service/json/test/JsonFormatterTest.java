@@ -47,8 +47,8 @@ public class JsonFormatterTest extends TestCase {
    public void testMapper() throws Exception {
       System.err.println(SOURCE_SMALL);
       JsonFormatter formatter = new JsonFormatter();
-      System.err.println(formatter.format(SOURCE_SMALL));
+      formatter.format(SOURCE_SMALL, System.err::println);
       System.err.println(SOURCE_NORMAL);
-      System.err.println(formatter.format(SOURCE_NORMAL));
+      formatter.format(SOURCE_NORMAL, System.err::println);
    }
 }

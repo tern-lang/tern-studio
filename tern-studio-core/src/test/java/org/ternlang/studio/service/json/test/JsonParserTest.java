@@ -1,5 +1,7 @@
 package org.ternlang.studio.service.json.test;
 
+import org.ternlang.studio.service.json.DirectAssembler;
+import org.ternlang.studio.service.json.JsonAssembler;
 import org.ternlang.studio.service.json.JsonParser;
 import org.ternlang.studio.service.json.handler.AttributeHandler;
 import org.ternlang.studio.service.json.handler.BooleanValue;
@@ -50,7 +52,8 @@ public class JsonParserTest extends PerfTestCase {
    "}\n";         
    
    public void testParser() throws Exception {
-      JsonParser parser = new JsonParser(HANDLER);
+      JsonAssembler assembler = new DirectAssembler(HANDLER);
+      JsonParser parser = new JsonParser(assembler);
       parser.parse(SOURCE_SMALL);   
    }
    
@@ -63,8 +66,13 @@ public class JsonParserTest extends PerfTestCase {
       System.err.println(source);
       
       final int iterations = 1000000;
-      final AttributeHandler handler = new BlankHandler();      
-      final JsonParser parser = new JsonParser(handler);
+      final AttributeHandler handler = new BlankHandler();   
+      final JsonAssembler assembler = new DirectAssembler(handler);
+      final JsonParser parser = new JsonParser(assembler);
+      
+      parser.parse(source);
+      parser.parse(source);
+      
       final Runnable task = new Runnable() {
          
          public void run() {
@@ -105,13 +113,16 @@ public class JsonParserTest extends PerfTestCase {
       public void onBlockBegin(Name name) {}
 
       @Override
-      public void onBlockEnd(Name name) {}
+      public void onBlockBegin(Name name, Name type) {}
+      
+      @Override
+      public void onBlockEnd() {}
 
       @Override
       public void onArrayBegin(Name name) {}
 
       @Override
-      public void onArrayEnd(Name name) {}
+      public void onArrayEnd() {}
 
       @Override
       public void onEnd() {}
@@ -122,52 +133,72 @@ public class JsonParserTest extends PerfTestCase {
       
       @Override
       public void onAttribute(Name name, TextValue value) {
-         System.err.println(name + "=" + value);
+         if (!name.isEmpty()) {
+            System.err.println(name + "=" + value);
+         } else {
+            System.err.println(value);
+         }
       }
       
       @Override
       public void onAttribute(Name name, IntegerValue value) {
-         System.err.println(name + "=" + value);
+         if (!name.isEmpty()) {
+            System.err.println(name + "=" + value);
+         } else {
+            System.err.println(value);
+         }
       }
       
       @Override
       public void onAttribute(Name name, DecimalValue value) {
-         System.err.println(name + "=" + value);
+         if (!name.isEmpty()) {
+            System.err.println(name + "=" + value);
+         } else {
+            System.err.println(value);
+         }
       }
       
       @Override
       public void onAttribute(Name name, BooleanValue value) {
-         System.err.println(name + "=" + value);
+         if (!name.isEmpty()) {
+            System.err.println(name + "=" + value);
+         } else {
+            System.err.println(value);
+         }
       }
       
       @Override
       public void onAttribute(Name name, NullValue value) {
-         System.err.println(name + "=" + value);
+         if (!name.isEmpty()) {
+            System.err.println(name + "=" + value);
+         } else {
+            System.err.println(value);
+         }
       }
 
       @Override
       public void onBlockBegin(Name name) {
-         if (name != null) {
+         if (!name.isEmpty()) {
             System.err.print(name + ": ");
          }
          System.err.println("{");
       }
 
       @Override
-      public void onBlockEnd(Name name) {
+      public void onBlockEnd() {
          System.err.println("}");
       }
 
       @Override
       public void onArrayBegin(Name name) {
-         if (name != null) {
+         if (!name.isEmpty()) {
             System.err.print(name + ": ");
          }
          System.err.println("[");
       }
 
       @Override
-      public void onArrayEnd(Name name) {
+      public void onArrayEnd() {
          System.err.println("]");
       }
 

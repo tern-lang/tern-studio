@@ -9,7 +9,7 @@ public class ObjectMapperTest extends PerfTestCase {
    
    private static class Example {
       private String name;
-      private int age;
+      //private int age;
       private String ignore;
       private String[] attrs;
       private Address address;
@@ -23,11 +23,11 @@ public class ObjectMapperTest extends PerfTestCase {
    private static final String SOURCE = 
    "{\n" +
    "   \"name\": \"Niall Gallagher\",\n" +
-   "   \"age\": 101,\n" +
+   //"   \"age\": 101,\n" +
    "   \"attrs\": [\n" +
    "      \"one\",\n" +
-   "      2,\n" +
-   "      3\n" +
+   "      \"2\",\n" +
+   "      \"3\"\n" +
    "   ],\n" +
    "   \"address\": {\n" +
    "      \"street\": \"William St\",\n" +
@@ -49,7 +49,7 @@ public class ObjectMapperTest extends PerfTestCase {
                   Example example = reader.read(SOURCE);
                   
                   assertEquals(example.name, "Niall Gallagher");
-                  assertEquals(example.age, 101);
+                  //assertEquals(example.age, 101);
                   assertEquals(example.address.street, "William St");
                   assertEquals(example.address.city, "Limerick");
                }
@@ -84,7 +84,7 @@ public class ObjectMapperTest extends PerfTestCase {
                   Example example = reader.readValue(SOURCE);
                   
                   assertEquals(example.name, "Niall Gallagher");
-                  assertEquals(example.age, 101);
+                  //assertEquals(example.age, 101);
                   assertEquals(example.address.street, "William St");
                   assertEquals(example.address.city, "Limerick");
                }
