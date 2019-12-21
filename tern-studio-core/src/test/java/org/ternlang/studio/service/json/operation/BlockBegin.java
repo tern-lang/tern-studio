@@ -2,7 +2,7 @@ package org.ternlang.studio.service.json.operation;
 
 import org.ternlang.studio.service.json.document.DocumentHandler;
 import org.ternlang.studio.service.json.document.Name;
-import org.ternlang.studio.service.json.document.Slice;
+import org.ternlang.studio.service.json.document.TextSlice;
 
 public class BlockBegin extends Operation {
    
@@ -49,7 +49,7 @@ public class BlockBegin extends Operation {
 
    private static class TypeSlice extends Name {
       
-      private final Slice slice = new Slice();    
+      private final TextSlice slice = new TextSlice();
       
       public boolean isEmpty() {
          return slice.length() <= 0;

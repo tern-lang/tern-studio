@@ -6,7 +6,7 @@ import org.ternlang.studio.service.json.document.DocumentAssembler;
 import org.ternlang.studio.service.json.document.DocumentHandler;
 import org.ternlang.studio.service.json.document.Name;
 import org.ternlang.studio.service.json.document.Value;
-import org.ternlang.studio.service.json.object.ObjectAssembler;
+import org.ternlang.studio.service.json.object.TypeAssembler;
 
 public class JsonParserTest extends PerfTestCase {
 
@@ -94,7 +94,7 @@ public class JsonParserTest extends PerfTestCase {
       final char[] token = type.toCharArray();
       final int iterations = 1000000;
       final DocumentHandler handler = new BlankHandler();   
-      final DocumentAssembler assembler = new ObjectAssembler(handler, token);
+      final DocumentAssembler assembler = new TypeAssembler(handler, token);
       final JsonParser parser = new JsonParser(assembler);
       
       parser.parse(source);

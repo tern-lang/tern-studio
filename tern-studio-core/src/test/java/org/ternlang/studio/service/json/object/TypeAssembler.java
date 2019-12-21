@@ -4,7 +4,7 @@ import org.ternlang.common.ArrayStack;
 import org.ternlang.studio.service.json.document.DocumentAssembler;
 import org.ternlang.studio.service.json.document.DocumentHandler;
 import org.ternlang.studio.service.json.document.DocumentState;
-import org.ternlang.studio.service.json.document.Slice;
+import org.ternlang.studio.service.json.document.TextSlice;
 import org.ternlang.studio.service.json.operation.ArrayBegin;
 import org.ternlang.studio.service.json.operation.ArrayEnd;
 import org.ternlang.studio.service.json.operation.Attribute;
@@ -12,23 +12,23 @@ import org.ternlang.studio.service.json.operation.BlockBegin;
 import org.ternlang.studio.service.json.operation.BlockEnd;
 import org.ternlang.studio.service.json.operation.Operation;
 import org.ternlang.studio.service.json.operation.OperationAllocator;
-import org.ternlang.studio.service.json.operation.Type;
+import org.ternlang.studio.service.json.operation.BlockType;
 
-public class ObjectAssembler implements DocumentAssembler {
+public class TypeAssembler implements DocumentAssembler {
    
    private final DocumentHandler handler;
    private final OperationAllocator allocator;
    private final ArrayStack<Operation> active;
    private final ArrayStack<Operation> ready;
-   private final ArrayStack<Type> blocks;
+   private final ArrayStack<BlockType> blocks;
    private final DocumentState name;
    private final char[] type;
    
-   public ObjectAssembler(DocumentHandler handler, char[] type) {
+   public TypeAssembler(DocumentHandler handler, char[] type) {
       this.active = new ArrayStack<Operation>();
       this.ready = new ArrayStack<Operation>();
       this.allocator = new OperationAllocator();
-      this.blocks= new ArrayStack<Type>();
+      this.blocks= new ArrayStack<BlockType>();
       this.name = new DocumentState();
       this.handler = handler;
       this.type = type;
@@ -49,7 +49,7 @@ public class ObjectAssembler implements DocumentAssembler {
       Attribute attribute = name.attribute(allocator);
       
       if(name.match(type, 0, type.length)) {
-         Type top = blocks.peek();
+         BlockType top = blocks.peek();
          
          if(!top.isEmpty()) {
             throw new IllegalStateException("Duplicate attribute");
@@ -94,7 +94,7 @@ public class ObjectAssembler implements DocumentAssembler {
 
    @Override
    public void blockBegin() {
-      Type type = allocator.type();
+      BlockType type = allocator.type();
       BlockBegin begin = name.blockBegin(allocator);
       
       blocks.push(type);
@@ -103,7 +103,7 @@ public class ObjectAssembler implements DocumentAssembler {
 
    @Override
    public void blockEnd() {
-      Type type = blocks.pop();
+      BlockType type = blocks.pop();
 
       while(!active.isEmpty()) {
          Operation next = active.pop();
@@ -111,7 +111,7 @@ public class ObjectAssembler implements DocumentAssembler {
          
          if(next.isBegin()) {
             if(!type.isEmpty()) {
-               Slice slice = type.toToken();
+               TextSlice slice = type.toToken();
                BlockBegin begin = (BlockBegin)next;
                char[] source = slice.source();
                int off = slice.offset();
@@ -129,7 +129,7 @@ public class ObjectAssembler implements DocumentAssembler {
       BlockEnd end = allocator.blockEnd(); 
       
       end.execute(handler);
-      type.close(); // recycle it
+      type.dispose(); // recycle it
    }
 
    @Override

@@ -9,7 +9,7 @@ public class OperationAllocator {
    private final ArrayStack<ArrayBegin> arrayBegins;
    private final ArrayStack<ArrayEnd> arrayEnds;
    private final ArrayStack<Attribute> attributes;
-   private final ArrayStack<Type> types;
+   private final ArrayStack<BlockType> types;
    private final OperationRecycler recycler;
    
    public OperationAllocator() {
@@ -18,15 +18,15 @@ public class OperationAllocator {
       this.arrayBegins = new ArrayStack<ArrayBegin>();
       this.arrayEnds = new ArrayStack<ArrayEnd>();
       this.attributes = new ArrayStack<Attribute>();
-      this.types = new ArrayStack<Type>();
+      this.types = new ArrayStack<BlockType>();
       this.recycler = new OperationRecycler();
    }
    
-   public Type type() {
-      Type type = types.pop();
+   public BlockType type() {
+      BlockType type = types.pop();
       
       if(type == null) {
-         return new Type(recycler);
+         return new BlockType(recycler);
       }
       return type;
    }
@@ -75,11 +75,11 @@ public class OperationAllocator {
       }
       return end;
    }
-   
+
    private class OperationRecycler implements OperationPool {
 
       @Override
-      public void recycle(Type type) {
+      public void recycle(BlockType type) {
          type.reset();
          types.push(type);
       }
@@ -113,6 +113,5 @@ public class OperationAllocator {
          end.reset();
          arrayEnds.push(end);
       }
-      
    }
 }

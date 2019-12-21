@@ -6,7 +6,7 @@ import org.ternlang.studio.service.json.operation.Attribute;
 import org.ternlang.studio.service.json.operation.BlockBegin;
 import org.ternlang.studio.service.json.operation.BlockEnd;
 import org.ternlang.studio.service.json.operation.OperationAllocator;
-import org.ternlang.studio.service.json.operation.Type;
+import org.ternlang.studio.service.json.operation.BlockType;
 
 public class DirectAssembler implements DocumentAssembler {
 
@@ -126,7 +126,7 @@ public class DirectAssembler implements DocumentAssembler {
       private final ArrayBegin arrayBegin;
       private final ArrayEnd arrayEnd;
       private final Attribute attribute;
-      private final Type type;
+      private final BlockType type;
       
       public StaticAllocator() {
          this.attribute = new Attribute(null);
@@ -134,11 +134,11 @@ public class DirectAssembler implements DocumentAssembler {
          this.blockEnd = new BlockEnd(null);
          this.arrayBegin = new ArrayBegin(null);
          this.arrayEnd = new ArrayEnd(null);
-         this.type = new Type(null);  
+         this.type = new BlockType(null);
       }
       
       @Override
-      public Type type() {
+      public BlockType type() {
          return type;
       }
       

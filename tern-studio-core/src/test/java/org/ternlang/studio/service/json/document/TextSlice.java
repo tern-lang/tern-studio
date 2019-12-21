@@ -1,16 +1,16 @@
 package org.ternlang.studio.service.json.document;
 
-public class Slice implements CharSequence {
+public class TextSlice implements CharSequence {
 
    private char[] source;
    private int off;
    private int length;
    
-   public Slice() {
+   public TextSlice() {
       super();
    }
    
-   public Slice with(char[] source, int off, int length) {
+   public TextSlice with(char[] source, int off, int length) {
       this.source = source;
       this.off = off;
       this.length = length;
@@ -37,7 +37,7 @@ public class Slice implements CharSequence {
    
    @Override
    public CharSequence subSequence(int start, int end) {     
-      Slice slice = new Slice();
+      TextSlice slice = new TextSlice();
             
       if(end - start > 0) {      
          return slice.with(source, off + start, end - start);

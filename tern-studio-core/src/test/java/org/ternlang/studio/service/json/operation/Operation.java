@@ -2,7 +2,7 @@ package org.ternlang.studio.service.json.operation;
 
 import org.ternlang.studio.service.json.document.DocumentHandler;
 import org.ternlang.studio.service.json.document.Name;
-import org.ternlang.studio.service.json.document.Slice;
+import org.ternlang.studio.service.json.document.TextSlice;
 
 public abstract class Operation {
 
@@ -20,7 +20,7 @@ public abstract class Operation {
    
    protected static class NameSlice extends Name {
       
-      private final Slice slice = new Slice();    
+      private final TextSlice slice = new TextSlice();
       
       @Override
       public CharSequence toToken() {

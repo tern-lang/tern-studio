@@ -1,24 +1,24 @@
 package org.ternlang.studio.service.json.operation;
 
 import org.ternlang.studio.service.json.document.Name;
-import org.ternlang.studio.service.json.document.Slice;
+import org.ternlang.studio.service.json.document.TextSlice;
 
-public class Type extends Name implements AutoCloseable {
+public class BlockType extends Name {
 
    private final OperationPool pool;
-   private final Slice slice;  
+   private final TextSlice slice;
    
-   public Type(OperationPool pool) {
-      this.slice = new Slice();
+   public BlockType(OperationPool pool) {
+      this.slice = new TextSlice();
       this.pool = pool;
    }
    
    @Override
-   public Slice toToken() {
+   public TextSlice toToken() {
       return slice;
    }
    
-   public Type with(char[] source, int off, int length) {
+   public BlockType with(char[] source, int off, int length) {
       slice.with(source, off, length);
       hash = 0;
       return this;
@@ -32,9 +32,8 @@ public class Type extends Name implements AutoCloseable {
    public void reset() {
       slice.reset();
    }
-   
-   @Override
-   public void close() {
+
+   public void dispose() {
       if(pool != null) {
          pool.recycle(this);
       }

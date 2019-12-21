@@ -4,16 +4,16 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.ternlang.studio.service.json.document.Trie;
+import org.ternlang.studio.service.json.document.TextTrie;
 
 public class TypeIndexer {
-   
+
+   private final TextTrie<FieldElement> index;
    private final ValueConverter converter;
    private final ObjectBuilder builder;
-   private final Trie<FieldElement> index;
    
    public TypeIndexer(ValueConverter converter, ObjectBuilder builder) {
-      this.index = new Trie<FieldElement>();
+      this.index = new TextTrie<FieldElement>();
       this.converter = converter;
       this.builder = builder;
    }

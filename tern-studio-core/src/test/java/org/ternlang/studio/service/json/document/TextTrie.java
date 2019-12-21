@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class Trie<T> implements Iterable<T> {
+public class TextTrie<T> implements Iterable<T> {
    
    private static final int[] POSITION = new int[256];
    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-@";
@@ -17,7 +17,7 @@ public class Trie<T> implements Iterable<T> {
    }
    
    private final Set<T> values = new HashSet<T>();
-   private final Trie.Node root = new Node(this);
+   private final TextTrie.Node root = new Node(this);
    
    public boolean isEmpty() {
       return values.isEmpty();
@@ -30,7 +30,7 @@ public class Trie<T> implements Iterable<T> {
    
    public T match(CharSequence key) {
       int length = key.length();
-      Trie.Node node = root;
+      TextTrie.Node node = root;
       
       for(int i = 0; i < length; i++) {
          char index = key.charAt(i);
@@ -48,7 +48,7 @@ public class Trie<T> implements Iterable<T> {
    }
    
    public T match(char[] source, int off, int length) {
-      Trie.Node node = root;
+      TextTrie.Node node = root;
       
       for(int i = 0; i < length; i++) {
          char ch = source[i + off];
@@ -71,22 +71,22 @@ public class Trie<T> implements Iterable<T> {
    
    private static class Node {
       
-      private Trie.Node[] children = new Trie.Node[WIDTH];
-      private Trie parent;
+      private TextTrie.Node[] children = new TextTrie.Node[WIDTH];
+      private TextTrie parent;
       private Object value;
       
-      public Node(Trie parent) {
+      public Node(TextTrie parent) {
          this.parent = parent;
       }
 
-      public Trie.Node get(char ch) {
+      public TextTrie.Node get(char ch) {
          if(ch <= 255 && ch >= 0) {
             int index = POSITION[ch];
             
             if(index == -1) {
                throw new IllegalStateException("Character " + ch + " is not valid");
             }
-            return (Trie.Node)children[index];
+            return (TextTrie.Node)children[index];
          }
          return null;
       }
@@ -109,7 +109,7 @@ public class Trie<T> implements Iterable<T> {
             if(index == -1) {
                throw new IllegalArgumentException("Value '" + ch + "' is not a valid identifier"); 
             }
-            Trie.Node node = (Trie.Node)children[index];
+            TextTrie.Node node = (TextTrie.Node)children[index];
             
             if(node == null) {
                node = children[index] = new Node(parent);
