@@ -4,6 +4,7 @@ import org.ternlang.studio.service.json.object.ObjectMapper;
 import org.ternlang.studio.service.json.object.ObjectReader;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 
 public class ObjectMapperTest extends PerfTestCase {
    
@@ -32,7 +33,8 @@ public class ObjectMapperTest extends PerfTestCase {
    "   \"address\": {\n" +
    "      \"street\": \"William St\",\n" +
    "      \"city\": \"Limerick\"\n" +
-   "   }\n" +
+   "   },\n" +
+   "   \"type\": \"Example\"\n"+
    "}\n";         
    
    public void testMapper() throws Exception {
@@ -60,6 +62,36 @@ public class ObjectMapperTest extends PerfTestCase {
       };
       timeRun("INTERNAL iterations: " + iterations , task);
    }
+
+   public void testMapperWithType() throws Exception {
+      System.err.println(SOURCE);
+
+      final int iterations = 1000000;
+      final ObjectMapper mapper = new ObjectMapper()
+            .register(Example.class)
+            .register(Address.class)
+            .type("type");
+
+      final ObjectReader reader = mapper.resolve(Object.class);
+      final Runnable task = new Runnable() {
+
+         public void run() {
+            try {
+               for(int i = 0; i < iterations; i++) {
+                  Example example = reader.read(SOURCE);
+
+                  assertEquals(example.name, "Niall Gallagher");
+                  //assertEquals(example.age, 101);
+                  assertEquals(example.address.street, "William St");
+                  assertEquals(example.address.city, "Limerick");
+               }
+            } catch(Exception e) {
+               e.printStackTrace();
+            }
+         }
+      };
+      timeRun("INTERNAL iterations: " + iterations , task);
+   }
    
    public void testMapperJackson() throws Exception {
       System.err.println(SOURCE);
@@ -72,7 +104,8 @@ public class ObjectMapperTest extends PerfTestCase {
             .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
             .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
             .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
-            .withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
+            .withCreatorVisibility(JsonAutoDetect.Visibility.NONE))
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
       
       final com.fasterxml.jackson.databind.ObjectReader reader = 
             mapper.readerFor(Example.class);

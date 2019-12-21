@@ -4,7 +4,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.ternlang.common.ArrayStack;
 import org.ternlang.studio.service.json.JsonParser;
-import org.ternlang.studio.service.json.document.DirectAssembler;
 import org.ternlang.studio.service.json.document.DocumentAssembler;
 import org.ternlang.studio.service.json.document.DocumentHandler;
 import org.ternlang.studio.service.json.document.Name;
@@ -16,9 +15,9 @@ public class ObjectReader {
    private final DocumentAssembler assembler;
    private final JsonParser parser;
    
-   public ObjectReader(FieldElement tree, ValueConverter converter, ObjectBuilder builder) {
-      this.handler = new ObjectHandler(tree, converter, builder);
-      this.assembler = new DirectAssembler(handler);
+   public ObjectReader(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, String root, String type) {
+      this.handler = new ObjectHandler(indexer, converter, builder, root);
+      this.assembler = new TypeAssembler(handler, type);
       this.parser = new JsonParser(assembler);
    }
    
@@ -26,8 +25,7 @@ public class ObjectReader {
       parser.parse(source);
       return (T)handler.getObject();
    }
-   
-   
+
    private final class ObjectHandler implements DocumentHandler {
       
       private final AtomicReference<Object> reference;
@@ -35,13 +33,15 @@ public class ObjectReader {
       private final ArrayStack<Object> objects;
       private final ValueConverter converter;
       private final ObjectBuilder builder;
-      private final FieldElement root;
+      private final TypeIndexer indexer;
+      private final String root;
       
-      public ObjectHandler(FieldElement root, ValueConverter converter, ObjectBuilder builder) {
+      public ObjectHandler(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, String root) {
          this.reference = new AtomicReference<Object>();
          this.stack = new ArrayStack<FieldElement>();
          this.objects = new ArrayStack<Object>();
          this.converter = converter;
+         this.indexer = indexer;
          this.builder = builder;
          this.root = root;
       }
@@ -59,7 +59,7 @@ public class ObjectReader {
       @Override
       public void onAttribute(Name name, Value value) {
          if(!name.isEmpty()) {
-            CharSequence token = name.toToken();
+            CharSequence token = name.toText();
             FieldElement top = stack.peek();
             Object object = objects.peek();
             
@@ -68,45 +68,50 @@ public class ObjectReader {
             }
             FieldAttribute field = top.attribute(token);
             
-            if(field == null) {
-               throw new IllegalStateException("Could not find '" + name + "'");
+            if(field != null) {
+               Class type = field.getType();
+
+               if (!type.isArray()) {
+                  Object converted = converter.convert(type, value);
+                  field.setValue(object, converted);
+               }
             }
-            Class type = field.getType();
-            Object converted = converter.convert(type, value);
-           
-            field.setValue(object, converted);
          }
       }
       
       @Override
       public void onBlockBegin(Name name, Name override) {
-         CharSequence type = override.toToken();
+         CharSequence type = override.toText();
          Object value = builder.create(type);
-         
+
          if(!name.isEmpty()) {
-            CharSequence token = name.toToken();
+            CharSequence token = name.toText();
             FieldElement top = stack.peek();
-            Object object = objects.peek();
-            
-            if(top == null) {
-               throw new IllegalStateException("Illegal JSON ending");
-            }
             FieldAttribute field = top.attribute(token);
-            FieldElement child = top.element(token);
-            
-            objects.push(value);
-            stack.push(child);
-            field.setValue(object, value);
+
+            if(field != null) {
+               FieldElement element = indexer.match(type);
+               Object object = objects.peek();
+
+               if(top == null) {
+                  throw new IllegalStateException("Illegal JSON ending");
+               }
+               objects.push(value);
+               stack.push(element);
+               field.setValue(object, value);
+            }
          } else {
+            FieldElement element = indexer.match(type);
+
             objects.push(value);
-            stack.push(root);
+            stack.push(element);
          }
       }
       
       @Override
       public void onBlockBegin(Name name) {
          if(!name.isEmpty()) {
-            CharSequence token = name.toToken();
+            CharSequence token = name.toText();
             FieldElement top = stack.peek();
             Object object = objects.peek();
             
@@ -114,19 +119,22 @@ public class ObjectReader {
                throw new IllegalStateException("Illegal JSON ending");
             }
             FieldAttribute field = top.attribute(token);
-            String type = field.getName();
-            FieldElement child = top.element(type);
-            Object value = builder.create(type);
-            
-            objects.push(value);
-            stack.push(child);
-            field.setValue(object, value);
+
+            if(field != null) {
+               String type = field.getName();
+               FieldElement element = indexer.match(type);
+               Object value = builder.create(type);
+
+               objects.push(value);
+               stack.push(element);
+               field.setValue(object, value);
+            }
          } else {
-            String type = root.getType();
-            Object value = builder.create(type);
+            FieldElement element = indexer.match(root);
+            Object value = builder.create(root);
             
             objects.push(value);
-            stack.push(root);
+            stack.push(element);
          }
       }
       

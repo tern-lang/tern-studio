@@ -90,11 +90,10 @@ public class JsonParserTest extends PerfTestCase {
    
    private void parseSourceWithTypeAssembler(String name, String source, String type) throws Exception {
       System.err.println(source);
-      
-      final char[] token = type.toCharArray();
+
       final int iterations = 1000000;
       final DocumentHandler handler = new BlankHandler();   
-      final DocumentAssembler assembler = new TypeAssembler(handler, token);
+      final DocumentAssembler assembler = new TypeAssembler(handler, type);
       final JsonParser parser = new JsonParser(assembler);
       
       parser.parse(source);

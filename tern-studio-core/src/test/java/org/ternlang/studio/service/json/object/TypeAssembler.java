@@ -20,15 +20,17 @@ public class TypeAssembler implements DocumentAssembler {
    private final OperationAllocator allocator;
    private final ArrayStack<Operation> active;
    private final ArrayStack<Operation> ready;
+   private final ArrayStack<Operation> commit;
    private final ArrayStack<BlockType> blocks;
    private final DocumentState name;
-   private final char[] type;
+   private final String type;
    
-   public TypeAssembler(DocumentHandler handler, char[] type) {
+   public TypeAssembler(DocumentHandler handler, String type) {
+      this.commit = new ArrayStack<Operation>();
       this.active = new ArrayStack<Operation>();
       this.ready = new ArrayStack<Operation>();
       this.allocator = new OperationAllocator();
-      this.blocks= new ArrayStack<BlockType>();
+      this.blocks = new ArrayStack<BlockType>();
       this.name = new DocumentState();
       this.handler = handler;
       this.type = type;
@@ -48,7 +50,7 @@ public class TypeAssembler implements DocumentAssembler {
    public void text(char[] source, int off, int length) {
       Attribute attribute = name.attribute(allocator);
       
-      if(name.match(type, 0, type.length)) {
+      if(name.match(type)) {
          BlockType top = blocks.peek();
          
          if(!top.isEmpty()) {
@@ -111,7 +113,7 @@ public class TypeAssembler implements DocumentAssembler {
          
          if(next.isBegin()) {
             if(!type.isEmpty()) {
-               TextSlice slice = type.toToken();
+               TextSlice slice = type.toText();
                BlockBegin begin = (BlockBegin)next;
                char[] source = slice.source();
                int off = slice.offset();
@@ -122,13 +124,9 @@ public class TypeAssembler implements DocumentAssembler {
             break;
          }
       }
-      while(!ready.isEmpty()) {
-         Operation next = ready.pop();
-         next.execute(handler);
-      }
-      BlockEnd end = allocator.blockEnd(); 
-      
-      end.execute(handler);
+      BlockEnd end = allocator.blockEnd();
+
+      commit.push(end);
       type.dispose(); // recycle it
    }
 
@@ -149,6 +147,15 @@ public class TypeAssembler implements DocumentAssembler {
       if(!active.isEmpty()) {
          throw new IllegalStateException("Operations not recycled");
       }
+      while(!ready.isEmpty()) {
+         Operation next = ready.pop();
+         next.execute(handler);
+      }
+      while(!commit.isEmpty()) {
+         Operation next = commit.pop();
+         next.execute(handler);
+      }
       handler.onEnd();
+      name.reset();
    }
 }

@@ -11,7 +11,7 @@ public class Attribute extends Operation {
    private final IntegerValue integer;
    private final BooleanValue bool;
    private final TextValue text;
-   private final NameSlice name;
+   private final NameValue name;
    private final NullValue none;
    
    public Attribute(OperationPool pool) {
@@ -19,7 +19,7 @@ public class Attribute extends Operation {
       this.decimal = new DecimalValue();
       this.bool = new BooleanValue();
       this.text = new TextValue();
-      this.name = new NameSlice();
+      this.name = new NameValue();
       this.none = new NullValue();
       this.pool = pool;
    }

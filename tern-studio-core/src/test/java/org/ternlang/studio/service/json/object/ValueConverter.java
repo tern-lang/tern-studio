@@ -34,7 +34,7 @@ public class ValueConverter {
       if(actual == Character.class) {
          return value.toCharacter();
       }
-      return value;
+      throw new IllegalStateException("Unable to convert " + type);
    }
 
    public boolean accept(Class type) {

@@ -12,21 +12,21 @@ public class BlockType extends Name {
       this.slice = new TextSlice();
       this.pool = pool;
    }
-   
-   @Override
-   public TextSlice toToken() {
-      return slice;
-   }
-   
+
    public BlockType with(char[] source, int off, int length) {
       slice.with(source, off, length);
       hash = 0;
       return this;
    }
+
+   @Override
+   public TextSlice toText() {
+      return slice;
+   }
    
    @Override
    public boolean isEmpty() {
-      return slice.length() <= 0;
+      return slice.isEmpty();
    }
    
    public void reset() {

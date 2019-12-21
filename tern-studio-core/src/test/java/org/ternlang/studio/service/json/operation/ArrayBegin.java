@@ -5,10 +5,10 @@ import org.ternlang.studio.service.json.document.DocumentHandler;
 public class ArrayBegin extends Operation {
    
    private final OperationPool pool;
-   private final NameSlice name;
+   private final NameValue name;
 
    public ArrayBegin(OperationPool pool) {
-      this.name = new NameSlice();
+      this.name = new NameValue();
       this.pool = pool;
    }
 

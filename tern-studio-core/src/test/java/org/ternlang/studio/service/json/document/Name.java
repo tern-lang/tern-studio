@@ -6,7 +6,7 @@ public abstract class Name {
 
    @Override
    public int hashCode() {
-      CharSequence token = toToken();
+      CharSequence token = toText();
       int length = token.length();
       int local = hash;
 
@@ -29,8 +29,8 @@ public abstract class Name {
       }
       if (other instanceof Name) {
          Name name = (Name) other;
-         CharSequence actual = toToken();
-         CharSequence required = name.toToken();
+         CharSequence actual = toText();
+         CharSequence required = name.toText();
 
          if (actual.length() != required.length()) {
             return false;
@@ -47,9 +47,9 @@ public abstract class Name {
 
    @Override
    public String toString() {
-      return toToken().toString();
+      return toText().toString();
    }
 
-   public abstract CharSequence toToken();
+   public abstract CharSequence toText();
    public abstract boolean isEmpty();
 }

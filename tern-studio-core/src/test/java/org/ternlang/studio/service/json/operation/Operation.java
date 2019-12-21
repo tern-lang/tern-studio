@@ -17,20 +17,23 @@ public abstract class Operation {
    public abstract void execute(DocumentHandler handler);
    public abstract void reset();
 
-   
-   protected static class NameSlice extends Name {
+   protected static class NameValue extends Name {
       
-      private final TextSlice slice = new TextSlice();
-      
-      @Override
-      public CharSequence toToken() {
-         return slice;
+      private final TextSlice slice;
+
+      public NameValue() {
+         this.slice = new TextSlice();
       }
-      
-      public NameSlice with(char[] source, int off, int length) {
+
+      public NameValue with(char[] source, int off, int length) {
          slice.with(source, off, length);
          hash = 0;
          return this;
+      }
+
+      @Override
+      public CharSequence toText() {
+         return slice;
       }
       
       @Override
@@ -40,6 +43,7 @@ public abstract class Operation {
       
       public void reset() {
          slice.reset();
+         hash = 0;
       }
       
       @Override

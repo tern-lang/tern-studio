@@ -17,17 +17,21 @@ public class DocumentState {
       this.length = length;
       return this;
    }
-   
-   public boolean match(char[] type, int off, int length) {
-      if(type.length > 0 && type.length == length) {
-         int remain = length;
-         
-         while(--remain >= 0) {
-            if(source[remain] != type[remain]) {
-               return false;
+
+   public boolean match(String type) {
+      if(type != null && length > 0) {
+         int remain = type.length();
+
+         if(length == remain) {
+            while(--remain >= 0) {
+               char next = type.charAt(remain);
+
+               if(source[off + remain] != next) {
+                  return false;
+               }
             }
+            return true;
          }
-         return true;
       }
       return false;
    }

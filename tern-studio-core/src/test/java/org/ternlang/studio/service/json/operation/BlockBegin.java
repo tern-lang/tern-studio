@@ -7,12 +7,12 @@ import org.ternlang.studio.service.json.document.TextSlice;
 public class BlockBegin extends Operation {
    
    private final OperationPool pool;
-   private final TypeSlice type;
-   private final NameSlice name;
+   private final TypeValue type;
+   private final NameValue name;
 
    public BlockBegin(OperationPool pool) {
-      this.name = new NameSlice();
-      this.type = new TypeSlice();
+      this.name = new NameValue();
+      this.type = new TypeValue();
       this.pool = pool;
    }
 
@@ -47,26 +47,33 @@ public class BlockBegin extends Operation {
       return true;
    }
 
-   private static class TypeSlice extends Name {
+   private static class TypeValue extends Name {
       
-      private final TextSlice slice = new TextSlice();
-      
-      public boolean isEmpty() {
-         return slice.length() <= 0;
+      private final TextSlice slice;
+
+      public TypeValue() {
+         this.slice = new TextSlice();
       }
-      
-      @Override
-      public CharSequence toToken() {
-         return slice;
-      }
-      
-      public TypeSlice with(char[] source, int off, int length) {
+
+      public TypeValue with(char[] source, int off, int length) {
          slice.with(source, off, length);
+         hash = 0;
          return this;
       }
-      
+
+      @Override
+      public CharSequence toText() {
+         return slice;
+      }
+
+      @Override
+      public boolean isEmpty() {
+         return slice.isEmpty();
+      }
+
       public void reset() {
          slice.reset();
+         hash = 0;
       }
       
       @Override

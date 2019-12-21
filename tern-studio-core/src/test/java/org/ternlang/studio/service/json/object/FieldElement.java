@@ -35,8 +35,4 @@ public class FieldElement {
    public FieldAttribute attribute(CharSequence name) {
       return attributes.match(name);
    }
-   
-   public FieldElement element(CharSequence name) {
-      return indexer.match(name);
-   }
 }

@@ -19,13 +19,9 @@ public class JsonParser extends StringParser {
    @Override
    protected void parse() {
       assembler.begin();
-      
-      try {
-         pack();
-         process();
-      } finally {
-         assembler.end();
-      }
+      pack();
+      process();
+      assembler.end();
    }
    
    private void pack() {
