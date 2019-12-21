@@ -1,5 +1,7 @@
 package org.ternlang.studio.service.json.test;
 
+import java.text.DecimalFormat;
+
 import org.ternlang.studio.service.json.JsonParser;
 import org.ternlang.studio.service.json.document.DirectAssembler;
 import org.ternlang.studio.service.json.document.DocumentAssembler;
@@ -64,11 +66,14 @@ public class JsonParserTest extends PerfTestCase {
    private void parseSource(String name, String source) throws Exception {
       System.err.println(source);
       
-      final int iterations = 1000000;
+      final double iterations = 1000000;
+      final DecimalFormat format = new DecimalFormat("######.########");
       final DocumentHandler handler = new BlankHandler();   
       final DocumentAssembler assembler = new DirectAssembler(handler);
       final JsonParser parser = new JsonParser(assembler);
-      
+      final double gb = 1000000000;
+      final double fraction = (source.length() * iterations) / gb;
+
       parser.parse(source);
       parser.parse(source);
       
@@ -84,18 +89,21 @@ public class JsonParserTest extends PerfTestCase {
             }
          }
       };
-      timeRun(name + " iterations: " + iterations, task);
+      timeRun(name + " iterations (" + format.format(fraction) + " GB): " + iterations, task);
    }
    
    
    private void parseSourceWithTypeAssembler(String name, String source, String type) throws Exception {
       System.err.println(source);
 
-      final int iterations = 1000000;
+      final double iterations = 1000000;
+      final DecimalFormat format = new DecimalFormat("######.########");
       final DocumentHandler handler = new BlankHandler();   
       final DocumentAssembler assembler = new TypeAssembler(handler, type);
       final JsonParser parser = new JsonParser(assembler);
-      
+      final double gb = 1000000000;
+      final double fraction = (source.length() * iterations) / gb;
+
       parser.parse(source);
       parser.parse(source);
       
@@ -111,7 +119,7 @@ public class JsonParserTest extends PerfTestCase {
             }
          }
       };
-      timeRun(name + " iterations: " + iterations, task);
+      timeRun(name + " iterations (" + format.format(fraction) + " GB): " + iterations, task);
    }
    
    
