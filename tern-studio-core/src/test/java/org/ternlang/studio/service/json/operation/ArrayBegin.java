@@ -1,6 +1,6 @@
 package org.ternlang.studio.service.json.operation;
 
-import org.ternlang.studio.service.json.handler.AttributeHandler;
+import org.ternlang.studio.service.json.document.DocumentHandler;
 
 public class ArrayBegin extends Operation {
    
@@ -13,7 +13,7 @@ public class ArrayBegin extends Operation {
    }
 
    @Override
-   public void execute(AttributeHandler handler) {
+   public void execute(DocumentHandler handler) {
       handler.onArrayBegin(name);
       
       if(pool != null) {

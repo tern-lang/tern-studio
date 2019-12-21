@@ -1,6 +1,5 @@
-package org.ternlang.studio.service.json;
+package org.ternlang.studio.service.json.document;
 
-import org.ternlang.studio.service.json.handler.AttributeHandler;
 import org.ternlang.studio.service.json.operation.ArrayBegin;
 import org.ternlang.studio.service.json.operation.ArrayEnd;
 import org.ternlang.studio.service.json.operation.Attribute;
@@ -9,15 +8,15 @@ import org.ternlang.studio.service.json.operation.BlockEnd;
 import org.ternlang.studio.service.json.operation.OperationAllocator;
 import org.ternlang.studio.service.json.operation.Type;
 
-public class DirectAssembler implements JsonAssembler {
+public class DirectAssembler implements DocumentAssembler {
 
-   private final AttributeHandler handler;
    private final StaticAllocator allocator;
-   private final JsonState state;
+   private final DocumentHandler handler;
+   private final DocumentState state;
    
-   public DirectAssembler(AttributeHandler handler) {
+   public DirectAssembler(DocumentHandler handler) {
       this.allocator = new StaticAllocator();
-      this.state = new JsonState();
+      this.state = new DocumentState();
       this.handler = handler;
    }
    

@@ -1,16 +1,20 @@
 package org.ternlang.studio.service.json.object;
 
-import java.lang.reflect.Constructor;
-
 import org.ternlang.common.Cache;
 import org.ternlang.common.CopyOnWriteCache;
 
 public class ObjectMapper {
    
    private final Cache<Class, ObjectReader> builders;
+   private final ValueConverter converter;
+   private final ObjectBuilder builder;
+   private final TypeIndexer indexer;
    
    public ObjectMapper() {
       this.builders = new CopyOnWriteCache<Class, ObjectReader>();
+      this.converter = new ValueConverter();
+      this.builder = new ObjectBuilder();
+      this.indexer = new TypeIndexer(converter, builder);
    }
    
    public ObjectReader resolve(Class type) throws Exception {   
@@ -24,11 +28,8 @@ public class ObjectMapper {
    }
    
    private ObjectReader create(Class type) throws Exception {   
-      Constructor constructor = type.getDeclaredConstructor();
-      constructor.setAccessible(true);
-      TypeIndexer indexer = new TypeIndexer(constructor);
-      FieldTree tree = indexer.index();
-      return new ObjectReader(tree);
+      FieldElement tree = indexer.index(type);
+      return new ObjectReader(tree, converter, builder);
    }
 
 }

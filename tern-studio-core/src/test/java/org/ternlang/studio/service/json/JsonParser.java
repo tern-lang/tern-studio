@@ -1,12 +1,13 @@
 package org.ternlang.studio.service.json;
 
 import org.ternlang.parse.StringParser;
+import org.ternlang.studio.service.json.document.DocumentAssembler;
 
 public class JsonParser extends StringParser {   
    
-   private final JsonAssembler assembler;
+   private final DocumentAssembler assembler;
    
-   public JsonParser(JsonAssembler assembler) {
+   public JsonParser(DocumentAssembler assembler) {
       this.assembler = assembler;     
    }
    

@@ -1,83 +1,40 @@
 package org.ternlang.studio.service.json.object;
 
-import org.ternlang.studio.service.json.handler.BooleanValue;
-import org.ternlang.studio.service.json.handler.DecimalValue;
-import org.ternlang.studio.service.json.handler.Document.Attribute;
-import org.ternlang.studio.service.json.handler.Document.Element;
-import org.ternlang.studio.service.json.handler.IntegerValue;
-import org.ternlang.studio.service.json.handler.NullValue;
-import org.ternlang.studio.service.json.handler.TextValue;
+import java.lang.reflect.Field;
 
-public class FieldAttribute implements Attribute {
+public class FieldAttribute  {
 
-   private TokenConverter converter;
-   private FieldAccessor accessor;
-   private Object object;
+   private final Field field;
+   private final String name;
+   private final Class type;
    
-   public FieldAttribute(TokenConverter converter) {
-      this.converter = converter;
+   public FieldAttribute(Field field){
+      this.type = field.getType();
+      this.name = type.getSimpleName();
+      this.field = field;
    }
    
-   public FieldAttribute with(FieldAccessor accessor, Object object) {
-      this.accessor = accessor;
-      this.object = object;
-      return this;
+   public String getName() {
+      return name;
+   }
+   
+   public Class getType() {
+      return type;
+   }
+   
+   public Object getValue(Object source) {
+      try {
+         return field.get(source);
+      } catch(Exception e) {
+         throw new IllegalStateException("Illegal access to " + field, e);
+      }
    }
 
-   @Override
-   public void set(TextValue value) {
-      Class type = accessor.getType();
-      CharSequence token = value.toToken();
-      Object converted = converter.convert(type, token);
-      
-      accessor.setValue(object, converted);
-   }
-
-   @Override
-   public void set(IntegerValue value) {
-      Class type = accessor.getType();
-      CharSequence token = value.toToken();
-      Object converted = converter.convert(type, token);
-      
-      accessor.setValue(object, converted);
-   }
-
-   @Override
-   public void set(DecimalValue value) {
-      Class type = accessor.getType();
-      CharSequence token = value.toToken();
-      Object converted = converter.convert(type, token);
-      
-      accessor.setValue(object, converted);
-   }
-
-   @Override
-   public void set(BooleanValue value) {
-      Class type = accessor.getType();
-      CharSequence token = value.toToken();
-      Object converted = converter.convert(type, token);
-      
-      accessor.setValue(object, converted);
-   }
-
-   @Override
-   public void set(NullValue value) {
-      Class type = accessor.getType();
-      CharSequence token = value.toToken();
-      Object converted = converter.convert(type, token);
-      
-      accessor.setValue(object, converted);
-   }
-
-   @Override
-   public void set(Element element) {
-      Object value = element.get();
-      accessor.setValue(object, value);
-   }
-
-   @Override
-   public void reset() {
-      object = null;
-      accessor = null;
+   public void setValue(Object source, Object value) {
+      try {
+         field.set(source, value);
+      } catch(Exception e) {
+         throw new IllegalStateException("Illegal access to " + field, e);
+      }
    }
 }

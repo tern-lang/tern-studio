@@ -1,6 +1,6 @@
-package org.ternlang.studio.service.json;
+package org.ternlang.studio.service.json.document;
 
-public interface JsonAssembler {
+public interface DocumentAssembler {
    void begin();
    void name(char[] source, int off, int length);
    void text(char[] source, int off, int length);

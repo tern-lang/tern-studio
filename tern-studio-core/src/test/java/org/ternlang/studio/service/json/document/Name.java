@@ -1,4 +1,4 @@
-package org.ternlang.studio.service.json.handler;
+package org.ternlang.studio.service.json.document;
 
 public abstract class Name {
 

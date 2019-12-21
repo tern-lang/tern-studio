@@ -1,8 +1,8 @@
 package org.ternlang.studio.service.json.operation;
 
-import org.ternlang.studio.service.json.common.Slice;
-import org.ternlang.studio.service.json.handler.AttributeHandler;
-import org.ternlang.studio.service.json.handler.Name;
+import org.ternlang.studio.service.json.document.DocumentHandler;
+import org.ternlang.studio.service.json.document.Name;
+import org.ternlang.studio.service.json.document.Slice;
 
 public class BlockBegin extends Operation {
    
@@ -17,7 +17,7 @@ public class BlockBegin extends Operation {
    }
 
    @Override
-   public void execute(AttributeHandler handler) {
+   public void execute(DocumentHandler handler) {
       if(!type.isEmpty()) {
          handler.onBlockBegin(name, type);
       } else {

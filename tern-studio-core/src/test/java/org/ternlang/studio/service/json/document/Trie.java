@@ -1,4 +1,4 @@
-package org.ternlang.studio.service.json.common;
+package org.ternlang.studio.service.json.document;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -99,12 +99,16 @@ public class Trie<T> implements Iterable<T> {
          int length = text.length();
          
          if(from < length) {               
-            char next = text.charAt(from);
+            char ch = text.charAt(from);
             
-            if(next > 255) {
-               throw new IllegalArgumentException("Value is not a valid identifier");
+            if(ch > 255) {
+               throw new IllegalArgumentException("Value '" + ch + "' is not a valid identifier");
             }
-            int index = POSITION[next];
+            int index = POSITION[ch];
+            
+            if(index == -1) {
+               throw new IllegalArgumentException("Value '" + ch + "' is not a valid identifier"); 
+            }
             Trie.Node node = (Trie.Node)children[index];
             
             if(node == null) {

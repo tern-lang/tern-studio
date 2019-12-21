@@ -1,7 +1,7 @@
 package org.ternlang.studio.service.json.operation;
 
-import org.ternlang.studio.service.json.common.Slice;
-import org.ternlang.studio.service.json.handler.Name;
+import org.ternlang.studio.service.json.document.Name;
+import org.ternlang.studio.service.json.document.Slice;
 
 public class Type extends Name implements AutoCloseable {
 

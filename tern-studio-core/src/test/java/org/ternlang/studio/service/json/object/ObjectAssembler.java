@@ -1,10 +1,10 @@
 package org.ternlang.studio.service.json.object;
 
 import org.ternlang.common.ArrayStack;
-import org.ternlang.studio.service.json.JsonAssembler;
-import org.ternlang.studio.service.json.JsonState;
-import org.ternlang.studio.service.json.common.Slice;
-import org.ternlang.studio.service.json.handler.AttributeHandler;
+import org.ternlang.studio.service.json.document.DocumentAssembler;
+import org.ternlang.studio.service.json.document.DocumentHandler;
+import org.ternlang.studio.service.json.document.DocumentState;
+import org.ternlang.studio.service.json.document.Slice;
 import org.ternlang.studio.service.json.operation.ArrayBegin;
 import org.ternlang.studio.service.json.operation.ArrayEnd;
 import org.ternlang.studio.service.json.operation.Attribute;
@@ -14,22 +14,22 @@ import org.ternlang.studio.service.json.operation.Operation;
 import org.ternlang.studio.service.json.operation.OperationAllocator;
 import org.ternlang.studio.service.json.operation.Type;
 
-public class TypeAssembler implements JsonAssembler {
+public class ObjectAssembler implements DocumentAssembler {
    
-   private final AttributeHandler handler;
+   private final DocumentHandler handler;
    private final OperationAllocator allocator;
    private final ArrayStack<Operation> active;
    private final ArrayStack<Operation> ready;
    private final ArrayStack<Type> blocks;
-   private final JsonState name;
+   private final DocumentState name;
    private final char[] type;
    
-   public TypeAssembler(AttributeHandler handler, char[] type) {
+   public ObjectAssembler(DocumentHandler handler, char[] type) {
       this.active = new ArrayStack<Operation>();
       this.ready = new ArrayStack<Operation>();
       this.allocator = new OperationAllocator();
       this.blocks= new ArrayStack<Type>();
-      this.name = new JsonState();
+      this.name = new DocumentState();
       this.handler = handler;
       this.type = type;
    }

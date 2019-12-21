@@ -2,13 +2,11 @@ package org.ternlang.studio.service.json;
 
 import java.util.function.Consumer;
 
-import org.ternlang.studio.service.json.handler.AttributeHandler;
-import org.ternlang.studio.service.json.handler.BooleanValue;
-import org.ternlang.studio.service.json.handler.DecimalValue;
-import org.ternlang.studio.service.json.handler.IntegerValue;
-import org.ternlang.studio.service.json.handler.Name;
-import org.ternlang.studio.service.json.handler.NullValue;
-import org.ternlang.studio.service.json.handler.TextValue;
+import org.ternlang.studio.service.json.document.DirectAssembler;
+import org.ternlang.studio.service.json.document.DocumentAssembler;
+import org.ternlang.studio.service.json.document.DocumentHandler;
+import org.ternlang.studio.service.json.document.Name;
+import org.ternlang.studio.service.json.document.Value;
 
 public class JsonFormatter {
    
@@ -28,7 +26,7 @@ public class JsonFormatter {
    
    private final StringBuilder builder;
    private final JsonHandler handler;
-   private final JsonAssembler assembler;
+   private final DocumentAssembler assembler;
    private final JsonParser parser;
    
    public JsonFormatter() {
@@ -47,7 +45,7 @@ public class JsonFormatter {
       consumer.accept(builder);
    }
    
-   private static class JsonHandler implements AttributeHandler {
+   private static class JsonHandler implements DocumentHandler {
    
       private StringBuilder builder;
       private String value;
@@ -62,38 +60,9 @@ public class JsonFormatter {
          indent = 0;
          builder.setLength(0);
       }
-      
+
       @Override
-      public void onAttribute(Name name, TextValue value) {
-         CharSequence token = value.toToken();
-         onAttribute(name, token);
-      }
-      
-      @Override
-      public void onAttribute(Name name, IntegerValue value) {
-         CharSequence token = value.toToken();
-         onAttribute(name, token);
-      }
-      
-      @Override
-      public void onAttribute(Name name, DecimalValue value) {
-         CharSequence token = value.toToken();
-         onAttribute(name, token);
-      }
-      
-      @Override
-      public void onAttribute(Name name, BooleanValue value) {
-         CharSequence token = value.toToken();
-         onAttribute(name, token);
-      }
-      
-      @Override
-      public void onAttribute(Name name, NullValue value) {
-         CharSequence token = value.toToken();
-         onAttribute(name, token);
-      }
- 
-      private void onAttribute(Name name, CharSequence value) {
+      public void onAttribute(Name name, Value value) {
          builder.append(INDENTS[indent]);
          
          if(!name.isEmpty()) {    

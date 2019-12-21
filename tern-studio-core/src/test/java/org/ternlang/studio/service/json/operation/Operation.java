@@ -1,8 +1,8 @@
 package org.ternlang.studio.service.json.operation;
 
-import org.ternlang.studio.service.json.common.Slice;
-import org.ternlang.studio.service.json.handler.AttributeHandler;
-import org.ternlang.studio.service.json.handler.Name;
+import org.ternlang.studio.service.json.document.DocumentHandler;
+import org.ternlang.studio.service.json.document.Name;
+import org.ternlang.studio.service.json.document.Slice;
 
 public abstract class Operation {
 
@@ -14,7 +14,7 @@ public abstract class Operation {
       return false;
    }
    
-   public abstract void execute(AttributeHandler handler);
+   public abstract void execute(DocumentHandler handler);
    public abstract void reset();
 
    

@@ -1,10 +1,14 @@
-package org.ternlang.studio.service.json.common;
+package org.ternlang.studio.service.json.document;
 
 public class Slice implements CharSequence {
 
    private char[] source;
    private int off;
    private int length;
+   
+   public Slice() {
+      super();
+   }
    
    public Slice with(char[] source, int off, int length) {
       this.source = source;

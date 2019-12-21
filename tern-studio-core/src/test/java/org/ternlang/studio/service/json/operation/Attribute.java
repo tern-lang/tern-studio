@@ -1,35 +1,31 @@
 package org.ternlang.studio.service.json.operation;
 
-import org.ternlang.studio.service.json.common.Slice;
-import org.ternlang.studio.service.json.handler.AttributeHandler;
-import org.ternlang.studio.service.json.handler.BooleanValue;
-import org.ternlang.studio.service.json.handler.DecimalValue;
-import org.ternlang.studio.service.json.handler.IntegerValue;
-import org.ternlang.studio.service.json.handler.NullValue;
-import org.ternlang.studio.service.json.handler.TextValue;
+import org.ternlang.studio.service.json.document.DocumentHandler;
+import org.ternlang.studio.service.json.document.Slice;
+import org.ternlang.studio.service.json.document.Value;
 
 public class Attribute extends Operation {
    
    private final OperationPool pool;
-   private final DecimalSlice decimal;
-   private final IntegerSlice integer;
-   private final BooleanSlice bool;
-   private final TextSlice text;
+   private final DecimalValue decimal;
+   private final IntegerValue integer;
+   private final BooleanValue bool;
+   private final TextValue text;
    private final NameSlice name;
-   private final NullSlice none;
+   private final NullValue none;
    
    public Attribute(OperationPool pool) {
-      this.integer = new IntegerSlice();
-      this.decimal = new DecimalSlice();
-      this.bool = new BooleanSlice();
-      this.text = new TextSlice();
+      this.integer = new IntegerValue();
+      this.decimal = new DecimalValue();
+      this.bool = new BooleanValue();
+      this.text = new TextValue();
       this.name = new NameSlice();
-      this.none = new NullSlice();
+      this.none = new NullValue();
       this.pool = pool;
    }
 
    @Override
-   public void execute(AttributeHandler handler) {
+   public void execute(DocumentHandler handler) {
       if(!text.isEmpty()) {
          handler.onAttribute(name, text);
       } else if(!bool.isEmpty()) {
@@ -80,24 +76,30 @@ public class Attribute extends Operation {
       none.reset();
    }
 
-   private static class TextSlice implements TextValue {
+   private static class TextValue extends Value {
       
-      private final Slice slice = new Slice();    
+      private final Slice slice;    
       
-      @Override
-      public CharSequence toToken() {
-         return slice;
+      public TextValue() {
+         this.slice = new Slice();
       }
       
-      public TextSlice with(char[] source, int off, int length) {
+      public TextValue with(char[] source, int off, int length) {
          slice.with(source, off, length);
          return this;
       }
       
+      @Override
+      public CharSequence toText() {
+         return slice;
+      }
+      
+      @Override
       public boolean isEmpty() {
          return slice.length() <= 0;
       }
       
+      @Override
       public void reset() {
          slice.reset();
       }
@@ -108,19 +110,23 @@ public class Attribute extends Operation {
       }
    }
    
-   private static class BooleanSlice implements BooleanValue {
+   private static class BooleanValue extends Value {
       
-      private final Slice slice = new Slice(); 
+      private final Slice slice; 
       private boolean value;
       
-      @Override
-      public CharSequence toToken() {
-         return slice;
+      public BooleanValue() {
+         this.slice = new Slice();
       }
-
-      public BooleanSlice with(char[] source, int off, int length) {
+      
+      public BooleanValue with(char[] source, int off, int length) {
          slice.with(source, off, length);
          return this;
+      }
+      
+      @Override
+      public CharSequence toText() {
+         return slice;
       }
 
       @Override
@@ -128,10 +134,12 @@ public class Attribute extends Operation {
          return value;
       }
       
+      @Override
       public boolean isEmpty() {
          return slice.length() <= 0;
       }
       
+      @Override
       public void reset() {
          slice.reset();
          value = false;
@@ -143,19 +151,23 @@ public class Attribute extends Operation {
       }
    }
    
-   private static class DecimalSlice implements DecimalValue {
+   private static class DecimalValue extends Value {
       
-      private final Slice slice = new Slice(); 
+      private final Slice slice; 
       private double value;
       
-      @Override
-      public CharSequence toToken() {
-         return slice;
+      public DecimalValue() {
+         this.slice = new Slice();
       }
-     
-      public DecimalSlice with(char[] source, int off, int length) {
+      
+      public DecimalValue with(char[] source, int off, int length) {
          slice.with(source, off, length);
          return this;
+      }
+      
+      @Override
+      public CharSequence toText() {
+         return slice;
       }
 
       @Override
@@ -168,10 +180,12 @@ public class Attribute extends Operation {
          return (float)value;
       }
       
+      @Override
       public boolean isEmpty() {
          return slice.length() <= 0;
       }
       
+      @Override
       public void reset() {
          slice.reset();
          value = 0;
@@ -183,19 +197,23 @@ public class Attribute extends Operation {
       }
    }
    
-   private static class IntegerSlice implements IntegerValue {
+   private static class IntegerValue extends Value {
       
-      private final Slice slice = new Slice(); 
+      private final Slice slice; 
       private long value;
       
-      @Override
-      public CharSequence toToken() {
-         return slice;
+      public IntegerValue() {
+         this.slice = new Slice();
       }
 
-      public IntegerSlice with(char[] source, int off, int length) {
+      public IntegerValue with(char[] source, int off, int length) {
          slice.with(source, off, length);
          return this;
+      }
+      
+      @Override
+      public CharSequence toText() {
+         return slice;
       }
 
       @Override
@@ -208,10 +226,12 @@ public class Attribute extends Operation {
          return (int)value;
       }
       
+      @Override
       public boolean isEmpty() {
          return slice.length() <= 0;
       }
       
+      @Override
       public void reset() {
          slice.reset();
          value = 0;
@@ -223,24 +243,30 @@ public class Attribute extends Operation {
       }
    }
    
-   private static class NullSlice implements NullValue {
+   private static class NullValue extends Value {
       
-      private final Slice slice = new Slice();    
+      private final Slice slice;    
       
-      @Override
-      public CharSequence toToken() {
-         return slice;
+      public NullValue() {
+         this.slice = new Slice();
       }
       
-      public NullSlice with(char[] source, int off, int length) {
+      public NullValue with(char[] source, int off, int length) {
          slice.with(source, off, length);
          return this;
       }
       
+      @Override
+      public CharSequence toText() {
+         return slice;
+      }
+      
+      @Override
       public boolean isEmpty() {
          return slice.length() <= 0;
       }
       
+      @Override
       public void reset() {
          slice.reset();
       }

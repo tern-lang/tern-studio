@@ -1,50 +1,38 @@
 package org.ternlang.studio.service.json.object;
 
-import java.io.File;
-import java.net.URI;
-import java.nio.file.Paths;
+import org.ternlang.studio.service.json.document.Value;
 
-class TokenConverter {   
+public class ValueConverter {   
 
-   public Object convert(Class type, CharSequence token) {
-      String value = token.toString();
+   public Object convert(Class type, Value value) {
       Class actual = convert(type);
 
       if(actual == String.class) {
-         return value;
+         return value.toString();
       }
       if(actual == Integer.class) {
-         return Integer.parseInt(value);
+         return value.toInteger();
       }
       if(actual == Double.class) {
-         return Double.parseDouble(value);
+         return value.toDouble();
       }
       if(actual == Float.class) {
-         return Float.parseFloat(value);
+         return value.toFloat();
       }
       if(actual == Boolean.class) {
-         return Boolean.parseBoolean(value);
+         return value.toBoolean();
       }
       if(actual == Byte.class) {
-         return Byte.parseByte(value);
+         return value.toBoolean();
       }
       if(actual == Short.class) {
-         return Short.parseShort(value);
+         return value.toShort();
       }
       if(actual == Long.class) {
-         return Long.parseLong(value);
+         return value.toLong();
       }
       if(actual == Character.class) {
-         return value.charAt(0);
-      }
-      if(actual == File.class) {
-         return Paths.get(value).toFile();
-      }
-      if(actual == URI.class) {
-         return URI.create(value);
-      }
-      if(Enum.class.isAssignableFrom(type)) {
-         return Enum.valueOf(type, value);
+         return value.toCharacter();
       }
       return value;
    }
@@ -77,18 +65,6 @@ class TokenConverter {
          return true;
       }
       if(actual == Character.class) {
-         return true;
-      }
-      if(actual == File.class) {
-         return true;
-      }
-      if(actual == URI.class) {
-         return true;
-      }
-      if(actual == Class.class) {
-         return true;
-      }
-      if(Enum.class.isAssignableFrom(type)) {
          return true;
       }
       return false;

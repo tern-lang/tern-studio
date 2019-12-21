@@ -3,25 +3,21 @@ package org.ternlang.studio.service.json.object;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.ternlang.common.ArrayStack;
-import org.ternlang.studio.service.json.DirectAssembler;
-import org.ternlang.studio.service.json.JsonAssembler;
 import org.ternlang.studio.service.json.JsonParser;
-import org.ternlang.studio.service.json.handler.AttributeHandler;
-import org.ternlang.studio.service.json.handler.BooleanValue;
-import org.ternlang.studio.service.json.handler.DecimalValue;
-import org.ternlang.studio.service.json.handler.IntegerValue;
-import org.ternlang.studio.service.json.handler.Name;
-import org.ternlang.studio.service.json.handler.NullValue;
-import org.ternlang.studio.service.json.handler.TextValue;
+import org.ternlang.studio.service.json.document.DirectAssembler;
+import org.ternlang.studio.service.json.document.DocumentAssembler;
+import org.ternlang.studio.service.json.document.DocumentHandler;
+import org.ternlang.studio.service.json.document.Name;
+import org.ternlang.studio.service.json.document.Value;
 
 public class ObjectReader {
    
    private final ObjectHandler handler;
-   private final JsonAssembler assembler;
+   private final DocumentAssembler assembler;
    private final JsonParser parser;
    
-   public ObjectReader(FieldTree tree) {
-      this.handler = new ObjectHandler(tree);
+   public ObjectReader(FieldElement tree, ValueConverter converter, ObjectBuilder builder) {
+      this.handler = new ObjectHandler(tree, converter, builder);
       this.assembler = new DirectAssembler(handler);
       this.parser = new JsonParser(assembler);
    }
@@ -32,17 +28,21 @@ public class ObjectReader {
    }
    
    
-   private final class ObjectHandler implements AttributeHandler {
+   private final class ObjectHandler implements DocumentHandler {
       
       private final AtomicReference<Object> reference;
-      private final ArrayStack<FieldTree> stack;
+      private final ArrayStack<FieldElement> stack;
       private final ArrayStack<Object> objects;
-      private final FieldTree root;
+      private final ValueConverter converter;
+      private final ObjectBuilder builder;
+      private final FieldElement root;
       
-      public ObjectHandler(FieldTree root) {
+      public ObjectHandler(FieldElement root, ValueConverter converter, ObjectBuilder builder) {
          this.reference = new AtomicReference<Object>();
-         this.stack = new ArrayStack<FieldTree>();
+         this.stack = new ArrayStack<FieldElement>();
          this.objects = new ArrayStack<Object>();
+         this.converter = converter;
+         this.builder = builder;
          this.root = root;
       }
       
@@ -57,126 +57,75 @@ public class ObjectReader {
       }
       
       @Override
-      public void onAttribute(Name name, TextValue value) {
+      public void onAttribute(Name name, Value value) {
          if(!name.isEmpty()) {
             CharSequence token = name.toToken();
-            FieldTree top = stack.peek();
+            FieldElement top = stack.peek();
             Object object = objects.peek();
             
             if(top == null) {
                throw new IllegalStateException("Attribute '" + name + "' has not block");
             }
-            FieldElement field = top.getAttribute(token);
+            FieldAttribute field = top.attribute(token);
             
             if(field == null) {
                throw new IllegalStateException("Could not find '" + name + "'");
             }
-            field.set(object, value);
+            Class type = field.getType();
+            Object converted = converter.convert(type, value);
+           
+            field.setValue(object, converted);
          }
       }
       
       @Override
-      public void onAttribute(Name name, IntegerValue value) {
+      public void onBlockBegin(Name name, Name override) {
+         CharSequence type = override.toToken();
+         Object value = builder.create(type);
+         
          if(!name.isEmpty()) {
             CharSequence token = name.toToken();
-            FieldTree top = stack.peek();
+            FieldElement top = stack.peek();
             Object object = objects.peek();
             
             if(top == null) {
-               throw new IllegalStateException("Attribute '" + name + "' has not block");
+               throw new IllegalStateException("Illegal JSON ending");
             }
-            FieldElement field = top.getAttribute(token);
+            FieldAttribute field = top.attribute(token);
+            FieldElement child = top.element(token);
             
-            if(field == null) {
-               throw new IllegalStateException("Could not find '" + name + "'");
-            }
-            field.set(object, value);
+            objects.push(value);
+            stack.push(child);
+            field.setValue(object, value);
+         } else {
+            objects.push(value);
+            stack.push(root);
          }
-      }
-      
-      @Override
-      public void onAttribute(Name name, DecimalValue value) {
-         if(!name.isEmpty()) {
-            CharSequence token = name.toToken();
-            FieldTree top = stack.peek();
-            Object object = objects.peek();
-            
-            if(top == null) {
-               throw new IllegalStateException("Attribute '" + name + "' has not block");
-            }
-            FieldElement field = top.getAttribute(token);
-            
-            if(field == null) {
-               throw new IllegalStateException("Could not find '" + name + "'");
-            }
-            field.set(object, value);
-         }
-      }
-      
-      @Override
-      public void onAttribute(Name name, BooleanValue value) {
-         if(!name.isEmpty()) {
-            CharSequence token = name.toToken();
-            FieldTree top = stack.peek();
-            Object object = objects.peek();
-            
-            if(top == null) {
-               throw new IllegalStateException("Attribute '" + name + "' has not block");
-            }
-            FieldElement field = top.getAttribute(token);
-            
-            if(field == null) {
-               throw new IllegalStateException("Could not find '" + name + "'");
-            }
-            field.set(object, value);
-         }
-      }
-      
-      @Override
-      public void onAttribute(Name name, NullValue value) {
-         if(!name.isEmpty()) {
-            CharSequence token = name.toToken();
-            FieldTree top = stack.peek();
-            Object object = objects.peek();
-            
-            if(top == null) {
-               throw new IllegalStateException("Attribute '" + name + "' has not block");
-            }
-            FieldElement field = top.getAttribute(token);
-            
-            if(field == null) {
-               throw new IllegalStateException("Could not find '" + name + "'");
-            }
-            field.set(object, value);
-         }
-      }    
-      
-      @Override
-      public void onBlockBegin(Name name, Name type) {
-         onBlockBegin(name);
       }
       
       @Override
       public void onBlockBegin(Name name) {
          if(!name.isEmpty()) {
             CharSequence token = name.toToken();
-            FieldTree top = stack.peek();
+            FieldElement top = stack.peek();
             Object object = objects.peek();
             
             if(top == null) {
                throw new IllegalStateException("Illegal JSON ending");
             }
-            FieldElement field = top.getAttribute(token);
-            FieldTree child = top.getChild(token);
-            Object value = child.getInstance();
+            FieldAttribute field = top.attribute(token);
+            String type = field.getName();
+            FieldElement child = top.element(type);
+            Object value = builder.create(type);
             
             objects.push(value);
             stack.push(child);
             field.setValue(object, value);
          } else {
-            Object object = root.getInstance();
+            String type = root.getType();
+            Object value = builder.create(type);
             
-            objects.push(object);
+            objects.push(value);
             stack.push(root);
          }
       }

@@ -1,16 +1,12 @@
 package org.ternlang.studio.service.json.test;
 
-import org.ternlang.studio.service.json.DirectAssembler;
-import org.ternlang.studio.service.json.JsonAssembler;
 import org.ternlang.studio.service.json.JsonParser;
-import org.ternlang.studio.service.json.handler.AttributeHandler;
-import org.ternlang.studio.service.json.handler.BooleanValue;
-import org.ternlang.studio.service.json.handler.DecimalValue;
-import org.ternlang.studio.service.json.handler.IntegerValue;
-import org.ternlang.studio.service.json.handler.Name;
-import org.ternlang.studio.service.json.handler.NullValue;
-import org.ternlang.studio.service.json.handler.TextValue;
-import org.ternlang.studio.service.json.object.TypeAssembler;
+import org.ternlang.studio.service.json.document.DirectAssembler;
+import org.ternlang.studio.service.json.document.DocumentAssembler;
+import org.ternlang.studio.service.json.document.DocumentHandler;
+import org.ternlang.studio.service.json.document.Name;
+import org.ternlang.studio.service.json.document.Value;
+import org.ternlang.studio.service.json.object.ObjectAssembler;
 
 public class JsonParserTest extends PerfTestCase {
 
@@ -53,7 +49,7 @@ public class JsonParserTest extends PerfTestCase {
    "}\n";         
    
    public void testParser() throws Exception {
-      JsonAssembler assembler = new DirectAssembler(HANDLER);
+      DocumentAssembler assembler = new DirectAssembler(HANDLER);
       JsonParser parser = new JsonParser(assembler);
       parser.parse(SOURCE_SMALL);   
    }
@@ -69,8 +65,8 @@ public class JsonParserTest extends PerfTestCase {
       System.err.println(source);
       
       final int iterations = 1000000;
-      final AttributeHandler handler = new BlankHandler();   
-      final JsonAssembler assembler = new DirectAssembler(handler);
+      final DocumentHandler handler = new BlankHandler();   
+      final DocumentAssembler assembler = new DirectAssembler(handler);
       final JsonParser parser = new JsonParser(assembler);
       
       parser.parse(source);
@@ -96,9 +92,9 @@ public class JsonParserTest extends PerfTestCase {
       System.err.println(source);
       
       final char[] token = type.toCharArray();
-      final int iterations = 5000000;
-      final AttributeHandler handler = new BlankHandler();   
-      final JsonAssembler assembler = new TypeAssembler(handler, token);
+      final int iterations = 1000000;
+      final DocumentHandler handler = new BlankHandler();   
+      final DocumentAssembler assembler = new ObjectAssembler(handler, token);
       final JsonParser parser = new JsonParser(assembler);
       
       parser.parse(source);
@@ -120,25 +116,13 @@ public class JsonParserTest extends PerfTestCase {
    }
    
    
-   private static class BlankHandler implements AttributeHandler {
+   private static class BlankHandler implements DocumentHandler {
 
       @Override
       public void onBegin() {}
 
       @Override
-      public void onAttribute(Name name, TextValue value) {}
-
-      @Override
-      public void onAttribute(Name name, IntegerValue value) {}
-
-      @Override
-      public void onAttribute(Name name, DecimalValue value) {}
-
-      @Override
-      public void onAttribute(Name name, BooleanValue value) {}
-
-      @Override
-      public void onAttribute(Name name, NullValue value) {}
+      public void onAttribute(Name name, Value value) {}
 
       @Override
       public void onBlockBegin(Name name) {}
@@ -160,46 +144,10 @@ public class JsonParserTest extends PerfTestCase {
       
    }
    
-   private static final AttributeHandler HANDLER = new BlankHandler() {
+   private static final DocumentHandler HANDLER = new BlankHandler() {
       
       @Override
-      public void onAttribute(Name name, TextValue value) {
-         if (!name.isEmpty()) {
-            System.err.println(name + "=" + value);
-         } else {
-            System.err.println(value);
-         }
-      }
-      
-      @Override
-      public void onAttribute(Name name, IntegerValue value) {
-         if (!name.isEmpty()) {
-            System.err.println(name + "=" + value);
-         } else {
-            System.err.println(value);
-         }
-      }
-      
-      @Override
-      public void onAttribute(Name name, DecimalValue value) {
-         if (!name.isEmpty()) {
-            System.err.println(name + "=" + value);
-         } else {
-            System.err.println(value);
-         }
-      }
-      
-      @Override
-      public void onAttribute(Name name, BooleanValue value) {
-         if (!name.isEmpty()) {
-            System.err.println(name + "=" + value);
-         } else {
-            System.err.println(value);
-         }
-      }
-      
-      @Override
-      public void onAttribute(Name name, NullValue value) {
+      public void onAttribute(Name name, Value value) {
          if (!name.isEmpty()) {
             System.err.println(name + "=" + value);
          } else {

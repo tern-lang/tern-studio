@@ -1,17 +1,17 @@
-package org.ternlang.studio.service.json;
+package org.ternlang.studio.service.json.document;
 
 import org.ternlang.studio.service.json.operation.ArrayBegin;
 import org.ternlang.studio.service.json.operation.Attribute;
 import org.ternlang.studio.service.json.operation.BlockBegin;
 import org.ternlang.studio.service.json.operation.OperationAllocator;
 
-public class JsonState {
+public class DocumentState {
    
    private char[] source;
    private int off;
    private int length;
    
-   public JsonState with(char[] source, int off, int length) {
+   public DocumentState with(char[] source, int off, int length) {
       this.source = source;
       this.off = off;
       this.length = length;
