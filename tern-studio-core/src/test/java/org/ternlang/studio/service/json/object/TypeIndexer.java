@@ -27,7 +27,7 @@ public class TypeIndexer {
       FieldElement tree = index.match(name);
       
       if(tree == null) {
-         FieldElement create = new FieldElement(this, name);
+         FieldElement create = new FieldElement(name);
          Set<Class> types = new HashSet<Class>();
          
          builder.index(type);

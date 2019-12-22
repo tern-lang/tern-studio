@@ -47,7 +47,7 @@ public class ObjectHandler implements DocumentHandler {
          if(top == null) {
             throw new IllegalStateException("Attribute '" + name + "' has not block");
          }
-         FieldAttribute field = top.attribute(token);
+         FieldAttribute field = top.match(token);
          
          if(field != null) {
             Class type = field.getType();
@@ -70,7 +70,7 @@ public class ObjectHandler implements DocumentHandler {
          if(top == null) {
             throw new IllegalStateException("Illegal JSON ending");
          }
-         FieldAttribute field = top.attribute(token);
+         FieldAttribute field = top.match(token);
 
          if(field != null) {
             String type = field.getName();
@@ -102,7 +102,7 @@ public class ObjectHandler implements DocumentHandler {
          if(top == null) {
             throw new IllegalStateException("Illegal JSON ending");
          }
-         FieldAttribute field = top.attribute(token);
+         FieldAttribute field = top.match(token);
 
          if(field != null) {
             FieldElement element = indexer.match(type);

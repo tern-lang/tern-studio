@@ -7,17 +7,11 @@ import org.ternlang.studio.service.json.document.TextTrie;
 public class FieldElement {
    
    private final TextTrie<FieldAttribute> attributes;
-   private final TypeIndexer indexer;
    private final String type;
    
-   public FieldElement(TypeIndexer indexer, String type) {
+   public FieldElement(String type) {
       this.attributes = new TextTrie<FieldAttribute>();
-      this.indexer = indexer;
       this.type = type;
-   }
-
-   public String getType() {
-      return type;
    }
    
    public FieldAttribute index(CharSequence name, Field field) {
@@ -32,7 +26,11 @@ public class FieldElement {
       return accessor;
    }
    
-   public FieldAttribute attribute(CharSequence name) {
+   public FieldAttribute match(CharSequence name) {
       return attributes.match(name);
+   }
+
+   public String type() {
+      return type;
    }
 }
