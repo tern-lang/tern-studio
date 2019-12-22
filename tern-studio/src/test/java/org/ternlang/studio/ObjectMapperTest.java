@@ -1,13 +1,13 @@
-package org.ternlang.studio.common.json;
+package org.ternlang.studio;
 
 import java.text.DecimalFormat;
 
-import org.ternlang.studio.common.json.entity.EntityReader;
 import org.ternlang.studio.common.json.object.ObjectMapper;
 import org.ternlang.studio.common.json.object.ObjectReader;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.google.gson.Gson;
 
 public class ObjectMapperTest extends PerfTestCase {
    
@@ -26,6 +26,12 @@ public class ObjectMapperTest extends PerfTestCase {
    private static class Address {
       private String street;
       private String city;
+      private PostCode postCode;
+   }
+   
+   public static class PostCode {
+      private String prefix;
+      private String suffix;
    }
 
    private static final String SOURCE = 
@@ -40,7 +46,11 @@ public class ObjectMapperTest extends PerfTestCase {
    "   ],\n" +
    "   \"address\": {\n" +
    "      \"street\": \"Flat 22,\\nWilliam St\",\n" +
-   "      \"city\": \"Limerick\"\n" +
+   "      \"city\": \"Limerick\",\n" +
+   "      \"postCode\": {\n" +
+   "         \"prefix\": \"IVTTYYU\",\n" +   
+   "         \"suffix\": \"EXCVITTX\"\n" +
+   "       }\n" +
    "   },\n" +
    "   \"type\": \"Example\",\n"+
    "   \"ready\": true\n"+
@@ -69,6 +79,8 @@ public class ObjectMapperTest extends PerfTestCase {
                   assertEquals(example.ready, true);
                   assertEquals(example.address.street, "Flat 22,\nWilliam St");
                   assertEquals(example.address.city, "Limerick");
+                  assertEquals(example.address.postCode.prefix, "IVTTYYU");
+                  assertEquals(example.address.postCode.suffix, "EXCVITTX");
                }
             } catch(Exception e) {
                e.printStackTrace();
@@ -104,6 +116,8 @@ public class ObjectMapperTest extends PerfTestCase {
                   assertEquals(example.ready, true);
                   assertEquals(example.address.street, "Flat 22,\nWilliam St");
                   assertEquals(example.address.city, "Limerick");
+                  assertEquals(example.address.postCode.prefix, "IVTTYYU");
+                  assertEquals(example.address.postCode.suffix, "EXCVITTX");
                }
             } catch(Exception e) {
                e.printStackTrace();
@@ -145,6 +159,8 @@ public class ObjectMapperTest extends PerfTestCase {
                   assertEquals(example.ready, true);
                   assertEquals(example.address.street, "Flat 22,\nWilliam St");
                   assertEquals(example.address.city, "Limerick");
+                  assertEquals(example.address.postCode.prefix, "IVTTYYU");
+                  assertEquals(example.address.postCode.suffix, "EXCVITTX");
                }
             } catch(Exception e) {
                e.printStackTrace();
@@ -154,4 +170,36 @@ public class ObjectMapperTest extends PerfTestCase {
       timeRun("JACKSON iterations (" + format.format(fraction) + " GB): " + format.format(ITERATIONS), task);
    }
 
+   public void testMapperGson() throws Exception {
+      System.err.println(SOURCE);
+      
+      final DecimalFormat format = new DecimalFormat("######.########");
+      final Gson gson = new Gson();
+      final double gb = 1000000000;
+      final double fraction = (SOURCE.length() * ITERATIONS) / gb;
+
+      final Runnable task = new Runnable() {
+         
+         public void run() {
+            try {                
+               for(int i = 0; i < ITERATIONS; i++) {
+                  Example example = gson.fromJson(SOURCE, Example.class);
+                  
+                  assertEquals(example.name, "Niall Gallagher");
+                  assertEquals(example.age, 101);
+                  assertEquals(example.num, -13456734670093L);
+                  assertEquals(example.ready, true);
+                  assertEquals(example.address.street, "Flat 22,\nWilliam St");
+                  assertEquals(example.address.city, "Limerick");
+                  assertEquals(example.address.postCode.prefix, "IVTTYYU");
+                  assertEquals(example.address.postCode.suffix, "EXCVITTX");
+               }
+            } catch(Exception e) {
+               e.printStackTrace();
+            } 
+         }
+      };
+      timeRun("GSON iterations (" + format.format(fraction) + " GB): " + format.format(ITERATIONS), task);
+   }
+   
 }

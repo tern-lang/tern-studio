@@ -1,67 +1,83 @@
 package org.ternlang.studio.common.json;
 
-import org.ternlang.parse.StringParser;
 import org.ternlang.studio.common.json.document.DocumentAssembler;
 
-public class JsonParser extends StringParser { 
+public class JsonParser { 
    
    private static final char[] TRUE = { 't', 'r', 'u', 'e' };
    private static final char[] FALSE = { 'f', 'a', 'l', 's', 'e' };
    private static final char[] NULL = { 'n', 'u', 'l', 'l' };
    
-   private final DocumentAssembler assembler;
-   
+   private DocumentAssembler assembler;
+   private char[] source;
+   private int off;
+   private int count;
+
    public JsonParser(DocumentAssembler assembler) {
+      this.source = new char[8192];
       this.assembler = assembler;     
    }
    
-   @Override
-   public void init() {      
-      off = 0;
-   }   
+   public void parse(String text){
+      int length = text.length();
+      
+      if(length > 0) {
+         expand(length);
+         count = length;
+         off = 0;
+         pack(text);
+         process();
+      }
+   }
 
-   @Override
-   protected void parse() {
-      assembler.begin();
-      pack();
-      process();
-      assembler.end();
+   private void expand(int capacity) {
+      if(source.length < capacity) {
+         int size = source.length * 2;
+         int max = Math.max(capacity, size);
+         
+         source = new char[max];
+      }
    }
    
-   private void pack() {
+   private void pack(String text) {
       int read = off;
       int write = 0;
 
       while(read < count){
-         char next = source[read];
+         char next = text.charAt(read);
          
          if(next == '"'){ 
             int insert = write + 1;
             
-            source[write++] = source[read++];
+            source[write++] = text.charAt(read++);
             write++;
             
             while(read < count) {
-               source[write++] = source[read++];
+               next = text.charAt(read++);
+               source[write++] = next;
                
-               if(source[read - 1] == '\\') {
+               if(next == '\\') {
                   if(read >= count) {
                      throw new IllegalStateException("String not closed");
                   }
-                  char special = source[read++];
+                  char special = text.charAt(read++);
                   char replace = escape(special);
                   
                   source[write - 1] = replace;
-               } else if(source[read] == '"') {
-                  int length = (write - insert) - 1;
-                  
-                  source[insert] = (char)length;
-                  read++;
-                  break;
+               } else {
+                  next = text.charAt(read);
+               
+                  if(next == '"') {
+                     int length = (write - insert) - 1;
+                     
+                     source[insert] = (char)length;
+                     read++;
+                     break;
+                  }
                }
             }
          } else if(!space(next)) {
-            source[write++] = source[read++];
+            source[write++] = text.charAt(read++);
          } else {
             read++;
          }
@@ -70,6 +86,8 @@ public class JsonParser extends StringParser {
    }
    
    private void process() {
+      assembler.begin();
+
       while(off < count) {
          if(source[off] == '{') {
             block();
@@ -79,6 +97,7 @@ public class JsonParser extends StringParser {
             throw new IllegalStateException("Could not parse JSON");
          }
       }
+      assembler.end();
    }
    
    private void attribute() {
@@ -300,5 +319,15 @@ public class JsonParser extends StringParser {
          return '\t';
       }
       return value;
+   }
+   
+   private boolean space(char value) {
+      switch(value){
+      case ' ': case '\t':
+      case '\n': case '\r':
+         return true;
+      default:
+         return false;
+      }
    }
 }
