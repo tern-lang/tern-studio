@@ -1,10 +1,7 @@
 package org.ternlang.studio.service.json.object;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import org.ternlang.common.Cache;
 import org.ternlang.common.CopyOnWriteCache;
-import org.ternlang.studio.service.json.document.TextSlice;
 import org.ternlang.studio.service.json.operation.BlockType;
 
 public class ObjectMapper {

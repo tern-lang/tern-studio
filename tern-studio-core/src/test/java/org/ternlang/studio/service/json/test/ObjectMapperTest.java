@@ -60,7 +60,7 @@ public class ObjectMapperTest extends PerfTestCase {
             } 
          }
       };
-      timeRun("INTERNAL iterations: " + iterations , task);
+      timeRun("INTERNAL NORMAL iterations: " + iterations , task);
    }
 
    public void testMapperWithType() throws Exception {
@@ -90,7 +90,7 @@ public class ObjectMapperTest extends PerfTestCase {
             }
          }
       };
-      timeRun("INTERNAL iterations: " + iterations , task);
+      timeRun("INTERNAL TYPE iterations: " + iterations , task);
    }
    
    public void testMapperJackson() throws Exception {
