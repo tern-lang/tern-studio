@@ -22,19 +22,23 @@ public class ObjectMapper {
       this.buffer = new char[1024];
    }
 
-   public ObjectMapper type(String type) {
-      int length = type.length();
-
-      type.getChars(0, length, buffer, 0);
-      match.with(buffer, 0, length);
-      return this;
-   }
-
    public ObjectMapper register(Class type) {
       indexer.index(type);
       return this;
    }
    
+   public ObjectMapper match(String type) {
+      if(type != null) {
+         int length = type.length();
+   
+         type.getChars(0, length, buffer, 0);
+         match.with(buffer, 0, length);
+      } else {
+         match.reset();
+      }
+      return this;
+   }
+
    public ObjectReader resolve(Class type) {
       ObjectReader builder = builders.fetch(type);
       

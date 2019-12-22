@@ -70,7 +70,7 @@ public class ObjectMapperTest extends PerfTestCase {
       final ObjectMapper mapper = new ObjectMapper()
             .register(Example.class)
             .register(Address.class)
-            .type("type");
+            .match("type");
 
       final ObjectReader reader = mapper.resolve(Object.class);
       final Runnable task = new Runnable() {
