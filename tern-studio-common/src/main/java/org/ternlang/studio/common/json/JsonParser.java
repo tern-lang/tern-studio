@@ -3,7 +3,11 @@ package org.ternlang.studio.common.json;
 import org.ternlang.parse.StringParser;
 import org.ternlang.studio.common.json.document.DocumentAssembler;
 
-public class JsonParser extends StringParser {   
+public class JsonParser extends StringParser { 
+   
+   private static final char[] TRUE = { 't', 'r', 'u', 'e' };
+   private static final char[] FALSE = { 'f', 'a', 'l', 's', 'e' };
+   private static final char[] NULL = { 'n', 'u', 'l', 'l' };
    
    private final DocumentAssembler assembler;
    
@@ -24,26 +28,6 @@ public class JsonParser extends StringParser {
       assembler.end();
    }
    
-   @Override
-   protected boolean skip(String text){
-      int size = text.length();
-      int read = 0;
-
-      if(off + size > count){
-         return false;
-      }
-      while(read < size){
-         char left = text.charAt(read);
-         char right = source[off + read++];
-
-         if(left != right){
-            return false;
-         }
-      }
-      off += size;
-      return true;
-   }
-   
    private void pack() {
       int read = off;
       int write = 0;
@@ -52,9 +36,14 @@ public class JsonParser extends StringParser {
          char next = source[read];
          
          if(next == '"'){ 
+            int insert = write + 1;
+            
+            source[write++] = source[read++];
+            write++;
+            
             while(read < count) {
                source[write++] = source[read++];
-
+               
                if(source[read - 1] == '\\') {
                   if(read >= count) {
                      throw new IllegalStateException("String not closed");
@@ -64,7 +53,10 @@ public class JsonParser extends StringParser {
                   
                   source[write - 1] = replace;
                } else if(source[read] == '"') {
-                  source[write++] = source[read++];
+                  int length = (write - insert) - 1;
+                  
+                  source[insert] = (char)length;
+                  read++;
                   break;
                }
             }
@@ -79,9 +71,9 @@ public class JsonParser extends StringParser {
    
    private void process() {
       while(off < count) {
-         if(skip("{")) {
+         if(source[off] == '{') {
             block();
-         } else if(skip("[")) {
+         } else if(source[off] == '[') {
             array();               
          } else {
             throw new IllegalStateException("Could not parse JSON");
@@ -92,33 +84,53 @@ public class JsonParser extends StringParser {
    private void attribute() {
       name();
       
-      if(!skip(":")) {
-         throw new IllegalStateException("Attribute must be followed by :");
+      if(off >= count) {
+         throw new IllegalStateException("Unexpected end of source");
       }
-      if(skip("{")) {
+      value();
+      
+      if(off < count && source[off] == ',') {
+         off++;
+      }
+   }
+   
+   private void name() {   
+      char open = source[off++];
+      
+      if(open != '"') {
+         throw new IllegalStateException("Name must start with a quote");
+      }
+      int length = source[off++];
+      
+      assembler.name(source, off, length);
+      off += length;
+   }
+   
+   private void value() {
+      char open = source[off++];
+      
+      if(open != ':') {
+         throw new IllegalStateException("Attribute value not prefixed by :");
+      }
+      if(source[off] == '{') {
          block();
-      }else if(skip("[")) {
+      }else if(source[off] == '[') {
          array();
       } else {
-         value();
+         token();
       }
-      skip(",");
    }
    
    private void text() {
-      int start = off;
-            
-      while(off < count) {
-         char next = source[off++];
-         
-         if(next == '\"' && source[off -1] != '\'') {
-            int length = (off - start) - 1;
-            
-            assembler.text(source, start, length);               
-            return;
-         }            
+      char open = source[off++];
+      
+      if(open != '"') {
+         throw new IllegalStateException("Text must start with a quote");
       }
-      throw new IllegalStateException("Invalid text value");   
+      int length = source[off++];
+      
+      assembler.text(source, off, length);
+      off += length;
    }
    
    private void number(int sign) {
@@ -130,7 +142,11 @@ public class JsonParser extends StringParser {
       while(off < count) {
          char next = source[off];
           
-         if(next == ']' || next == '}' || next == ',') {
+         if(next == '.') {
+            if(spot++ > 0) {
+               throw new IllegalStateException("Invalid decimal value");               
+            }   
+         } else if(next < '0' || next > '9') {
             int from = start + (sign == -1 ? 1 : 0);
             int length = off - start;
             
@@ -140,11 +156,7 @@ public class JsonParser extends StringParser {
                assembler.integer(source, from, length, sign * number);
             }
             return;
-         } else if(next == '.') {
-            if(spot++ > 0) {
-               throw new IllegalStateException("Invalid decimal value");               
-            }            
-         }
+         }  
          if(spot > 0) {
             scale *= 10;
          }
@@ -155,82 +167,86 @@ public class JsonParser extends StringParser {
       }
    }
    
-   private void bool() {
+   private void bool(boolean expect) {
       int start = off;
+      int index = 0;
       
-      if(skip("true")) {
-         assembler.bool(source, start, off - start, true); 
-      } else if(skip("false")) {
-         assembler.bool(source, start, off - start, false); 
+      if(expect) {
+         while(off < count && index < TRUE.length) {
+            if(TRUE[index++] != source[off++]) {
+               throw new IllegalStateException("Invalid boolean value");
+            }
+         }
+         assembler.bool(source, start, TRUE.length, true); 
       } else {
-         throw new IllegalStateException("Invalid boolean value");  
+         while(off < count && index < FALSE.length) {
+            if(FALSE[index++] != source[off++]) {
+               throw new IllegalStateException("Invalid boolean value");
+            }
+         }
+         assembler.bool(source, start, FALSE.length, false); 
       }
    }
    
    private void none() {
       int start = off;
+      int index = 0;
       
-      while(off < count) {
-         char next = source[off];
-         
-         if(next == ']' || next == '}' || next == ',') {
-            int length = off - start;
-            
-            assembler.none(source, start, length); 
-            return;
-         }            
-         off++;
+      while(off < count && index < NULL.length) {
+         if(NULL[index++] != source[off++]) {
+            throw new IllegalStateException("Invalid boolean value");
+         }
       }
-      throw new IllegalStateException("Invalid null value");  
+      assembler.bool(source, start, NULL.length, true); 
    }
    
-   private void value() {
+   private void token() {
       char value = source[off];
       
-      if(value == '"') {
-         off++;
+      switch(value) {
+      case '"':
          text();
-      } else if(value == 't' || value == 'f') {
-         bool();
-      } else if(value == 'n') {
+         break;
+      case 'f': 
+         bool(false);
+         break;
+      case 't':
+         bool(true);
+         break;
+      case 'n':   
          none();
-      } else if(value == '-') {
+         break;
+      case '-':   
          off++;
-         number(-1);         
-      } else {
-         if(value >= '0' && value <= '9') {
-            number(1);
-         } else {
-            throw new IllegalStateException("Could not parse value");
-         }
+         number(-1);  
+         break;
+      case '0': case '1':
+      case '2': case '3':
+      case '4': case '5':
+      case '6': case '7':
+      case '8': case '9':         
+         number(1);   
+         break;
+      default:
+         throw new IllegalStateException("Could not parse value");
       }
-   }
-   
-   private void name() {      
-      int pos = off;
-      
-      while(pos < count) {
-         char next = source[pos++];
-         
-         if(next == '\"') {
-            int length = (pos -1) - off;
-            int start = off;            
-            
-            off = pos;
-            assembler.name(source, start, length);
-            return;
-         }
-      }
-      throw new IllegalStateException("Unexpected end of source");
    }
    
    private void block() {
+      char open = source[off++];
+      
+      if(open != '{') {
+         throw new IllegalStateException("Block must begin with {");
+      }
       assembler.blockBegin();
       
       while(off < count) {
-         if(skip("\"")) {
+         char next = source[off++];
+         
+         if(next == '"') {
+            off--;
             attribute();
-         } else if(skip("}")) {
+         } else if(next == '}') {
             break;
          }
       }
@@ -238,22 +254,34 @@ public class JsonParser extends StringParser {
    }
    
    private void array() {
-      assembler.arrayBegin();
+      char open = source[off++];
       
+      if(open != '[') {
+         throw new IllegalStateException("Array must begin with [");
+      }
+      assembler.arrayBegin();
+
       while(off < count) {
-         char next = source[off++];
+         char next = source[off];
          
-         if(next == '[') {
-            array();
-         } else if(next == '{') {
-            block();
-         } else if(next == ']') {
-            break;            
-         } else {
-            off--;
-            value();   
+         if(next == ']') {
+            off++;
+            break;
          }
-         skip(",");
+         switch(next) {
+         case ',':
+            off++;
+            break;
+         case '[':
+            array();
+            break;
+         case '{':
+            block();
+            break;          
+         default:
+            token();   
+         }
+
       }
       assembler.arrayEnd();
    }
