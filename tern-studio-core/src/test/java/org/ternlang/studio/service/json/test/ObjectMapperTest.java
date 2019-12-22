@@ -1,5 +1,7 @@
 package org.ternlang.studio.service.json.test;
 
+import java.text.DecimalFormat;
+
 import org.ternlang.studio.service.json.object.ObjectMapper;
 import org.ternlang.studio.service.json.object.ObjectReader;
 
@@ -40,9 +42,13 @@ public class ObjectMapperTest extends PerfTestCase {
    public void testMapper() throws Exception {
       System.err.println(SOURCE);
       
-      final int iterations = 1000000;
+      final double iterations = 1000000;
+      final DecimalFormat format = new DecimalFormat("######.########");
       final ObjectMapper mapper = new ObjectMapper();
       final ObjectReader reader = mapper.resolve(Example.class);
+      final double gb = 1000000000;
+      final double fraction = (SOURCE.length() * iterations) / gb;
+
       final Runnable task = new Runnable() {
          
          public void run() {
@@ -60,19 +66,23 @@ public class ObjectMapperTest extends PerfTestCase {
             } 
          }
       };
-      timeRun("INTERNAL NORMAL iterations: " + iterations , task);
+      timeRun("INTERNAL NORMAL iterations (" + format.format(fraction) + " GB): " + iterations , task);
    }
 
    public void testMapperWithType() throws Exception {
       System.err.println(SOURCE);
 
-      final int iterations = 1000000;
+      final double iterations = 1000000;
+      final DecimalFormat format = new DecimalFormat("######.########");
       final ObjectMapper mapper = new ObjectMapper()
             .register(Example.class)
             .register(Address.class)
             .match("type");
 
       final ObjectReader reader = mapper.resolve(Object.class);
+      final double gb = 1000000000;
+      final double fraction = (SOURCE.length() * iterations) / gb;
+
       final Runnable task = new Runnable() {
 
          public void run() {
@@ -90,13 +100,14 @@ public class ObjectMapperTest extends PerfTestCase {
             }
          }
       };
-      timeRun("INTERNAL TYPE iterations: " + iterations , task);
+      timeRun("INTERNAL TYPE iterations (" + format.format(fraction) + " GB): " + iterations , task);
    }
    
    public void testMapperJackson() throws Exception {
       System.err.println(SOURCE);
       
-      final int iterations = 1000000;
+      final double iterations = 1000000;
+      final DecimalFormat format = new DecimalFormat("######.########");
       final com.fasterxml.jackson.databind.ObjectMapper mapper = 
             new com.fasterxml.jackson.databind.ObjectMapper();
       
@@ -109,6 +120,9 @@ public class ObjectMapperTest extends PerfTestCase {
       
       final com.fasterxml.jackson.databind.ObjectReader reader = 
             mapper.readerFor(Example.class);
+      final double gb = 1000000000;
+      final double fraction = (SOURCE.length() * iterations) / gb;
+
       final Runnable task = new Runnable() {
          
          public void run() {
@@ -126,7 +140,7 @@ public class ObjectMapperTest extends PerfTestCase {
             } 
          }
       };
-      timeRun("JACKSON iterations: " + iterations , task);
+      timeRun("JACKSON iterations (" + format.format(fraction) + " GB): " + iterations , task);
    }
 
 }
