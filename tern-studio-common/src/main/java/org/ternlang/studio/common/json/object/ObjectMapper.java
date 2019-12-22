@@ -1,25 +1,23 @@
 package org.ternlang.studio.common.json.object;
 
-import org.ternlang.common.Cache;
-import org.ternlang.common.CopyOnWriteCache;
-import org.ternlang.studio.common.json.operation.BlockType;
+import org.ternlang.studio.common.json.document.Name;
 
 public class ObjectMapper {
    
-   private final Cache<Class, ObjectReader> builders;
    private final ValueConverter converter;
    private final ObjectBuilder builder;
+   private final ObjectReader reader;
    private final TypeIndexer indexer;
-   private final BlockType match;
-   private final char[] buffer;
+   private final NameValue match;
+   private final NameValue root;
    
    public ObjectMapper() {
-      this.builders = new CopyOnWriteCache<Class, ObjectReader>();
       this.converter = new ValueConverter();
       this.builder = new ObjectBuilder();
       this.indexer = new TypeIndexer(converter, builder);
-      this.match = new BlockType(null);
-      this.buffer = new char[1024];
+      this.match = new NameValue();
+      this.root = new NameValue();
+      this.reader = new ObjectReader(indexer, converter, builder, match, root);
    }
 
    public ObjectMapper register(Class type) {
@@ -29,31 +27,58 @@ public class ObjectMapper {
    
    public ObjectMapper match(String type) {
       if(type != null) {
-         int length = type.length();
-   
-         type.getChars(0, length, buffer, 0);
-         match.with(buffer, 0, length);
+         match.with(type);
       } else {
          match.reset();
       }
       return this;
    }
 
-   public ObjectReader resolve(Class type) {
-      ObjectReader builder = builders.fetch(type);
+   public ObjectReader read(Class type) {
+      FieldElement tree = indexer.index(type);
+      String name = type.getSimpleName();
       
-      if(builder == null) {
-         builder = create(type);
-         builders.cache(type, builder);
-      }
-      return builder;
+      root.with(name);
+      return reader;
    }
    
-   private ObjectReader create(Class type) {
-      FieldElement tree = indexer.index(type);
-      String root = type.getSimpleName();
+   private static class NameValue extends Name {
 
-      return new ObjectReader(indexer, converter, builder, match, root);
+      private String value;
+      
+      public NameValue() {
+         this.value = "";
+      }
+
+      public NameValue with(String value) {
+         this.value = value;
+         this.hash = 0;
+         return this;
+      }
+      
+      @Override
+      public int hashCode() {
+         return value.hashCode();
+      }
+
+      @Override
+      public CharSequence toText() {
+         return value;
+      }
+      
+      @Override
+      public boolean isEmpty() {
+         return value.isEmpty();
+      }
+      
+      public void reset() {
+         value = "";
+      }
+
+      @Override
+      public String toString() {
+         return value;
+      }
    }
 
 }

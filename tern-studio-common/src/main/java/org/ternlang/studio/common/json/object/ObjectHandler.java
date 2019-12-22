@@ -15,9 +15,9 @@ public class ObjectHandler implements DocumentHandler {
    private final ValueConverter converter;
    private final ObjectBuilder builder;
    private final TypeIndexer indexer;
-   private final String root;
+   private final Name root;
    
-   public ObjectHandler(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, String root) {
+   public ObjectHandler(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, Name root) {
       this.reference = new AtomicReference<Object>();
       this.stack = new ArrayStack<FieldElement>();
       this.objects = new ArrayStack<Object>();
@@ -82,8 +82,9 @@ public class ObjectHandler implements DocumentHandler {
             field.setValue(object, value);
          }
       } else {
-         FieldElement element = indexer.match(root);
-         Object value = builder.create(root);
+         CharSequence type = root.toText();
+         FieldElement element = indexer.match(type);
+         Object value = builder.create(type);
 
          objects.push(value);
          stack.push(element);

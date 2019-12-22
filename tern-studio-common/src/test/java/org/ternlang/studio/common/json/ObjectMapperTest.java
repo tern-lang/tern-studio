@@ -45,7 +45,7 @@ public class ObjectMapperTest extends PerfTestCase {
       final double iterations = 1000000;
       final DecimalFormat format = new DecimalFormat("######.########");
       final ObjectMapper mapper = new ObjectMapper();
-      final ObjectReader reader = mapper.resolve(Example.class);
+      final ObjectReader reader = mapper.read(Example.class);
       final double gb = 1000000000;
       final double fraction = (SOURCE.length() * iterations) / gb;
 
@@ -79,7 +79,7 @@ public class ObjectMapperTest extends PerfTestCase {
             .register(Address.class)
             .match("type");
 
-      final ObjectReader reader = mapper.resolve(Object.class);
+      final ObjectReader reader = mapper.read(Object.class);
       final double gb = 1000000000;
       final double fraction = (SOURCE.length() * iterations) / gb;
 

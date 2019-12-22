@@ -10,14 +10,19 @@ public class ObjectReader {
    private final DirectStrategy direct;
    private final TypeStrategy type;
    private final Name match;
+   private final Name root;
    
-   public ObjectReader(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, Name match, String root) {
+   public ObjectReader(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, Name match, Name root) {
       this.direct = new DirectStrategy(indexer, converter, builder, root);
       this.type = new TypeStrategy(indexer, converter, builder, match, root);
       this.match = match;
+      this.root = root;
    }
    
    public <T> T read(String source) {
+      if(root.isEmpty()) {
+         throw new IllegalStateException("No root class specified");
+      }
       if(match.isEmpty()) {
          return direct.read(source);
       } 
@@ -30,7 +35,7 @@ public class ObjectReader {
       private final ObjectHandler handler;
       private final JsonParser parser;
       
-      public DirectStrategy(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, String root) {
+      public DirectStrategy(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, Name root) {
          this.handler = new ObjectHandler(indexer, converter, builder, root);
          this.assembler = new DirectAssembler(handler);
          this.parser = new JsonParser(assembler);
@@ -48,7 +53,7 @@ public class ObjectReader {
       private final ObjectHandler handler;
       private final JsonParser parser;
       
-      public TypeStrategy(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, Name match, String root) {
+      public TypeStrategy(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, Name match, Name root) {
          this.handler = new ObjectHandler(indexer, converter, builder, root);
          this.assembler = new TypeAssembler(handler, match);
          this.parser = new JsonParser(assembler);
