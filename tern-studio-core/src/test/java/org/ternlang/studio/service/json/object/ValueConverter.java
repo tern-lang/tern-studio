@@ -2,7 +2,7 @@ package org.ternlang.studio.service.json.object;
 
 import org.ternlang.studio.service.json.document.Value;
 
-public class ValueConverter {   
+public class ValueConverter {
 
    public Object convert(Class type, Value value) {
       Class actual = convert(type);
