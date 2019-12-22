@@ -21,17 +21,17 @@ public class ObjectMapper {
       this.indexer = new TypeIndexer(converter, builder);
    }
 
-   public ObjectMapper type(String type) throws Exception {
+   public ObjectMapper type(String type) {
       reference.set(type);
       return this;
    }
 
-   public ObjectMapper register(Class type) throws Exception {
+   public ObjectMapper register(Class type) {
       indexer.index(type);
       return this;
    }
    
-   public ObjectReader resolve(Class type) throws Exception {   
+   public ObjectReader resolve(Class type) {
       ObjectReader builder = builders.fetch(type);
       
       if(builder == null) {
@@ -41,7 +41,7 @@ public class ObjectMapper {
       return builder;
    }
    
-   private ObjectReader create(Class root) throws Exception {
+   private ObjectReader create(Class root) {
       FieldElement tree = indexer.index(root);
       String type = reference.get();
       String name = root.getSimpleName();

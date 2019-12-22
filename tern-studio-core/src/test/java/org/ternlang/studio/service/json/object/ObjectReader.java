@@ -21,7 +21,7 @@ public class ObjectReader {
       this.parser = new JsonParser(assembler);
    }
    
-   public <T> T read(String source) throws Exception {
+   public <T> T read(String source) {
       parser.parse(source);
       return (T)handler.get();
    }
