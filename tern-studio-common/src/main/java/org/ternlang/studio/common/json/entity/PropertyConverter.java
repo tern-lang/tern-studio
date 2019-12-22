@@ -1,8 +1,8 @@
-package org.ternlang.studio.common.json.object;
+package org.ternlang.studio.common.json.entity;
 
 import org.ternlang.studio.common.json.document.Value;
 
-public class ValueConverter {
+public class PropertyConverter {
 
    public Object convert(Class type, Value value) {
       Class actual = convert(type);

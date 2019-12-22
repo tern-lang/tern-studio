@@ -16,8 +16,13 @@ public class TextTrie<T> implements Iterable<T> {
       }
    }
    
-   private final Set<T> values = new HashSet<T>();
-   private final TextTrie.Node root = new Node(this);
+   private final Set<T> values;
+   private final Node root;
+   
+   public TextTrie() {
+      this.values = new HashSet<T>();
+      this.root = new Node(this);
+   }
    
    public boolean isEmpty() {
       return values.isEmpty();
@@ -30,7 +35,7 @@ public class TextTrie<T> implements Iterable<T> {
    
    public T match(CharSequence key) {
       int length = key.length();
-      TextTrie.Node node = root;
+      Node node = root;
       
       for(int i = 0; i < length; i++) {
          char index = key.charAt(i);
@@ -48,7 +53,7 @@ public class TextTrie<T> implements Iterable<T> {
    }
    
    public T match(char[] source, int off, int length) {
-      TextTrie.Node node = root;
+      Node node = root;
       
       for(int i = 0; i < length; i++) {
          char ch = source[i + off];
@@ -71,7 +76,7 @@ public class TextTrie<T> implements Iterable<T> {
    
    private static class Node {
       
-      private TextTrie.Node[] children = new TextTrie.Node[WIDTH];
+      private Node[] children = new Node[WIDTH];
       private TextTrie parent;
       private Object value;
       
@@ -79,14 +84,14 @@ public class TextTrie<T> implements Iterable<T> {
          this.parent = parent;
       }
 
-      public TextTrie.Node get(char ch) {
+      public Node get(char ch) {
          if(ch <= 255 && ch >= 0) {
             int index = POSITION[ch];
             
             if(index == -1) {
                throw new IllegalStateException("Character " + ch + " is not valid");
             }
-            return (TextTrie.Node)children[index];
+            return (Node)children[index];
          }
          return null;
       }
@@ -109,7 +114,7 @@ public class TextTrie<T> implements Iterable<T> {
             if(index == -1) {
                throw new IllegalArgumentException("Value '" + ch + "' is not a valid identifier"); 
             }
-            TextTrie.Node node = (TextTrie.Node)children[index];
+            Node node = (Node)children[index];
             
             if(node == null) {
                node = children[index] = new Node(parent);

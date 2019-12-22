@@ -1,11 +1,6 @@
-package org.ternlang.studio.common.json.object;
+package org.ternlang.studio.common.json.document;
 
 import org.ternlang.common.ArrayStack;
-import org.ternlang.studio.common.json.document.DocumentAssembler;
-import org.ternlang.studio.common.json.document.DocumentHandler;
-import org.ternlang.studio.common.json.document.DocumentState;
-import org.ternlang.studio.common.json.document.Name;
-import org.ternlang.studio.common.json.document.TextSlice;
 import org.ternlang.studio.common.json.operation.ArrayBegin;
 import org.ternlang.studio.common.json.operation.ArrayEnd;
 import org.ternlang.studio.common.json.operation.Attribute;
@@ -15,18 +10,18 @@ import org.ternlang.studio.common.json.operation.BlockType;
 import org.ternlang.studio.common.json.operation.Operation;
 import org.ternlang.studio.common.json.operation.OperationAllocator;
 
-public class TypeAssembler implements DocumentAssembler {
+public class PriorityAssembler implements DocumentAssembler {
    
-   private final DocumentHandler handler;
-   private final OperationAllocator allocator;
    private final ArrayStack<Operation> active;
    private final ArrayStack<Operation> ready;
    private final ArrayStack<Operation> commit;
    private final ArrayStack<BlockType> blocks;
+   private final OperationAllocator allocator;
+   private final DocumentHandler handler;
    private final DocumentState name;
    private final Name type;
    
-   public TypeAssembler(DocumentHandler handler, Name type) {
+   public PriorityAssembler(DocumentHandler handler, Name type) {
       this.commit = new ArrayStack<Operation>();
       this.active = new ArrayStack<Operation>();
       this.ready = new ArrayStack<Operation>();
@@ -64,26 +59,26 @@ public class TypeAssembler implements DocumentAssembler {
    }
 
    @Override
-   public void decimal(char[] source, int off, int length) {
+   public void decimal(char[] source, int off, int length, double value) {
       Attribute attribute = name.attribute(allocator);
       
-      attribute.decimal(source, off, length);
+      attribute.decimal(source, off, length, value);
       active.push(attribute);
    }
 
    @Override
-   public void integer(char[] source, int off, int length) {
+   public void integer(char[] source, int off, int length, long value) {
       Attribute attribute = name.attribute(allocator);
       
-      attribute.integer(source, off, length);
+      attribute.integer(source, off, length, value);
       active.push(attribute); 
    }
 
    @Override
-   public void bool(char[] source, int off, int length) {
+   public void bool(char[] source, int off, int length, boolean value) {
       Attribute attribute = name.attribute(allocator);
       
-      attribute.bool(source, off, length);
+      attribute.bool(source, off, length, value);
       active.push(attribute); 
    }
 

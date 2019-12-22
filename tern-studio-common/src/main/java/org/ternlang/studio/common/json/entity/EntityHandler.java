@@ -1,4 +1,4 @@
-package org.ternlang.studio.common.json.object;
+package org.ternlang.studio.common.json.entity;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -7,23 +7,19 @@ import org.ternlang.studio.common.json.document.DocumentHandler;
 import org.ternlang.studio.common.json.document.Name;
 import org.ternlang.studio.common.json.document.Value;
 
-public class ObjectHandler implements DocumentHandler {
+class EntityHandler implements DocumentHandler {
    
    private final AtomicReference<Object> reference;
-   private final ArrayStack<FieldElement> stack;
+   private final ArrayStack<Entity> entities;
    private final ArrayStack<Object> objects;
-   private final ValueConverter converter;
-   private final ObjectBuilder builder;
-   private final TypeIndexer indexer;
+   private final EntityProvider provider;
    private final Name root;
    
-   public ObjectHandler(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, Name root) {
+   public EntityHandler(EntityProvider provider, Name root) {
       this.reference = new AtomicReference<Object>();
-      this.stack = new ArrayStack<FieldElement>();
+      this.entities = new ArrayStack<Entity>();
       this.objects = new ArrayStack<Object>();
-      this.converter = converter;
-      this.indexer = indexer;
-      this.builder = builder;
+      this.provider = provider;
       this.root = root;
    }
    
@@ -34,28 +30,23 @@ public class ObjectHandler implements DocumentHandler {
    @Override
    public void begin() {
       objects.clear();
-      stack.clear();
+      entities.clear();
    }
    
    @Override
    public void attribute(Name name, Value value) {
       if(!name.isEmpty()) {
          CharSequence token = name.toText();
-         FieldElement top = stack.peek();
-         Object object = objects.peek();
+         Entity entity = entities.peek();
          
-         if(top == null) {
+         if(entity == null) {
             throw new IllegalStateException("Attribute '" + name + "' has not block");
          }
-         FieldAttribute field = top.match(token);
+         Object object = objects.peek();
+         Property property = entity.getProperty(token);
          
-         if(field != null) {
-            Class type = field.getType();
-
-            if (!type.isArray()) {
-               Object converted = converter.convert(type, value);
-               field.setValue(object, converted);
-            }
+         if(property != null) {
+            property.setValue(object, value);
          }
       }
    }
@@ -64,60 +55,60 @@ public class ObjectHandler implements DocumentHandler {
    public void blockBegin(Name name) {
       if(!name.isEmpty()) {
          CharSequence token = name.toText();
-         FieldElement top = stack.peek();
-         Object object = objects.peek();
+         Entity entity = entities.peek();
 
-         if(top == null) {
+         if(entity == null) {
             throw new IllegalStateException("Illegal JSON ending");
          }
-         FieldAttribute field = top.match(token);
+         Object object = objects.peek();
+         Property property = entity.getProperty(token);
 
-         if(field != null) {
-            String type = field.getName();
-            FieldElement element = indexer.match(type);
-            Object value = builder.create(type);
+         if(property != null) {
+            String type = property.getName();
+            Entity element = provider.getEntity(type);
+            Object value = provider.getInstance(type);
 
             objects.push(value);
-            stack.push(element);
-            field.setValue(object, value);
+            entities.push(element);
+            property.setValue(object, value);
          }
       } else {
          CharSequence type = root.toText();
-         FieldElement element = indexer.match(type);
-         Object value = builder.create(type);
+         Entity entity = provider.getEntity(type);
+         Object value = provider.getInstance(type);
 
          objects.push(value);
-         stack.push(element);
+         entities.push(entity);
       }
    }
 
    @Override
    public void blockBegin(Name name, Name override) {
       CharSequence type = override.toText();
-      Object value = builder.create(type);
+      Object value = provider.getInstance(type);
 
       if(!name.isEmpty()) {
          CharSequence token = name.toText();
-         FieldElement top = stack.peek();
+         Entity entity = entities.peek();
          
-         if(top == null) {
+         if(entity == null) {
             throw new IllegalStateException("Illegal JSON ending");
          }
-         FieldAttribute field = top.match(token);
+         Property property = entity.getProperty(token);
 
-         if(field != null) {
-            FieldElement element = indexer.match(type);
+         if(property != null) {
+            Entity child = provider.getEntity(type);
             Object object = objects.peek();
 
             objects.push(value);
-            stack.push(element);
-            field.setValue(object, value);
+            entities.push(child);
+            property.setValue(object, value);
          }
       } else {
-         FieldElement element = indexer.match(type);
+         Entity entity = provider.getEntity(type);
 
          objects.push(value);
-         stack.push(element);
+         entities.push(entity);
       }
    }
    
@@ -126,7 +117,7 @@ public class ObjectHandler implements DocumentHandler {
       Object value = objects.pop();
       
       reference.set(value);
-      stack.pop();
+      entities.pop();
    }
    
    @Override
@@ -141,7 +132,7 @@ public class ObjectHandler implements DocumentHandler {
    
    @Override
    public void end() {
-      if(!stack.isEmpty()) {
+      if(!entities.isEmpty()) {
          throw new IllegalStateException("Illegal JSON ending");
       }
    }

@@ -50,16 +50,16 @@ public class Attribute extends Operation {
       text.with(source, off, length);
    }
    
-   public void decimal(char[] source, int off, int length) {
-      decimal.with(source, off, length);
+   public void decimal(char[] source, int off, int length, double value) {
+      decimal.with(source, off, length, value);
    }
    
-   public void integer(char[] source, int off, int length) {
-      integer.with(source, off, length);
+   public void integer(char[] source, int off, int length, long value) {
+      integer.with(source, off, length, value);
    }
    
-   public void bool(char[] source, int off, int length) {
-      bool.with(source, off, length);
+   public void bool(char[] source, int off, int length, boolean value) {
+      bool.with(source, off, length, value);
    }
    
    public void none(char[] source, int off, int length) {
@@ -96,7 +96,7 @@ public class Attribute extends Operation {
       
       @Override
       public boolean isEmpty() {
-         return slice.length() <= 0;
+         return slice.isEmpty();
       }
       
       @Override
@@ -113,14 +113,15 @@ public class Attribute extends Operation {
    private static class BooleanValue extends Value {
       
       private final TextSlice slice;
-      private boolean value;
+      private boolean bool;
       
       public BooleanValue() {
          this.slice = new TextSlice();
       }
       
-      public BooleanValue with(char[] source, int off, int length) {
+      public BooleanValue with(char[] source, int off, int length, boolean value) {
          slice.with(source, off, length);
+         bool = value;
          return this;
       }
       
@@ -131,18 +132,18 @@ public class Attribute extends Operation {
 
       @Override
       public boolean toBoolean() {
-         return value;
+         return bool;
       }
       
       @Override
       public boolean isEmpty() {
-         return slice.length() <= 0;
+         return slice.isEmpty();
       }
       
       @Override
       public void reset() {
          slice.reset();
-         value = false;
+         bool = false;
       }
       
       @Override
@@ -154,14 +155,15 @@ public class Attribute extends Operation {
    private static class DecimalValue extends Value {
       
       private final TextSlice slice;
-      private double value;
+      private double number;
       
       public DecimalValue() {
          this.slice = new TextSlice();
       }
       
-      public DecimalValue with(char[] source, int off, int length) {
+      public DecimalValue with(char[] source, int off, int length, double value) {
          slice.with(source, off, length);
+         number = value;
          return this;
       }
       
@@ -172,23 +174,33 @@ public class Attribute extends Operation {
 
       @Override
       public double toDouble() {
-         return value;
+         return number;
       }
 
       @Override
       public float toFloat() {
-         return (float)value;
+         return (float)number;
+      }
+      
+      @Override
+      public int toInteger() {
+         return (int)number;
+      }
+
+      @Override
+      public long toLong() {
+         return (long)number;
       }
       
       @Override
       public boolean isEmpty() {
-         return slice.length() <= 0;
+         return slice.isEmpty();
       }
       
       @Override
       public void reset() {
          slice.reset();
-         value = 0;
+         number = 0;
       }
       
       @Override
@@ -200,14 +212,15 @@ public class Attribute extends Operation {
    private static class IntegerValue extends Value {
       
       private final TextSlice slice;
-      private long value;
+      private long number;
       
       public IntegerValue() {
          this.slice = new TextSlice();
       }
 
-      public IntegerValue with(char[] source, int off, int length) {
+      public IntegerValue with(char[] source, int off, int length, long value) {
          slice.with(source, off, length);
+         number = value;
          return this;
       }
       
@@ -218,23 +231,33 @@ public class Attribute extends Operation {
 
       @Override
       public long toLong() {
-         return value;
+         return number;
       }
 
       @Override
       public int toInteger() {
-         return (int)value;
+         return (int)number;
+      }
+      
+      @Override
+      public double toDouble() {
+         return (double)number;
+      }
+
+      @Override
+      public float toFloat() {
+         return (float)number;
       }
       
       @Override
       public boolean isEmpty() {
-         return slice.length() <= 0;
+         return slice.isEmpty();
       }
       
       @Override
       public void reset() {
          slice.reset();
-         value = 0;
+         number = 0;
       }
       
       @Override
@@ -263,7 +286,7 @@ public class Attribute extends Operation {
       
       @Override
       public boolean isEmpty() {
-         return slice.length() <= 0;
+         return slice.isEmpty();
       }
       
       @Override

@@ -46,7 +46,7 @@ public class TextSlice implements CharSequence {
    }
    
    public boolean isEmpty() {
-      return length == 0;
+      return length <= 0;
    }
    
    public void reset() {

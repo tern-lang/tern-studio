@@ -44,6 +44,25 @@ public abstract class Name {
       }
       return false;
    }
+   
+   public boolean equals(char[] source, int off, int length) {
+      if(length > 0) {
+         CharSequence text = toText();
+         int remain = text.length();
+
+         if(length == remain) {
+            while(--remain >= 0) {
+               char next = text.charAt(remain);
+
+               if(source[off + remain] != next) {
+                  return false;
+               }
+            }
+            return true;
+         }
+      }
+      return false;
+   }
 
    @Override
    public String toString() {

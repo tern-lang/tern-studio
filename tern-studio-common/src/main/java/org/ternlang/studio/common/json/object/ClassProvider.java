@@ -5,29 +5,38 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.ternlang.studio.common.json.document.TextTrie;
+import org.ternlang.studio.common.json.entity.Entity;
+import org.ternlang.studio.common.json.entity.EntityProvider;
+import org.ternlang.studio.common.json.entity.PropertyConverter;
 
-public class TypeIndexer {
+class ClassProvider implements EntityProvider {
 
-   private final TextTrie<FieldElement> index;
-   private final ValueConverter converter;
+   private final TextTrie<ClassEntity> index;
+   private final PropertyConverter converter;
    private final ObjectBuilder builder;
    
-   public TypeIndexer(ValueConverter converter, ObjectBuilder builder) {
-      this.index = new TextTrie<FieldElement>();
+   public ClassProvider(ObjectBuilder builder, PropertyConverter converter) {
+      this.index = new TextTrie<ClassEntity>();
       this.converter = converter;
       this.builder = builder;
    }
    
-   public FieldElement match(CharSequence type) {
+   @Override
+   public Object getInstance(CharSequence type) {
+      return builder.create(type);
+   }
+
+   @Override
+   public Entity getEntity(CharSequence type) {
       return index.match(type);
    }
 
-   public FieldElement index(Class type) {
+   public ClassEntity index(Class type) {
       String name = type.getSimpleName();
-      FieldElement tree = index.match(name);
+      ClassEntity tree = index.match(name);
       
       if(tree == null) {
-         FieldElement create = new FieldElement(name);
+         ClassEntity create = new ClassEntity(builder, converter, type, name);
          Set<Class> types = new HashSet<Class>();
          
          builder.index(type);
@@ -39,7 +48,7 @@ public class TypeIndexer {
       return tree;
    }
    
-   private void index(Class type, FieldElement tree, Set<Class> done) {      
+   private void index(Class type, ClassEntity tree, Set<Class> done) {      
       if(!done.add(type)) {
          throw new IllegalStateException("Cycle in type schema of " + type);
       }

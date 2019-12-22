@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 
 import org.ternlang.studio.common.json.document.TextTrie;
 
-public class ObjectBuilder {
+class ObjectBuilder {
    
    private final TextTrie<Constructor<?>> index;
    

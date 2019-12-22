@@ -7,8 +7,8 @@ import org.ternlang.studio.common.json.document.DirectAssembler;
 import org.ternlang.studio.common.json.document.DocumentAssembler;
 import org.ternlang.studio.common.json.document.DocumentHandler;
 import org.ternlang.studio.common.json.document.Name;
+import org.ternlang.studio.common.json.document.PriorityAssembler;
 import org.ternlang.studio.common.json.document.Value;
-import org.ternlang.studio.common.json.object.TypeAssembler;
 import org.ternlang.studio.common.json.operation.BlockType;
 
 public class JsonParserTest extends PerfTestCase {
@@ -102,7 +102,7 @@ public class JsonParserTest extends PerfTestCase {
       final BlockType match = new BlockType(null).with(text, 0, text.length);
       final DecimalFormat format = new DecimalFormat("######.########");
       final DocumentHandler handler = new BlankHandler();
-      final DocumentAssembler assembler = new TypeAssembler(handler, match);
+      final DocumentAssembler assembler = new PriorityAssembler(handler, match);
       final JsonParser parser = new JsonParser(assembler);
       final double gb = 1000000000;
       final double fraction = (source.length() * iterations) / gb;

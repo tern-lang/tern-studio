@@ -2,6 +2,7 @@ package org.ternlang.studio.common.json;
 
 import java.text.DecimalFormat;
 
+import org.ternlang.studio.common.json.entity.EntityReader;
 import org.ternlang.studio.common.json.object.ObjectMapper;
 import org.ternlang.studio.common.json.object.ObjectReader;
 
@@ -10,9 +11,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 
 public class ObjectMapperTest extends PerfTestCase {
    
+   private static final double ITERATIONS = 1000000;
+   
    private static class Example {
       private String name;
-      //private int age;
+      private int age;
+      private long num;
+      private boolean ready;
       private String ignore;
       private String[] attrs;
       private Address address;
@@ -26,39 +31,43 @@ public class ObjectMapperTest extends PerfTestCase {
    private static final String SOURCE = 
    "{\n" +
    "   \"name\": \"Niall Gallagher\",\n" +
-   //"   \"age\": 101,\n" +
+   "   \"age\": 101,\n" +
+   "   \"num\": -13456734670093,\n" +   
    "   \"attrs\": [\n" +
    "      \"one\",\n" +
    "      \"2\",\n" +
    "      \"3\"\n" +
    "   ],\n" +
    "   \"address\": {\n" +
-   "      \"street\": \"William St\",\n" +
+   "      \"street\": \"Flat 22,\\nWilliam St\",\n" +
    "      \"city\": \"Limerick\"\n" +
    "   },\n" +
-   "   \"type\": \"Example\"\n"+
+   "   \"type\": \"Example\",\n"+
+   "   \"ready\": true\n"+
    "}\n";         
    
    public void testMapper() throws Exception {
       System.err.println(SOURCE);
       
-      final double iterations = 1000000;
+
       final DecimalFormat format = new DecimalFormat("######.########");
       final ObjectMapper mapper = new ObjectMapper();
       final ObjectReader reader = mapper.read(Example.class);
       final double gb = 1000000000;
-      final double fraction = (SOURCE.length() * iterations) / gb;
+      final double fraction = (SOURCE.length() * ITERATIONS) / gb;
 
       final Runnable task = new Runnable() {
          
          public void run() {
             try {                
-               for(int i = 0; i < iterations; i++) {
+               for(int i = 0; i < ITERATIONS; i++) {
                   Example example = reader.read(SOURCE);
                   
                   assertEquals(example.name, "Niall Gallagher");
-                  //assertEquals(example.age, 101);
-                  assertEquals(example.address.street, "William St");
+                  assertEquals(example.age, 101);
+                  assertEquals(example.num, -13456734670093L);
+                  assertEquals(example.ready, true);
+                  assertEquals(example.address.street, "Flat 22,\nWilliam St");
                   assertEquals(example.address.city, "Limerick");
                }
             } catch(Exception e) {
@@ -66,13 +75,12 @@ public class ObjectMapperTest extends PerfTestCase {
             } 
          }
       };
-      timeRun("INTERNAL NORMAL iterations (" + format.format(fraction) + " GB): " + iterations , task);
+      timeRun("INTERNAL NORMAL iterations (" + format.format(fraction) + " GB): " + format.format(ITERATIONS), task);
    }
 
    public void testMapperWithType() throws Exception {
       System.err.println(SOURCE);
 
-      final double iterations = 1000000;
       final DecimalFormat format = new DecimalFormat("######.########");
       final ObjectMapper mapper = new ObjectMapper()
             .register(Example.class)
@@ -81,18 +89,20 @@ public class ObjectMapperTest extends PerfTestCase {
 
       final ObjectReader reader = mapper.read(Object.class);
       final double gb = 1000000000;
-      final double fraction = (SOURCE.length() * iterations) / gb;
+      final double fraction = (SOURCE.length() * ITERATIONS) / gb;
 
       final Runnable task = new Runnable() {
 
          public void run() {
             try {
-               for(int i = 0; i < iterations; i++) {
+               for(int i = 0; i < ITERATIONS; i++) {
                   Example example = reader.read(SOURCE);
 
                   assertEquals(example.name, "Niall Gallagher");
-                  //assertEquals(example.age, 101);
-                  assertEquals(example.address.street, "William St");
+                  assertEquals(example.age, 101);
+                  assertEquals(example.num, -13456734670093L);
+                  assertEquals(example.ready, true);
+                  assertEquals(example.address.street, "Flat 22,\nWilliam St");
                   assertEquals(example.address.city, "Limerick");
                }
             } catch(Exception e) {
@@ -100,13 +110,12 @@ public class ObjectMapperTest extends PerfTestCase {
             }
          }
       };
-      timeRun("INTERNAL TYPE iterations (" + format.format(fraction) + " GB): " + iterations , task);
+      timeRun("INTERNAL TYPE iterations (" + format.format(fraction) + " GB): " + format.format(ITERATIONS), task);
    }
    
    public void testMapperJackson() throws Exception {
       System.err.println(SOURCE);
       
-      final double iterations = 1000000;
       final DecimalFormat format = new DecimalFormat("######.########");
       final com.fasterxml.jackson.databind.ObjectMapper mapper = 
             new com.fasterxml.jackson.databind.ObjectMapper();
@@ -121,18 +130,20 @@ public class ObjectMapperTest extends PerfTestCase {
       final com.fasterxml.jackson.databind.ObjectReader reader = 
             mapper.readerFor(Example.class);
       final double gb = 1000000000;
-      final double fraction = (SOURCE.length() * iterations) / gb;
+      final double fraction = (SOURCE.length() * ITERATIONS) / gb;
 
       final Runnable task = new Runnable() {
          
          public void run() {
             try {                
-               for(int i = 0; i < iterations; i++) {
+               for(int i = 0; i < ITERATIONS; i++) {
                   Example example = reader.readValue(SOURCE);
                   
                   assertEquals(example.name, "Niall Gallagher");
-                  //assertEquals(example.age, 101);
-                  assertEquals(example.address.street, "William St");
+                  assertEquals(example.age, 101);
+                  assertEquals(example.num, -13456734670093L);
+                  assertEquals(example.ready, true);
+                  assertEquals(example.address.street, "Flat 22,\nWilliam St");
                   assertEquals(example.address.city, "Limerick");
                }
             } catch(Exception e) {
@@ -140,7 +151,7 @@ public class ObjectMapperTest extends PerfTestCase {
             } 
          }
       };
-      timeRun("JACKSON iterations (" + format.format(fraction) + " GB): " + iterations , task);
+      timeRun("JACKSON iterations (" + format.format(fraction) + " GB): " + format.format(ITERATIONS), task);
    }
 
 }

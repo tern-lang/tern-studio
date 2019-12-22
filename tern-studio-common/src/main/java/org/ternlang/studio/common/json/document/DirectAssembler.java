@@ -41,30 +41,30 @@ public class DirectAssembler implements DocumentAssembler {
    }
 
    @Override
-   public void decimal(char[] source, int off, int length) {
+   public void decimal(char[] source, int off, int length, double value) {
       Attribute decimal = state.attribute(allocator);
       
-      decimal.decimal(source, off, length);
+      decimal.decimal(source, off, length, value);
       decimal.execute(handler);
       decimal.reset();
       state.reset();
    }
 
    @Override
-   public void integer(char[] source, int off, int length) {
+   public void integer(char[] source, int off, int length, long value) {
       Attribute integer = state.attribute(allocator);
       
-      integer.integer(source, off, length);
+      integer.integer(source, off, length, value);
       integer.execute(handler);
       integer.reset();
       state.reset();
    }
 
    @Override
-   public void bool(char[] source, int off, int length) {
+   public void bool(char[] source, int off, int length, boolean value) {
       Attribute bool = state.attribute(allocator);
       
-      bool.integer(source, off, length);
+      bool.bool(source, off, length, value);
       bool.execute(handler);
       bool.reset();
       state.reset();
@@ -74,7 +74,7 @@ public class DirectAssembler implements DocumentAssembler {
    public void none(char[] source, int off, int length) {
       Attribute none = state.attribute(allocator);
       
-      none.integer(source, off, length);
+      none.none(source, off, length);
       none.execute(handler);
       none.reset();
       state.reset();

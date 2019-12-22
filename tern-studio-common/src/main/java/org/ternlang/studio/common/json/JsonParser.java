@@ -24,29 +24,57 @@ public class JsonParser extends StringParser {
       assembler.end();
    }
    
+   @Override
+   protected boolean skip(String text){
+      int size = text.length();
+      int read = 0;
+
+      if(off + size > count){
+         return false;
+      }
+      while(read < size){
+         char left = text.charAt(read);
+         char right = source[off + read++];
+
+         if(left != right){
+            return false;
+         }
+      }
+      off += size;
+      return true;
+   }
+   
    private void pack() {
-      int pos = 0;
+      int read = off;
+      int write = 0;
 
-      while(off < count){
-         if(quote(source[off])){ 
-            char open = source[off];
-            
-            while(off < count) {
-               source[pos++] = source[off++];
+      while(read < count){
+         char next = source[read];
+         
+         if(next == '"'){ 
+            while(read < count) {
+               source[write++] = source[read++];
 
-               if(source[off] == open) {
-                  source[pos++] = source[off++];
+               if(source[read - 1] == '\\') {
+                  if(read >= count) {
+                     throw new IllegalStateException("String not closed");
+                  }
+                  char special = source[read++];
+                  char replace = escape(special);
+                  
+                  source[write - 1] = replace;
+               } else if(source[read] == '"') {
+                  source[write++] = source[read++];
                   break;
                }
             }
-         } else if(!space(source[off])) {
-            source[pos++] = source[off++];
+         } else if(!space(next)) {
+            source[write++] = source[read++];
          } else {
-            off++;
+            read++;
          }
       }
-      count = pos;
-      off = 0;
+      count = write;
    }
    
    private void process() {
@@ -94,6 +122,8 @@ public class JsonParser extends StringParser {
    }
    
    private void number(int sign) {
+      double scale = 1.0d;
+      long number = 0;
       int start = off;
       int spot = 0;
       
@@ -101,12 +131,13 @@ public class JsonParser extends StringParser {
          char next = source[off];
           
          if(next == ']' || next == '}' || next == ',') {
+            int from = start + (sign == -1 ? 1 : 0);
             int length = off - start;
             
             if(spot > 0) {
-               assembler.decimal(source, start + sign, length);
+               assembler.decimal(source, from, length, sign * number / scale); // lossy
             } else {
-               assembler.integer(source, start + sign, length);
+               assembler.integer(source, from, length, sign * number);
             }
             return;
          } else if(next == '.') {
@@ -114,6 +145,12 @@ public class JsonParser extends StringParser {
                throw new IllegalStateException("Invalid decimal value");               
             }            
          }
+         if(spot > 0) {
+            scale *= 10;
+         }
+         number *= 10;
+         number += next;
+         number -= '0';
          off++;
       }
    }
@@ -121,18 +158,13 @@ public class JsonParser extends StringParser {
    private void bool() {
       int start = off;
       
-      while(off < count) {
-         char next = source[off];
-         
-         if(next == ']' || next == '}' || next == ',') {
-            int length = off - start;
-            
-            assembler.bool(source, start, length); 
-            return;
-         }            
-         off++;
+      if(skip("true")) {
+         assembler.bool(source, start, off - start, true); 
+      } else if(skip("false")) {
+         assembler.bool(source, start, off - start, false); 
+      } else {
+         throw new IllegalStateException("Invalid boolean value");  
       }
-      throw new IllegalStateException("Invalid boolean value");  
    }
    
    private void none() {
@@ -167,7 +199,7 @@ public class JsonParser extends StringParser {
          number(-1);         
       } else {
          if(value >= '0' && value <= '9') {
-            number(0);
+            number(1);
          } else {
             throw new IllegalStateException("Could not parse value");
          }
@@ -224,5 +256,21 @@ public class JsonParser extends StringParser {
          skip(",");
       }
       assembler.arrayEnd();
+   }
+   
+   private char escape(char value) {
+      switch(value) {
+      case 'b':
+         return '\b';
+      case 'f':
+         return '\f';
+      case 'n':
+         return '\n';
+      case 'r':
+         return '\r';
+      case 't':
+         return '\t';
+      }
+      return value;
    }
 }
