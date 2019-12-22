@@ -4,19 +4,18 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.ternlang.studio.common.json.document.TextTrie;
 import org.ternlang.studio.common.json.entity.Entity;
 import org.ternlang.studio.common.json.entity.EntityProvider;
 import org.ternlang.studio.common.json.entity.PropertyConverter;
 
 class ClassProvider implements EntityProvider {
 
-   private final TextTrie<ClassEntity> index;
+   private final SymbolTable<ClassEntity> index;
    private final PropertyConverter converter;
    private final ObjectBuilder builder;
    
    public ClassProvider(ObjectBuilder builder, PropertyConverter converter) {
-      this.index = new TextTrie<ClassEntity>();
+      this.index = new SymbolTable<ClassEntity>();
       this.converter = converter;
       this.builder = builder;
    }

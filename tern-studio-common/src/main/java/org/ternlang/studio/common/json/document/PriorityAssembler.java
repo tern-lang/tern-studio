@@ -109,7 +109,7 @@ public class PriorityAssembler implements DocumentAssembler {
          
          if(next.isBegin()) {
             if(!type.isEmpty()) {
-               TextSlice slice = type.toText();
+               SourceSlice slice = type.toText();
                BlockBegin begin = (BlockBegin)next;
                char[] source = slice.source();
                int off = slice.offset();

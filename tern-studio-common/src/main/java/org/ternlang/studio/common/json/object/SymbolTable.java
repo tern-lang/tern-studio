@@ -1,10 +1,10 @@
-package org.ternlang.studio.common.json.document;
+package org.ternlang.studio.common.json.object;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class TextTrie<T> implements Iterable<T> {
+class SymbolTable<T> implements Iterable<T> {
    
    private static final int[] POSITION = new int[256];
    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-@";
@@ -19,7 +19,7 @@ public class TextTrie<T> implements Iterable<T> {
    private final Set<T> values;
    private final Node root;
    
-   public TextTrie() {
+   public SymbolTable() {
       this.values = new HashSet<T>();
       this.root = new Node(this);
    }
@@ -77,10 +77,10 @@ public class TextTrie<T> implements Iterable<T> {
    private static class Node {
       
       private Node[] children = new Node[WIDTH];
-      private TextTrie parent;
+      private SymbolTable parent;
       private Object value;
       
-      public Node(TextTrie parent) {
+      public Node(SymbolTable parent) {
          this.parent = parent;
       }
 

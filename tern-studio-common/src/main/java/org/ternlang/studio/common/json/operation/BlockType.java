@@ -1,15 +1,15 @@
 package org.ternlang.studio.common.json.operation;
 
 import org.ternlang.studio.common.json.document.Name;
-import org.ternlang.studio.common.json.document.TextSlice;
+import org.ternlang.studio.common.json.document.SourceSlice;
 
 public class BlockType extends Name {
 
    private final OperationPool pool;
-   private final TextSlice slice;
+   private final SourceSlice slice;
    
    public BlockType(OperationPool pool) {
-      this.slice = new TextSlice();
+      this.slice = new SourceSlice();
       this.pool = pool;
    }
 
@@ -20,7 +20,7 @@ public class BlockType extends Name {
    }
 
    @Override
-   public TextSlice toText() {
+   public SourceSlice toText() {
       return slice;
    }
    

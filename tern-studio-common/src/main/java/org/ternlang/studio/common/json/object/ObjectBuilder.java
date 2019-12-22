@@ -2,14 +2,12 @@ package org.ternlang.studio.common.json.object;
 
 import java.lang.reflect.Constructor;
 
-import org.ternlang.studio.common.json.document.TextTrie;
-
 class ObjectBuilder {
    
-   private final TextTrie<Constructor<?>> index;
+   private final SymbolTable<Constructor<?>> index;
    
    public ObjectBuilder() {
-      this.index = new TextTrie<Constructor<?>>();
+      this.index = new SymbolTable<Constructor<?>>();
    }
    
    public void index(Class<?> type) {

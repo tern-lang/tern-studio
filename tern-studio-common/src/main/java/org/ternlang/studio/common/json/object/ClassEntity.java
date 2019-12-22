@@ -2,21 +2,20 @@ package org.ternlang.studio.common.json.object;
 
 import java.lang.reflect.Field;
 
-import org.ternlang.studio.common.json.document.TextTrie;
 import org.ternlang.studio.common.json.entity.Entity;
 import org.ternlang.studio.common.json.entity.Property;
 import org.ternlang.studio.common.json.entity.PropertyConverter;
 
 class ClassEntity implements Entity {
    
-   private final TextTrie<FieldProperty> attributes;
+   private final SymbolTable<FieldProperty> attributes;
    private final PropertyConverter converter;
    private final ObjectBuilder builder;
    private final String name;
    private final Class type;
    
    public ClassEntity(ObjectBuilder builder, PropertyConverter converter, Class type, String name) {
-      this.attributes = new TextTrie<FieldProperty>();
+      this.attributes = new SymbolTable<FieldProperty>();
       this.converter = converter;
       this.builder = builder;
       this.type = type;

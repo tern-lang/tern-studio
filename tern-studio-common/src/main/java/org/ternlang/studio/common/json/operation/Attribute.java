@@ -1,7 +1,7 @@
 package org.ternlang.studio.common.json.operation;
 
 import org.ternlang.studio.common.json.document.DocumentHandler;
-import org.ternlang.studio.common.json.document.TextSlice;
+import org.ternlang.studio.common.json.document.SourceSlice;
 import org.ternlang.studio.common.json.document.Value;
 
 public class Attribute extends Operation {
@@ -78,10 +78,10 @@ public class Attribute extends Operation {
 
    private static class TextValue extends Value {
       
-      private final TextSlice slice;
+      private final SourceSlice slice;
       
       public TextValue() {
-         this.slice = new TextSlice();
+         this.slice = new SourceSlice();
       }
       
       public TextValue with(char[] source, int off, int length) {
@@ -112,11 +112,11 @@ public class Attribute extends Operation {
    
    private static class BooleanValue extends Value {
       
-      private final TextSlice slice;
+      private final SourceSlice slice;
       private boolean bool;
       
       public BooleanValue() {
-         this.slice = new TextSlice();
+         this.slice = new SourceSlice();
       }
       
       public BooleanValue with(char[] source, int off, int length, boolean value) {
@@ -154,11 +154,11 @@ public class Attribute extends Operation {
    
    private static class DecimalValue extends Value {
       
-      private final TextSlice slice;
+      private final SourceSlice slice;
       private double number;
       
       public DecimalValue() {
-         this.slice = new TextSlice();
+         this.slice = new SourceSlice();
       }
       
       public DecimalValue with(char[] source, int off, int length, double value) {
@@ -211,11 +211,11 @@ public class Attribute extends Operation {
    
    private static class IntegerValue extends Value {
       
-      private final TextSlice slice;
+      private final SourceSlice slice;
       private long number;
       
       public IntegerValue() {
-         this.slice = new TextSlice();
+         this.slice = new SourceSlice();
       }
 
       public IntegerValue with(char[] source, int off, int length, long value) {
@@ -268,10 +268,10 @@ public class Attribute extends Operation {
    
    private static class NullValue extends Value {
       
-      private final TextSlice slice;
+      private final SourceSlice slice;
       
       public NullValue() {
-         this.slice = new TextSlice();
+         this.slice = new SourceSlice();
       }
       
       public NullValue with(char[] source, int off, int length) {

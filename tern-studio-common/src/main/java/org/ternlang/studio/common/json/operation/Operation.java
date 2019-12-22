@@ -2,7 +2,7 @@ package org.ternlang.studio.common.json.operation;
 
 import org.ternlang.studio.common.json.document.DocumentHandler;
 import org.ternlang.studio.common.json.document.Name;
-import org.ternlang.studio.common.json.document.TextSlice;
+import org.ternlang.studio.common.json.document.SourceSlice;
 
 public abstract class Operation {
 
@@ -19,10 +19,10 @@ public abstract class Operation {
 
    protected static class NameValue extends Name {
       
-      private final TextSlice slice;
+      private final SourceSlice slice;
 
       public NameValue() {
-         this.slice = new TextSlice();
+         this.slice = new SourceSlice();
       }
 
       public NameValue with(char[] source, int off, int length) {
