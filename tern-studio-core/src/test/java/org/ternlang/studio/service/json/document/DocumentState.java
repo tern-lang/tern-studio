@@ -18,13 +18,14 @@ public class DocumentState {
       return this;
    }
 
-   public boolean match(String type) {
+   public boolean match(Name type) {
       if(type != null && length > 0) {
-         int remain = type.length();
+         CharSequence text = type.toText();
+         int remain = text.length();
 
          if(length == remain) {
             while(--remain >= 0) {
-               char next = type.charAt(remain);
+               char next = text.charAt(remain);
 
                if(source[off + remain] != next) {
                   return false;

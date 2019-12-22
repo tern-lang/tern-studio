@@ -4,25 +4,32 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.ternlang.common.Cache;
 import org.ternlang.common.CopyOnWriteCache;
+import org.ternlang.studio.service.json.document.TextSlice;
+import org.ternlang.studio.service.json.operation.BlockType;
 
 public class ObjectMapper {
    
    private final Cache<Class, ObjectReader> builders;
-   private final AtomicReference<String> reference;
    private final ValueConverter converter;
    private final ObjectBuilder builder;
    private final TypeIndexer indexer;
+   private final BlockType match;
+   private final char[] buffer;
    
    public ObjectMapper() {
-      this.reference = new AtomicReference<String>();
       this.builders = new CopyOnWriteCache<Class, ObjectReader>();
       this.converter = new ValueConverter();
       this.builder = new ObjectBuilder();
       this.indexer = new TypeIndexer(converter, builder);
+      this.match = new BlockType(null);
+      this.buffer = new char[1024];
    }
 
    public ObjectMapper type(String type) {
-      reference.set(type);
+      int length = type.length();
+
+      type.getChars(0, length, buffer, 0);
+      match.with(buffer, 0, length);
       return this;
    }
 
@@ -41,12 +48,11 @@ public class ObjectMapper {
       return builder;
    }
    
-   private ObjectReader create(Class root) {
-      FieldElement tree = indexer.index(root);
-      String type = reference.get();
-      String name = root.getSimpleName();
+   private ObjectReader create(Class type) {
+      FieldElement tree = indexer.index(type);
+      String root = type.getSimpleName();
 
-      return new ObjectReader(indexer, converter, builder, name, type);
+      return new ObjectReader(indexer, converter, builder, match, root);
    }
 
 }

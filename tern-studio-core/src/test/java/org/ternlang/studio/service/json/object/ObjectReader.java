@@ -15,7 +15,7 @@ public class ObjectReader {
    private final ObjectHandler handler;
    private final JsonParser parser;
    
-   public ObjectReader(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, String root, String type) {
+   public ObjectReader(TypeIndexer indexer, ValueConverter converter, ObjectBuilder builder, Name type, String root) {
       this.handler = new ObjectHandler(indexer, converter, builder, root);
       this.assembler = new TypeAssembler(handler, type);
       this.parser = new JsonParser(assembler);

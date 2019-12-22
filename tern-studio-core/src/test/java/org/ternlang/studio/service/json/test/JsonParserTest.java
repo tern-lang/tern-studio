@@ -9,6 +9,7 @@ import org.ternlang.studio.service.json.document.DocumentHandler;
 import org.ternlang.studio.service.json.document.Name;
 import org.ternlang.studio.service.json.document.Value;
 import org.ternlang.studio.service.json.object.TypeAssembler;
+import org.ternlang.studio.service.json.operation.BlockType;
 
 public class JsonParserTest extends PerfTestCase {
 
@@ -97,9 +98,11 @@ public class JsonParserTest extends PerfTestCase {
       System.err.println(source);
 
       final double iterations = 1000000;
+      char[] text = type.toCharArray();
+      final BlockType match = new BlockType(null).with(text, 0, text.length);
       final DecimalFormat format = new DecimalFormat("######.########");
-      final DocumentHandler handler = new BlankHandler();   
-      final DocumentAssembler assembler = new TypeAssembler(handler, type);
+      final DocumentHandler handler = new BlankHandler();
+      final DocumentAssembler assembler = new TypeAssembler(handler, match);
       final JsonParser parser = new JsonParser(assembler);
       final double gb = 1000000000;
       final double fraction = (source.length() * iterations) / gb;

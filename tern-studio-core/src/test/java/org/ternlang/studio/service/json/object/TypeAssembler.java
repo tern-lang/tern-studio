@@ -4,6 +4,7 @@ import org.ternlang.common.ArrayStack;
 import org.ternlang.studio.service.json.document.DocumentAssembler;
 import org.ternlang.studio.service.json.document.DocumentHandler;
 import org.ternlang.studio.service.json.document.DocumentState;
+import org.ternlang.studio.service.json.document.Name;
 import org.ternlang.studio.service.json.document.TextSlice;
 import org.ternlang.studio.service.json.operation.ArrayBegin;
 import org.ternlang.studio.service.json.operation.ArrayEnd;
@@ -23,9 +24,9 @@ public class TypeAssembler implements DocumentAssembler {
    private final ArrayStack<Operation> commit;
    private final ArrayStack<BlockType> blocks;
    private final DocumentState name;
-   private final String type;
+   private final Name type;
    
-   public TypeAssembler(DocumentHandler handler, String type) {
+   public TypeAssembler(DocumentHandler handler, Name type) {
       this.commit = new ArrayStack<Operation>();
       this.active = new ArrayStack<Operation>();
       this.ready = new ArrayStack<Operation>();
