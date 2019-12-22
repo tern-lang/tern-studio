@@ -98,15 +98,16 @@ public class ObjectHandler implements DocumentHandler {
       if(!name.isEmpty()) {
          CharSequence token = name.toText();
          FieldElement top = stack.peek();
+         
+         if(top == null) {
+            throw new IllegalStateException("Illegal JSON ending");
+         }
          FieldAttribute field = top.attribute(token);
 
          if(field != null) {
             FieldElement element = indexer.match(type);
             Object object = objects.peek();
 
-            if(top == null) {
-               throw new IllegalStateException("Illegal JSON ending");
-            }
             objects.push(value);
             stack.push(element);
             field.setValue(object, value);
