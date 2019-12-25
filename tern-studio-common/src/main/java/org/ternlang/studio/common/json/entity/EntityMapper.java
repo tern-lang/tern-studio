@@ -9,11 +9,11 @@ public class EntityMapper {
    private final NameValue match;
    private final NameValue root;
    
-   public EntityMapper(EntityProvider provider) {
+   public EntityMapper(EntityProvider provider, PropertyConverter converter) {
       this.match = new NameValue();
       this.root = new NameValue();
       this.reader = new EntityReader(provider, match, root);
-      this.writer = new EntityWriter(provider);
+      this.writer = new EntityWriter(provider, converter);
    }
 
    public EntityMapper match(String attribute) {

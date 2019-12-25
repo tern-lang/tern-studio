@@ -26,7 +26,7 @@ public class EntityWriterTest extends TestCase {
       PropertyConverter converter = new PropertyConverter();
       ObjectBuilder builder = new ObjectBuilder();
       ClassProvider provider = new ClassProvider(builder, converter);
-      EntityWriter writer = new EntityWriter(provider);
+      EntityWriter writer = new EntityWriter(provider, converter);
       Example example = new Example();
       
       example.name = "Niall";

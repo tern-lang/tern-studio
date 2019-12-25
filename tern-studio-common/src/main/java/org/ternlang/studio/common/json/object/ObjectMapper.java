@@ -19,7 +19,7 @@ public class ObjectMapper {
       this.converter = new PropertyConverter();
       this.builder = new ObjectBuilder();
       this.provider = new ClassProvider(builder, converter);
-      this.mapper = new EntityMapper(provider);
+      this.mapper = new EntityMapper(provider, converter);
    }
 
    public ObjectMapper register(Class type) {
