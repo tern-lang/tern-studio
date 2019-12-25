@@ -23,9 +23,10 @@ public class JsonParser {
       
       if(length > 0) {
          expand(length);
+         text.getChars(0, length, source, 0);
          count = length;
          off = 0;
-         pack(text);
+         pack();
          process();
       }
    }
@@ -39,45 +40,40 @@ public class JsonParser {
       }
    }
    
-   private void pack(String text) {
+   private void pack() {
       int read = off;
       int write = 0;
 
       while(read < count){
-         char next = text.charAt(read);
+         char next = source[read];
          
          if(next == '"'){ 
             int insert = write + 1;
             
-            source[write++] = text.charAt(read++);
+            source[write++] = source[read++];
             write++;
             
             while(read < count) {
-               next = text.charAt(read++);
-               source[write++] = next;
+               source[write++] = source[read++];
                
-               if(next == '\\') {
+               if(source[read - 1] == '\\') {
                   if(read >= count) {
                      throw new IllegalStateException("String not closed");
                   }
-                  char special = text.charAt(read++);
+                  char special = source[read++];
                   char replace = escape(special);
                   
                   source[write - 1] = replace;
-               } else {
-                  next = text.charAt(read);
-               
-                  if(next == '"') {
-                     int length = (write - insert) - 1;
-                     
-                     source[insert] = (char)length;
-                     read++;
-                     break;
-                  }
+               } else if(source[read] == '"') {
+                  int length = (write - insert) - 1;
+                  
+                  source[insert] = (char)length;
+                  read++;
+                  break;
                }
             }
          } else if(!space(next)) {
-            source[write++] = text.charAt(read++);
+            source[write++] = source[read++];
          } else {
             read++;
          }

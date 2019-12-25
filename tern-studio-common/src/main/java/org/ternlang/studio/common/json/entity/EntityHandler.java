@@ -66,7 +66,7 @@ class EntityHandler implements DocumentHandler {
          if(property != null) {
             String type = property.getName();
             Entity element = provider.getEntity(type);
-            Object value = provider.getInstance(type);
+            Object value = element.getInstance();
 
             objects.push(value);
             entities.push(element);
@@ -75,7 +75,7 @@ class EntityHandler implements DocumentHandler {
       } else {
          CharSequence type = root.toText();
          Entity entity = provider.getEntity(type);
-         Object value = provider.getInstance(type);
+         Object value = entity.getInstance();
 
          objects.push(value);
          entities.push(entity);
@@ -85,7 +85,6 @@ class EntityHandler implements DocumentHandler {
    @Override
    public void blockBegin(Name name, Name override) {
       CharSequence type = override.toText();
-      Object value = provider.getInstance(type);
 
       if(!name.isEmpty()) {
          CharSequence token = name.toText();
@@ -97,18 +96,20 @@ class EntityHandler implements DocumentHandler {
          Property property = entity.getProperty(token);
 
          if(property != null) {
-            Entity child = provider.getEntity(type);
             Object object = objects.peek();
+            Entity child = provider.getEntity(type);
+            Object value = child.getInstance();
 
             objects.push(value);
             entities.push(child);
             property.setValue(object, value);
          }
       } else {
-         Entity entity = provider.getEntity(type);
+         Entity child = provider.getEntity(type);
+         Object value = child.getInstance();
 
          objects.push(value);
-         entities.push(entity);
+         entities.push(child);
       }
    }
    

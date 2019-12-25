@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 
 public class ObjectMapperTest extends PerfTestCase {
    
-   private static final double ITERATIONS = 1000000;
+   private static final double ITERATIONS = 5000000;
    
    private static class Example {
       private String name;
@@ -66,6 +66,8 @@ public class ObjectMapperTest extends PerfTestCase {
       final double gb = 1000000000;
       final double fraction = (SOURCE.length() * ITERATIONS) / gb;
 
+      reader.read(SOURCE);
+
       final Runnable task = new Runnable() {
          
          public void run() {
@@ -102,6 +104,8 @@ public class ObjectMapperTest extends PerfTestCase {
       final ObjectReader reader = mapper.read(Object.class);
       final double gb = 1000000000;
       final double fraction = (SOURCE.length() * ITERATIONS) / gb;
+
+      reader.read(SOURCE);
 
       final Runnable task = new Runnable() {
 
@@ -146,6 +150,8 @@ public class ObjectMapperTest extends PerfTestCase {
       final double gb = 1000000000;
       final double fraction = (SOURCE.length() * ITERATIONS) / gb;
 
+      reader.readValue(SOURCE);
+
       final Runnable task = new Runnable() {
          
          public void run() {
@@ -177,6 +183,8 @@ public class ObjectMapperTest extends PerfTestCase {
       final Gson gson = new Gson();
       final double gb = 1000000000;
       final double fraction = (SOURCE.length() * ITERATIONS) / gb;
+
+      gson.fromJson(SOURCE, Example.class);
 
       final Runnable task = new Runnable() {
          

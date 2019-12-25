@@ -3,6 +3,7 @@ package org.ternlang.studio.common.json.object;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.ternlang.studio.common.json.entity.Entity;
 import org.ternlang.studio.common.json.entity.EntityProvider;
@@ -19,26 +20,21 @@ class ClassProvider implements EntityProvider {
       this.converter = converter;
       this.builder = builder;
    }
-   
-   @Override
-   public Object getInstance(CharSequence type) {
-      return builder.create(type);
-   }
 
    @Override
    public Entity getEntity(CharSequence type) {
       return index.match(type);
    }
 
-   public ClassEntity index(Class type) {
+   public Entity index(Class type) {
       String name = type.getSimpleName();
+      Supplier<Object> factory = builder.create(type, name);
       ClassEntity tree = index.match(name);
       
       if(tree == null) {
-         ClassEntity create = new ClassEntity(builder, converter, type, name);
+         ClassEntity create = new ClassEntity(converter, factory, type, name);
          Set<Class> types = new HashSet<Class>();
-         
-         builder.index(type);
+
          index.index(create, name);
          index(type, create, types);
          

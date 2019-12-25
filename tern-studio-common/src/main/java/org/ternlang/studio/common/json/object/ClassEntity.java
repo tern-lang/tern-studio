@@ -1,6 +1,7 @@
 package org.ternlang.studio.common.json.object;
 
 import java.lang.reflect.Field;
+import java.util.function.Supplier;
 
 import org.ternlang.studio.common.json.entity.Entity;
 import org.ternlang.studio.common.json.entity.Property;
@@ -10,14 +11,14 @@ class ClassEntity implements Entity {
    
    private final SymbolTable<FieldProperty> attributes;
    private final PropertyConverter converter;
-   private final ObjectBuilder builder;
+   private final Supplier<Object> factory;
    private final String name;
    private final Class type;
    
-   public ClassEntity(ObjectBuilder builder, PropertyConverter converter, Class type, String name) {
+   public ClassEntity(PropertyConverter converter, Supplier<Object> factory, Class type, String name) {
       this.attributes = new SymbolTable<FieldProperty>();
       this.converter = converter;
-      this.builder = builder;
+      this.factory = factory;
       this.type = type;
       this.name = name;
    }
@@ -35,8 +36,8 @@ class ClassEntity implements Entity {
    }
 
    @Override
-   public Object getInstance(CharSequence type) {
-      return builder.create(type);
+   public Object getInstance() {
+      return factory.get();
    }
    
    @Override
