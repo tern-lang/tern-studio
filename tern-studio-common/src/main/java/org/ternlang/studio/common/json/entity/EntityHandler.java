@@ -64,8 +64,12 @@ class EntityHandler implements DocumentHandler {
          Property property = entity.getProperty(token);
 
          if(property != null) {
-            String type = property.getName();
+            String type = property.getEntity();
             Entity element = provider.getEntity(type);
+            
+            if(element == null) {
+               throw new IllegalStateException("No such type " + type);
+            }
             Object value = element.getInstance();
 
             objects.push(value);

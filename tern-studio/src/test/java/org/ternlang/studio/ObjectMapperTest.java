@@ -29,6 +29,10 @@ public class ObjectMapperTest extends PerfTestCase {
       private PostCode postCode;
    }
    
+   private static class FullAddress extends Address{
+      private int house;
+   }
+   
    public static class PostCode {
       private String prefix;
       private String suffix;
@@ -45,6 +49,8 @@ public class ObjectMapperTest extends PerfTestCase {
    "      \"3\"\n" +
    "   ],\n" +
    "   \"address\": {\n" +
+   "      \"type\": \"FullAddress\",\n"+
+   "      \"house\": 62,\n"+   
    "      \"street\": \"Flat 22,\\nWilliam St\",\n" +
    "      \"city\": \"Limerick\",\n" +
    "      \"postCode\": {\n" +
@@ -99,6 +105,7 @@ public class ObjectMapperTest extends PerfTestCase {
       final ObjectMapper mapper = new ObjectMapper()
             .register(Example.class)
             .register(Address.class)
+            .register(FullAddress.class)
             .match("type");
 
       final ObjectReader reader = mapper.read(Object.class);
@@ -129,6 +136,52 @@ public class ObjectMapperTest extends PerfTestCase {
          }
       };
       timeRun("INTERNAL TYPE iterations (" + format.format(fraction) + " GB): " + format.format(ITERATIONS), task);
+   }
+   
+   public void testMapperWithTypeAlias() throws Exception {
+      final String source = SOURCE
+            .replace("FullAddress", "FULL_ADDRESS")
+            .replace("Address", "ADDRESS")
+            .replace("Example", "EXAMPLE");
+            
+      System.err.println(source);
+
+      final DecimalFormat format = new DecimalFormat("######.########");
+      final ObjectMapper mapper = new ObjectMapper()
+            .register(Example.class, "EXAMPLE")
+            .register(Address.class, "ADDRESS")
+            .register(FullAddress.class, "FULL_ADDRESS")
+            .match("type");
+
+      final ObjectReader reader = mapper.read(Object.class);
+      final double gb = 1000000000;
+      final double fraction = (source.length() * ITERATIONS) / gb;
+
+      reader.read(source);
+
+      final Runnable task = new Runnable() {
+
+         public void run() {
+            try {
+               for(int i = 0; i < ITERATIONS; i++) {
+                  Example example = reader.read(source);
+
+                  assertEquals(example.name, "Niall Gallagher");
+                  assertEquals(example.age, 101);
+                  assertEquals(example.num, -13456734670093L);
+                  assertEquals(example.ready, true);
+                  assertEquals(((FullAddress)example.address).house, 62);
+                  assertEquals(example.address.street, "Flat 22,\nWilliam St");
+                  assertEquals(example.address.city, "Limerick");
+                  assertEquals(example.address.postCode.prefix, "IVTTYYU");
+                  assertEquals(example.address.postCode.suffix, "EXCVITTX");
+               }
+            } catch(Exception e) {
+               e.printStackTrace();
+            }
+         }
+      };
+      timeRun("INTERNAL ALIAS iterations (" + format.format(fraction) + " GB): " + format.format(ITERATIONS), task);
    }
    
    public void testMapperJackson() throws Exception {
@@ -210,4 +263,13 @@ public class ObjectMapperTest extends PerfTestCase {
       timeRun("GSON iterations (" + format.format(fraction) + " GB): " + format.format(ITERATIONS), task);
    }
    
+   public static void main(String[] list) throws Exception {
+      ObjectMapperTest test = new ObjectMapperTest();
+      
+      test.testMapper();
+      test.testMapperWithTypeAlias();
+      test.testMapperWithType();
+      test.testMapperJackson();
+      test.testMapperGson();
+   }
 }

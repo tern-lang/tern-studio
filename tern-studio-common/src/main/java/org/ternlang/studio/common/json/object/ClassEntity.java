@@ -1,6 +1,8 @@
 package org.ternlang.studio.common.json.object;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.ternlang.studio.common.json.entity.Entity;
@@ -11,26 +13,31 @@ class ClassEntity implements Entity {
    
    private final SymbolTable<FieldProperty> attributes;
    private final PropertyConverter converter;
+   private final List<Property> properties;
    private final Supplier<Object> factory;
-   private final String name;
+   private final String entity;
    private final Class type;
    
-   public ClassEntity(PropertyConverter converter, Supplier<Object> factory, Class type, String name) {
+   public ClassEntity(PropertyConverter converter, Supplier<Object> factory, Class type, String entity) {
       this.attributes = new SymbolTable<FieldProperty>();
+      this.properties = new ArrayList<Property>();
       this.converter = converter;
       this.factory = factory;
+      this.entity = entity;
       this.type = type;
-      this.name = name;
    }
    
-   public Property index(CharSequence name, Field field) {
+   public Property index(String name, Field field) {
+      Class type = field.getType();
       FieldProperty property = attributes.match(name);
+      boolean primitive = converter.accept(type);
       
       if(property == null) {
-         property = new FieldProperty(converter, field);  
+         property = new FieldProperty(converter, field, name, primitive);  
          
          field.setAccessible(true);
          attributes.index(property, name);
+         properties.add(property);
       }
       return property;
    }
@@ -41,13 +48,18 @@ class ClassEntity implements Entity {
    }
    
    @Override
+   public Iterable<Property> getProperties() {
+      return properties;
+   }
+   
+   @Override
    public Property getProperty(CharSequence name) {
       return attributes.match(name);
    }
 
    @Override
-   public String getName() {
-      return name;
+   public String getEntity() {
+      return entity;
    }
    
    @Override

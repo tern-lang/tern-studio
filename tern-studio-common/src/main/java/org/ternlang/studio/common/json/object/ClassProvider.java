@@ -28,6 +28,16 @@ class ClassProvider implements EntityProvider {
 
    public Entity index(Class type) {
       String name = type.getSimpleName();
+      Entity tree = index.match(name);
+      
+      if(tree == null) {
+         return index(type, name);
+      }
+      return tree;
+   }
+   
+   public Entity index(Class type, String alias) {
+      String name = type.getSimpleName();
       Supplier<Object> factory = builder.create(type, name);
       ClassEntity tree = index.match(name);
       
@@ -35,6 +45,7 @@ class ClassProvider implements EntityProvider {
          ClassEntity create = new ClassEntity(converter, factory, type, name);
          Set<Class> types = new HashSet<Class>();
 
+         index.index(create, alias);
          index.index(create, name);
          index(type, create, types);
          

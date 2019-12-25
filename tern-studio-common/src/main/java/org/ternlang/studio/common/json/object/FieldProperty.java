@@ -10,16 +10,30 @@ class FieldProperty implements Property {
 
    private final PropertyConverter converter;
    private final Field field;
+   private final String entity;
    private final String name;
    private final Class type;
+   private final boolean primitive;
    private final boolean array;
    
-   public FieldProperty(PropertyConverter converter, Field field){
+   public FieldProperty(PropertyConverter converter, Field field, String name, boolean primitive){
       this.type = field.getType();
-      this.name = type.getSimpleName();
+      this.entity = type.getSimpleName();
       this.array = type.isArray();
+      this.primitive = primitive;
       this.converter = converter;
       this.field = field;
+      this.name = name;
+   }
+
+   @Override
+   public boolean isArray() {
+      return array;
+   }
+
+   @Override
+   public boolean isPrimitive() {
+      return primitive;
    }
 
    @Override
@@ -50,6 +64,11 @@ class FieldProperty implements Property {
       } catch(Exception e) {
          throw new IllegalStateException("Illegal access to " + field, e);
       }
+   }
+
+   @Override
+   public String getEntity() {
+      return entity;
    }
    
    @Override

@@ -27,6 +27,11 @@ public class ObjectMapper {
       return this;
    }
    
+   public ObjectMapper register(Class type, String alias) {
+      provider.index(type, alias);
+      return this;
+   }
+   
    public ObjectMapper match(String attribute) {
       mapper.match(attribute);
       return this;

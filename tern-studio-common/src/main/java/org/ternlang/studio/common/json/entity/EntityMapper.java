@@ -5,6 +5,7 @@ import org.ternlang.studio.common.json.document.Name;
 public class EntityMapper {
    
    private final EntityReader reader;
+   private final EntityWriter writer;
    private final NameValue match;
    private final NameValue root;
    
@@ -12,6 +13,7 @@ public class EntityMapper {
       this.match = new NameValue();
       this.root = new NameValue();
       this.reader = new EntityReader(provider, match, root);
+      this.writer = new EntityWriter(provider);
    }
 
    public EntityMapper match(String attribute) {
@@ -30,6 +32,10 @@ public class EntityMapper {
          root.reset();
       }
       return reader;
+   }
+   
+   public EntityWriter write() {
+      return writer;
    }
    
    private static class NameValue extends Name {
