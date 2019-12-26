@@ -11,7 +11,7 @@ import org.ternlang.studio.common.json.entity.PropertyConverter;
 
 class ClassEntity implements Entity {
    
-   private final SymbolTable<FieldProperty> attributes;
+   private final SymbolTable<Property> attributes;
    private final PropertyConverter converter;
    private final List<Property> properties;
    private final Supplier<Object> factory;
@@ -19,7 +19,7 @@ class ClassEntity implements Entity {
    private final Class type;
    
    public ClassEntity(PropertyConverter converter, Supplier<Object> factory, Class type, String entity) {
-      this.attributes = new SymbolTable<FieldProperty>();
+      this.attributes = new SymbolTable<Property>();
       this.properties = new ArrayList<Property>();
       this.converter = converter;
       this.factory = factory;
@@ -29,13 +29,19 @@ class ClassEntity implements Entity {
    
    public Property index(String name, Field field) {
       Class type = field.getType();
-      FieldProperty property = attributes.match(name);
-      boolean primitive = converter.accept(type);
+      Property property = attributes.match(name);
       
       if(property == null) {
-         property = new FieldProperty(converter, field, name, primitive);  
+         Class entry = type.getComponentType();
+         boolean primitive = converter.accept(type);
          
          field.setAccessible(true);
+         
+         if(type.isArray()) {
+            property = new ObjectProperty(converter, field, entry, name, primitive, true);  
+         } else {
+            property = new ObjectProperty(converter, field, type, name, primitive, false);  
+         }
          attributes.index(property, name);
          properties.add(property);
       }

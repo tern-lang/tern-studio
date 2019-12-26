@@ -56,6 +56,11 @@ public abstract class Value {
       return text.charAt(0);
    }
    
+   public Object toObject() {
+      CharSequence text = toText();
+      return text.toString();
+   }
+   
    public boolean isNull() {
       return false;
    }

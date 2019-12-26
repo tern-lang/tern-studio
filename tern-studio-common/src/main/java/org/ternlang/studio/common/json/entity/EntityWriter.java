@@ -2,6 +2,8 @@ package org.ternlang.studio.common.json.entity;
 
 import java.lang.reflect.Array;
 
+import org.ternlang.studio.common.json.document.Value;
+
 public class EntityWriter {
 
    private final PropertyConverter converter;
@@ -17,37 +19,31 @@ public class EntityWriter {
    public CharSequence write(Object source) {
       if(source != null) {
          Class type = source.getClass();
-         
-         if(converter.accept(type)) {
-            builder.append("\"");
-            builder.append(source);
-            builder.append("\"");
-         } else {
-            String name = type.getSimpleName();
-            Entity entity = provider.getEntity(name);
-   
-            builder.append("{");
-            write(source, entity);
-            builder.append("}");
-         }
+         String name = type.getSimpleName();
+         Entity entity = provider.getEntity(name);
+
+         builder.append("{");
+         writeObject(source, entity);
+         builder.append("}");
       } else {
          builder.append("null");
       }
       return builder;
    }
    
-   private CharSequence write(Object source, Entity entity) {
+   private void writeObject(Object source, Entity entity) {
       if(source != null) {
          Iterable<Property> properties = entity.getProperties();
          String separator = "";
          
          for(Property property : properties) {
             String name = property.getName();
-            Object value = property.getValue(source);
+            Value value = property.getValue(source);
             
             builder.append(separator);
             builder.append('"');
             builder.append(name);
+            builder.append("\":");
             
             if(property.isPrimitive()) {
                builder.append("\":\"");
@@ -58,14 +54,12 @@ public class EntityWriter {
                
                if(array != null) {
                   int length = Array.getLength(array);
-                  
-                  builder.append("\":[");
-                  
-                  for(int i = 0; i < length; i++) {
-                     Object element = Array.get(array, i);
-                     write(element);
+      
+                  if(length > 0) {
+                     writeArray(source, entity, length);
+                  } else {
+                     builder.append("[]");
                   }
-                  builder.append("]");
                } else {
                   builder.append("null");
                }
@@ -74,7 +68,7 @@ public class EntityWriter {
                Entity child = provider.getEntity(type);
                
                builder.append("\":{");
-               write(value, child);
+               writeObject(value, child);
                builder.append("}");
             }
             separator = ",";
@@ -82,6 +76,13 @@ public class EntityWriter {
       } else {
          builder.append("null");
       }
-      return builder;
    }
+   
+   
+   private void writeArray(Object source, Entity entity, int length) {
+      for(int i = 0; i < length; i++) {
+         
+      }
+   }
+   
 }

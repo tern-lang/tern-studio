@@ -90,6 +90,11 @@ public class Attribute extends Operation {
       }
       
       @Override
+      public Object toObject() {
+         return slice.toString();
+      }
+      
+      @Override
       public CharSequence toText() {
          return slice;
       }
@@ -123,6 +128,11 @@ public class Attribute extends Operation {
          slice.with(source, off, length);
          bool = value;
          return this;
+      }
+      
+      @Override
+      public Object toObject() {
+         return bool;
       }
       
       @Override
@@ -170,6 +180,11 @@ public class Attribute extends Operation {
       @Override
       public CharSequence toText() {
          return slice;
+      }
+      
+      @Override
+      public Object toObject() {
+         return number;
       }
 
       @Override
@@ -228,6 +243,11 @@ public class Attribute extends Operation {
       public CharSequence toText() {
          return slice;
       }
+      
+      @Override
+      public Object toObject() {
+         return number;
+      }
 
       @Override
       public long toLong() {
@@ -277,6 +297,11 @@ public class Attribute extends Operation {
       public NullValue with(char[] source, int off, int length) {
          slice.with(source, off, length);
          return this;
+      }
+      
+      @Override
+      public Object toObject() {
+         return null;
       }
       
       @Override

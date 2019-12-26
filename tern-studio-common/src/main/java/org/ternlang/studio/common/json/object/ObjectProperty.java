@@ -6,9 +6,10 @@ import org.ternlang.studio.common.json.document.Value;
 import org.ternlang.studio.common.json.entity.Property;
 import org.ternlang.studio.common.json.entity.PropertyConverter;
 
-class FieldProperty implements Property {
+class ObjectProperty implements Property {
 
    private final PropertyConverter converter;
+   private final ObjectValue value;
    private final Field field;
    private final String entity;
    private final String name;
@@ -16,13 +17,14 @@ class FieldProperty implements Property {
    private final boolean primitive;
    private final boolean array;
    
-   public FieldProperty(PropertyConverter converter, Field field, String name, boolean primitive){
-      this.type = field.getType();
+   public ObjectProperty(PropertyConverter converter, Field field, Class type, String name, boolean primitive, boolean array){
+      this.value = new ObjectValue(field);
       this.entity = type.getSimpleName();
-      this.array = type.isArray();
-      this.primitive = primitive;
       this.converter = converter;
+      this.primitive = primitive;
+      this.array = array;
       this.field = field;
+      this.type = type;
       this.name = name;
    }
 
@@ -37,9 +39,9 @@ class FieldProperty implements Property {
    }
 
    @Override
-   public Object getValue(Object source) {
+   public Value getValue(Object source) {
       try {
-         return field.get(source);
+         return value.with(source);
       } catch(Exception e) {
          throw new IllegalStateException("Illegal access to " + field, e);
       }
@@ -79,5 +81,45 @@ class FieldProperty implements Property {
    @Override
    public Class getType() {
       return type;
+   }
+   
+   private static class ObjectValue extends Value {
+
+      private Object source;
+      private Field field;
+
+      public ObjectValue(Field field) {
+         this.field = field;
+      }
+      
+      public Value with(Object source) {
+         this.source = source;
+         return this;
+      }
+      
+      @Override
+      public Object toObject() {
+         try {
+            return field.get(source);
+         } catch(Exception e) {
+            throw new IllegalStateException("Illegal access to " + field, e);
+         }
+      }
+
+      @Override
+      public CharSequence toText() {
+         Object object = toObject();
+         return String.valueOf(object);
+      }
+
+      @Override
+      public boolean isEmpty() {
+         return false;
+      }
+
+      @Override
+      public void reset() {
+         source = null;
+      }
    }
 }

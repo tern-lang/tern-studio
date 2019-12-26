@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 
 public class ObjectMapperTest extends PerfTestCase {
    
-   private static final double ITERATIONS = 5000000;
+   private static final double ITERATIONS = 1000000;
    
    private static class Example {
       private String name;
@@ -266,9 +266,9 @@ public class ObjectMapperTest extends PerfTestCase {
    public static void main(String[] list) throws Exception {
       ObjectMapperTest test = new ObjectMapperTest();
       
-      test.testMapper();
       test.testMapperWithTypeAlias();
       test.testMapperWithType();
+      test.testMapper();
       test.testMapperJackson();
       test.testMapperGson();
    }
