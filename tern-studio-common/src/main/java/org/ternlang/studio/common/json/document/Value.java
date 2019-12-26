@@ -30,14 +30,14 @@ public abstract class Value {
       return Integer.parseInt(string);
    }
    
-   public int toShort() {
+   public short toShort() {
       CharSequence text = toText();
       String string = text.toString();
       
       return Short.parseShort(string);
    }
    
-   public int toByte() {
+   public byte toByte() {
       CharSequence text = toText();
       String string = text.toString();
       

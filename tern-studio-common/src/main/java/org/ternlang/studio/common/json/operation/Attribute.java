@@ -208,6 +208,16 @@ public class Attribute extends Operation {
       }
       
       @Override
+      public short toShort() {
+         return (short)number;
+      }
+
+      @Override
+      public byte toByte() {
+         return (byte)number;
+      }
+      
+      @Override
       public boolean isEmpty() {
          return slice.isEmpty();
       }
@@ -267,6 +277,16 @@ public class Attribute extends Operation {
       @Override
       public float toFloat() {
          return (float)number;
+      }
+      
+      @Override
+      public short toShort() {
+         return (short)number;
+      }
+
+      @Override
+      public byte toByte() {
+         return (byte)number;
       }
       
       @Override
