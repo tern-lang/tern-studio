@@ -1,0 +1,37 @@
+
+enum ProcessMode {
+   REMOTE,
+   SERVICE,
+   SCRIPT,
+   TASK
+}
+
+enum ExecuteStatus {
+   REGISTERING,
+   WAITING,
+   STARTING,
+   COMPILING,
+   DEBUGGING,
+   RUNNING,
+   TERMINATING,
+   FINISHED
+}  
+
+struct BeginEvent {
+   status: ExecuteStatus;
+   mode: ProcessMode;
+   resource: char[100];
+   process: char[20];
+   project: char[20];
+   system: char[20];
+   pid: char[20];
+   totalTime: int64;
+   totalMemory: int64;
+   usedMemory: int64;
+   threads: int32;
+   duration: int64;
+}
+
+union Event {
+   BeginEvent
+}

@@ -1,0 +1,34 @@
+# |  represents a logical "or"
+# *  represents one or more
+# +  represents at least once
+# ?  represents one or none
+# <> define a production
+# () groups productions
+# {} group productions, first match wins
+# _  represents whitespace
+# [] represents a symbol
+# '' represents a literal text value
+
+sign = {'-' | '+'};
+number = ?<sign>{[hexadecimal] | [binary] | [decimal]};
+boolean = {'true' | 'false'};
+null = 'null';
+literal = {<null> | <boolean> | <number> | [template] | [text]};
+
+entity = [identifier];
+
+array-length = [decimal];
+array = [identifier] +('['<array-length>']');
+
+struct-constraint = (<array> | <entity>);
+struct-property = [identifier] ':' <struct-constraint> ';';
+struct-definition = 'struct' _ [type] '{' +<struct-property> '}'; 
+
+enum-property = [type];
+enum-definition = 'enum' _ [type] '{' <enum-property> *(',' <enum-property>) '}'; 
+
+union-property = [type];
+union-definition = 'union' _ [type] '{' <union-property> *(',' <union-property>) '}'; 
+
+schema = *{<enum-definition> | <struct-definition> | <union-definition>};
+
