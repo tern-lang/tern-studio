@@ -25,5 +25,13 @@ public class EnumDefinition implements Definition {
       
       entity.setModule(namespace);
       entity.setType(EntityType.ENUM);
+      
+      
+      if(properties == null || properties.length == 0) {
+         throw new IllegalStateException("Union " + name + " has no entities");
+      }
+      for(EnumProperty property : properties) {
+         property.process(scope, entity);
+      }
    }
 }

@@ -25,5 +25,12 @@ public class UnionDefinition implements Definition {
       
       entity.setModule(namespace);
       entity.setType(EntityType.UNION);
+      
+      if(properties == null || properties.length == 0) {
+         throw new IllegalStateException("Union " + name + " has no entities");
+      }
+      for(UnionProperty property : properties) {
+         property.process(scope, entity);
+      }
    }
 }
