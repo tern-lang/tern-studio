@@ -11,6 +11,24 @@ public class FilePatternScanner {
    private static final String RECURSIVE_PATTERN = "_RECURSIVE_PATTERN_";
    private static final String SINGLE_PATTERN = "_SINGLE_PATTERN_";
    
+   public static Pattern compile(String token, boolean file) {
+      String expression = token;
+   
+      expression = expression.replace("**", RECURSIVE_PATTERN); // convert \** to \.*
+      expression = expression.replace("*", SINGLE_PATTERN); // convert \* to file regex
+      
+      try {
+         expression = file ? new File(expression).getCanonicalPath() : expression; // remove ../ and ./
+         expression = PatternEscaper.escape(expression);
+         expression = expression.replace(RECURSIVE_PATTERN, ".*");
+         expression = expression.replace(SINGLE_PATTERN, "[a-zA-Z0-9_\\$\\-\\(\\)\\.\\s]+");
+         
+         return Pattern.compile(expression);
+      }catch(Exception e) {
+         throw new IllegalArgumentException("Could not parse pattern '" +token+ "'", e);
+      }
+   }
+   
    public static FileSet scan(String token, File root) throws IOException {
       File file = new File(root, token);
       
@@ -34,25 +52,15 @@ public class FilePatternScanner {
             File directory = new File(parent);
             
             if(directory.exists()) {
-               expression = expression.replace("**", RECURSIVE_PATTERN); // convert \** to \.*
-               expression = expression.replace("*", SINGLE_PATTERN); // convert \* to file regex
-               
-               File path = new File(expression);
-               
                try {
-                  expression = path.getCanonicalPath(); // remove ../ and ./
-                  expression = PatternEscaper.escape(expression);
-                  expression = expression.replace(RECURSIVE_PATTERN, ".*");
-                  expression = expression.replace(SINGLE_PATTERN, "[a-zA-Z0-9_\\$\\-\\(\\)\\.\\s]+");
-                  
-                  Pattern pattern = Pattern.compile(expression);
+                  Pattern pattern = compile(expression, true);
                   List<File> list = FilePatternMatcher.scan(pattern, directory);
                   
                   Collections.sort(list);
                   
                   return new FileSet(directory, list, time);
                }catch(Exception e) {
-                  throw new IllegalArgumentException("Could not parse pattern '" +token+ "'", e);
+                  throw new IllegalArgumentException("Could not match pattern '" +token+ "'", e);
                }
             }
          }

@@ -2,35 +2,40 @@ package org.ternlang.studio.message.idl;
 
 public class Property {
    
-   private final PropertyType type;
-   private final String constraint;
-   private final String name;
-   private final int dimension;
+   private PropertyType type;
+   private String constraint;
+   private String name;
+   private int dimension;
    
-   public Property(PropertyType type, String name, String constraint) {
-      this(type, name, constraint, 0);
-   }
-   
-   public Property(PropertyType type, String name, String constraint, int dimension) {
-      this.dimension = dimension;
-      this.constraint = constraint;
-      this.type = type;
+   public Property(String name) {
       this.name = name;
    }
-   
+
    public PropertyType getType() {
       return type;
    }
-  
-   public String getName() {
-      return name;
+
+   public void setType(PropertyType type) {
+      this.type = type;
    }
-   
+
    public String getConstraint() {
       return constraint;
    }
-   
+
+   public void setConstraint(String constraint) {
+      this.constraint = constraint;
+   }
+
+   public String getName() {
+      return name;
+   }
+
    public int getDimension() {
       return dimension;
+   }
+
+   public void setDimension(int dimension) {
+      this.dimension = dimension;
    }
 }

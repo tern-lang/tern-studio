@@ -1,35 +1,53 @@
 package org.ternlang.studio.message.idl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.ternlang.common.Cache;
+import org.ternlang.common.LazyCache;
 
 public class Entity {
-   
-   private final List<Property> properties;
-   private final EntityType type;
-   private final String name;
-   private final String module;
 
-   public Entity(EntityType type, String name, String module) {
-      this.properties = new ArrayList<Property>();
-      this.module = module;
+   private Cache<String, Property> properties;
+   private EntityType type;
+   private String name;
+   private String module;
+
+   public Entity(String name) {
+      this.properties = new LazyCache<String, Property>(Property::new);
       this.name = name;
-      this.type = type;
    }
    
+   public Property getProperty(String name) {
+      return properties.fetch(name);
+   }
+
+   public List<Property> getProperties() {
+      return properties.keySet()
+            .stream()
+            .map(properties::fetch)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+   }
+
+   public EntityType getType() {
+      return type;
+   }
+
+   public void setType(EntityType type) {
+      this.type = type;
+   }
+
    public String getName() {
       return name;
    }
-   
-   public String getPackage() {
+
+   public String getModule() {
       return module;
    }
-   
-   public List<Property> getProperties() {
-      return properties;
-   }
-   
-   public EntityType getType() {
-      return type;
+
+   public void setModule(String module) {
+      this.module = module;
    }
 }

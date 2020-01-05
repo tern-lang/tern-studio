@@ -1,4 +1,6 @@
 
+namespace com.bitril;
+
 enum ProcessMode {
    REMOTE,
    SERVICE,
