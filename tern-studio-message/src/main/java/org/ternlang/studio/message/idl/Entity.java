@@ -35,8 +35,9 @@ public class Entity {
       return type;
    }
 
-   public void setType(EntityType type) {
+   public Entity setType(EntityType type) {
       this.type = type;
+      return this;
    }
 
    public String getName() {
@@ -47,7 +48,8 @@ public class Entity {
       return module;
    }
 
-   public void setModule(String module) {
+   public Entity setModule(String module) {
       this.module = module;
+      return this;
    }
 }

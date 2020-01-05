@@ -15,16 +15,18 @@ public class Property {
       return type;
    }
 
-   public void setType(PropertyType type) {
+   public Property setType(PropertyType type) {
       this.type = type;
+      return this;
    }
 
    public String getConstraint() {
       return constraint;
    }
 
-   public void setConstraint(String constraint) {
+   public Property setConstraint(String constraint) {
       this.constraint = constraint;
+      return this;
    }
 
    public String getName() {
@@ -35,7 +37,8 @@ public class Property {
       return dimension;
    }
 
-   public void setDimension(int dimension) {
+   public Property setDimension(int dimension) {
       this.dimension = dimension;
+      return this;
    }
 }
