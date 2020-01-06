@@ -5,16 +5,26 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.ternlang.common.Cache;
-import org.ternlang.common.LazyCache;
+import org.ternlang.common.CopyOnWriteCache;
 
 public class Package {
 
-   private Cache<String, Entity> entities;
-   private String name;
+   private final Cache<String, Entity> entities;
+   private final String name;
 
    public Package(String name) {
-      this.entities = new LazyCache<String, Entity>(Entity::new);
+      this.entities = new CopyOnWriteCache<String, Entity>();
       this.name = name;
+   }
+   
+   public Entity addEntity(String name) {
+      Entity entity = entities.fetch(name);
+      
+      if(entity == null) {
+         entity = new Entity(name);
+         entities.cache(name, entity);
+      }
+      return entity;
    }
    
    public Entity getEntity(String name) {

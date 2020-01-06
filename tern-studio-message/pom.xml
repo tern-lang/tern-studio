@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ternlang</groupId>
   <artifactId>tern-studio-message</artifactId>
@@ -6,9 +7,9 @@
   <version>1.4.6</version>
   <url>http://tern-lang.org</url>
   <dependencies>
-      <dependency>
+    <dependency>
       <groupId>org.ternlang</groupId>
-      <artifactId>tern-studio-common</artifactId>
+      <artifactId>tern-studio-core</artifactId>
       <version>1.4.6</version>
     </dependency>
     <dependency>
@@ -32,14 +33,7 @@
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
-        <!--  configuration>
-          <source>9</source>
-          <target>9</target>
-          <compilerArgs>
-            <arg>- -add-modules</arg>
-            <arg>java.base</arg>
-          </compilerArgs>
-        </configuration -->
+        <!-- configuration> <source>9</source> <target>9</target> <compilerArgs> <arg>- -add-modules</arg> <arg>java.base</arg> </compilerArgs> </configuration -->
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -61,7 +55,7 @@
             <manifest>
               <mainClass>org.ternlang.studio.agent.local.LocalProcess</mainClass>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries> 
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
             </manifest>
           </archive>
           <descriptorRefs>
@@ -72,7 +66,7 @@
         <executions>
           <execution>
             <id>make-assembly</id>
-            <phase>package</phase> 
+            <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>

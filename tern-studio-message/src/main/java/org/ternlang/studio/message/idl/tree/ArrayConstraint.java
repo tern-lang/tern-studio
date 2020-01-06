@@ -8,14 +8,25 @@ import org.ternlang.tree.literal.TextLiteral;
 
 public class ArrayConstraint implements Constraint {
 
-   private final NumberLiteral[] dimensions;
+   private final NumberLiteral dimension;
    private final NameReference type;
+   private final Option option;
    
-   public ArrayConstraint(TextLiteral type, NumberLiteral... dimensions) {
+   public ArrayConstraint(TextLiteral type, NumberLiteral dimension) {
+      this(type, dimension, null);
+   }
+   
+   public ArrayConstraint(TextLiteral type, NumberLiteral dimension, Option option) {
       this.type = new NameReference(type);
-      this.dimensions = dimensions;
+      this.dimension = dimension;
+      this.option = option;
    }
 
+   @Override
+   public void define(Scope scope, Property property) throws Exception {
+
+   }
+   
    @Override
    public void process(Scope scope, Property property) throws Exception {
 

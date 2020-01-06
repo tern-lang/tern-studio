@@ -5,14 +5,24 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.ternlang.common.Cache;
-import org.ternlang.common.LazyCache;
+import org.ternlang.common.CopyOnWriteCache;
 
 public class Model {
 
-   private Cache<String, Package> packages;
+   private final Cache<String, Package> packages;
 
    public Model() {
-      this.packages = new LazyCache<String, Package>(Package::new);
+      this.packages = new CopyOnWriteCache<String, Package>();
+   }
+   
+   public Package addPackage(String name) {
+      Package module = packages.fetch(name);
+      
+      if(module == null) {
+         module = new Package(name);
+         packages.cache(name, module);
+      }
+      return module;
    }
    
    public Package getPackage(String name) {

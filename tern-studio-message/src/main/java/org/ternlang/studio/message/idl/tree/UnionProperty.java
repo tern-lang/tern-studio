@@ -15,6 +15,13 @@ public class UnionProperty {
       this.identifier = new NameReference(identifier);
    }
    
+   public void define(Scope scope, Entity entity) throws Exception {
+      String name = identifier.getName(scope);
+      Property property = entity.addProperty(name);
+      
+      property.setType(PropertyType.ENTITY);
+   }
+   
    public void process(Scope scope, Entity entity) throws Exception {
       String name = identifier.getName(scope);
       Property property = entity.getProperty(name);

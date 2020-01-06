@@ -18,6 +18,23 @@ public class UnionDefinition implements Definition {
    }
    
    @Override
+   public void define(Scope scope, Package module) throws Exception {
+      String name = identifier.getName(scope);
+      Entity entity = module.addEntity(name);
+      String namespace = module.getName();
+      
+      entity.setModule(namespace);
+      entity.setType(EntityType.UNION);
+      
+      if(properties == null || properties.length == 0) {
+         throw new IllegalStateException("Union " + name + " has no entities");
+      }
+      for(UnionProperty property : properties) {
+         property.process(scope, entity);
+      }
+   }
+   
+   @Override
    public void process(Scope scope, Package module) throws Exception {
       String name = identifier.getName(scope);
       Entity entity = module.getEntity(name);

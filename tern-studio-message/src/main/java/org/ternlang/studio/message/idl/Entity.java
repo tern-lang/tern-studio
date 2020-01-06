@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.ternlang.common.Cache;
-import org.ternlang.common.LazyCache;
+import org.ternlang.common.CopyOnWriteCache;
 
 public class Entity {
 
@@ -15,8 +15,18 @@ public class Entity {
    private String module;
 
    public Entity(String name) {
-      this.properties = new LazyCache<String, Property>(Property::new);
+      this.properties = new CopyOnWriteCache<String, Property>();
       this.name = name;
+   }
+   
+   public Property addProperty(String name) {
+      Property property = properties.fetch(name);
+      
+      if(property == null) {
+         property = new Property(name);
+         properties.cache(name, property);
+      }
+      return property;
    }
    
    public Property getProperty(String name) {

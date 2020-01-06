@@ -16,19 +16,31 @@ public class EnumDefinition implements Definition {
       this.identifier = new NameReference(identifier);
       this.properties = properties;
    }
-
+   
    @Override
-   public void process(Scope scope, Package module) throws Exception {
+   public void define(Scope scope, Package module) throws Exception {
       String name = identifier.getName(scope);
-      Entity entity = module.getEntity(name);
+      Entity entity = module.addEntity(name);
       String namespace = module.getName();
       
       entity.setModule(namespace);
       entity.setType(EntityType.ENUM);
       
-      
       if(properties == null || properties.length == 0) {
          throw new IllegalStateException("Union " + name + " has no entities");
+      }
+      for(EnumProperty property : properties) {
+         property.define(scope, entity);
+      }
+   }
+
+   @Override
+   public void process(Scope scope, Package module) throws Exception {
+      String name = identifier.getName(scope);
+      Entity entity = module.getEntity(name);
+      
+      if(entity == null) {
+         throw new IllegalStateException("Enum " + name + " has not been defined");
       }
       for(EnumProperty property : properties) {
          property.process(scope, entity);

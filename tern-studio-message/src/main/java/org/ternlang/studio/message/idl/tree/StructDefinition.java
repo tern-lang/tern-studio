@@ -18,6 +18,16 @@ public class StructDefinition implements Definition {
    }
    
    @Override
+   public void define(Scope scope, Package module) throws Exception {
+      String name = identifier.getName(scope);
+      Entity entity = module.addEntity(name);
+      String namespace = module.getName();
+      
+      entity.setModule(namespace);
+      entity.setType(EntityType.STRUCT);
+   }
+   
+   @Override
    public void process(Scope scope, Package module) throws Exception {
       String name = identifier.getName(scope);
       Entity entity = module.getEntity(name);

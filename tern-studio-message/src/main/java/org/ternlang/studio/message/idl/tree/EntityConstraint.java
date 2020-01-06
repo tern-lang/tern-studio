@@ -8,9 +8,20 @@ import org.ternlang.tree.literal.TextLiteral;
 public class EntityConstraint implements Constraint {
 
    private final NameReference type;
-   
+   private final Option option;
+
    public EntityConstraint(TextLiteral type) {
+      this(type, null);
+   }
+   
+   public EntityConstraint(TextLiteral type, Option option) {
       this.type = new NameReference(type);
+      this.option = option;
+   }
+   
+   @Override
+   public void define(Scope scope, Property property) throws Exception {
+
    }
 
    @Override

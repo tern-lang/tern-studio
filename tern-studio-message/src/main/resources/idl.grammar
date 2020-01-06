@@ -15,10 +15,17 @@ boolean = {'true' | 'false'};
 null = 'null';
 literal = {<null> | <boolean> | <number> | [template] | [text]};
 
-entity = [identifier];
+full-qualifier = [qualifier]*('.'[qualifier]);
+wild-qualifier = [qualifier]*('.'[qualifier])'.*';
+
+namespace = 'namespace' _ (<full-qualifier> | <wild-qualifier>) ';';
+
+option = '?';
+
+entity = [identifier] ?<option>;
 
 array-length = [decimal];
-array = [identifier] +('['<array-length>']');
+array = [identifier] '['<array-length>']'  ?<option>;
 
 struct-constraint = (<array> | <entity>);
 struct-property = [identifier] ':' <struct-constraint> ';';
@@ -30,5 +37,5 @@ enum-definition = 'enum' _ [type] '{' <enum-property> *(',' <enum-property>) '}'
 union-property = [type];
 union-definition = 'union' _ [type] '{' <union-property> *(',' <union-property>) '}'; 
 
-schema = *{<enum-definition> | <struct-definition> | <union-definition>};
+schema = <namespace> *{<enum-definition> | <struct-definition> | <union-definition>};
 

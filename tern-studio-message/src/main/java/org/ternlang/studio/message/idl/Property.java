@@ -6,9 +6,18 @@ public class Property {
    private String constraint;
    private String name;
    private int dimension;
+   private boolean optional;
    
    public Property(String name) {
       this.name = name;
+   }
+   
+   public boolean isOptional() {
+      return optional;
+   }
+
+   public void setOptional(boolean optional) {
+      this.optional = optional;
    }
 
    public PropertyType getType() {
