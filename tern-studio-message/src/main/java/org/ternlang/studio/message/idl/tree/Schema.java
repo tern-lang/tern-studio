@@ -1,7 +1,7 @@
 package org.ternlang.studio.message.idl.tree;
 
 import org.ternlang.core.scope.Scope;
-import org.ternlang.studio.message.idl.Model;
+import org.ternlang.studio.message.idl.Domain;
 import org.ternlang.studio.message.idl.Package;
 
 public class Schema {
@@ -14,16 +14,16 @@ public class Schema {
       this.namespace = namespace;
    }
    
-   public void define(Scope scope, Model model) throws Exception {
-      Package module = namespace.define(scope, model);
+   public void define(Scope scope, Domain domain) throws Exception {
+      Package module = namespace.define(scope, domain);
       
       for(Definition definition : definitions) {
          definition.define(scope, module);
       }
    }
    
-   public void process(Scope scope, Model model) throws Exception {
-      Package module = namespace.process(scope, model);
+   public void process(Scope scope, Domain domain) throws Exception {
+      Package module = namespace.process(scope, domain);
       
       for(Definition definition : definitions) {
          definition.process(scope, module);

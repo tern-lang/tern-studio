@@ -9,14 +9,27 @@ import org.ternlang.common.CopyOnWriteCache;
 
 public class Package {
 
-   private final Cache<String, Entity> entities;
-   private final String name;
+   private Cache<String, Entity> entities;
+   private String name;
+   private String path;
 
    public Package(String name) {
       this.entities = new CopyOnWriteCache<String, Entity>();
       this.name = name;
    }
    
+   public String getName() {
+      return name;
+   }
+   
+   public String getPath() {
+      return path;
+   }
+
+   public void setPath(String path) {
+      this.path = path;
+   }
+
    public Entity addEntity(String name) {
       Entity entity = entities.fetch(name);
       
@@ -38,8 +51,4 @@ public class Package {
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
    } 
-   
-   public String getName() {
-      return name;
-   }
 }

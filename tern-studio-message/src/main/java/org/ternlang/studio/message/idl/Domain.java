@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 import org.ternlang.common.Cache;
 import org.ternlang.common.CopyOnWriteCache;
 
-public class Model {
+public class Domain {
 
    private final Cache<String, Package> packages;
 
-   public Model() {
+   public Domain() {
       this.packages = new CopyOnWriteCache<String, Package>();
    }
    

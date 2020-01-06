@@ -19,7 +19,7 @@ public class StructProperty {
    
    public void define(Scope scope, Entity entity) throws Exception {
       String name = identifier.getName(scope);
-      Property property = entity.getProperty(name);
+      Property property = entity.addProperty(name);
       
       property.setType(PropertyType.ENUM);
    }

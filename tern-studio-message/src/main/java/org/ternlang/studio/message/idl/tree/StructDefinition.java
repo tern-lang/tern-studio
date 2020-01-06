@@ -25,15 +25,25 @@ public class StructDefinition implements Definition {
       
       entity.setModule(namespace);
       entity.setType(EntityType.STRUCT);
+      
+      if(properties == null || properties.length == 0) {
+         throw new IllegalStateException("Struct " + name + " has no properties");
+      }
+      for(StructProperty property : properties) {
+         property.define(scope, entity);
+      }
    }
    
    @Override
    public void process(Scope scope, Package module) throws Exception {
       String name = identifier.getName(scope);
       Entity entity = module.getEntity(name);
-      String namespace = module.getName();
       
-      entity.setModule(namespace);
-      entity.setType(EntityType.STRUCT);
+      if(properties == null || properties.length == 0) {
+         throw new IllegalStateException("Struct " + name + " has no properties");
+      }
+      for(StructProperty property : properties) {
+         property.define(scope, entity);
+      }
    }
 }

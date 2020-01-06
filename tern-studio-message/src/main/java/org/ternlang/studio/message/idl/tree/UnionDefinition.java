@@ -30,7 +30,7 @@ public class UnionDefinition implements Definition {
          throw new IllegalStateException("Union " + name + " has no entities");
       }
       for(UnionProperty property : properties) {
-         property.process(scope, entity);
+         property.define(scope, entity);
       }
    }
    

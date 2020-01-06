@@ -20,6 +20,8 @@ import org.ternlang.core.type.extend.FileExtension;
 import org.ternlang.parse.SyntaxCompiler;
 import org.ternlang.parse.SyntaxNode;
 import org.ternlang.parse.SyntaxParser;
+import org.ternlang.studio.message.idl.Domain;
+import org.ternlang.studio.message.idl.tree.Schema;
 
 public class SyntaxTest {
 
@@ -50,8 +52,11 @@ public class SyntaxTest {
       SyntaxNode node = analyzer.parse(file.getCanonicalPath(), source, "schema");
       System.err.println(SyntaxPrinter.print(analyzer, source, "schema")); 
       
-      Object result = assembler.assemble(node, path);
-      System.err.println(result);
+      Domain domain = new Domain();
+      Schema schema = assembler.assemble(node, path);
+      
+      schema.define(scope, domain);
+      schema.process(scope, domain);
       
       return null;
    }

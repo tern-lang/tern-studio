@@ -2,7 +2,7 @@ package org.ternlang.studio.message.idl.tree;
 
 import org.ternlang.core.module.Path;
 import org.ternlang.core.scope.Scope;
-import org.ternlang.studio.message.idl.Model;
+import org.ternlang.studio.message.idl.Domain;
 import org.ternlang.studio.message.idl.Package;
 import org.ternlang.tree.Qualifier;
 
@@ -16,13 +16,20 @@ public class Namespace {
       this.path = path;
    }
    
-   public Package define(Scope scope, Model model) throws Exception {
-      String module = qualifier.getQualifier();
-      return model.addPackage(module);
+   public Package define(Scope scope, Domain domain) throws Exception {
+      String location = qualifier.getQualifier();
+      Package module = domain.addPackage(location);
+      String resource = path.getPath();
+      
+      if(resource.startsWith("/")) {
+         resource = resource.substring(1);
+      }
+      module.setPath(resource);
+      return module;
    }
    
-   public Package process(Scope scope, Model model) throws Exception {
-      String module = qualifier.getQualifier();
-      return model.getPackage(module);
+   public Package process(Scope scope, Domain domain) throws Exception {
+      String location = qualifier.getQualifier();
+      return domain.getPackage(location);
    }
 }
