@@ -1,5 +1,7 @@
 package org.ternlang.studio.message.idl.tree;
 
+import static org.ternlang.studio.message.idl.PropertyType.ENUM;
+
 import org.ternlang.core.scope.Scope;
 import org.ternlang.studio.message.idl.Entity;
 import org.ternlang.studio.message.idl.Property;
@@ -19,13 +21,13 @@ public class EnumProperty {
       String name = identifier.getName(scope);
       Property property = entity.addProperty(name);
       
-      property.setType(PropertyType.ENUM);
+      property.setType(ENUM.mask);
    }
    
    public void process(Scope scope, Entity entity) throws Exception {
       String name = identifier.getName(scope);
       Property property = entity.getProperty(name);
       
-      property.setType(PropertyType.ENUM);
+      property.setType(ENUM.mask);
    }
 }

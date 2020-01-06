@@ -10,4 +10,8 @@ public class Option {
    public Option(TextLiteral identifier) {
       this.identifier = new NameReference(identifier);
    }
+   
+   public boolean optional() {
+      return true;
+   }
 }

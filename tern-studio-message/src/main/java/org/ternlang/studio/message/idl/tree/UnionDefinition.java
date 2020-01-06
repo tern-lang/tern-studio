@@ -38,11 +38,7 @@ public class UnionDefinition implements Definition {
    public void process(Scope scope, Package module) throws Exception {
       String name = identifier.getName(scope);
       Entity entity = module.getEntity(name);
-      String namespace = module.getName();
-      
-      entity.setModule(namespace);
-      entity.setType(EntityType.UNION);
-      
+
       if(properties == null || properties.length == 0) {
          throw new IllegalStateException("Union " + name + " has no entities");
       }

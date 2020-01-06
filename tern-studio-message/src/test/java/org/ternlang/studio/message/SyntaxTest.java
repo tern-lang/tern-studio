@@ -39,15 +39,17 @@ public class SyntaxTest {
       Scope scope = merger.create(model, "default");
       SyntaxParser analyzer = compiler.compile();
 
-      analyzer.parse("/idl.txt", "int32[10]?", "array");
-      analyzer.parse("/idl.txt", "int32[10]", "array");
-      analyzer.parse("/idl.txt", "int32?", "entity");
+      analyzer.parse("/idl.txt", "int[10]?", "array");
+      analyzer.parse("/idl.txt", "int[10]", "array");
+      analyzer.parse("/idl.txt", "int?", "entity");
+      analyzer.parse("/idl.txt", "DateTime", "entity");
+      analyzer.parse("/idl.txt", "DateTime?", "entity");
       analyzer.parse("/idl.txt", "namespace foo.bar;", "namespace");
       analyzer.parse("/idl.txt", "enum ProcessMode{REMOTE, SERVICE,SCRIPT, TASK}", "enum-definition");
       analyzer.parse("/idl.txt", "union Event{BeginEvent, RegisterEvent }", "union-definition");
       analyzer.parse("/idl.txt", "int32[10]", "struct-constraint");
-      analyzer.parse("/idl.txt", "struct BeginEvent {process: char[10]; duration: int64;}", "struct-definition");
-      analyzer.parse("/idl.txt", "namespace foo.bar; struct BeginEvent {process: char[10]; duration: int64;}", "schema");
+      analyzer.parse("/idl.txt", "struct BeginEvent {process: char[10]; duration: long;}", "struct-definition");
+      analyzer.parse("/idl.txt", "namespace foo.bar; struct BeginEvent {process: char[10]; duration: long;}", "schema");
       
       SyntaxNode node = analyzer.parse(file.getCanonicalPath(), source, "schema");
       System.err.println(SyntaxPrinter.print(analyzer, source, "schema")); 

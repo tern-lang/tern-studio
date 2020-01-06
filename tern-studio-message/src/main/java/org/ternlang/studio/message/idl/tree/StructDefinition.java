@@ -43,7 +43,7 @@ public class StructDefinition implements Definition {
          throw new IllegalStateException("Struct " + name + " has no properties");
       }
       for(StructProperty property : properties) {
-         property.define(scope, entity);
+         property.process(scope, entity);
       }
    }
 }

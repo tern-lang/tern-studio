@@ -27,11 +27,11 @@ struct BeginEvent {
    project: char[20];
    system: char[20];
    pid: char[20];
-   totalTime: int64;
-   totalMemory: int64;
-   usedMemory: int64;
-   threads: int32;
-   duration: int64;
+   totalTime: long;
+   totalMemory: long;
+   usedMemory: long;
+   threads: int;
+   duration: long;
 }
 
 union Event {

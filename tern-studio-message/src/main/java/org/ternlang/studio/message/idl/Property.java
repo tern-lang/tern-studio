@@ -2,11 +2,11 @@ package org.ternlang.studio.message.idl;
 
 public class Property {
    
-   private PropertyType type;
    private String constraint;
    private String name;
    private int dimension;
    private boolean optional;
+   private int type;
    
    public Property(String name) {
       this.name = name;
@@ -20,11 +20,11 @@ public class Property {
       this.optional = optional;
    }
 
-   public PropertyType getType() {
+   public int getType() {
       return type;
    }
 
-   public Property setType(PropertyType type) {
+   public Property setType(int type) {
       this.type = type;
       return this;
    }

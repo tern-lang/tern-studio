@@ -15,6 +15,7 @@ boolean = {'true' | 'false'};
 null = 'null';
 literal = {<null> | <boolean> | <number> | [template] | [text]};
 
+
 full-qualifier = [qualifier]*('.'[qualifier]);
 wild-qualifier = [qualifier]*('.'[qualifier])'.*';
 

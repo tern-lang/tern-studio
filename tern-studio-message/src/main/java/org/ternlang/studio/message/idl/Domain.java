@@ -36,4 +36,10 @@ public class Domain {
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
    } 
+   
+   public List<Entity> getEntities() {
+      return getPackages().stream()
+            .flatMap(module -> module.getEntities().stream())
+            .collect(Collectors.toList());
+   } 
 }
