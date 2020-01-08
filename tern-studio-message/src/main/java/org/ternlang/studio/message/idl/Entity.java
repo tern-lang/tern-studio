@@ -11,8 +11,8 @@ public class Entity {
 
    private Cache<String, Property> properties;
    private EntityType type;
+   private Package module;
    private String name;
-   private String module;
 
    public Entity(String name) {
       this.properties = new CopyOnWriteCache<String, Property>();
@@ -54,11 +54,11 @@ public class Entity {
       return name;
    }
 
-   public String getModule() {
+   public Package getPackage() {
       return module;
    }
 
-   public Entity setModule(String module) {
+   public Entity setPackage(Package module) {
       this.module = module;
       return this;
    }

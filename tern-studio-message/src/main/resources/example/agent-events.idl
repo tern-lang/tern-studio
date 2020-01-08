@@ -1,23 +1,8 @@
 
-namespace com.bitril;
+namespace org.ternlang.event;
 
-enum ProcessMode {
-   REMOTE,
-   SERVICE,
-   SCRIPT,
-   TASK
-}
-
-enum ExecuteStatus {
-   REGISTERING,
-   WAITING,
-   STARTING,
-   COMPILING,
-   DEBUGGING,
-   RUNNING,
-   TERMINATING,
-   FINISHED
-}  
+import org.ternlang.common.ExecuteStatus;
+import org.ternlang.common.ProcessMode;
 
 struct BeginEvent {
    status: ExecuteStatus;

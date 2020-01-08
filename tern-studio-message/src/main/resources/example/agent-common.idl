@@ -1,0 +1,20 @@
+
+namespace org.ternlang.common;
+
+enum ProcessMode {
+   REMOTE,
+   SERVICE,
+   SCRIPT,
+   TASK
+}
+
+enum ExecuteStatus {
+   REGISTERING,
+   WAITING,
+   STARTING,
+   COMPILING,
+   DEBUGGING,
+   RUNNING,
+   TERMINATING,
+   FINISHED
+} 

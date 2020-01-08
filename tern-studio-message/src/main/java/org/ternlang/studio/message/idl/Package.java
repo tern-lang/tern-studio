@@ -6,16 +6,26 @@ import java.util.stream.Collectors;
 
 import org.ternlang.common.Cache;
 import org.ternlang.common.CopyOnWriteCache;
+import org.ternlang.core.scope.Scope;
 
 public class Package {
 
    private Cache<String, Entity> entities;
+   private Scope scope;
    private String name;
    private String path;
 
    public Package(String name) {
       this.entities = new CopyOnWriteCache<String, Entity>();
       this.name = name;
+   }
+   
+   public Scope getScope() {
+      return scope;
+   }
+   
+   public void setScope(Scope scope) {
+      this.scope = scope;
    }
    
    public String getName() {

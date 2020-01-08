@@ -29,6 +29,9 @@ public class Namespace {
       if(resource.startsWith("/")) {
          resource = resource.substring(1);
       }
+      if(resource.endsWith("/idl.tern")) {
+         resource = resource.replace("/idl.tern", ".idl");
+      }
       module.setPath(resource);
       return module;
    }

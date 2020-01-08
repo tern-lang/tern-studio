@@ -6,10 +6,19 @@ public class Property {
    private String name;
    private int dimension;
    private boolean optional;
+   private int offset;
    private int type;
    
    public Property(String name) {
       this.name = name;
+   }
+   
+   public boolean isArray() {
+      return PropertyType.isArray(type);
+   }
+   
+   public boolean isPrimitive() {
+      return PropertyType.isPrimitive(type);
    }
    
    public boolean isOptional() {
@@ -18,6 +27,14 @@ public class Property {
 
    public void setOptional(boolean optional) {
       this.optional = optional;
+   }
+   
+   public int getOffset() {
+      return offset;
+   }
+
+   public void setOffset(int offset) {
+      this.offset = offset;
    }
 
    public int getType() {

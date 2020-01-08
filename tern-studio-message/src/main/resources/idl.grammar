@@ -21,6 +21,9 @@ wild-qualifier = [qualifier]*('.'[qualifier])'.*';
 
 namespace = 'namespace' _ (<full-qualifier> | <wild-qualifier>) ';';
 
+import = 'import' _ (<full-qualifier> | <wild-qualifier>) ';';
+import-list = *<import>;
+
 option = '?';
 
 entity = [identifier] ?<option>;
@@ -38,5 +41,5 @@ enum-definition = 'enum' _ [type] '{' <enum-property> *(',' <enum-property>) '}'
 union-property = [type];
 union-definition = 'union' _ [type] '{' <union-property> *(',' <union-property>) '}'; 
 
-schema = <namespace> *{<enum-definition> | <struct-definition> | <union-definition>};
+schema = <namespace> <import-list> *{<enum-definition> | <struct-definition> | <union-definition>};
 

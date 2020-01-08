@@ -49,7 +49,7 @@ public class ArrayConstraint implements Constraint {
    public void process(Scope scope, Property property) throws Exception {
       int type = property.getType();
       
-      if(PropertyType.isEntity(type)) {
+      if(PropertyType.isEntity(type) || PropertyType.isEnum(type)) {
          String constraint = property.getConstraint();
          ScopeState state = scope.getState();
          Value value = state.getValue(constraint);

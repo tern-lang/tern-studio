@@ -21,9 +21,8 @@ public class UnionDefinition implements Definition {
    public void define(Scope scope, Package module) throws Exception {
       String name = identifier.getName(scope);
       Entity entity = module.addEntity(name);
-      String namespace = module.getName();
       
-      entity.setModule(namespace);
+      entity.setPackage(module);
       entity.setType(EntityType.UNION);
       
       if(properties == null || properties.length == 0) {

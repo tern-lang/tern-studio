@@ -47,9 +47,9 @@ public class DomainLoader {
 
       while(resources.hasNext()) {
          URL resource = resources.next();
-         DomainArtifact artifact = read(resource);
-         String source = artifact.getSource();
-         Path path = artifact.getPath();
+         DomainDefinition definition = read(resource);
+         String source = definition.getSource();
+         Path path = definition.getPath();
          String location = path.getPath();
          SyntaxNode node = analyzer.parse(location, source, EXPRESSION);
          Schema schema = assembler.assemble(node, path);
@@ -64,7 +64,7 @@ public class DomainLoader {
       return domain;
    }
 
-   private static DomainArtifact read(URL resource) throws Exception {
+   private static DomainDefinition read(URL resource) throws Exception {
       InputStream stream = resource.openStream();
       String location = resource.toString();
 
@@ -78,18 +78,18 @@ public class DomainLoader {
             buffer.write(chunk, 0, count);
          }
          String source = buffer.toString("UTF-8");
-         return new DomainArtifact(path, source);
+         return new DomainDefinition(path, source);
       } catch(Exception e) {
          throw new IllegalStateException("Could not read " + resource, e);
       }
    }
 
-   private static class DomainArtifact {
+   private static class DomainDefinition {
 
       private final Path path;
       private final String source;
 
-      public DomainArtifact(Path path, String source) {
+      public DomainDefinition(Path path, String source) {
          this.path = path;
          this.source = source;
       }
