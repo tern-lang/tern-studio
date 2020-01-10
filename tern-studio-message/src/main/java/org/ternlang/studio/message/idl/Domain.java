@@ -35,7 +35,14 @@ public class Domain {
             .map(packages::fetch)
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
-   } 
+   }
+   
+   public Entity getEntity(String name) {
+      return getEntities().stream()
+            .filter(entity -> entity.getName().equals(name))
+            .findFirst()
+            .orElse(null);
+   }
    
    public List<Entity> getEntities() {
       return getPackages().stream()

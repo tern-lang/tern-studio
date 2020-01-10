@@ -1,16 +1,23 @@
 package org.ternlang.studio.message.idl.codegen.build;
 
+import org.ternlang.studio.message.idl.Domain;
 import org.ternlang.studio.message.idl.Property;
 import org.ternlang.studio.message.idl.codegen.CodeAppender;
 
 public class EnumArrayGenerator implements PropertyGenerator {
 
+   private final Domain domain;
+   
+   public EnumArrayGenerator(Domain domain) {
+      this.domain = domain;
+   }
+   
    @Override
    public void generateField(CodeAppender builder, String owner, Property property) {
       String name = property.getName();
       String constraint = property.getConstraint();
 
-      builder.append("   private %sArrayCodec %s = new %sArrayCodec();\n", constraint, name, constraint);
+      builder.append("   private %sArrayCodec %sCodec = new %sArrayCodec();\n", constraint, name, constraint);
    }
    
    @Override
@@ -22,8 +29,8 @@ public class EnumArrayGenerator implements PropertyGenerator {
       
       builder.append("   @Override\n");
       builder.append("   public %sArrayBuilder %s() {\n", constraint, name);
-      builder.append("      %s.wrap(buffer, offset + %s, %s * Primitive.BYTE_SIZE);\n", name, offset, length);
-      builder.append("      return %s;\n", name);
+      builder.append("      %sCodec.wrap(buffer, offset + %s, %s * Primitive.BYTE_SIZE);\n", name, offset, length);
+      builder.append("      return %sCodec;\n", name);
       builder.append("   }\n");
    }
 

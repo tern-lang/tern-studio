@@ -64,7 +64,7 @@ public class JsonParserTest extends PerfTestCase {
       parseSourceWithTypeAssembler("TYPE SOURCE_NORMAL", SOURCE_NORMAL, "BeginString");
    }
    
-   private void parseSource(String name, String source) throws Exception {
+   private void parseSource(final String name, final String source) throws Exception {
       System.err.println(source);
       
       final double iterations = 1000000;
@@ -94,7 +94,7 @@ public class JsonParserTest extends PerfTestCase {
    }
    
    
-   private void parseSourceWithTypeAssembler(String name, String source, String type) throws Exception {
+   private void parseSourceWithTypeAssembler(final String name, final String source, final String type) throws Exception {
       System.err.println(source);
 
       final double iterations = 1000000;

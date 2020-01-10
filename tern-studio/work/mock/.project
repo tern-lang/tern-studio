@@ -1,0 +1,9 @@
+<project>
+   <source>
+      <path>main/src</path>
+      <path>main/assets</path>
+      <path>test/src</path>
+      <path>test/assets</path>
+   </source> 
+</project>
+

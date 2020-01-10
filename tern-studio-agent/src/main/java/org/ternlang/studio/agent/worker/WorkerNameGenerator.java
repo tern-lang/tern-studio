@@ -32,7 +32,5 @@ public class WorkerNameGenerator {
       
       return String.format("%s-%s%s", prefix, sequence, date);
    }
-   
-   
 }
 

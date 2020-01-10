@@ -1,10 +1,17 @@
 package org.ternlang.studio.message.idl.codegen.build;
 
+import org.ternlang.studio.message.idl.Domain;
 import org.ternlang.studio.message.idl.Property;
 import org.ternlang.studio.message.idl.codegen.CodeAppender;
 
 public class PrimitiveGenerator implements PropertyGenerator {
 
+   private final Domain domain;
+   
+   public PrimitiveGenerator(Domain domain) {
+      this.domain = domain;
+   }
+   
    @Override
    public void generateField(CodeAppender builder, String owner, Property property) {
       // no field for primitive
