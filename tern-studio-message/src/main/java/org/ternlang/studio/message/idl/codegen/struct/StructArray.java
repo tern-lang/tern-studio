@@ -38,15 +38,6 @@ public class StructArray extends CodeTemplate {
    
    @Override
    protected void generateBody() {
-      String name = entity.getName();
-      
-      appender.append("\n");
-      appender.append("   /**").append("\n");
-      appender.append("    * Add element to the array\n");
-      appender.append("    * @returns iterator of elements").append("\n");
-      appender.append("    */").append("\n");  
-      appender.append("   @Override\n");
-      appender.append("   Iterator<").append(name).append("> iterator();\n");
       appender.append("\n");
       appender.append("   /**").append("\n");
       appender.append("    * Length of the array\n");

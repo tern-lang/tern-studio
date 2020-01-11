@@ -87,6 +87,7 @@ public abstract class CodeTemplate {
       appender.append("import java.nio.ByteOrder;\n");
       appender.append("import org.ternlang.studio.message.ByteSize;\n");
       appender.append("import org.ternlang.studio.message.Frame;\n");
+      appender.append("import org.ternlang.studio.message.primitive.*;\n");
       appender.append("\n");
    }
    

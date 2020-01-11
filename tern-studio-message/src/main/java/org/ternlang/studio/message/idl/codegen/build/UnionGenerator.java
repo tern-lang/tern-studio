@@ -30,7 +30,7 @@ public class UnionGenerator extends PropertyGenerator {
       
       appender.append("   @Override\n");
       appender.append("   public %sAppender %s() {\n", constraint, name);
-      appender.append("      %sCodec.wrap(frame, offset + %s, %s * ByteSize.BYTE_SIZE);\n", name, offset, length);
+      appender.append("      %sCodec.with(frame, offset + %s, %s * ByteSize.BYTE_SIZE);\n", name, offset, length);
       appender.append("      return %s;\n", name);
       appender.append("   }\n");
    }
@@ -44,7 +44,7 @@ public class UnionGenerator extends PropertyGenerator {
       
       appender.append("   @Override\n");
       appender.append("   public void %s(%s, %s) {\n", name, constraint, name);
-      appender.append("      %sCodec.wrap(frame, offset + %s, ??);\n", name, offset, length);
+      appender.append("      %sCodec.with(frame, offset + %s, ??);\n", name, offset, length);
       
       Entity entity = domain.getEntity(constraint);
       List<Property> properties = entity.getProperties();

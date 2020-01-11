@@ -29,7 +29,7 @@ public class PrimitiveArrayGenerator extends PropertyGenerator {
       
       appender.append("   @Override\n");
       appender.append("   public %sArrayBuilder %s() {\n", type, name);
-      appender.append("      %sCodec.wrap(frame, offset + %s, %s * ByteSize.%s_SIZE);\n", name, offset, length, upperType);
+      appender.append("      %sCodec.with(frame, offset + %s, %s * ByteSize.%s_SIZE);\n", name, offset, length, upperType);
       appender.append("      return %sCodec;\n", name);
       appender.append("   }\n");
    }

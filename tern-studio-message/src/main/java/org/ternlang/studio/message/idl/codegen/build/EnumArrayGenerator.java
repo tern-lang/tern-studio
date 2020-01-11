@@ -28,7 +28,7 @@ public class EnumArrayGenerator extends PropertyGenerator {
       
       appender.append("   @Override\n");
       appender.append("   public %sArrayBuilder %s() {\n", constraint, name);
-      appender.append("      %sCodec.wrap(frame, offset + %s, %s * ByteSize.BYTE_SIZE);\n", name, offset, length);
+      appender.append("      %sCodec.with(frame, offset + %s, %s * ByteSize.BYTE_SIZE);\n", name, offset, length);
       appender.append("      return %sCodec;\n", name);
       appender.append("   }\n");
    }
