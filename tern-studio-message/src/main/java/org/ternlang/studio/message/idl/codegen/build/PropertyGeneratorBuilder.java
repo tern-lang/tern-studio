@@ -1,26 +1,36 @@
 package org.ternlang.studio.message.idl.codegen.build;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.ternlang.studio.message.idl.Domain;
 import org.ternlang.studio.message.idl.Entity;
 import org.ternlang.studio.message.idl.EntityType;
 import org.ternlang.studio.message.idl.Property;
 
-public class PropertySelector {
+public class PropertyGeneratorBuilder {
 
    private final Domain domain;
    
-   public PropertySelector(Domain domain) {
+   public PropertyGeneratorBuilder(Domain domain) {
       this.domain = domain;
    }
-   
-   public PropertyGenerator select(Property property) {
+
+   public List<PropertyGenerator> create(Entity entity) {
+      return entity.getProperties()
+          .stream()
+          .map(this::create)
+          .collect(Collectors.toList());
+   }
+
+   private PropertyGenerator create(Property property) {
       String constraint = property.getConstraint();
       
       if(property.isPrimitive()) {
          if(property.isArray()) {
-            return new PrimitiveArrayGenerator(domain);
+            return new PrimitiveArrayGenerator(domain, property);
          }
-         return new PrimitiveGenerator(domain);
+         return new PrimitiveGenerator(domain, property);
       }
       Entity entity = domain.getEntity(constraint);
       
@@ -31,24 +41,24 @@ public class PropertySelector {
 
       if(property.isArray()) {
          if(type.isEnum()) {
-            return new EnumArrayGenerator(domain);
+            return new EnumArrayGenerator(domain, property);
          }
          if(type.isUnion()) {
-            return new UnionArrayGenerator(domain);
+            return new UnionArrayGenerator(domain, property);
          }
          if(type.isStruct()) {
-            return new StructArrayGenerator(domain);
+            return new StructArrayGenerator(domain, property);
          }
          throw new IllegalArgumentException("Could not create array property for " + entity);
       }      
       if(type.isEnum()) {
-         return new EnumGenerator(domain);
+         return new EnumGenerator(domain, property);
       }
       if(type.isUnion()) {
-         return new UnionGenerator(domain);
+         return new UnionGenerator(domain, property);
       }
       if(type.isStruct()) {
-         return new StructGenerator(domain);
+         return new StructGenerator(domain, property);
       }
       throw new IllegalArgumentException("Could not create property for " + entity);
    }

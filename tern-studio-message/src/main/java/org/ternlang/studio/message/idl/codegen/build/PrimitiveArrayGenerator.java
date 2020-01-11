@@ -4,27 +4,23 @@ import org.ternlang.studio.message.idl.Domain;
 import org.ternlang.studio.message.idl.Property;
 import org.ternlang.studio.message.idl.codegen.CodeAppender;
 
-public class PrimitiveArrayGenerator implements PropertyGenerator {
+public class PrimitiveArrayGenerator extends PropertyGenerator {
 
-   private final Domain domain;
-   
-   public PrimitiveArrayGenerator(Domain domain) {
-      this.domain = domain;
+   public PrimitiveArrayGenerator(Domain domain, Property property) {
+      super(domain, property);
    }
    
    @Override
-   public void generateField(CodeAppender builder, String owner, Property property) {
+   public void generateField(CodeAppender builder) {
       String name = property.getName();
-      String constraint = property.getConstraint();
-      String type = generateName(constraint);
+      String type = getConstraint(Case.PASCAL);
 
       builder.append("   private %sArrayCodec %sCodec = new %sArrayCodec();\n", type, name, type);
    }
    
    @Override
-   public void generateGetter(CodeAppender builder, String owner, Property property) {
-      String constraint = property.getConstraint();
-      String type = generateName(constraint);
+   public void generateGetter(CodeAppender builder) {
+      String type = getConstraint(Case.PASCAL);
       String upperType = type.toUpperCase();
       String name = property.getName();
       int length = property.getDimension();
@@ -38,9 +34,9 @@ public class PrimitiveArrayGenerator implements PropertyGenerator {
    }
 
    @Override
-   public void generateSetter(CodeAppender builder, String owner, Property property) {
+   public void generateSetter(CodeAppender builder) {
       String constraint = property.getConstraint();
-      String type = generateName(constraint);
+      String type = getConstraint(Case.PASCAL);
       String upperType = type.toUpperCase();
       String name = property.getName();
       int length = property.getDimension();
@@ -64,18 +60,17 @@ public class PrimitiveArrayGenerator implements PropertyGenerator {
    }
 
    @Override
-   public void generateGetterSignature(CodeAppender builder, String owner, Property property) {
-      String constraint = property.getConstraint();
-      String type = generateName(constraint);
+   public void generateGetterSignature(CodeAppender builder) {
+      String type = getConstraint(Case.PASCAL);
       String name = property.getName();
       
       builder.append("   %sArray %s();\n", type, name);
    }
 
    @Override
-   public void generateSetterSignature(CodeAppender builder, String owner, Property property) {
+   public void generateSetterSignature(CodeAppender builder) {
       String constraint = property.getConstraint();
-      String type = generateName(constraint);
+      String type = getConstraint(Case.PASCAL);
       String name = property.getName();
       
       if(!constraint.equals("char")) {

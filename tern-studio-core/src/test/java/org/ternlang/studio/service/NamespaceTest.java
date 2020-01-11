@@ -1,11 +1,11 @@
 package org.ternlang.studio.service;
 
-import junit.framework.TestCase;
-
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Persister;
+
+import junit.framework.TestCase;
 
 public class NamespaceTest extends TestCase{
    

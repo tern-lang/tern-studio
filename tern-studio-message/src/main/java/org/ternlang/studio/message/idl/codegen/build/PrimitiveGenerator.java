@@ -4,23 +4,21 @@ import org.ternlang.studio.message.idl.Domain;
 import org.ternlang.studio.message.idl.Property;
 import org.ternlang.studio.message.idl.codegen.CodeAppender;
 
-public class PrimitiveGenerator implements PropertyGenerator {
+public class PrimitiveGenerator extends PropertyGenerator {
 
-   private final Domain domain;
-   
-   public PrimitiveGenerator(Domain domain) {
-      this.domain = domain;
+   public PrimitiveGenerator(Domain domain, Property property) {
+      super(domain, property);
    }
    
    @Override
-   public void generateField(CodeAppender builder, String owner, Property property) {
+   public void generateField(CodeAppender builder) {
       // no field for primitive
    }
    
    @Override
-   public void generateGetter(CodeAppender builder, String owner, Property property) {
+   public void generateGetter(CodeAppender builder) {
       String constraint = property.getConstraint();
-      String method = generateName(constraint);
+      String method = getConstraint(Case.PASCAL);
       String name = property.getName();
       int offset = property.getOffset();
       
@@ -31,9 +29,9 @@ public class PrimitiveGenerator implements PropertyGenerator {
    }
 
    @Override
-   public void generateSetter(CodeAppender builder, String owner, Property property) {
+   public void generateSetter(CodeAppender builder) {
       String constraint = property.getConstraint();
-      String method = generateName(constraint);
+      String method = getConstraint(Case.PASCAL);
       String name = property.getName();
       int offset = property.getOffset();
       
@@ -45,7 +43,7 @@ public class PrimitiveGenerator implements PropertyGenerator {
    }
 
    @Override
-   public void generateGetterSignature(CodeAppender builder, String owner, Property property) {
+   public void generateGetterSignature(CodeAppender builder) {
       String constraint = property.getConstraint();
       String name = property.getName();
       
@@ -53,7 +51,7 @@ public class PrimitiveGenerator implements PropertyGenerator {
    }
 
    @Override
-   public void generateSetterSignature(CodeAppender builder, String owner, Property property) {
+   public void generateSetterSignature(CodeAppender builder) {
       String constraint = property.getConstraint();
       String name = property.getName();
       

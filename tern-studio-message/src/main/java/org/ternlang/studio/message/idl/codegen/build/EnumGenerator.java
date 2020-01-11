@@ -4,21 +4,19 @@ import org.ternlang.studio.message.idl.Domain;
 import org.ternlang.studio.message.idl.Property;
 import org.ternlang.studio.message.idl.codegen.CodeAppender;
 
-public class EnumGenerator implements PropertyGenerator {
+public class EnumGenerator extends PropertyGenerator {
 
-   private final Domain domain;
-   
-   public EnumGenerator(Domain domain) {
-      this.domain = domain;
+   public EnumGenerator(Domain domain, Property property) {
+      super(domain, property);
    }
    
    @Override
-   public void generateField(CodeAppender builder, String owner, Property property) {
+   public void generateField(CodeAppender builder) {
       // no field for primitive
    }
    
    @Override
-   public void generateGetter(CodeAppender builder, String owner, Property property) {
+   public void generateGetter(CodeAppender builder) {
       String constraint = property.getConstraint();
       String name = property.getName();
       int offset = property.getOffset();
@@ -30,7 +28,7 @@ public class EnumGenerator implements PropertyGenerator {
    }
 
    @Override
-   public void generateSetter(CodeAppender builder, String owner, Property property) {
+   public void generateSetter(CodeAppender builder) {
       String constraint = property.getConstraint();
       String name = property.getName();
       int offset = property.getOffset();
@@ -42,7 +40,7 @@ public class EnumGenerator implements PropertyGenerator {
    }
 
    @Override
-   public void generateGetterSignature(CodeAppender builder, String owner, Property property) {
+   public void generateGetterSignature(CodeAppender builder) {
       String constraint = property.getConstraint();
       String name = property.getName();
       
@@ -50,7 +48,7 @@ public class EnumGenerator implements PropertyGenerator {
    }
 
    @Override
-   public void generateSetterSignature(CodeAppender builder, String owner, Property property) {
+   public void generateSetterSignature(CodeAppender builder) {
       String constraint = property.getConstraint();
       String name = property.getName();
       
