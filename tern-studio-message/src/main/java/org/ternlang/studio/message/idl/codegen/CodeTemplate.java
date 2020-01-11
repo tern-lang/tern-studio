@@ -6,15 +6,18 @@ import org.ternlang.core.variable.Value;
 import org.ternlang.studio.message.idl.Domain;
 import org.ternlang.studio.message.idl.Entity;
 import org.ternlang.studio.message.idl.Package;
+import org.ternlang.studio.message.idl.codegen.build.PropertyGeneratorBuilder;
 
 public abstract class CodeTemplate {
 
-   protected final StringBuilder builder;
+   protected final PropertyGeneratorBuilder builder;
+   protected final CodeAppender appender;
    protected final Domain domain;
    protected final Entity entity;
    
    public CodeTemplate(Domain domain, Entity entity) {
-      this.builder = new StringBuilder();
+      this.builder = new PropertyGeneratorBuilder(domain);
+      this.appender = new CodeAppender();
       this.domain = domain;
       this.entity = entity;
    }
@@ -27,7 +30,7 @@ public abstract class CodeTemplate {
    }
    
    protected GeneratedFile generateFile() {
-      String source = builder.toString();
+      String source = appender.toString();
       Package origin = entity.getPackage();
       
       if(origin == null) {
@@ -43,15 +46,15 @@ public abstract class CodeTemplate {
    
    protected void generateEntity() {
       String name = name();
-      String category = category();      
-      
-      builder.append("public ");
-      builder.append(category);
-      builder.append(" ");
-      builder.append(name);
-      builder.append(" {\n");
+      String category = category();
+
+      appender.append("public ");
+      appender.append(category);
+      appender.append(" ");
+      appender.append(name);
+      appender.append(" {\n");
       generateBody();
-      builder.append("}\n");
+      appender.append("}\n");
    }
    
    protected void generateImports() {
@@ -72,17 +75,19 @@ public abstract class CodeTemplate {
                Entity entity = value.getValue();
                Package origin = entity.getPackage();
                String namespace = origin.getName();
-               
-               builder.append("import ");
-               builder.append(namespace);
-               builder.append(".");
-               builder.append(constraint);
-               builder.append(";\n");
+
+               appender.append("import ");
+               appender.append(namespace);
+               appender.append(".");
+               appender.append(constraint);
+               appender.append(";\n");
             }
          }
       });
-      
-      builder.append("\n");
+      appender.append("import java.nio.ByteOrder;\n");
+      appender.append("import org.ternlang.studio.message.ByteSize;\n");
+      appender.append("import org.ternlang.studio.message.Frame;\n");
+      appender.append("\n");
    }
    
    protected void generatePackage() {
@@ -92,11 +97,11 @@ public abstract class CodeTemplate {
          throw new IllegalStateException("Entity has no package");
       }
       String namespace = module.getName();
-      
-      builder.append("// Generated Code\n");
-      builder.append("package ");
-      builder.append(namespace);
-      builder.append(";\n\n");
+
+      appender.append("// Generated Code\n");
+      appender.append("package ");
+      appender.append(namespace);
+      appender.append(";\n\n");
    }
 
    protected abstract String name();

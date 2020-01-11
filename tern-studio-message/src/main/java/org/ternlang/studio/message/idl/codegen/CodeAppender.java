@@ -7,6 +7,16 @@ public class CodeAppender {
    public CodeAppender() {
       this.builder = new StringBuilder();
    }
+
+   public CodeAppender append(int number) {
+      builder.append(number);
+      return this;
+   }
+
+   public CodeAppender append(long number) {
+      builder.append(number);
+      return this;
+   }
    
    public CodeAppender append(String text) {
       builder.append(text);

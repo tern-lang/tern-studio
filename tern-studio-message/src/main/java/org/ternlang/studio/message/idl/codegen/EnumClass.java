@@ -30,32 +30,45 @@ public class EnumClass extends CodeTemplate {
       
       for(Property property : properties) {
          String name = property.getName();
-      
-         builder.append(separator);
-         builder.append("   ");
-         builder.append(name);
-         builder.append("((byte)");
-         builder.append(index++);
-         builder.append(")");
+
+         appender.append(separator);
+         appender.append("   %s((byte)%s)", name, index++);
          separator = ",\n";         
-      }      
-      builder.append(";\n\n");
+      }
+      appender.append(";\n\n");
       generateFields();
       generateConstructor();
+      generateResolver();
    }
    
    private void generateFields() {
-      builder.append("   public final byte code;\n\n");
+      appender.append("   public final byte code;\n\n");
    }
    
    private void generateConstructor() {
       String name = entity.getName();
-      
-      builder.append("   ");
-      builder.append(name);
-      builder.append("(byte code) {\n");
-      builder.append("      this.code = code;\n");
-      builder.append("   }\n");      
+
+      appender.append("   %s(byte code) {\n", name);
+      appender.append("      this.code = code;\n");
+      appender.append("   }\n");
    }
 
+   private void generateResolver() {
+      List<Property> properties = entity.getProperties();
+      String name = entity.getName();
+      int index = 1;
+
+      appender.append("\n");
+      appender.append("   public static %s resolve(int code) {\n", name);
+      appender.append("      switch(code) {\n");
+
+      for(Property property : properties) {
+         String entry = property.getName();
+
+         appender.append("      case %s: return %s;\n", index++, entry);
+      }
+      appender.append("      }\n");
+      appender.append("      throw new IllegalArgumentException(\"No match for \" + code);\n");
+      appender.append("   }\n");
+   }
 }

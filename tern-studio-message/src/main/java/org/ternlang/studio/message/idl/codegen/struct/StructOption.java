@@ -24,18 +24,18 @@ public class StructOption extends CodeTemplate {
    protected void generateBody() {
       String name = entity.getName();
       
-      builder.append("\n");
-      builder.append("   /**").append("\n");
-      builder.append("    * Deterning if it is present\n");
-      builder.append("    * @returns true if present false otherwise").append("\n");
-      builder.append("    */").append("\n");  
-      builder.append("   boolean isPresent();\n");
-      builder.append("\n");
-      builder.append("   /**").append("\n");
-      builder.append("    * Value if present\n");
-      builder.append("    * @returns value if present").append("\n");
-      builder.append("    */").append("\n");
-      builder.append("   ").append(name).append(" get();\n");
-      builder.append("\n");
+      appender.append("\n");
+      appender.append("   /**").append("\n");
+      appender.append("    * Deterning if it is present\n");
+      appender.append("    * @returns true if present false otherwise").append("\n");
+      appender.append("    */").append("\n");  
+      appender.append("   boolean isPresent();\n");
+      appender.append("\n");
+      appender.append("   /**").append("\n");
+      appender.append("    * Value if present\n");
+      appender.append("    * @returns value if present").append("\n");
+      appender.append("    */").append("\n");
+      appender.append("   ").append(name).append(" get();\n");
+      appender.append("\n");
    }
 }

@@ -9,44 +9,44 @@ public class StructArrayBuilder extends CodeTemplate {
    public StructArrayBuilder(Domain domain, Entity entity) {
       super(domain, entity);
    }
-   
+
    @Override
    protected String name() {
       return entity.getName() + "ArrayBuilder";
-   }   
+   }
 
    @Override
    protected String category() {
       return "interface";
    }
-   
+
    @Override
    protected void generateEntity() {
       String name = entity.getName();
-      String category = category();      
-      
-      builder.append("public ");
-      builder.append(category);
-      builder.append(" ");
-      builder.append(name);
-      builder.append("ArrayBuilder extends ");
-      builder.append(name);
-      builder.append("Array {");
+      String category = category();
+
+      appender.append("public ");
+      appender.append(category);
+      appender.append(" ");
+      appender.append(name);
+      appender.append("ArrayBuilder extends ");
+      appender.append(name);
+      appender.append("Array {");
       generateBody();
-      builder.append("}\n");
+      appender.append("}\n");
    }
-   
+
    @Override
    protected void generateBody() {
       String name = entity.getName();
-      
-      builder.append("\n");
-      builder.append("   /**").append("\n");
-      builder.append("    * Add element to the array\n");
-      builder.append("    * @returns builder to use").append("\n");
-      builder.append("    */").append("\n");   
-      builder.append("   ").append(name).append("Builder add();");
-      builder.append("\n");
+
+      appender.append("\n");
+      appender.append("   /**").append("\n");
+      appender.append("    * Add element to the array\n");
+      appender.append("    * @returns builder to use").append("\n");
+      appender.append("    */").append("\n");
+      appender.append("   ").append(name).append("Builder add();");
+      appender.append("\n");
    }
 }
 

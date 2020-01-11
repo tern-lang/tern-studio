@@ -1,55 +1,56 @@
 package org.ternlang.studio.message.idl.codegen.build;
 
 import org.ternlang.studio.message.idl.Domain;
+import org.ternlang.studio.message.idl.Entity;
 import org.ternlang.studio.message.idl.Property;
 import org.ternlang.studio.message.idl.codegen.CodeAppender;
 
 public class StructArrayGenerator extends PropertyGenerator {
 
-   public StructArrayGenerator(Domain domain, Property property) {
-      super(domain, property);
+   public StructArrayGenerator(Domain domain, Entity entity, Property property) {
+      super(domain, entity, property);
    }
 
    @Override
-   public void generateField(CodeAppender builder) {
+   public void generateField(CodeAppender appender) {
       String name = property.getName();
       String constraint = property.getConstraint();
 
-      builder.append("   private %sArrayCodec %sCodec = new %sArrayCodec();\n", constraint, name, constraint);
+      appender.append("   private %sArrayCodec %sCodec = new %sArrayCodec();\n", constraint, name, constraint);
    }
    
    @Override
-   public void generateGetter(CodeAppender builder) {
+   public void generateGetter(CodeAppender appender) {
       String constraint = property.getConstraint();
       String name = property.getName();
       int length = property.getDimension();
       int offset = property.getOffset();
       
-      builder.append("   @Override\n");
-      builder.append("   public %sArrayBuilder %s() {\n", constraint, name);
-      builder.append("      %sCodec.wrap(buffer, offset + %s, %s * Primitive.BYTE_SIZE);\n", name, offset, length);
-      builder.append("      return %sCodec;\n", name);
-      builder.append("   }\n");
+      appender.append("   @Override\n");
+      appender.append("   public %sArrayBuilder %s() {\n", constraint, name);
+      appender.append("      %sCodec.wrap(frame, offset + %s, %s * ByteSize.BYTE_SIZE);\n", name, offset, length);
+      appender.append("      return %sCodec;\n", name);
+      appender.append("   }\n");
    }
 
    @Override
-   public void generateSetter(CodeAppender builder) {
+   public void generateSetter(CodeAppender appender) {
       // setter is a getter
    }
 
    @Override
-   public void generateGetterSignature(CodeAppender builder) {
+   public void generateGetterSignature(CodeAppender appender) {
       String constraint = property.getConstraint();
       String name = property.getName();
       
-      builder.append("   %sArray %s();\n", constraint, name);
+      appender.append("   %sArray %s();\n", constraint, name);
    }
 
    @Override
-   public void generateSetterSignature(CodeAppender builder) {
+   public void generateSetterSignature(CodeAppender appender) {
       String constraint = property.getConstraint();
       String name = property.getName();
       
-      builder.append("   %sArrayBuilder %s();\n", constraint, name);
+      appender.append("   %sArrayBuilder %s();\n", constraint, name);
    }
 }

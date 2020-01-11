@@ -25,34 +25,34 @@ public class StructArray extends CodeTemplate {
       String name = entity.getName();
       String category = category();      
       
-      builder.append("public ");
-      builder.append(category);
-      builder.append(" ");
-      builder.append(name);
-      builder.append("Array extends Iterable<");
-      builder.append(name);
-      builder.append("> {");
+      appender.append("public ");
+      appender.append(category);
+      appender.append(" ");
+      appender.append(name);
+      appender.append("Array extends Iterable<");
+      appender.append(name);
+      appender.append("> {");
       generateBody();
-      builder.append("}\n");
+      appender.append("}\n");
    }
    
    @Override
    protected void generateBody() {
       String name = entity.getName();
       
-      builder.append("\n");
-      builder.append("   /**").append("\n");
-      builder.append("    * Add element to the array\n");
-      builder.append("    * @returns iterator of elements").append("\n");
-      builder.append("    */").append("\n");  
-      builder.append("   @Override\n");
-      builder.append("   Iterator<").append(name).append("> iterator();\n");
-      builder.append("\n");
-      builder.append("   /**").append("\n");
-      builder.append("    * Length of the array\n");
-      builder.append("    * @returns number of elements").append("\n");
-      builder.append("    */").append("\n");
-      builder.append("   int length();\n");
-      builder.append("\n");
+      appender.append("\n");
+      appender.append("   /**").append("\n");
+      appender.append("    * Add element to the array\n");
+      appender.append("    * @returns iterator of elements").append("\n");
+      appender.append("    */").append("\n");  
+      appender.append("   @Override\n");
+      appender.append("   Iterator<").append(name).append("> iterator();\n");
+      appender.append("\n");
+      appender.append("   /**").append("\n");
+      appender.append("    * Length of the array\n");
+      appender.append("    * @returns number of elements").append("\n");
+      appender.append("    */").append("\n");
+      appender.append("   int length();\n");
+      appender.append("\n");
    }
 }

@@ -19,18 +19,18 @@ public class PropertyGeneratorBuilder {
    public List<PropertyGenerator> create(Entity entity) {
       return entity.getProperties()
           .stream()
-          .map(this::create)
+          .map(property -> create(entity, property))
           .collect(Collectors.toList());
    }
 
-   private PropertyGenerator create(Property property) {
+   private PropertyGenerator create(Entity parent, Property property) {
       String constraint = property.getConstraint();
       
       if(property.isPrimitive()) {
          if(property.isArray()) {
-            return new PrimitiveArrayGenerator(domain, property);
+            return new PrimitiveArrayGenerator(domain, parent, property);
          }
-         return new PrimitiveGenerator(domain, property);
+         return new PrimitiveGenerator(domain, parent, property);
       }
       Entity entity = domain.getEntity(constraint);
       
@@ -41,24 +41,24 @@ public class PropertyGeneratorBuilder {
 
       if(property.isArray()) {
          if(type.isEnum()) {
-            return new EnumArrayGenerator(domain, property);
+            return new EnumArrayGenerator(domain, parent, property);
          }
          if(type.isUnion()) {
-            return new UnionArrayGenerator(domain, property);
+            return new UnionArrayGenerator(domain, parent, property);
          }
          if(type.isStruct()) {
-            return new StructArrayGenerator(domain, property);
+            return new StructArrayGenerator(domain, parent, property);
          }
          throw new IllegalArgumentException("Could not create array property for " + entity);
       }      
       if(type.isEnum()) {
-         return new EnumGenerator(domain, property);
+         return new EnumGenerator(domain, parent, property);
       }
       if(type.isUnion()) {
-         return new UnionGenerator(domain, property);
+         return new UnionGenerator(domain, parent, property);
       }
       if(type.isStruct()) {
-         return new StructGenerator(domain, property);
+         return new StructGenerator(domain, parent, property);
       }
       throw new IllegalArgumentException("Could not create property for " + entity);
    }

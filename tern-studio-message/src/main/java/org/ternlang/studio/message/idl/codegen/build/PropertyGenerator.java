@@ -1,16 +1,23 @@
 package org.ternlang.studio.message.idl.codegen.build;
 
+import org.ternlang.core.scope.Scope;
+import org.ternlang.core.scope.ScopeState;
+import org.ternlang.core.variable.Value;
 import org.ternlang.studio.message.idl.Domain;
+import org.ternlang.studio.message.idl.Entity;
+import org.ternlang.studio.message.idl.Package;
 import org.ternlang.studio.message.idl.Property;
 import org.ternlang.studio.message.idl.codegen.CodeAppender;
 
 public abstract class PropertyGenerator {
 
-   public final Property property;
-   public final Domain domain;
+   protected final Property property;
+   protected final Entity entity;
+   protected final Domain domain;
 
-   protected PropertyGenerator(Domain domain, Property property) {
+   protected PropertyGenerator(Domain domain, Entity entity, Property property) {
       this.domain = domain;
+      this.entity = entity;
       this.property = property;
    }
 
@@ -20,6 +27,24 @@ public abstract class PropertyGenerator {
 
    public Property getProperty() {
       return property;
+   }
+
+   public Entity getEntity() {
+      return entity;
+   }
+
+   public Entity getConstraintEntity() {
+      Package module = entity.getPackage();
+
+      if(module == null) {
+         throw new IllegalStateException("Entity has no package");
+      }
+      Scope scope = module.getScope();
+      ScopeState state = scope.getState();
+      String constraint = property.getConstraint();
+      Value value = state.getValue(constraint);
+
+      return value.getValue();
    }
 
    public String getConstraint(Case textCase) {
