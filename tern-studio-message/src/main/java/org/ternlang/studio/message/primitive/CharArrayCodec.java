@@ -5,17 +5,12 @@ import static org.ternlang.studio.message.ByteSize.SHORT_SIZE;
 
 import org.ternlang.studio.message.Frame;
 
-/**
- * 1) Frame must support moving bytes to create space
- * 2) All properties must be ordered according to whether they are fixed length
- *
- */
 public class CharArrayCodec implements CharArrayOption, CharArrayBuilder {
 
    private static final int LENGTH_BYTES = SHORT_SIZE;
    private static final int ELEMENT_BYTES = CHAR_SIZE;
 
-   private final int limit;
+   private final int limit;   
    private Frame frame;
    private int offset;
    private int length;
@@ -52,14 +47,14 @@ public class CharArrayCodec implements CharArrayOption, CharArrayBuilder {
    
    @Override
    public int length() {
-      return frame.getShort(offset) / ELEMENT_BYTES;
+      return frame.getShort(offset);
    }
 
    @Override
    public char charAt(int index) {
       int length = length();
 
-      if(index < 0 || index < length) {
+      if(index < 0 || index >= length) {
          throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
       }
       return frame.getChar((offset + LENGTH_BYTES) + index * ELEMENT_BYTES);
@@ -72,7 +67,7 @@ public class CharArrayCodec implements CharArrayOption, CharArrayBuilder {
 
    @Override
    public CharArrayCodec length(int length) {
-      if((length * ELEMENT_BYTES) + LENGTH_BYTES >= limit) {
+      if((length * ELEMENT_BYTES) + LENGTH_BYTES > limit) {
          throw new IndexOutOfBoundsException("Length " + length + " is greater than capacity");
       }
       frame.setShort(offset, (short)length);
@@ -81,12 +76,11 @@ public class CharArrayCodec implements CharArrayOption, CharArrayBuilder {
 
    @Override
    public CharArrayCodec add(char value) {
-      int length = length() + 1;
+      int length = length();
 
-      if((length * ELEMENT_BYTES) + LENGTH_BYTES >= limit) {
-         throw new IndexOutOfBoundsException("Capacity has been exceeded");
-      }
+      length(length + 1);
       frame.setChar((length * ELEMENT_BYTES) + LENGTH_BYTES, value);
+      
       return this;
    }
 
@@ -94,9 +88,6 @@ public class CharArrayCodec implements CharArrayOption, CharArrayBuilder {
    public CharArrayCodec set(int start, char value) {
       int length = length();
 
-      if(start < 0 || (start * ELEMENT_BYTES) + LENGTH_BYTES >= limit) {
-         throw new IndexOutOfBoundsException("Index " + start + " is greater than capacity");
-      }
       if(start >= length) {
          length(start + 1);
       }
@@ -108,8 +99,8 @@ public class CharArrayCodec implements CharArrayOption, CharArrayBuilder {
    public CharArrayCodec set(int start, CharSequence values) {
       int size = values.length();
 
-      if(size + start + offset > length) {
-         throw new IllegalStateException("Length exceeds available space");
+      if(size + start > length) {
+         length(size + start);
       }
       for(int i = 0; i < size; i++) {
          char next = values.charAt(i);
@@ -132,5 +123,12 @@ public class CharArrayCodec implements CharArrayOption, CharArrayBuilder {
    @Override
    public CharArrayBuilder clear() {
       return length(0);
+   }
+   
+   @Override
+   public String toString() {
+      return new StringBuilder()
+         .append(this)
+         .toString();
    }
 }
