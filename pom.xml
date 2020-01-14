@@ -83,7 +83,6 @@
     <module>tern-studio-common</module>         
     <module>tern-studio-core</module>
     <module>tern-studio-agent</module>
-    <module>tern-studio-message</module>    
     <module>tern-studio-index</module>
     <module>tern-studio-project</module>
     <module>tern-studio-build</module>
