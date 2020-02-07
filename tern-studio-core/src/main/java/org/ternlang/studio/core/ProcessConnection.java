@@ -8,13 +8,7 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.ternlang.studio.agent.event.BreakpointsEvent;
-import org.ternlang.studio.agent.event.BrowseEvent;
-import org.ternlang.studio.agent.event.EvaluateEvent;
-import org.ternlang.studio.agent.event.ExecuteEvent;
-import org.ternlang.studio.agent.event.PingEvent;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
-import org.ternlang.studio.agent.event.StepEvent;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
 

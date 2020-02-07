@@ -19,7 +19,6 @@ import org.ternlang.studio.agent.debug.SuspendController;
 import org.ternlang.studio.agent.debug.SuspendInterceptor;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.agent.event.ProcessEventTimer;
-import org.ternlang.studio.agent.event.RegisterEvent;
 import org.ternlang.studio.agent.log.AsyncLog;
 import org.ternlang.studio.agent.log.ConsoleLog;
 import org.ternlang.studio.agent.log.Log;
@@ -83,15 +82,15 @@ public class ProcessAgent {
          final ProcessEventChannel channel = client.connect(process, host, port);
          final SuspendInterceptor suspender = new SuspendInterceptor(channel, matcher, controller, mode, process);
          final FaultContextExtractor extractor = new FaultContextExtractor(channel, logger, process);
-         final RegisterEvent register = new RegisterEvent.Builder(process)
-            .withPid(pid)
-            .withSystem(system)
-            .build();
          
          interceptor.register(profiler);
          interceptor.register(suspender);
          interceptor.register(extractor);
-         channel.send(register); // send the initial register event
+
+         // send the initial register event
+         channel.begin().register().pid(pid).system(system);
+         channel.send();
+
          validator.validate();
          checker.register(new ConnectionListener() {
            

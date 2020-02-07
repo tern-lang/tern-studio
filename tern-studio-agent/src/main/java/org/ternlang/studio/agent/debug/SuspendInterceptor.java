@@ -14,7 +14,6 @@ import org.ternlang.core.trace.Trace;
 import org.ternlang.core.trace.TraceType;
 import org.ternlang.studio.agent.ProcessMode;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
-import org.ternlang.studio.agent.event.ScopeEvent;
 
 public class SuspendInterceptor extends TraceAdapter {
    

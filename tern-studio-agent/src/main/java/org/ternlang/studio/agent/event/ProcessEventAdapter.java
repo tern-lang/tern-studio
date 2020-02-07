@@ -1,5 +1,22 @@
 package org.ternlang.studio.agent.event;
 
+import org.ternlang.agent.message.event.BeginEvent;
+import org.ternlang.agent.message.event.BreakpointsEvent;
+import org.ternlang.agent.message.event.BrowseEvent;
+import org.ternlang.agent.message.event.EvaluateEvent;
+import org.ternlang.agent.message.event.ExecuteEvent;
+import org.ternlang.agent.message.event.ExitEvent;
+import org.ternlang.agent.message.event.FaultEvent;
+import org.ternlang.agent.message.event.PingEvent;
+import org.ternlang.agent.message.event.PongEvent;
+import org.ternlang.agent.message.event.ProfileEvent;
+import org.ternlang.agent.message.event.RegisterEvent;
+import org.ternlang.agent.message.event.ScopeEvent;
+import org.ternlang.agent.message.event.ScriptErrorEvent;
+import org.ternlang.agent.message.event.StepEvent;
+import org.ternlang.agent.message.event.WriteErrorEvent;
+import org.ternlang.agent.message.event.WriteOutputEvent;
+
 public class ProcessEventAdapter implements ProcessEventListener {
    public void onExit(ProcessEventChannel channel, ExitEvent event) throws Exception {}
    public void onExecute(ProcessEventChannel channel, ExecuteEvent event) throws Exception {}

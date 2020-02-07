@@ -1,38 +1,28 @@
 package org.ternlang.studio.agent.client;
 
+import static java.lang.Short.MAX_VALUE;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.ternlang.agent.message.event.ProcessEventBuilder;
+import org.ternlang.agent.message.event.ProcessEventCodec;
+import org.ternlang.message.ByteArrayFrame;
 import org.ternlang.studio.agent.core.QueueExecutor;
-import org.ternlang.studio.agent.event.BeginEvent;
-import org.ternlang.studio.agent.event.BreakpointsEvent;
-import org.ternlang.studio.agent.event.BrowseEvent;
-import org.ternlang.studio.agent.event.EvaluateEvent;
-import org.ternlang.studio.agent.event.ExecuteEvent;
-import org.ternlang.studio.agent.event.ExitEvent;
-import org.ternlang.studio.agent.event.FaultEvent;
-import org.ternlang.studio.agent.event.PingEvent;
-import org.ternlang.studio.agent.event.PongEvent;
-import org.ternlang.studio.agent.event.ProcessEvent;
+import org.ternlang.studio.agent.event.MessageEnvelope;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.agent.event.ProcessEventConnection;
 import org.ternlang.studio.agent.event.ProcessEventConsumer;
 import org.ternlang.studio.agent.event.ProcessEventListener;
 import org.ternlang.studio.agent.event.ProcessEventProducer;
-import org.ternlang.studio.agent.event.ProfileEvent;
-import org.ternlang.studio.agent.event.RegisterEvent;
-import org.ternlang.studio.agent.event.ScopeEvent;
-import org.ternlang.studio.agent.event.ScriptErrorEvent;
-import org.ternlang.studio.agent.event.StepEvent;
-import org.ternlang.studio.agent.event.WriteErrorEvent;
-import org.ternlang.studio.agent.event.WriteOutputEvent;
 import org.ternlang.studio.agent.log.TraceLogger;
 
 public class ConnectTunnelClient {
@@ -114,42 +104,64 @@ public class ConnectTunnelClient {
       
       private final ProcessEventConnection connection;
       private final SocketClientSession session;
+      private final ConnectEventHandler handler;
+      private final ProcessEventCodec codec;
+      private final ByteArrayFrame frame;
       private final AtomicBoolean closed;
       private final Set<Class> events;
       
       public SocketConnection(SocketClientSession session, InputStream input, OutputStream output) throws IOException {
          this.connection = new ProcessEventConnection(logger, executor, input, output, session);
+         this.handler = new ConnectEventHandler(this, listener);
          this.events = new CopyOnWriteArraySet<Class>();
+         this.frame = new ByteArrayFrame();
+         this.codec = new ProcessEventCodec();
          this.closed = new AtomicBoolean();
          this.session = session;
       }
+
+      @Override
+      public ProcessEventBuilder begin() {
+         frame.clear();
+         codec.with(frame, 0, MAX_VALUE);
+         return codec;
+      }
       
       @Override
-      public boolean send(ProcessEvent event) throws Exception {
+      public boolean send() throws Exception {
          ProcessEventProducer producer = connection.getProducer();
-         String process = event.getProcess();
-         
+         String process = "process-xx";
+
          try {
-            producer.produce(event);
+            int length = frame.length();
+            byte[] array = frame.getByteArray();
+            MessageEnvelope envelope = new MessageEnvelope(0, array, 0, length);
+
+            producer.produce(envelope);
             return true;
          } catch(Exception e) {
             logger.info(process + ": Error sending event", e);
-            close(process + ": Error sending event " +event + ": " + e);
+            close(process + ": Error sending event: " + e);
          }
          return false;
       }
 
       @Override
-      public boolean sendAsync(ProcessEvent event) throws Exception {
+      public boolean sendAsync() throws Exception {
          ProcessEventProducer producer = connection.getProducer();
-         String process = event.getProcess();
+         String process = "process-xx";
 
          try {
-            Future<Boolean> future = producer.produceAsync(event);
+            int length = frame.length();
+            byte[] array = frame.getByteArray();
+            byte[] copy = Arrays.copyOf(array, length); // copy if async
+            MessageEnvelope envelope = new MessageEnvelope(0, copy, 0, length);
+
+            Future<Boolean> future = producer.produceAsync(envelope);
             return future.get();
          } catch(Exception e) {
             logger.info(process + ": Error sending async event", e);
-            close(process + ": Error sending async event " +event + ": " + e);
+            close(process + ": Error sending async event: " + e);
          }
          return false;
       }
@@ -160,46 +172,9 @@ public class ConnectTunnelClient {
             ProcessEventConsumer consumer = connection.getConsumer();
             
             while(true) {
-               ProcessEvent event = consumer.consume();
-               Class type = event.getClass();
-               
-               events.add(type);
-               
-               if(event instanceof ExitEvent) {
-                  listener.onExit(this, (ExitEvent)event);
-               } else if(event instanceof ExecuteEvent) {
-                  listener.onExecute(this, (ExecuteEvent)event);                  
-               } else if(event instanceof RegisterEvent) {
-                  listener.onRegister(this, (RegisterEvent)event);
-               } else if(event instanceof ScriptErrorEvent) {
-                  listener.onScriptError(this, (ScriptErrorEvent)event);
-               } else if(event instanceof WriteErrorEvent) {
-                  listener.onWriteError(this, (WriteErrorEvent)event);
-               } else if(event instanceof WriteOutputEvent) {
-                  listener.onWriteOutput(this, (WriteOutputEvent)event);
-               } else if(event instanceof PingEvent) {
-                  listener.onPing(this, (PingEvent)event);
-               } else if(event instanceof PongEvent) {
-                  listener.onPong(this, (PongEvent)event);
-               } else if(event instanceof ScopeEvent) {
-                  listener.onScope(this, (ScopeEvent)event);
-               } else if(event instanceof BreakpointsEvent) {
-                  listener.onBreakpoints(this, (BreakpointsEvent)event);
-               } else if(event instanceof BeginEvent) {
-                  listener.onBegin(this, (BeginEvent)event);
-               } else if(event instanceof StepEvent) {
-                  listener.onStep(this, (StepEvent)event);
-               } else if(event instanceof BrowseEvent) {
-                  listener.onBrowse(this, (BrowseEvent)event);
-               } else if(event instanceof EvaluateEvent) {
-                  listener.onEvaluate(this, (EvaluateEvent)event);                  
-               } else if(event instanceof ProfileEvent) {
-                  listener.onProfile(this, (ProfileEvent)event);
-               } else if(event instanceof FaultEvent) {
-                  listener.onFault(this, (FaultEvent)event);
-               }
+               consumer.consume(handler);
             }
-         }catch(Exception e) {
+         } catch(Exception e) {
             logger.info("Error processing events ["+ events + "]", e);
             close("Error in event loop: " + e);
          } finally {

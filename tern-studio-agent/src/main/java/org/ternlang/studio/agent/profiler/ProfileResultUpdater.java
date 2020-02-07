@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.ternlang.common.thread.ThreadBuilder;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
-import org.ternlang.studio.agent.event.ProfileEvent;
 
 public class ProfileResultUpdater implements Runnable {
 

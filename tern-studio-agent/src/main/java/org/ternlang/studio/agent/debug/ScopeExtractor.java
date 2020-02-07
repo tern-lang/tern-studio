@@ -8,6 +8,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.ternlang.agent.message.common.VariablePath;
+import org.ternlang.agent.message.common.VariablePathArray;
 import org.ternlang.core.Context;
 import org.ternlang.core.ResourceManager;
 import org.ternlang.core.function.Function;
@@ -83,21 +85,29 @@ public class ScopeExtractor implements ScopeBrowser {
    }
    
    @Override
-   public void browse(Set<String> expand) {
+   public void browse(VariablePathArray expand) {
       local.clear();
-      local.addAll(expand);
+
+      for(VariablePath path : expand) {
+         String value = path.path().toString();
+         local.add(value);
+      }
       counter.getAndIncrement();
    }
    
    @Override
-   public void evaluate(Set<String> expand, String expression) {
+   public void evaluate(VariablePathArray expand, String expression) {
       evaluate(expand, expression, false);
    }
 
    @Override
-   public void evaluate(Set<String> expand, String expression, boolean refresh) {
+   public void evaluate(VariablePathArray expand, String expression, boolean refresh) {
       watch.clear();
-      watch.addAll(expand);
+
+      for(VariablePath path : expand) {
+         String value = path.path().toString();
+         watch.add(value);
+      }
       evaluate.set(expression);
       execute.set(refresh); // should we execute same expression again
       counter.getAndIncrement();

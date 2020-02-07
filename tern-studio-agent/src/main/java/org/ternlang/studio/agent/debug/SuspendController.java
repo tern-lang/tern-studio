@@ -4,9 +4,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.ternlang.studio.agent.debug.ResumeListener;
-import org.ternlang.studio.agent.debug.ResumeType;
-import org.ternlang.studio.agent.debug.ScopeBrowser;
+import org.ternlang.agent.message.common.VariablePathArray;
 
 public class SuspendController {
    
@@ -73,7 +71,7 @@ public class SuspendController {
       return types.remove(name); // resume in a specific way
    }
    
-   public void browse(Set<String> expand, String thread) {
+   public void browse(VariablePathArray expand, String thread) {
       Object lock = locks.get(thread);
       ScopeBrowser browser = browsers.get(thread);
       
@@ -88,7 +86,7 @@ public class SuspendController {
       }
    }
    
-   public void evaluate(Set<String> expand, String thread, String expression, boolean refresh) {
+   public void evaluate(VariablePathArray expand, String thread, String expression, boolean refresh) {
       Object lock = locks.get(thread);
       ScopeBrowser browser = browsers.get(thread);
       

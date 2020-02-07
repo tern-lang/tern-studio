@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.ternlang.core.trace.TraceType;
 import org.ternlang.studio.agent.ProcessMode;
-import org.ternlang.studio.agent.event.ScopeEvent;
 
 public class ScopeEventBuilder {
 

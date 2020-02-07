@@ -10,7 +10,6 @@ import org.simpleframework.module.annotation.Value;
 import org.simpleframework.transport.Channel;
 import org.ternlang.studio.agent.event.ProcessEventFilter;
 import org.ternlang.studio.agent.event.ProcessEventListener;
-import org.ternlang.studio.agent.event.StepEvent;
 import org.ternlang.studio.core.command.AttachCommand;
 import org.ternlang.studio.core.command.BreakpointsCommand;
 import org.ternlang.studio.core.command.BrowseCommand;

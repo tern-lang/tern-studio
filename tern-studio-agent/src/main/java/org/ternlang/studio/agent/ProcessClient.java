@@ -8,7 +8,6 @@ import org.ternlang.core.ResourceManager;
 import org.ternlang.studio.agent.core.ExecuteLatch;
 import org.ternlang.studio.agent.core.ExecuteStatus;
 import org.ternlang.studio.agent.debug.BreakpointMatcher;
-import org.ternlang.studio.agent.event.ExitEvent;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.agent.task.ProcessExecutor;
 import org.ternlang.studio.agent.worker.store.WorkerStore;

@@ -18,7 +18,6 @@ import org.ternlang.core.scope.Scope;
 import org.ternlang.core.scope.ScopeState;
 import org.ternlang.core.stack.ThreadStack;
 import org.ternlang.core.trace.Trace;
-import org.ternlang.studio.agent.event.FaultEvent;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.agent.log.TraceLogger;
 

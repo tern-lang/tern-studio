@@ -6,9 +6,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 import org.ternlang.studio.agent.event.ProcessEventChannel;
-import org.ternlang.studio.agent.event.ProcessEventType;
-import org.ternlang.studio.agent.event.WriteErrorEvent;
-import org.ternlang.studio.agent.event.WriteOutputEvent;
 
 public class ProcessOutputStream extends OutputStream {
 

@@ -1,9 +1,13 @@
 package org.ternlang.studio.agent.debug;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.ternlang.agent.message.common.Breakpoint;
+import org.ternlang.agent.message.common.BreakpointArray;
+import org.ternlang.agent.message.common.Line;
+import org.ternlang.agent.message.common.LineArray;
 
 public class BreakpointMatcher {
 
@@ -19,37 +23,32 @@ public class BreakpointMatcher {
       suspend.set(true);
    }
    
-   public void update(Map<String, Map<Integer, Boolean>> breakpoints) {
+   public void update(BreakpointArray breakpoints) {
       Set[] copy = new Set[1024];
       
       if(breakpoints != null) {
-         Set<String> resources = breakpoints.keySet();
-         
-         for(String resource : resources) {
-            Map<Integer, Boolean> locations = breakpoints.get(resource);
-            
-            if(locations != null) {
-               Set<Integer> lines = locations.keySet();
-               
-               for(Integer line : lines) {
-                  Boolean enabled = locations.get(line); 
-                        
-                  if(enabled != null && enabled.booleanValue()) {
-                     if(line > copy.length) {
-                        copy = copyOf(copy, line * 2);
-                     }
-                     Set set = copy[line];
-                     
-                     if(set == null) {
-                        set = new HashSet();
-                        copy[line] = set;
-                     }
-                     String module = ResourceExtractor.extractModule(resource);
-                     
-                     set.add(module); // add module 
-                     set.add(resource); // add module resource file
-                     
+         for(Breakpoint breakpoint : breakpoints) {
+            String resource = breakpoint.resource().toString();
+            LineArray lines = breakpoint.lines();
+
+            for(Line line : lines) {
+               int number = line.line();
+
+               if(line.active()) {
+                  if(number > copy.length) {
+                     copy = copyOf(copy, number * 2);
                   }
+                  Set set = copy[number];
+
+                  if(set == null) {
+                     set = new HashSet();
+                     copy[number] = set;
+                  }
+                  String module = ResourceExtractor.extractModule(resource);
+
+                  set.add(module); // add module
+                  set.add(resource); // add module resource file
+
                }
             }
          }

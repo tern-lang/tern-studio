@@ -1,0 +1,174 @@
+
+namespace org.ternlang.agent.message.event;
+
+import org.ternlang.agent.message.common.ExecuteStatus;
+import org.ternlang.agent.message.common.ProcessMode;
+import org.ternlang.agent.message.common.*;
+
+struct BeginEvent version 1 {
+   status: ExecuteStatus;
+   mode: ProcessMode;
+   resource: Resource?;
+   process: Process;
+   project: Project;
+   system: System;
+   pid: Pid;
+   totalTime: long;
+   totalMemory: long;
+   usedMemory: long;
+   threads: int;
+   duration: long;
+}
+
+struct BreakpointsEvent version 1 {
+   breakpoints: Breakpoint[];
+   process: Process;
+}
+
+struct BrowseEvent version 1 {
+   expand: VariablePath[];
+   process: Process;
+   thread: char[];
+}
+
+struct EvaluateEvent version 1 {
+   expand: VariablePath[];
+   expression: char[];
+   process: Process;
+   thread: char[];
+   refresh: boolean;
+}
+
+struct ExecuteEvent version 1 {
+   breakpoints: Breakpoint[];
+   arguments: ProgramArgument[];
+   data: ExecuteData;
+   dependencies: char[];
+   project: Project;
+   resource: Resource;
+   process: Process;
+   debug: boolean;
+}
+
+struct ExitEvent version 1 {
+   mode: ProcessMode;
+   process: Process;
+   duration: long;
+}
+
+struct FaultEvent version 1 {
+   variables: VariableTree;
+   resource: Resource;
+   process: Process;
+   thread: char[];
+   cause: char[];
+   line: int;
+}
+
+struct PingEvent version 1 {
+   process: Process;
+   time: long;
+}
+
+struct PongEvent version 1 {
+   status: ExecuteStatus;
+   resource: Resource?;
+   process: Process;
+   project: Project;
+   system: System;
+   pid: Pid;
+   totalTime: long;
+   usedTime: long;
+   totalMemory: long;
+   usedMemory: long;
+   threads: int;
+}
+
+struct ProgressEvent version 1 {
+   status: ExecuteStatus;
+   resource: Resource?;
+   process: Process;
+   project: Project;
+   system: System;
+   pid: Pid;
+   totalTime: long;
+   usedTime: long;
+   totalMemory: long;
+   usedMemory: long;
+   threads: int;
+}
+
+struct ProfileEvent version 1 {
+   results: ProfileResult[];
+   process: Process;
+}
+
+struct RegisterEvent version 1 {
+   process: Process;
+   system: System;
+   pid: Pid;
+}
+
+struct ScopeEvent version 1 {
+   variables: VariableTree;
+   status: ThreadStatus;
+   instruction: char[];
+   resource: Resource;
+   process: Process;
+   source: char[];
+   thread: char[];
+   stack: char[];
+   line: int;
+   depth: int;
+   key: int;
+}
+
+struct ScriptErrorEvent version 1 {
+   description: char[];
+   message: char[];
+   resource: Resource;
+   process: Process;
+   line: int;
+}
+
+struct StepEvent version 1 {
+   process: Process;
+   type: StepType;
+   thread: char[];
+}
+
+struct WriteErrorEvent version 1 {
+   process: Process;
+   data: byte[];
+   offset: int;
+   length: int;
+   flush: boolean;
+}
+
+struct WriteOutputEvent version 1 {
+   process: Process;
+   data: byte[];
+   offset: int;
+   length: int;
+   flush: boolean;
+}
+
+union ProcessEvent version 1 {
+   begin: BeginEvent;
+   breakpoints: BreakpointsEvent;
+   browse: BrowseEvent;
+   evaluate: EvaluateEvent;
+   execute: ExecuteEvent;
+   exit: ExitEvent;
+   fault: FaultEvent;
+   ping: PingEvent;
+   pong: PongEvent;
+   progress: ProgressEvent;
+   profile: ProfileEvent;
+   register: RegisterEvent;
+   scope: ScopeEvent;
+   scriptError: ScriptErrorEvent;
+   step: StepEvent;
+   writeError: WriteErrorEvent;
+   writeOutput: WriteOutputEvent;
+}

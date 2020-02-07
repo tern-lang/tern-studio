@@ -2,9 +2,7 @@ package org.ternlang.studio.agent.event;
 
 import java.io.Closeable;
 import java.io.OutputStream;
-import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -12,29 +10,27 @@ import java.util.concurrent.FutureTask;
 import org.ternlang.studio.agent.log.TraceLogger;
 
 public class ProcessEventProducer {
-   
-   private final Map<Class, ProcessEventMarshaller> marshallers;
+
    private final MessageEnvelopeWriter writer;
    private final TraceLogger logger;
    private final Closeable closeable;
    private final Executor executor;
    
    public ProcessEventProducer(TraceLogger logger, OutputStream stream, Closeable closeable, Executor executor) {
-      this.marshallers = new ConcurrentHashMap<Class, ProcessEventMarshaller>();
       this.writer = new MessageEnvelopeWriter(stream, closeable);
       this.closeable = closeable;
       this.executor = executor;
       this.logger = logger;
    }
    
-   public void produce(ProcessEvent event) throws Exception {
-      SendTask task = new SendTask(event);
+   public void produce(MessageEnvelope message) throws Exception {
+      SendTask task = new SendTask(message);
       //executor.execute(task);
       task.call();
    }
 
-   public Future<Boolean> produceAsync(ProcessEvent event) throws Exception {
-      SendTask task = new SendTask(event);
+   public Future<Boolean> produceAsync(MessageEnvelope message) throws Exception {
+      SendTask task = new SendTask(message);
       FutureTask<Boolean> future = new FutureTask<Boolean>(task);
 
       executor.execute(future);
@@ -75,28 +71,15 @@ public class ProcessEventProducer {
    
    private class SendTask implements Callable<Boolean> {
       
-      private final ProcessEvent event;
+      private final MessageEnvelope message;
       
-      public SendTask(ProcessEvent event) {
-         this.event = event;
+      public SendTask(MessageEnvelope message) {
+         this.message = message;
       }
       
       @Override
       public Boolean call() throws Exception {
-         Class type = event.getClass();
-         
          try {
-            if (!marshallers.containsKey(type)) {
-               ProcessEventType[] events = ProcessEventType.values();
-      
-               for (ProcessEventType event : events) {
-                  ProcessEventMarshaller marshaller = event.marshaller.newInstance();
-                  marshallers.put(event.event, marshaller);
-               }
-            }
-            ProcessEventMarshaller marshaller = marshallers.get(type);
-            MessageEnvelope message = marshaller.toMessage(event);
-      
             writer.write(message);
             return true;
          }catch(Exception e){
@@ -106,5 +89,4 @@ public class ProcessEventProducer {
          }
       }
    }
-
 }

@@ -2,36 +2,33 @@ package org.ternlang.studio.agent.event;
 
 import java.io.Closeable;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.ternlang.agent.message.event.ProcessEventCodec;
+import org.ternlang.agent.message.event.ProcessEventHandler;
+import org.ternlang.message.ByteArrayFrame;
 
 public class ProcessEventConsumer {
-   
-   private final Map<Integer, ProcessEventMarshaller> marshallers;
+
    private final MessageEnvelopeReader reader;
+   private final ProcessEventCodec codec;
+   private final ByteArrayFrame frame;
 
    public ProcessEventConsumer(InputStream stream, Closeable closeable) {
-      this.marshallers = new HashMap<Integer, ProcessEventMarshaller>();
       this.reader = new MessageEnvelopeReader(stream, closeable);
+      this.codec = new ProcessEventCodec();
+      this.frame = new ByteArrayFrame();
    }
    
-   public ProcessEvent consume() throws Exception {
-      if(marshallers.isEmpty()) {
-         ProcessEventType[] events = ProcessEventType.values();
-         
-         for(ProcessEventType event : events) {
-            ProcessEventMarshaller marshaller = event.marshaller.newInstance();
-            marshallers.put(event.code, marshaller);
-         }
-      }
+   public boolean consume(ProcessEventHandler handler) throws Exception {
       MessageEnvelope message = reader.read();
       int code = message.getCode();
-      ProcessEventMarshaller marshaller = marshallers.get(code);
-      
-      if(marshaller == null) {
-         throw new IllegalStateException("Could not find marshaller for " + code);
-      }
-      return marshaller.fromMessage(message);
+      byte[] data = message.getData();
+      int offset = message.getOffset();
+      int length = message.getLength();
+
+      frame.wrap(data, offset, length);
+
+      return codec.match(handler);
    }
 
 }

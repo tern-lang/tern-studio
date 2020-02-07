@@ -3,6 +3,7 @@ package org.ternlang.studio.agent.task;
 import java.util.List;
 import java.util.concurrent.ThreadFactory;
 
+import org.ternlang.agent.message.common.ProgramArgumentArray;
 import org.ternlang.common.thread.ThreadBuilder;
 import org.ternlang.core.scope.Model;
 import org.ternlang.studio.agent.ProcessContext;
@@ -10,7 +11,6 @@ import org.ternlang.studio.agent.ProcessMode;
 import org.ternlang.studio.agent.ProcessModel;
 import org.ternlang.studio.agent.client.ConnectionChecker;
 import org.ternlang.studio.agent.core.ClassPathUpdater;
-import org.ternlang.studio.agent.core.ExecuteData;
 import org.ternlang.studio.agent.core.ExecuteLatch;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.agent.log.TraceLogger;
@@ -35,7 +35,14 @@ public class ProcessExecutor {
       this.mode = mode;
    }
 
-   public void beginExecute(ProcessEventChannel channel, String project, String resource, String dependencies, List<String> arguments, boolean debug) {
+   public void beginExecute(
+       ProcessEventChannel channel,
+       String project,
+       String resource,
+       String dependencies,
+       ProgramArgumentArray arguments,
+       boolean debug)
+   {
       ExecuteLatch latch = context.getLatch();
       String process = context.getProcess();
       

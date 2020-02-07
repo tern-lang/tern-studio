@@ -7,16 +7,15 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.ternlang.agent.message.event.PingEvent;
+import org.ternlang.agent.message.event.PongEventBuilder;
 import org.ternlang.common.thread.ThreadBuilder;
 import org.ternlang.studio.agent.ProcessContext;
 import org.ternlang.studio.agent.ProcessMode;
-import org.ternlang.studio.agent.core.ExecuteData;
 import org.ternlang.studio.agent.core.ExecuteLatch;
 import org.ternlang.studio.agent.core.ExecuteState;
 import org.ternlang.studio.agent.core.ExecuteStatus;
 import org.ternlang.studio.agent.core.TerminateHandler;
-import org.ternlang.studio.agent.event.PingEvent;
-import org.ternlang.studio.agent.event.PongEvent;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 
 public class ConnectionChecker implements Closeable {
@@ -63,22 +62,23 @@ public class ConnectionChecker implements Closeable {
          long remainingTime = Math.max(0, context.getTimeLimiter().getTimeLimit().getExpiryTime() - System.currentTimeMillis());
          long timeout = context.getTimeLimiter().getTimeLimit().getTimeout();
          
-         PongEvent pong = new PongEvent.Builder(process)
-            .withPid(pid)
-            .withSystem(system)
-            .withProject(project)
-            .withResource(resource)
-            .withStatus(status)
-            .withUsedTime(timeout - remainingTime)
-            .withTotalTime(timeout)
-            .withUsedMemory(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())
-            .withTotalMemory(Runtime.getRuntime().totalMemory())
-            .withThreads(Thread.getAllStackTraces().size()) // this might be expensive
-            .build();
+         PongEventBuilder pong = channel.begin()
+            .pong()
+            .pid(pid)
+            .system(system)
+            .project(project)
+            .status(org.ternlang.agent.message.common.ExecuteStatus.resolve(status.name()))
+            .usedTime(timeout - remainingTime)
+            .totalTime(timeout)
+            .usedMemory(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())
+            .totalMemory(Runtime.getRuntime().totalMemory())
+            .threads(Thread.getAllStackTraces().size()); // this might be expensive
+
+         pong.resource().some(resource);
          
          if(mode.isDetachRequired()) {
             if(!status.isFinished()) { // send pong only if still running
-               if(!channel.send(pong)) {
+               if(!channel.send()) {
                   if(mode.isTerminateRequired()) {
                      TerminateHandler.terminate("Ping failed for " + process);
                   }
@@ -87,7 +87,7 @@ public class ConnectionChecker implements Closeable {
                }
             }
          } else {
-            if(!channel.send(pong)) {
+            if(!channel.send()) {
                if(mode.isTerminateRequired()) {
                   TerminateHandler.terminate("Ping failed for " + process);
                }
