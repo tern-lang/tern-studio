@@ -55,7 +55,7 @@ public class ConnectTunnelClient {
          executor.start();
          connection.setName(name);
          tunnel.tunnel(socket); // do the tunnel handshake
-         socket.setSoTimeout(10000);
+         socket.setSoTimeout(1000000000);
          connection.start();
          return connection;
       }catch(Exception e) {
@@ -167,6 +167,7 @@ public class ConnectTunnelClient {
                consumer.consume(handler);
             }
          } catch(Exception e) {
+            e.printStackTrace();
             logger.info("Error processing events ["+ events + "]", e);
             close("Error in event loop: " + e);
          } finally {

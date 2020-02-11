@@ -190,7 +190,7 @@ public class ProcessPool {
                listener.onRegister(channel, event);
             } catch(Exception e) {
                log.info(process + ": Exception processing exit event", e);
-               listeners.remove(listener);
+               remove(listener);
             }
          }
       }
@@ -205,7 +205,7 @@ public class ProcessPool {
                listener.onExit(channel, event);
             } catch(Exception e) {
                log.info(process + ": Exception processing exit event", e);
-               listeners.remove(listener);
+               remove(listener);
             }
          }
       }
@@ -219,7 +219,7 @@ public class ProcessPool {
                listener.onWriteError(channel, event);
             } catch(Exception e) {
                log.info(process + ": Exception processing write error event", e);
-               listeners.remove(listener);
+               remove(listener);
             }
          }
       }
@@ -233,7 +233,7 @@ public class ProcessPool {
                listener.onWriteOutput(channel, event);
             } catch(Exception e) {
                log.info(process + ": Exception processing write output event", e);
-               listeners.remove(listener);
+               remove(listener);
             }
          }
       }
@@ -247,7 +247,7 @@ public class ProcessPool {
                listener.onScriptError(channel, event);
             } catch(Exception e) {
                log.info(process + ": Exception processing syntax error event", e);
-               listeners.remove(listener);
+               remove(listener);
             }
          }
       }
@@ -261,7 +261,7 @@ public class ProcessPool {
                listener.onBegin(channel, event);
             } catch(Exception e) {
                log.info(process + ": Exception processing begin event", e);
-               listeners.remove(listener);
+               remove(listener);
             }
          }
       }
@@ -275,7 +275,7 @@ public class ProcessPool {
                listener.onProfile(channel, event);
             } catch(Exception e) {
                log.info(process + ": Exception processing profile event", e);
-               listeners.remove(listener);
+               remove(listener);
             }
          }
       }
@@ -289,7 +289,7 @@ public class ProcessPool {
                listener.onPong(channel, event);
             } catch(Exception e) {
                log.info(process + ": Exception processing pong event", e);
-               listeners.remove(listener);
+               remove(listener);
             }
          }
       }
@@ -303,7 +303,7 @@ public class ProcessPool {
                listener.onScope(channel, event);
             } catch(Exception e) {
                log.info(process + ": Exception processing scope event", e);
-               listeners.remove(listener);
+               remove(listener);
             }
          }
       }
@@ -317,7 +317,7 @@ public class ProcessPool {
                listener.onFault(channel, event);
             } catch(Exception e) {
                log.info(process + ": Exception processing fault event", e);
-               listeners.remove(listener);
+               remove(listener);
             }
          }
       }
@@ -491,7 +491,7 @@ public class ProcessPool {
                }
             }
             running.addAll(notDead);
-            log.info("Active processes are " + activeNames);;
+            log.info("Active processes are " + activeNames + " and inactive are " + notDead);
          }catch(Exception e){
             log.info("Error pinging agents", e);
          }

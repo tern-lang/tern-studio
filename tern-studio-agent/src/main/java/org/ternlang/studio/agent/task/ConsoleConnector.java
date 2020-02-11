@@ -31,8 +31,8 @@ public class ConsoleConnector implements ConnectionListener{
    public void connect() {
       try {
          // redirect all output to the streams
-         System.setOut(output);
-         System.setErr(error);
+        // System.setOut(output);
+         //System.setErr(error);
       }catch(Exception e) {
          System.err.println(ExceptionBuilder.buildAll(e));
       }
@@ -41,8 +41,8 @@ public class ConsoleConnector implements ConnectionListener{
    @Override
    public void onClose() {
       try {
-         System.setOut(originalOutput);
-         System.setErr(originalError);
+       //  System.setOut(originalOutput);
+       //  System.setErr(originalError);
       }catch(Exception e) {
          System.err.println(ExceptionBuilder.buildAll(e));
       }

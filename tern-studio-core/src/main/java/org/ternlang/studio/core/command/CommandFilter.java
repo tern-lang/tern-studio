@@ -30,10 +30,10 @@ public class CommandFilter implements ProcessEventFilter {
    }
    
    public boolean isFocused(ProcessOrigin origin) {
-      String process = origin.process().toString();
       String focus = attachment.get();
       
       if(focus != null) {
+         String process = origin.process().toString();
          return process.equals(focus);
       }
       return false;

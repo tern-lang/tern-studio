@@ -4,6 +4,7 @@ import org.simpleframework.module.annotation.Component;
 import org.simpleframework.transport.Channel;
 import org.ternlang.agent.message.event.BeginEvent;
 import org.ternlang.agent.message.event.ExitEvent;
+import org.ternlang.agent.message.event.PongEvent;
 import org.ternlang.studio.agent.ProcessMode;
 import org.ternlang.studio.agent.event.ProcessEventAdapter;
 import org.ternlang.studio.agent.event.ProcessEventChannel;

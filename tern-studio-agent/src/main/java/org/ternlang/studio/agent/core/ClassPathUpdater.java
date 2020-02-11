@@ -84,60 +84,62 @@ public class ClassPathUpdater {
       URLClassPath path = createClassPath(loader);
 
       for(File dependency : dependencies) {
-         String resource = dependency.getAbsolutePath();
-
-         if(dependency.isFile() && !resource.endsWith(JAR_EXTENSION)) {
-            FileReader reader = new FileReader(dependency);
-            LineNumberReader iterator = new LineNumberReader(reader);
-            List<File> files = new ArrayList<File>();
-
-            try {
-               String line = iterator.readLine();
-
-               while(line != null) {
-                  String token = line.trim();
-                  int length = token.length();
-
-                  if(length > 0) {
-                     File file = new File(token);
-                     files.add(file);
-                  }
-                  line = iterator.readLine();
-               }
-               int size = files.size();
-
-               if(size > 0) {
-                  for(int i = 0; i < size; i++){
-                     File file = files.get(i).getCanonicalFile();
-                     URI location = file.toURI();
-                     URL entry = location.toURL();
-
-                     if(debug) {
-                        String message = String.format(INCLUDE_MESSAGE , entry);
-                        System.err.println(message);
+         if(dependency != null) {
+            String resource = dependency.getAbsolutePath();
+   
+            if(dependency.isFile() && !resource.endsWith(JAR_EXTENSION)) {
+               FileReader reader = new FileReader(dependency);
+               LineNumberReader iterator = new LineNumberReader(reader);
+               List<File> files = new ArrayList<File>();
+   
+               try {
+                  String line = iterator.readLine();
+   
+                  while(line != null) {
+                     String token = line.trim();
+                     int length = token.length();
+   
+                     if(length > 0) {
+                        File file = new File(token);
+                        files.add(file);
                      }
-                     if(!file.exists()) {
-                        throw new IllegalArgumentException("Could not find " + path);
-                     }
-                     path.addURL(entry);
+                     line = iterator.readLine();
                   }
+                  int size = files.size();
+   
+                  if(size > 0) {
+                     for(int i = 0; i < size; i++){
+                        File file = files.get(i).getCanonicalFile();
+                        URI location = file.toURI();
+                        URL entry = location.toURL();
+   
+                        if(debug) {
+                           String message = String.format(INCLUDE_MESSAGE , entry);
+                           System.err.println(message);
+                        }
+                        if(!file.exists()) {
+                           throw new IllegalArgumentException("Could not find " + path);
+                        }
+                        path.addURL(entry);
+                     }
+                  }
+               } finally {
+                  reader.close();
                }
-            } finally {
-               reader.close();
+            } else {
+               File file = dependency.getCanonicalFile();
+               URI location = file.toURI();
+               URL entry = location.toURL();
+   
+               if(debug) {
+                  String message = String.format(INCLUDE_MESSAGE , entry);
+                  System.err.println(message);
+               }
+               if(!file.exists()) {
+                  throw new IllegalArgumentException("Could not find " + path);
+               }
+               path.addURL(entry);
             }
-         } else {
-            File file = dependency.getCanonicalFile();
-            URI location = file.toURI();
-            URL entry = location.toURL();
-
-            if(debug) {
-               String message = String.format(INCLUDE_MESSAGE , entry);
-               System.err.println(message);
-            }
-            if(!file.exists()) {
-               throw new IllegalArgumentException("Could not find " + path);
-            }
-            path.addURL(entry);
          }
       }
    }

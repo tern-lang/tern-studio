@@ -88,7 +88,12 @@ public class ProcessAgent {
          interceptor.register(extractor);
 
          // send the initial register event
-         channel.begin().register().pid(pid).system(system);
+         channel.begin()
+            .register()
+            .process(process)
+            .pid(pid)
+            .system(system);
+         
          channel.send();
 
          validator.validate();

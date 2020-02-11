@@ -21,8 +21,6 @@ public class AsyncEventExchanger implements MessageEnvelopeProcessor {
 
    private final Map<String, ProcessEventChannel> channels;
    private final ProcessEventRouter router;
-   private final ProcessEventCodec codec;
-   private final ByteArrayFrame frame;
    private final Executor executor;
    private final Reactor reactor;
    
@@ -35,8 +33,7 @@ public class AsyncEventExchanger implements MessageEnvelopeProcessor {
       this.router = new ProcessEventRouter(listener);
       this.executor = new ThreadPool(threads);
       this.reactor = new ExecutorReactor(executor);
-      this.frame = new ByteArrayFrame();
-      this.codec = new ProcessEventCodec();
+
    }
    
    public void connect(Channel channel, String process) throws Exception {
@@ -50,13 +47,18 @@ public class AsyncEventExchanger implements MessageEnvelopeProcessor {
       int offset = message.getOffset();
       int length = message.getLength();
 
-      frame.wrap(data, offset, length);
-      codec.with(frame, 0, length);
-
-      ProcessOrigin origin = codec.get();
-      String process = origin.process().toString();
-      
-      channels.put(process, channel);
-      router.route(channel, origin);
+      if(length > 0) {
+         ByteArrayFrame frame = new ByteArrayFrame();
+         ProcessEventCodec codec = new ProcessEventCodec();
+         
+         frame.wrap(data, offset, length);
+         codec.with(frame, 0, length);
+   
+         ProcessOrigin origin = codec.get();
+         String process = origin.process().toString();
+         
+         channels.put(process, channel);
+         router.route(channel, origin);
+      }
    }
 }

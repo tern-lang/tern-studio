@@ -13,10 +13,10 @@ public class ExecuteDataWrapper implements ExecuteData {
     private final boolean debug;
 
     public ExecuteDataWrapper(String process, String project, String resource, String dependencies, boolean debug) {
-        this.process = new StringCharArray(process);
-        this.dependencies = new StringCharArray(dependencies);
-        this.resource = new StringCharArray(resource);
-        this.project = new StringCharArray(project);
+        this.process = new StringCharArray(process == null ? "" : process);
+        this.dependencies = new StringCharArray(dependencies == null ? "" : dependencies);
+        this.resource = new StringCharArray(resource == null ? "" : resource);
+        this.project = new StringCharArray(project == null ? "" : project);
         this.debug = debug;
     }
 

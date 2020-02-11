@@ -140,14 +140,15 @@ public class CommandEventConverter {
    public StatusCommand convert(StatusEvent event) throws Exception {
       String focus = filter.getFocus();
       String process = event.process().toString();
-      String resource = event.resource().toString();
+      String projectName = event.project().toString().isEmpty() ? null : event.project().toString();
+      String resource = event.resource().get().toString().isEmpty() ? null : event.resource().get().toString();
       String path = project.getRealPath(resource);
       
       return StatusCommand.builder()
             .process(process)
             .pid(event.pid().toString())
             .system(event.system().toString())
-            .project(event.project().toString())
+            .project(projectName)
             .time(System.currentTimeMillis())
             .totalTime(event.totalTime())
             .usedTime(event.usedTime())

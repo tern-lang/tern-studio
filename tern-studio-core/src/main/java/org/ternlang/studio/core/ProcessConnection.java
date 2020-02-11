@@ -134,6 +134,7 @@ public class ProcessConnection {
          }
          log.info(process + ": Ping failed");
       } catch (Exception e) {
+         e.printStackTrace();
          log.info(process + ": Error occured sending ping event", e);
          close(process + ": Error occured sending ping event: " + e);
       }

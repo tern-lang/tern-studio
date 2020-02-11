@@ -22,6 +22,7 @@ public class ProcessEventThreadLocal extends ThreadLocal<ProcessEventSender> {
       }
       
       public ProcessEventSender start() {
+         frame.setCount(16);
          with(frame, 0, Integer.MAX_VALUE);
          return this;
       }

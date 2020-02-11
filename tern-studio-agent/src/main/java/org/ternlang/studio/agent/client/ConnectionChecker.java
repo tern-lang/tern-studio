@@ -33,7 +33,7 @@ public class ConnectionChecker implements Closeable {
       this.listeners = new CopyOnWriteArraySet<ConnectionListener>();
       this.active = new AtomicBoolean();
       this.update = new AtomicLong();
-      this.checker = new HealthChecker(this, active, update, 10000);
+      this.checker = new HealthChecker(this, active, update, 1000000000);
       this.factory = new ThreadBuilder();
       this.context = context;
       this.process = process;
@@ -65,6 +65,7 @@ public class ConnectionChecker implements Closeable {
          
          PongEventBuilder pong = channel.begin()
             .pong()
+            .process(process)
             .pid(pid)
             .system(system)
             .project(project)
