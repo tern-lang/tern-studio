@@ -5,75 +5,78 @@ import org.ternlang.agent.message.common.ExecuteStatus;
 import org.ternlang.agent.message.common.ProcessMode;
 import org.ternlang.agent.message.common.*;
 
-struct BeginEvent version 1 {
+struct ProcessOrigin {
+   process: Process;
+}
+
+struct StatusEvent extends ProcessOrigin {
    status: ExecuteStatus;
    mode: ProcessMode;
    resource: Resource?;
-   process: Process;
    project: Project;
    system: System;
    pid: Pid;
    totalTime: long;
+   usedTime: long;
    totalMemory: long;
    usedMemory: long;
    threads: int;
+}
+
+struct BeginEvent extends StatusEvent {
    duration: long;
 }
 
-struct BreakpointsEvent version 1 {
+struct BreakpointsEvent extends ProcessOrigin {
    breakpoints: Breakpoint[];
-   process: Process;
 }
 
-struct BrowseEvent version 1 {
+struct BrowseEvent extends ProcessOrigin {
    expand: VariablePath[];
-   process: Process;
    thread: char[];
 }
 
-struct EvaluateEvent version 1 {
+struct EvaluateEvent extends ProcessOrigin {
    expand: VariablePath[];
    expression: char[];
-   process: Process;
    thread: char[];
    refresh: boolean;
 }
 
-struct ExecuteEvent version 1 {
+struct ExecuteEvent extends ProcessOrigin {
    breakpoints: Breakpoint[];
    arguments: ProgramArgument[];
    data: ExecuteData;
    dependencies: char[];
    project: Project;
    resource: Resource;
-   process: Process;
    debug: boolean;
 }
 
-struct ExitEvent version 1 {
+struct ExitEvent extends ProcessOrigin {
    mode: ProcessMode;
-   process: Process;
    duration: long;
 }
 
-struct FaultEvent version 1 {
+struct FaultEvent extends ProcessOrigin {
    variables: VariableTree;
    resource: Resource;
-   process: Process;
    thread: char[];
    cause: char[];
    line: int;
 }
 
-struct PingEvent version 1 {
-   process: Process;
+struct PingEvent extends ProcessOrigin {
    time: long;
 }
 
-struct PongEvent version 1 {
+struct PongEvent extends StatusEvent {
+   time: long;
+}
+
+struct ProgressEvent extends ProcessOrigin {
    status: ExecuteStatus;
    resource: Resource?;
-   process: Process;
    project: Project;
    system: System;
    pid: Pid;
@@ -84,37 +87,20 @@ struct PongEvent version 1 {
    threads: int;
 }
 
-struct ProgressEvent version 1 {
-   status: ExecuteStatus;
-   resource: Resource?;
-   process: Process;
-   project: Project;
-   system: System;
-   pid: Pid;
-   totalTime: long;
-   usedTime: long;
-   totalMemory: long;
-   usedMemory: long;
-   threads: int;
-}
-
-struct ProfileEvent version 1 {
+struct ProfileEvent extends ProcessOrigin {
    results: ProfileResult[];
-   process: Process;
 }
 
-struct RegisterEvent version 1 {
-   process: Process;
+struct RegisterEvent extends ProcessOrigin {
    system: System;
    pid: Pid;
 }
 
-struct ScopeEvent version 1 {
+struct ScopeEvent extends ProcessOrigin {
    variables: VariableTree;
    status: ThreadStatus;
    instruction: char[];
    resource: Resource;
-   process: Process;
    source: char[];
    thread: char[];
    stack: char[];
@@ -123,37 +109,33 @@ struct ScopeEvent version 1 {
    key: int;
 }
 
-struct ScriptErrorEvent version 1 {
+struct ScriptErrorEvent extends ProcessOrigin {
    description: char[];
    message: char[];
    resource: Resource;
-   process: Process;
    line: int;
 }
 
-struct StepEvent version 1 {
-   process: Process;
+struct StepEvent extends ProcessOrigin {
    type: StepType;
    thread: char[];
 }
 
-struct WriteErrorEvent version 1 {
-   process: Process;
+struct WriteErrorEvent extends ProcessOrigin {
    data: byte[];
    offset: int;
    length: int;
    flush: boolean;
 }
 
-struct WriteOutputEvent version 1 {
-   process: Process;
+struct WriteOutputEvent extends ProcessOrigin {
    data: byte[];
    offset: int;
    length: int;
    flush: boolean;
 }
 
-union ProcessEvent version 1 {
+union ProcessEvent requires ProcessOrigin {
    begin: BeginEvent;
    breakpoints: BreakpointsEvent;
    browse: BrowseEvent;

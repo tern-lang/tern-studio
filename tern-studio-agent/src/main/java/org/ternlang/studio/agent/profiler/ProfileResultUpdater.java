@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.ternlang.agent.message.common.ProfileResultArrayBuilder;
 import org.ternlang.common.thread.ThreadBuilder;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 
@@ -34,14 +35,17 @@ public class ProfileResultUpdater implements Runnable {
       
       while(true) {
          String process = reference.get();
+
          try {
             Thread.sleep(delay);
             Set<ProfileResult> results = profiler.lines(2000);
-            ProfileEvent event = new ProfileEvent.Builder(process)
-               .withResults(results)
-               .build();
-            
-            channel.send(event);
+            ProfileResultArrayBuilder builder = channel.begin()
+               .profile()
+               .process(process)
+               .results();
+
+            builder.add(ProfileResultConverter.convert(results));
+            channel.send();
          }catch(Exception e) {
             e.printStackTrace();
          }finally{

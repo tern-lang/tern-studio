@@ -1,14 +1,5 @@
 package org.ternlang.studio.agent.debug;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.ternlang.core.Context;
 import org.ternlang.core.error.InternalError;
 import org.ternlang.core.error.InternalErrorBuilder;
@@ -20,6 +11,15 @@ import org.ternlang.core.stack.ThreadStack;
 import org.ternlang.core.trace.Trace;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.agent.log.TraceLogger;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FaultContextExtractor extends TraceAdapter {
 
@@ -46,15 +46,16 @@ public class FaultContextExtractor extends TraceAdapter {
             String resource = path.getPath();
             int line = trace.getLine();
             
-            FaultEvent event = new FaultEvent.Builder(process)
-               .withVariables(variables)
-               .withCause(error)
-               .withLine(line)
-               .withResource(resource)
-               .withThread(thread)
-               .build();         
+            channel.begin()
+               .fault()
+               .process(process)
+               .variables(variables.getTree())
+               .cause(error)
+               .line(line)
+               .resource(resource)
+               .thread(thread);
    
-            channel.send(event);
+            channel.send();
          }catch(Exception e) {
             logger.debug("Could not send fault context", e);
          }

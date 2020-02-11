@@ -1,5 +1,7 @@
 package org.ternlang.studio.agent.debug;
 
+import org.ternlang.agent.message.common.VariableTree;
+
 import java.util.Collections;
 import java.util.Map;
 
@@ -19,6 +21,10 @@ public class ScopeVariableTree {
       this.local = Collections.unmodifiableMap(builder.local);
       this.change = builder.change;
    }
+
+   public VariableTree getTree() {
+      return ScopeVariableConverter.convert(this);
+   }
    
    public Map<String, Map<String, String>> getLocal() {
       return local;
@@ -31,7 +37,7 @@ public class ScopeVariableTree {
    public int getChange() {
       return change;
    }
-   
+
    public static class Builder {
       
       private Map<String, Map<String, String>> evaluation;

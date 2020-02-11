@@ -9,6 +9,8 @@ import static org.ternlang.studio.agent.core.ExecuteStatus.TERMINATING;
 import java.util.List;
 import java.util.SortedSet;
 
+import org.ternlang.agent.message.common.ExecuteData;
+import org.ternlang.agent.message.common.ProfileResultArrayBuilder;
 import org.ternlang.compile.verify.VerifyError;
 import org.ternlang.core.trace.Trace;
 import org.ternlang.studio.agent.ProcessContext;
@@ -22,15 +24,15 @@ import org.ternlang.studio.agent.profiler.TraceProfiler;
 
 public class ProgressReporter {
    
-   private final ProcessEventChannel client;
+   private final ProcessEventChannel channel;
    private final ProcessContext context;
    private final String project;
    private final String resource;
    private final boolean debug;
    
-   public ProgressReporter(ProcessContext context, ProcessEventChannel client, String project, String resource, boolean debug) {
+   public ProgressReporter(ProcessContext context, ProcessEventChannel channel, String project, String resource, boolean debug) {
       this.context = context;   
-      this.client = client;
+      this.channel = channel;
       this.project = project;
       this.resource = resource;
       this.debug = debug;
@@ -42,26 +44,27 @@ public class ProgressReporter {
       ExecuteData data = state.getData();
       String process = state.getProcess();
       String system = state.getSystem();
-      String project = data.getProject();
+      String project = data.project().toString();
       String pid = state.getPid();
       long duration = latch.update(COMPILING);
       
       if(duration >= 0) {
-         try {  
-            ProgressEvent event = new ProgressEvent.Builder(process)
-               .withPid(pid)
-               .withSystem(system)
-               .withProject(project)
-               .withResource(resource)
-               .withStatus(COMPILING)
-               .withTotalTime(context.getTimeLimiter().getTimeLimit().getTimeout())
-               .withUsedTime(0)
-               .withTotalMemory(Runtime.getRuntime().totalMemory())
-               .withUsedMemory(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())
-               .withThreads(Thread.getAllStackTraces().size()) // this might be expensive
-               .build();
-                
-            client.send(event);
+         try {
+            channel.begin()
+               .progress()
+               .process(process)
+               .pid(pid)
+               .system(system)
+               .project(project)
+               .resource(resource)
+               .status(org.ternlang.agent.message.common.ExecuteStatus.COMPILING)
+               .totalTime(context.getTimeLimiter().getTimeLimit().getTimeout())
+               .usedTime(0)
+               .totalMemory(Runtime.getRuntime().totalMemory())
+               .usedMemory(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())
+               .threads(Thread.getAllStackTraces().size()); // this might be expensive
+
+            channel.send();
          } catch(Exception e) {
             ConsoleFlusher.flushError(e);
          }
@@ -74,7 +77,7 @@ public class ProgressReporter {
       ExecuteData data = state.getData();
       String process = state.getProcess();
       String system = state.getSystem();
-      String project = data.getProject();
+      String project = data.project().toString();
       String pid = state.getPid();
       long duration = latch.update(debug ? DEBUGGING : RUNNING);
       
@@ -83,22 +86,25 @@ public class ProgressReporter {
          long timeout = context.getTimeLimiter().getTimeLimit().getTimeout();
          
          try {
-            BeginEvent event = new BeginEvent.Builder(process)
-               .withMode(context.getMode())
-               .withDuration(duration)
-               .withPid(pid)
-               .withSystem(system)
-               .withProject(project)
-               .withResource(resource)
-               .withStatus(debug ? DEBUGGING : RUNNING)
-               .withTotalTime(timeout)
-               .withUsedTime(timeout - remainingTime)
-               .withTotalMemory(Runtime.getRuntime().totalMemory())
-               .withUsedMemory(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())
-               .withThreads(Thread.getAllStackTraces().size()) // this might be expensive
-               .build();
+            channel.begin()
+               .begin()
+               .process(process)
+               .mode(org.ternlang.agent.message.common.ProcessMode.resolve(context.getMode().name()))
+               .duration(duration)
+               .pid(pid)
+               .system(system)
+               .project(project)
+               .resource(resource)
+               .status(debug ?
+                       org.ternlang.agent.message.common.ExecuteStatus.DEBUGGING :
+                       org.ternlang.agent.message.common.ExecuteStatus.RUNNING)
+               .totalTime(timeout)
+               .usedTime(timeout - remainingTime)
+               .totalMemory(Runtime.getRuntime().totalMemory())
+               .usedMemory(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())
+               .threads(Thread.getAllStackTraces().size()); // this might be expensive
             
-            client.send(event);
+            channel.send();
          } catch(Exception e) {
             ConsoleFlusher.flushError(e);
          }
@@ -117,14 +123,15 @@ public class ProgressReporter {
          int line = trace.getLine();
          
          try {
-            ScriptErrorEvent event = new ScriptErrorEvent.Builder(process)
-               .withDescription(description)   
-               .withMessage(message)
-               .withResource(path)
-               .withLine(line)
-               .build();
-            
-            client.send(event);
+            channel.begin()
+               .scriptError()
+               .process(process)
+               .description(description)
+               .message(message)
+               .resource(path)
+               .line(line);
+
+            channel.send();
          } catch(Exception e) {
             ConsoleFlusher.flushError(e);
          }
@@ -142,22 +149,22 @@ public class ProgressReporter {
       if(duration >= 0) {
          long timeout = context.getTimeLimiter().getTimeLimit().getTimeout();
          
-         try {  
-            ProgressEvent event = new ProgressEvent.Builder(process)
-               .withPid(pid)
-               .withSystem(system)
-               .withProject(project)
-               .withResource(resource)
-               .withStatus(TERMINATING)
-               .withUsedTime(timeout)
-               .withTotalTime(timeout)
-               .withTotalMemory(Runtime.getRuntime().totalMemory())
-               .withUsedMemory(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())
-               .withThreads(Thread.getAllStackTraces().size()) // this might be expensive
-               .build();
-               
-   
-            client.send(event);       
+         try {
+            channel.begin()
+               .progress()
+               .process(process)
+               .pid(pid)
+               .system(system)
+               .project(project)
+               .resource(resource)
+               .status(org.ternlang.agent.message.common.ExecuteStatus.TERMINATING)
+               .usedTime(timeout)
+               .totalTime(timeout)
+               .totalMemory(Runtime.getRuntime().totalMemory())
+               .usedMemory(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())
+               .threads(Thread.getAllStackTraces().size()); // this might be expensive
+
+            channel.send();
          } catch(Exception e) {
             ConsoleFlusher.flushError(e);
          }
@@ -168,15 +175,23 @@ public class ProgressReporter {
       ExecuteLatch latch = context.getLatch();
       ExecuteState state = latch.getState();
       TraceProfiler profiler = context.getProfiler();
-      SortedSet<ProfileResult> lines = profiler.lines(200);
+      SortedSet<ProfileResult> results = profiler.lines(200);
       String process = state.getProcess();
       
-      try {  
-         ProfileEvent profile = new ProfileEvent.Builder(process)
-            .withResults(lines)
-            .build();
-            
-         client.send(profile);       
+      try {
+         ProfileResultArrayBuilder builder = channel.begin()
+            .profile()
+            .process(process)
+            .results();
+
+         for(ProfileResult result : results) {
+            builder.add()
+               .time(result.getTime())
+               .count(result.getCount())
+               .resource(result.getResource())
+               .line(result.getLine());
+         }
+         channel.send();
       } catch(Exception e) {
          ConsoleFlusher.flushError(e);
       }
@@ -189,14 +204,14 @@ public class ProgressReporter {
       long duration = latch.update(FINISHED);
       
       if(duration >= 0) {
-         try { 
-            ExitEvent event = new ExitEvent.Builder(process)
-               .withDuration(totalTime)
-               .withMode(context.getMode())
-               .build();         
-   
-   
-            client.send(event);
+         try {
+            channel.begin()
+               .exit()
+               .process(process)
+               .duration(totalTime)
+               .mode(org.ternlang.agent.message.common.ProcessMode.resolve(context.getMode().name()));
+
+            channel.send();
          } catch(Exception e) {
             ConsoleFlusher.flushError(e);
          }

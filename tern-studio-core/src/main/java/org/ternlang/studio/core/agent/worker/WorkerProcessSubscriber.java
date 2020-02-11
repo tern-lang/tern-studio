@@ -2,6 +2,8 @@ package org.ternlang.studio.core.agent.worker;
 
 import org.simpleframework.module.annotation.Component;
 import org.simpleframework.transport.Channel;
+import org.ternlang.agent.message.event.BeginEvent;
+import org.ternlang.agent.message.event.ExitEvent;
 import org.ternlang.studio.agent.ProcessMode;
 import org.ternlang.studio.agent.event.ProcessEventAdapter;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
@@ -33,14 +35,14 @@ public class WorkerProcessSubscriber {
       
       @Override
       public void onBegin(ProcessEventChannel channel, BeginEvent event) {
-         String process = event.getProcess();
+         String process = event.process().toString();
          controller.start(process);
       }
    
       @Override
       public void onExit(ProcessEventChannel channel, ExitEvent event) {
-         String process = event.getProcess();
-         ProcessMode mode = event.getMode();
+         String process = event.process().toString();
+         ProcessMode mode = ProcessMode.valueOf(event.mode().name());
          
          if(mode.isTerminateRequired()) {
             controller.stop(process);

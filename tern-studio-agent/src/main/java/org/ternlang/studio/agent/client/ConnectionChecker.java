@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.ternlang.agent.message.common.ExecuteData;
 import org.ternlang.agent.message.event.PingEvent;
 import org.ternlang.agent.message.event.PongEventBuilder;
 import org.ternlang.common.thread.ThreadBuilder;
@@ -52,8 +53,8 @@ public class ConnectionChecker implements Closeable {
       ExecuteState state = latch.getState();
       ExecuteStatus status = state.getStatus();
       ExecuteData data = state.getData();
-      String project = data.getProject();
-      String resource = data.getResource();
+      CharSequence project = data.project();
+      CharSequence resource = data.resource();
       String system = state.getSystem();
       String pid = state.getPid();
       long time = System.currentTimeMillis();

@@ -2,6 +2,18 @@ package org.ternlang.studio.core.command;
 
 import java.util.Map;
 
+import org.ternlang.agent.message.event.BeginEvent;
+import org.ternlang.agent.message.event.ExitEvent;
+import org.ternlang.agent.message.event.FaultEvent;
+import org.ternlang.agent.message.event.PongEvent;
+import org.ternlang.agent.message.event.ProfileEvent;
+import org.ternlang.agent.message.event.RegisterEvent;
+import org.ternlang.agent.message.event.ScopeEvent;
+import org.ternlang.agent.message.event.ScriptErrorEvent;
+import org.ternlang.agent.message.event.StatusEvent;
+import org.ternlang.agent.message.event.WriteErrorEvent;
+import org.ternlang.agent.message.event.WriteOutputEvent;
+import org.ternlang.studio.agent.debug.ScopeVariableConverter;
 import org.ternlang.studio.agent.debug.ScopeVariableTree;
 import org.ternlang.studio.agent.event.ProcessEventAdapter;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
@@ -24,8 +36,8 @@ public class CommandEventForwarder extends ProcessEventAdapter {
    
    @Override
    public void onScope(ProcessEventChannel channel, ScopeEvent event) throws Exception {
-      String source = event.getSource();
-      String process = event.getProcess();
+      String source = event.source().toString();
+      String process = event.process().toString();
       
       if(filter.isFocused(event)) {
          ScopeCommand command = converter.convert(event);
@@ -42,25 +54,26 @@ public class CommandEventForwarder extends ProcessEventAdapter {
    @Override
    public void onFault(ProcessEventChannel channel, FaultEvent event) throws Exception {
       if(filter.isFocused(event)) {
-         ScopeVariableTree tree = event.getVariables();
+         ScopeVariableTree tree = ScopeVariableConverter.convert(event.variables());
          Map<String, Map<String, String>> local = tree.getLocal();
-         String process = event.getProcess();
-         String thread = event.getThread();
-         String cause = event.getCause();
-         String resource = event.getResource();
-         int line = event.getLine();
+         String process = event.process().toString();
+         String thread = event.thread().toString();
+         String cause = event.cause().toString();
+         String resource = event.resource().toString();
+         int line = event.line();
+
          logger.log(process, local, resource, thread, cause, line);
       }
    }
    
    @Override
-   public void onWriteError(ProcessEventChannel channel, WriteErrorEvent event) throws Exception {   
+   public void onWriteError(ProcessEventChannel channel, WriteErrorEvent event) throws Exception {
       PrintErrorCommand printcommand = converter.convert(event);
       client.sendCommand(printcommand);
    }
    
    @Override
-   public void onWriteOutput(ProcessEventChannel channel, WriteOutputEvent event) throws Exception {  
+   public void onWriteOutput(ProcessEventChannel channel, WriteOutputEvent event) throws Exception {
       PrintOutputCommand printCommand = converter.convert(event);
       client.sendCommand(printCommand);
    }
@@ -91,19 +104,19 @@ public class CommandEventForwarder extends ProcessEventAdapter {
    }
    
    @Override
-   public void onRegister(ProcessEventChannel channel, RegisterEvent event) throws Exception {  
+   public void onRegister(ProcessEventChannel channel, RegisterEvent event) throws Exception {
       StatusCommand statusCommand = converter.convert(event);
       client.sendCommand(statusCommand);
    }
    
    @Override
-   public void onPong(ProcessEventChannel channel, PongEvent event) throws Exception {  
+   public void onPong(ProcessEventChannel channel, PongEvent event) throws Exception {
       StatusCommand statusCommand = converter.convert(event);
       client.sendCommand(statusCommand);
    }
    
    @Override
-   public void onExit(ProcessEventChannel channel, ExitEvent event) throws Exception {  
+   public void onExit(ProcessEventChannel channel, ExitEvent event) throws Exception {
       ExitCommand exitCommand = converter.convert(event);
       client.sendCommand(exitCommand);
    }

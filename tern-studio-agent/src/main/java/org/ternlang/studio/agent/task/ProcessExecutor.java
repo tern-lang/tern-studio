@@ -1,8 +1,6 @@
 package org.ternlang.studio.agent.task;
 
-import java.util.List;
-import java.util.concurrent.ThreadFactory;
-
+import org.ternlang.agent.message.common.ExecuteData;
 import org.ternlang.agent.message.common.ProgramArgumentArray;
 import org.ternlang.common.thread.ThreadBuilder;
 import org.ternlang.core.scope.Model;
@@ -11,9 +9,12 @@ import org.ternlang.studio.agent.ProcessMode;
 import org.ternlang.studio.agent.ProcessModel;
 import org.ternlang.studio.agent.client.ConnectionChecker;
 import org.ternlang.studio.agent.core.ClassPathUpdater;
+import org.ternlang.studio.agent.core.ExecuteDataWrapper;
 import org.ternlang.studio.agent.core.ExecuteLatch;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.agent.log.TraceLogger;
+
+import java.util.concurrent.ThreadFactory;
 
 public class ProcessExecutor {
 
@@ -49,18 +50,27 @@ public class ProcessExecutor {
       try {         
          if(resource != null) {
             ProcessModel overrides = new ProcessModel(model);
-            ExecuteData data = new ExecuteData(process, project, resource, dependencies, debug);
+            ExecuteData data = new ExecuteDataWrapper(process, project, resource, dependencies, debug);
             ConsoleConnector connector = new ConsoleConnector(channel, process);
             ProcessTask harness = new ProcessTask(context, channel, mode, overrides, project, resource, debug);
             
             if(latch.start(data)) {
                Thread thread = factory.newThread(harness);
                ClassLoader loader = ClassPathUpdater.updateClassPath(dependencies);
-               String[] array = arguments.toArray(empty);
-               
-               overrides.addAttribute(ProcessModel.SHORT_ARGUMENTS, array);
-               overrides.addAttribute(ProcessModel.LONG_ARGUMENTS, array);
-               
+
+               if(arguments != null) {
+                  int length = arguments.length();
+                  String[] array = new String[length];
+
+                  for (int i = 0; i < length; i++) {
+                     array[i] = arguments.get(i).toString();
+                  }
+                  overrides.addAttribute(ProcessModel.SHORT_ARGUMENTS, array);
+                  overrides.addAttribute(ProcessModel.LONG_ARGUMENTS, array);
+               } else {
+                  overrides.addAttribute(ProcessModel.SHORT_ARGUMENTS, empty);
+                  overrides.addAttribute(ProcessModel.LONG_ARGUMENTS, empty);
+               }
                if(loader == null) {
                   logger.info("Could not update dependencies");
                }
@@ -80,7 +90,7 @@ public class ProcessExecutor {
       
       try {         
          if(resource != null) {
-            ExecuteData data = new ExecuteData(process, project, resource, null, true);
+            ExecuteData data = new ExecuteDataWrapper(process, project, resource, null, true);
             ProgressReporter reporter = new ProgressReporter(context, channel, project, resource, true);
             ConsoleConnector connector = new ConsoleConnector(channel, process);
             

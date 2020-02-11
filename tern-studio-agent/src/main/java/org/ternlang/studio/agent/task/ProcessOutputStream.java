@@ -11,11 +11,11 @@ public class ProcessOutputStream extends OutputStream {
 
    private final ByteArrayOutputStream buffer;
    private final ProcessEventChannel channel;
-   private final ProcessEventType type;
+   private final ProcessOutputType type;
    private final PrintStream stream;
    private final String process;
    
-   public ProcessOutputStream(ProcessEventType type, ProcessEventChannel channel, PrintStream stream, String process) {
+   public ProcessOutputStream(ProcessOutputType type, ProcessEventChannel channel, PrintStream stream, String process) {
       this.buffer = new ByteArrayOutputStream();
       this.process = process;
       this.channel = channel;
@@ -48,23 +48,25 @@ public class ProcessOutputStream extends OutputStream {
       try {
          byte[] octets = buffer.toByteArray();
          
-         if(type == ProcessEventType.WRITE_ERROR) {
-            WriteErrorEvent event = new WriteErrorEvent.Builder(process)
-               .withData(octets)
-               .withOffset(0)
-               .withLength(octets.length)
-               .build();
+         if(type == ProcessOutputType.STDERR) {
+            channel.begin()
+               .writeError()
+               .process(process)
+               .offset(0)
+               .length(octets.length)
+               .data().set(0, octets);
    
-            channel.sendAsync(event);
+            channel.sendAsync();
             stream.flush();
          } else {
-            WriteOutputEvent event = new WriteOutputEvent.Builder(process)
-               .withData(octets)
-               .withOffset(0)
-               .withLength(octets.length)
-               .build();
-            
-            channel.sendAsync(event);
+            channel.begin()
+               .writeOutput()
+               .process(process)
+               .offset(0)
+               .length(octets.length)
+               .data().set(0, octets);
+
+            channel.sendAsync();
             stream.flush();
          }
       }catch(Exception e) {

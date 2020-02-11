@@ -1,19 +1,17 @@
 package org.ternlang.studio.agent.core;
 
+import org.ternlang.agent.message.common.ExecuteData;
+import org.ternlang.common.LockProgress;
+import org.ternlang.common.Progress;
+
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
+
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static org.ternlang.studio.agent.core.ExecuteStatus.STARTING;
 import static org.ternlang.studio.agent.core.ExecuteStatus.WAITING;
 import static org.ternlang.studio.agent.runtime.RuntimeAttribute.OS;
 import static org.ternlang.studio.agent.runtime.RuntimeAttribute.PID;
-
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.ternlang.common.LockProgress;
-import org.ternlang.common.Progress;
-import org.ternlang.studio.agent.runtime.RuntimeAttribute;
-import org.ternlang.studio.agent.runtime.RuntimeValue;
-import org.ternlang.studio.agent.runtime.RuntimeState;
 
 public class ExecuteLatch {
    
@@ -32,7 +30,7 @@ public class ExecuteLatch {
    }
    
    public ExecuteLatch(String process, long duration) {
-      this.waitData = new ExecuteData(process, null, null, null, false);
+      this.waitData = new ExecuteDataWrapper(process, null, null, null, false);
       this.executeReference = new AtomicReference<ExecuteData>(waitData);      
       this.statusReference = new AtomicReference<ExecuteStatus>(WAITING);
       this.progress = new LockProgress<ExecuteStatus>();

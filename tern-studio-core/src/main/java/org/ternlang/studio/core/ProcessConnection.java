@@ -1,16 +1,22 @@
 package org.ternlang.studio.core;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
+import org.ternlang.agent.message.common.BreakpointArray;
+import org.ternlang.agent.message.common.StepType;
+import org.ternlang.agent.message.common.VariablePathArrayBuilder;
+import org.ternlang.agent.message.event.BreakpointsEventBuilder;
+import org.ternlang.agent.message.event.ExecuteEventBuilder;
+import org.ternlang.studio.agent.debug.BreakpointConverter;
+import org.ternlang.studio.agent.debug.BreakpointMap;
+import org.ternlang.studio.agent.debug.ProgramArgumentConverter;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.project.Project;
 import org.ternlang.studio.project.Workspace;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @AllArgsConstructor
@@ -24,78 +30,90 @@ public class ProcessConnection {
       try {
          Project project = workspace.getByName(projectName);
          String path = project.getScriptPath(resource);
-         
-         ExecuteEvent event = new ExecuteEvent.Builder(process)
-            .withProject(projectName)
-            .withResource(path)
-            .withDependencies(dependencies)
-            .withBreakpoints(convert(projectName, breakpoints))
-            .withArguments(arguments)
-            .withDebug(debug)
-            .build();
+         ExecuteEventBuilder builder = channel.begin()
+            .execute()
+            .process(process)
+            .project(projectName)
+            .resource(path)
+            .dependencies(dependencies)
+            .debug(debug);
 
-         return channel.send(event);
+         builder.arguments().add(ProgramArgumentConverter.convert(arguments));
+         builder.breakpoints().add(convert(projectName, breakpoints));
+
+         return channel.send();
       } catch (Exception e) {
          log.info(process + ": Error occured sending execute event", e);
          close(process + ": Error occured sending execute event: " + e);
          throw new IllegalStateException("Could not execute script '" + resource + "' for '" + process + "'", e);
       }
    }
-   
+
    public boolean suspend(String projectName, Map<String, Map<Integer, Boolean>> breakpoints) {
       try {
-         BreakpointsEvent event = new BreakpointsEvent.Builder(process)
-            .withBreakpoints(convert(projectName, breakpoints))
-            .build();
-         
-         return channel.send(event);
+         BreakpointsEventBuilder builder = channel.begin()
+            .breakpoints()
+            .process(process);
+
+         builder.breakpoints().add(convert(projectName, breakpoints));
+
+         return channel.send();
       } catch (Exception e) {
          log.info(process + ": Error occured sending suspend event", e);
          close(process + ": Error occured sending suspend event: " + e);
          throw new IllegalStateException("Could not set breakpoints '" + breakpoints + "' for '" + process + "'", e);
       }
    }
-   
+
    public boolean browse(String thread, Set<String> expand) {
       try {
-         BrowseEvent event = new BrowseEvent.Builder(process)
-            .withThread(thread)
-            .withExpand(expand)
-            .build();
-         
-         return channel.send(event);
+         VariablePathArrayBuilder builder = channel.begin()
+            .browse()
+            .process(process)
+            .thread(thread)
+            .expand();
+
+         for(String path : expand) {
+            builder.add().path(path);
+         }
+         return channel.send();
       } catch (Exception e) {
          log.info(process + ": Error occured sending browse event", e);
          close(process + ": Error occured sending browse event: " + e);
          throw new IllegalStateException("Could not browse '" + thread + "' for '" + process + "'", e);
       }
    }
-   
+
    public boolean evaluate(String thread, String expression, boolean refresh, Set<String> expand) {
       try {
-         EvaluateEvent event = new EvaluateEvent.Builder(process)
-            .withThread(thread)
-            .withExpression(expression)
-            .withRefresh(refresh)
-            .withExpand(expand)
-            .build();
-         
-         return channel.send(event);
+         VariablePathArrayBuilder builder = channel.begin()
+            .evaluate()
+            .process(process)
+            .thread(thread)
+            .expression(expression)
+            .refresh(refresh)
+            .expand();
+
+         for(String path : expand) {
+            builder.add().path(path);
+         }
+         return channel.send();
       } catch (Exception e) {
          log.info(process + ": Error occured sending evaluate event", e);
          close(process + ": Error occured sending evaluate event: " + e);
          throw new IllegalStateException("Could not evaluate '" + expression + "' on '" + thread + "' for '" + process + "'", e);
       }
    }
-   
-   public boolean step(String thread, int type) {
-      try {
-         StepEvent event = new StepEvent.Builder(process)
-            .withThread(thread)
-            .withType(type)
-            .build();
 
-         return channel.send(event);
+   public boolean step(String thread, StepType type) {
+      try {
+         channel.begin()
+            .step()
+            .process(process)
+            .thread(thread)
+            .type(type);
+
+         return channel.send();
       } catch (Exception e) {
          log.info(process + ": Error occured sending step event", e);
          close(process + ": Error occured sending step event: " + e);
@@ -105,11 +123,12 @@ public class ProcessConnection {
 
    public boolean ping(long time) {
       try {
-         PingEvent event = new PingEvent.Builder(process)
-            .withTime(time)
-            .build();
-         
-         if(channel.send(event)) {
+         channel.begin()
+            .ping()
+            .process(process)
+            .time(time);
+
+         if(channel.send()) {
             log.trace(process + ": Ping succeeded");
             return true;
          }
@@ -120,25 +139,28 @@ public class ProcessConnection {
       }
       return false;
    }
-   
-   private Map<String, Map<Integer, Boolean>> convert(String name, Map<String, Map<Integer, Boolean>> breakpoints) {
+
+   private BreakpointArray convert(String name, Map<String, Map<Integer, Boolean>> breakpoints) {
       Project project = workspace.getByName(name);
       Set<String> breakpointPaths = breakpoints.keySet();
-      
-      if(!breakpointPaths.isEmpty()) {
-         Map<String, Map<Integer, Boolean>> convertedBreakpoints = new LinkedHashMap<String, Map<Integer, Boolean>>();
-      
-         for(String breakpointPath : breakpointPaths) {
-            Map<Integer, Boolean> breakpointLines = breakpoints.get(breakpointPath);
-            String scriptPath = project.getScriptPath(breakpointPath);
-            
-            convertedBreakpoints.put(scriptPath, breakpointLines);
+      BreakpointMap map = new BreakpointMap();
+
+      for(String breakpointPath : breakpointPaths) {
+         Set<Map.Entry<Integer, Boolean>> breakpointLines = breakpoints.get(breakpointPath).entrySet();
+         String scriptPath = project.getScriptPath(breakpointPath);
+
+         for(Map.Entry<Integer, Boolean> breakpointLine : breakpointLines) {
+            Integer number = breakpointLine.getKey();
+            Boolean value = breakpointLine.getValue();
+
+            if(Boolean.TRUE.equals(value)) {
+               map.add(scriptPath, number);
+            }
          }
-         return convertedBreakpoints;
       }
-      return breakpoints;
+      return BreakpointConverter.convert(map);
    }
-   
+
    public void close(String reason) {
       try {
          log.info(process + ": Closing connection: " +reason);
@@ -151,7 +173,7 @@ public class ProcessConnection {
    public String getProcess() {
       return process;
    }
-   
+
    @Override
    public String toString() {
       return process;

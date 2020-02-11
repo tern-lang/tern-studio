@@ -1,11 +1,12 @@
 package org.ternlang.studio.agent.debug;
 
-import static org.ternlang.studio.agent.debug.ScopeVariableTree.EMPTY;
+import org.ternlang.core.trace.TraceType;
+import org.ternlang.studio.agent.ProcessMode;
+import org.ternlang.studio.agent.event.ProcessEventChannel;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.ternlang.core.trace.TraceType;
-import org.ternlang.studio.agent.ProcessMode;
+import static org.ternlang.studio.agent.debug.ScopeVariableTree.EMPTY;
 
 public class ScopeEventBuilder {
 
@@ -35,7 +36,7 @@ public class ScopeEventBuilder {
       this.type = type;
    }
    
-   public ScopeEvent startEvent(ProcessMode mode) {  
+   public void startEvent(ProcessEventChannel channel, ProcessMode mode) throws Exception {
       boolean remote = mode.isRemoteAttachment();
       int count = counter.getAndIncrement();
       ScopeContext context = extractor.blank(remote); // a blank context prevents suspending on toString() 
@@ -43,55 +44,64 @@ public class ScopeEventBuilder {
       String source = context.getSource();
       String name = type.name();      
  
-      return new ScopeEvent.Builder(process)
-         .withVariables(variables)
-         .withThread(thread)
-         .withStack(stack)
-         .withInstruction(name)
-         .withStatus(ThreadStatus.SUSPENDED)
-         .withResource(resource)
-         .withSource(source)
-         .withLine(line)
-         .withDepth(depth)
-         .withKey(count)
-         .build();
+      channel.begin()
+         .scope()
+         .process(process)
+         .variables(variables.getTree())
+         .thread(thread)
+         .stack(stack)
+         .instruction(name)
+         .status(org.ternlang.agent.message.common.ThreadStatus.SUSPENDED)
+         .resource(resource)
+         .source(source)
+         .line(line)
+         .depth(depth)
+         .key(count);
+
+      channel.send();
    }
    
-   public ScopeEvent suspendEvent(ProcessMode mode) {  
+   public void suspendEvent(ProcessEventChannel channel, ProcessMode mode) throws Exception {
       boolean remote = mode.isRemoteAttachment();
       int count = counter.getAndIncrement();
       ScopeContext context = extractor.build(remote, count > 0 || !remote); // this is totally rubbish
       ScopeVariableTree variables = context.getTree();
       String source = context.getSource();
       String name = type.name();      
- 
-      return new ScopeEvent.Builder(process)
-         .withVariables(variables)
-         .withThread(thread)
-         .withStack(stack)
-         .withInstruction(name)
-         .withStatus(ThreadStatus.SUSPENDED)
-         .withResource(resource)
-         .withSource(source)
-         .withLine(line)
-         .withDepth(depth)
-         .withKey(count)
-         .build();
+
+      channel.begin()
+         .scope()
+         .process(process)
+         .variables(variables.getTree())
+         .thread(thread)
+         .stack(stack)
+         .instruction(name)
+         .status(org.ternlang.agent.message.common.ThreadStatus.SUSPENDED)
+         .resource(resource)
+         .source(source)
+         .line(line)
+         .depth(depth)
+         .key(count);
+
+      channel.send();
    }
    
-   public ScopeEvent resumeEvent(ProcessMode mode) {      
+   public void resumeEvent(ProcessEventChannel channel, ProcessMode mode) throws Exception {
       String name = type.name();
 
-      return new ScopeEvent.Builder(process)
-         .withVariables(blank)
-         .withThread(thread)
-         .withStack(stack)
-         .withInstruction(name)
-         .withStatus(ThreadStatus.RUNNING)
-         .withResource(resource)
-         .withLine(line)
-         .withDepth(depth)
-         .withKey(count)
-         .build();
+      channel.begin()
+         .scope()
+         .process(process)
+         .variables(blank.getTree())
+         .thread(thread)
+         .stack(stack)
+         .instruction(name)
+         .status(org.ternlang.agent.message.common.ThreadStatus.RUNNING)
+         .resource(resource)
+         .line(line)
+         .depth(depth)
+         .key(count);
+
+      channel.send();
    }
 }

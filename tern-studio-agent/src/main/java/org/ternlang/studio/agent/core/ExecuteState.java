@@ -1,6 +1,8 @@
 package org.ternlang.studio.agent.core;
 
-public interface ExecuteState { 
+import org.ternlang.agent.message.common.ExecuteData;
+
+public interface ExecuteState {
    ExecuteData getData();
    ExecuteStatus getStatus();
    String getProcess();

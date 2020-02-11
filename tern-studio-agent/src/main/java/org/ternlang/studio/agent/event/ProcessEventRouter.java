@@ -9,6 +9,7 @@ import org.ternlang.agent.message.event.ExitEvent;
 import org.ternlang.agent.message.event.FaultEvent;
 import org.ternlang.agent.message.event.PingEvent;
 import org.ternlang.agent.message.event.PongEvent;
+import org.ternlang.agent.message.event.ProcessOrigin;
 import org.ternlang.agent.message.event.ProfileEvent;
 import org.ternlang.agent.message.event.RegisterEvent;
 import org.ternlang.agent.message.event.ScopeEvent;
@@ -25,7 +26,7 @@ public class ProcessEventRouter {
       this.listener = listener;
    }
    
-   public void route(ProcessEventChannel channel, ProcessEvent event) throws Exception {
+   public void route(ProcessEventChannel channel, ProcessOrigin event) throws Exception {
       if(event instanceof ExitEvent) {
          listener.onExit(channel, (ExitEvent)event);
       } else if(event instanceof ExecuteEvent) {

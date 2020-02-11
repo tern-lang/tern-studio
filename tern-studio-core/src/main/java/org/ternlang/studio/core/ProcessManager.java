@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.simpleframework.module.annotation.Component;
 import org.simpleframework.module.annotation.Value;
 import org.simpleframework.transport.Channel;
+import org.ternlang.agent.message.event.StepEvent;
 import org.ternlang.studio.agent.event.ProcessEventFilter;
 import org.ternlang.studio.agent.event.ProcessEventListener;
 import org.ternlang.studio.core.command.AttachCommand;
@@ -147,13 +148,13 @@ public class ProcessManager implements ProcessRemoteController {
          StepType type = command.getType();
          
          if(type == StepType.RUN) {
-            return connection.step(thread, StepEvent.RUN);
+            return connection.step(thread, org.ternlang.agent.message.common.StepType.RUN);
          } else if(type == StepType.STEP_IN) {
-            return connection.step(thread, StepEvent.STEP_IN);
+            return connection.step(thread, org.ternlang.agent.message.common.StepType.STEP_IN);
          } else if(type == StepType.STEP_OUT) {
-            return connection.step(thread, StepEvent.STEP_OUT);
+            return connection.step(thread, org.ternlang.agent.message.common.StepType.STEP_OUT);
          } else if(type == StepType.STEP_OVER) {
-            return connection.step(thread, StepEvent.STEP_OVER);
+            return connection.step(thread, org.ternlang.agent.message.common.StepType.STEP_OVER);
          }
       }
       return true;

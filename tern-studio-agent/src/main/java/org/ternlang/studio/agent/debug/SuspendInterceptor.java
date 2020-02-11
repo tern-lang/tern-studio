@@ -60,14 +60,12 @@ public class SuspendInterceptor extends TraceAdapter {
             ScopeExtractor extractor = new ScopeExtractor(context, scope, function, path);
             ScopeEventBuilder builder = new ScopeEventBuilder(extractor, type, process, thread, threads, path, line, depth, count);
             ScopeNotifier notifier = new ScopeNotifier(builder, mode, threadName);
-            ScopeEvent suspend = builder.startEvent(mode); //N.B initial event has no variables
-            ScopeEvent resume = builder.resumeEvent(mode);
-            
+
             progress.clear(); // clear config
-            channel.send(suspend);
+            builder.startEvent(channel, mode); // N.B initial event has no variables
             notifier.start();
             suspend(notifier, extractor, resource, line);
-            channel.send(resume);
+            builder.resumeEvent(channel, mode);
          } catch(Exception e) {
             e.printStackTrace();
          }
@@ -100,14 +98,12 @@ public class SuspendInterceptor extends TraceAdapter {
             ScopeExtractor extractor = new ScopeExtractor(context, scope, function, path);
             ScopeEventBuilder builder = new ScopeEventBuilder(extractor, type, process, thread, threads, path, line, depth, count);
             ScopeNotifier notifier = new ScopeNotifier(builder, mode, threadName);
-            ScopeEvent suspend = builder.startEvent(mode); //N.B initial event has no variables
-            ScopeEvent resume = builder.resumeEvent(mode);
             
             progress.clear(); // clear config
-            channel.send(suspend);
+            builder.startEvent(channel, mode); // N.B initial event has no variables
             notifier.start();
             suspend(notifier, extractor, resource, line);
-            channel.send(resume);
+            builder.resumeEvent(channel, mode);
          } catch(Exception e) {
             e.printStackTrace();
          }
@@ -142,8 +138,7 @@ public class SuspendInterceptor extends TraceAdapter {
                Thread.sleep(400);
                
                if(active.get()) {
-                  ScopeEvent event = builder.suspendEvent(mode);
-                  channel.send(event);
+                  builder.suspendEvent(channel, mode);
                }
             }
          } catch(Exception e) {
@@ -158,5 +153,4 @@ public class SuspendInterceptor extends TraceAdapter {
          active.set(false);
       }
    }
-
 }

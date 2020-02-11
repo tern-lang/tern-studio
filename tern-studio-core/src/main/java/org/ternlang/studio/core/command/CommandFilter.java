@@ -2,7 +2,7 @@ package org.ternlang.studio.core.command;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.ternlang.studio.agent.event.ProcessEvent;
+import org.ternlang.agent.message.event.ProcessOrigin;
 import org.ternlang.studio.agent.event.ProcessEventFilter;
 
 public class CommandFilter implements ProcessEventFilter {
@@ -29,8 +29,8 @@ public class CommandFilter implements ProcessEventFilter {
       attachment.set(process);
    }
    
-   public boolean isFocused(ProcessEvent event) {
-      String process = event.getProcess();
+   public boolean isFocused(ProcessOrigin origin) {
+      String process = origin.process().toString();
       String focus = attachment.get();
       
       if(focus != null) {

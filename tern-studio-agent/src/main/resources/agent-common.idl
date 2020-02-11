@@ -37,37 +37,37 @@ enum StepType {
    STEP_OUT
 }
 
-struct Line version 1 {
+struct Line {
     line: int;
     active: boolean;
 }
 
-struct Breakpoint version 1 {
+struct Breakpoint {
     resource: Resource;
     lines: Line[];
 }
 
-struct VariablePath version 1 {
+struct VariablePath {
     path: char[];
 }
 
-struct VariableAttribute version 1 {
+struct VariableAttribute {
    name: char[];
    value: char[];
 }
 
-struct Variable version 1 {
+struct Variable {
    path: VariablePath;
    attributes: VariableAttribute[];
 }
 
-struct VariableTree version 1 {
+struct VariableTree {
    evaluation: Variable[];
    local: Variable[];
    change: int;
 }
 
-struct ExecuteData version 1 {
+struct ExecuteData {
    dependencies: char[];
    process: Process;
    resource: Resource;
@@ -75,11 +75,11 @@ struct ExecuteData version 1 {
    debug: boolean;
 }
 
-struct ProgramArgument version 1 {
+struct ProgramArgument {
    argument: char[];
 }
 
-struct ProfileResult version 1 {
+struct ProfileResult {
    resource: Resource;
    line: int;
    count: int;

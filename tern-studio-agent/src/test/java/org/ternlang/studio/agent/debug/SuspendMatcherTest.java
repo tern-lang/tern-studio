@@ -1,28 +1,23 @@
 package org.ternlang.studio.agent.debug;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.ternlang.studio.agent.debug.BreakpointMatcher;
-
 import junit.framework.TestCase;
 
 public class SuspendMatcherTest extends TestCase {
 
    public void testSuspend() throws Exception {
-      Map<String, Map<Integer, Boolean>> breakpoints = new HashMap<String, Map<Integer, Boolean>>();
-      Map<Integer, Boolean> test = new HashMap<Integer, Boolean>();
-      Map<Integer, Boolean> large = new HashMap<Integer, Boolean>();
-      test.put(12,  true);
-      test.put(7, true);
-      test.put(8, false);
-      large.put(210, true);
-      large.put(66, true);
-      large.put(7, true);
-      breakpoints.put("/test.tern", test);
-      breakpoints.put("/path/large.tern", large);
+      BreakpointMap breakpoints = new BreakpointMap();
+
+      breakpoints.add("/test.tern", 12);
+      breakpoints.add("/test.tern", 7);
+      breakpoints.remove("/test.tern", 8);
+
+      breakpoints.add("/path/large.tern", 210);
+      breakpoints.add("/path/large.tern", 66);
+      breakpoints.add("/path/large.tern", 7);
+
       BreakpointMatcher matcher = new BreakpointMatcher();
-      matcher.update(breakpoints);
+
+      matcher.update(BreakpointConverter.convert(breakpoints));
       assertTrue(matcher.isBreakpoint("/test.tern", 7));
       assertFalse(matcher.isBreakpoint("/test.tern", 77));
       assertFalse(matcher.isBreakpoint("/test.tern", 1334));

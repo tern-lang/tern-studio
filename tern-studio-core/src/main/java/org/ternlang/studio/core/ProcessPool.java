@@ -13,6 +13,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
 
 import org.simpleframework.transport.Channel;
+import org.ternlang.agent.message.event.BeginEvent;
+import org.ternlang.agent.message.event.ExitEvent;
+import org.ternlang.agent.message.event.FaultEvent;
+import org.ternlang.agent.message.event.PongEvent;
+import org.ternlang.agent.message.event.ProfileEvent;
+import org.ternlang.agent.message.event.RegisterEvent;
+import org.ternlang.agent.message.event.ScopeEvent;
+import org.ternlang.agent.message.event.ScriptErrorEvent;
+import org.ternlang.agent.message.event.WriteErrorEvent;
+import org.ternlang.agent.message.event.WriteOutputEvent;
 import org.ternlang.common.Cache;
 import org.ternlang.common.LeastRecentlyUsedCache;
 import org.ternlang.common.thread.ThreadBuilder;
@@ -168,7 +178,7 @@ public class ProcessPool {
       
       @Override
       public void onRegister(ProcessEventChannel channel, RegisterEvent event) throws Exception {
-         String process = event.getProcess();
+         String process = event.process().toString();
          ProcessConnection connection = new ProcessConnection(channel, workspace, process);
          
          log.info("Registered new connection " + process);
@@ -187,7 +197,7 @@ public class ProcessPool {
       
       @Override
       public void onExit(ProcessEventChannel channel, ExitEvent event) throws Exception {
-         String process = event.getProcess();
+         String process = event.process().toString();
          
          for(ProcessEventListener listener : listeners) {
             try {
@@ -202,7 +212,7 @@ public class ProcessPool {
       
       @Override
       public void onWriteError(ProcessEventChannel channel, WriteErrorEvent event) throws Exception {
-         String process = event.getProcess();
+         String process = event.process().toString();
          
          for(ProcessEventListener listener : listeners) {
             try {
@@ -216,7 +226,7 @@ public class ProcessPool {
       
       @Override
       public void onWriteOutput(ProcessEventChannel channel, WriteOutputEvent event) throws Exception {
-         String process = event.getProcess();
+         String process = event.process().toString();
          
          for(ProcessEventListener listener : listeners) {
             try {
@@ -230,7 +240,7 @@ public class ProcessPool {
       
       @Override
       public void onScriptError(ProcessEventChannel channel, ScriptErrorEvent event) throws Exception {
-         String process = event.getProcess();
+         String process = event.process().toString();
          
          for(ProcessEventListener listener : listeners) {
             try {
@@ -244,7 +254,7 @@ public class ProcessPool {
       
       @Override
       public void onBegin(ProcessEventChannel channel, BeginEvent event) throws Exception {
-         String process = event.getProcess();
+         String process = event.process().toString();
          
          for(ProcessEventListener listener : listeners) {
             try {
@@ -258,7 +268,7 @@ public class ProcessPool {
       
       @Override
       public void onProfile(ProcessEventChannel channel, ProfileEvent event) throws Exception {
-         String process = event.getProcess();
+         String process = event.process().toString();
          
          for(ProcessEventListener listener : listeners) {
             try {
@@ -272,7 +282,7 @@ public class ProcessPool {
       
       @Override
       public void onPong(ProcessEventChannel channel, PongEvent event) throws Exception {
-         String process = event.getProcess();
+         String process = event.process().toString();
          
          for(ProcessEventListener listener : listeners) {
             try {
@@ -286,7 +296,7 @@ public class ProcessPool {
       
       @Override
       public void onScope(ProcessEventChannel channel, ScopeEvent event) throws Exception {
-         String process = event.getProcess();
+         String process = event.process().toString();
          
          for(ProcessEventListener listener : listeners) {
             try {
@@ -300,7 +310,7 @@ public class ProcessPool {
       
       @Override
       public void onFault(ProcessEventChannel channel, FaultEvent event) throws Exception {
-         String process = event.getProcess();
+         String process = event.process().toString();
          
          for(ProcessEventListener listener : listeners) {
             try {
