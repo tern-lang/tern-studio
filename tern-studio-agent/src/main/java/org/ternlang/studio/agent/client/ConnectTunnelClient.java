@@ -1,7 +1,5 @@
 package org.ternlang.studio.agent.client;
 
-import static java.lang.Short.MAX_VALUE;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,8 +12,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.ternlang.agent.message.event.ProcessEventBuilder;
-import org.ternlang.agent.message.event.ProcessEventCodec;
-import org.ternlang.message.ByteArrayFrame;
+import org.ternlang.agent.message.event.ProcessOrigin;
 import org.ternlang.studio.agent.core.QueueExecutor;
 import org.ternlang.studio.agent.event.MessageEnvelope;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
@@ -23,6 +20,8 @@ import org.ternlang.studio.agent.event.ProcessEventConnection;
 import org.ternlang.studio.agent.event.ProcessEventConsumer;
 import org.ternlang.studio.agent.event.ProcessEventListener;
 import org.ternlang.studio.agent.event.ProcessEventProducer;
+import org.ternlang.studio.agent.event.ProcessEventThreadLocal;
+import org.ternlang.studio.agent.event.ProcessEventThreadLocal.ProcessEventSender;
 import org.ternlang.studio.agent.log.TraceLogger;
 
 public class ConnectTunnelClient {
@@ -103,10 +102,9 @@ public class ConnectTunnelClient {
    private class SocketConnection extends Thread implements ProcessEventChannel {
       
       private final ProcessEventConnection connection;
+      private final ProcessEventThreadLocal local;
       private final SocketClientSession session;
       private final ConnectEventHandler handler;
-      private final ProcessEventCodec codec;
-      private final ByteArrayFrame frame;
       private final AtomicBoolean closed;
       private final Set<Class> events;
       
@@ -114,29 +112,25 @@ public class ConnectTunnelClient {
          this.connection = new ProcessEventConnection(logger, executor, input, output, session);
          this.handler = new ConnectEventHandler(this, listener);
          this.events = new CopyOnWriteArraySet<Class>();
-         this.frame = new ByteArrayFrame();
-         this.codec = new ProcessEventCodec();
+         this.local = new ProcessEventThreadLocal();
          this.closed = new AtomicBoolean();
          this.session = session;
       }
 
       @Override
       public ProcessEventBuilder begin() {
-         frame.clear();
-         codec.with(frame, 0, MAX_VALUE);
-         return codec;
+         return local.get().clear();
       }
       
       @Override
       public boolean send() throws Exception {
          ProcessEventProducer producer = connection.getProducer();
-         String process = "process-xx";
+         ProcessEventSender sender = local.get();
+         ProcessOrigin origin = sender.get();
+         String process = origin.process().toString();
 
          try {
-            int length = frame.length();
-            byte[] array = frame.getByteArray();
-            MessageEnvelope envelope = new MessageEnvelope(0, array, 0, length);
-
+            MessageEnvelope envelope = sender.envelope();
             producer.produce(envelope);
             return true;
          } catch(Exception e) {
@@ -149,14 +143,12 @@ public class ConnectTunnelClient {
       @Override
       public boolean sendAsync() throws Exception {
          ProcessEventProducer producer = connection.getProducer();
-         String process = "process-xx";
+         ProcessEventSender sender = local.get();
+         ProcessOrigin origin = sender.get();
+         String process = origin.process().toString();
 
          try {
-            int length = frame.length();
-            byte[] array = frame.getByteArray();
-            byte[] copy = Arrays.copyOf(array, length); // copy if async
-            MessageEnvelope envelope = new MessageEnvelope(0, copy, 0, length);
-
+            MessageEnvelope envelope = sender.envelope();
             Future<Boolean> future = producer.produceAsync(envelope);
             return future.get();
          } catch(Exception e) {

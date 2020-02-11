@@ -1,33 +1,31 @@
 package org.ternlang.studio.core.message;
 
+import java.io.OutputStream;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.simpleframework.transport.Channel;
 import org.slf4j.Logger;
 import org.ternlang.agent.message.event.ProcessEventBuilder;
-import org.ternlang.agent.message.event.ProcessEventCodec;
-import org.ternlang.message.ByteArrayFrame;
+import org.ternlang.agent.message.event.ProcessOrigin;
 import org.ternlang.studio.agent.event.MessageEnvelope;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.agent.event.ProcessEventProducer;
+import org.ternlang.studio.agent.event.ProcessEventThreadLocal;
+import org.ternlang.studio.agent.event.ProcessEventThreadLocal.ProcessEventSender;
 import org.ternlang.studio.agent.log.Log;
 import org.ternlang.studio.agent.log.LogLevel;
 import org.ternlang.studio.agent.log.LogLogger;
 import org.ternlang.studio.agent.log.TraceLogger;
 
-import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import static java.lang.Short.MAX_VALUE;
-
 @Slf4j
 public class AsyncEventClient implements ProcessEventChannel {
 
+   private final ProcessEventThreadLocal local;
    private final ProcessEventProducer producer;
-   private final ProcessEventCodec codec;
-   private final ByteArrayFrame frame;
    private final TraceLogger adapter;
    private final OutputStream stream;
    private final AtomicBoolean open;
@@ -38,27 +36,23 @@ public class AsyncEventClient implements ProcessEventChannel {
       this.adapter = new LogLogger(logger, LogLevel.DEBUG);
       this.stream = new ChannelOutputStream(channel);
       this.producer = new ProcessEventProducer(adapter, stream, stream, executor);
+      this.local = new ProcessEventThreadLocal();
       this.open = new AtomicBoolean(true);
-      this.frame = new ByteArrayFrame();
-      this.codec = new ProcessEventCodec();
    }
 
    @Override
    public ProcessEventBuilder begin() {
-      frame.clear();
-      codec.with(frame, 0, MAX_VALUE);
-      return codec;
+      return local.get().clear();
    }
    
    @Override
    public boolean send() throws Exception {
-      String process = "process-xx";
+      ProcessEventSender sender = local.get();
+      ProcessOrigin origin = sender.get();
+      String process = origin.process().toString();
 
       try {
-         int length = frame.length();
-         byte[] array = frame.getByteArray();
-         MessageEnvelope envelope = new MessageEnvelope(0, array, 0, length);
-
+         MessageEnvelope envelope = sender.envelope();
          producer.produce(envelope);
          return true;
       } catch(Exception e) {
@@ -70,14 +64,12 @@ public class AsyncEventClient implements ProcessEventChannel {
 
    @Override
    public boolean sendAsync() throws Exception {
-      String process = "process-xx";
+      ProcessEventSender sender = local.get();
+      ProcessOrigin origin = sender.get();
+      String process = origin.process().toString();
       
       try {
-         int length = frame.length();
-         byte[] array = frame.getByteArray();
-         byte[] copy = Arrays.copyOf(array, length); // copy if async
-         MessageEnvelope envelope = new MessageEnvelope(0, copy, 0, length);
-
+         MessageEnvelope envelope = sender.envelope();
          Future<Boolean> future = producer.produceAsync(envelope);
          return future.get();
       } catch(Exception e) {
@@ -134,7 +126,6 @@ public class AsyncEventClient implements ProcessEventChannel {
          } else {
             log.error(message);
          }
-      }
-      
+      }      
    }
 }

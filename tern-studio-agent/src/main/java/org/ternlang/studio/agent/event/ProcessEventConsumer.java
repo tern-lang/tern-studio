@@ -10,13 +10,9 @@ import org.ternlang.message.ByteArrayFrame;
 public class ProcessEventConsumer {
 
    private final MessageEnvelopeReader reader;
-   private final ProcessEventCodec codec;
-   private final ByteArrayFrame frame;
 
    public ProcessEventConsumer(InputStream stream, Closeable closeable) {
       this.reader = new MessageEnvelopeReader(stream, closeable);
-      this.codec = new ProcessEventCodec();
-      this.frame = new ByteArrayFrame();
    }
    
    public boolean consume(ProcessEventHandler handler) throws Exception {
@@ -26,9 +22,16 @@ public class ProcessEventConsumer {
       int offset = message.getOffset();
       int length = message.getLength();
 
-      frame.wrap(data, offset, length);
+      if(length > 0) {
+         ProcessEventCodec codec = new ProcessEventCodec(); // for the sake of concurrency
+         ByteArrayFrame frame = new ByteArrayFrame();
+         
+         frame.wrap(data, offset, length);
+         codec.with(frame, 0, Integer.MAX_VALUE);
 
-      return codec.match(handler);
+         return codec.match(handler);
+      }
+      return false;
    }
 
 }
