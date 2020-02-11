@@ -40,6 +40,12 @@ public class ProcessConnection {
 
          builder.arguments().add(ProgramArgumentConverter.convert(arguments));
          builder.breakpoints().add(convert(projectName, breakpoints));
+         builder.data()
+            .process(process)
+            .debug(debug)
+            .dependencies(dependencies)
+            .resource(path)
+            .project(projectName);
 
          return channel.send();
       } catch (Exception e) {

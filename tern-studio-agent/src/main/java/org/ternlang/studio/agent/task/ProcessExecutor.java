@@ -63,7 +63,7 @@ public class ProcessExecutor {
                   String[] array = new String[length];
 
                   for (int i = 0; i < length; i++) {
-                     array[i] = arguments.get(i).toString();
+                     array[i] = arguments.get(i).argument().toString();
                   }
                   overrides.addAttribute(ProcessModel.SHORT_ARGUMENTS, array);
                   overrides.addAttribute(ProcessModel.LONG_ARGUMENTS, array);

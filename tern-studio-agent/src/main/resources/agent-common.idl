@@ -1,6 +1,7 @@
 
 namespace org.ternlang.agent.message.common;
 
+alias SourceCode = char[];
 alias Resource = char[];
 alias Process = char[];
 alias Project = char[];

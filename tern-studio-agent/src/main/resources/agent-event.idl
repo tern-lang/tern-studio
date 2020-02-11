@@ -101,7 +101,7 @@ struct ScopeEvent extends ProcessOrigin {
    status: ThreadStatus;
    instruction: char[];
    resource: Resource;
-   source: char[];
+   source: SourceCode?;
    thread: char[];
    stack: char[];
    line: int;
