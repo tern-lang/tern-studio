@@ -29,8 +29,9 @@ public class CommandEventConverter {
    public ScopeCommand convert(ScopeEvent event) throws Exception {
       String resource = event.resource().toString();
       String path = project.getRealPath(resource);
+      String source = event.source().isSome() ? event.source().get().toString() : null;
       ScopeVariableTree variables = ScopeVariableConverter.convert(event.variables());
-
+      
       return ScopeCommand.builder()
             .process(event.process().toString())
             .variables(variables.getLocal())
@@ -40,7 +41,7 @@ public class CommandEventConverter {
             .stack(event.stack().toString())
             .instruction(event.instruction().toString())
             .status(event.status().name())
-            .source(event.source().toString())
+            .source(source)
             .line(event.line())
             .depth(event.depth())
             .key(event.key())
