@@ -7,7 +7,7 @@ import org.ternlang.agent.message.common.BreakpointCodec;
 import org.ternlang.agent.message.common.Line;
 import org.ternlang.agent.message.common.LineArray;
 import org.ternlang.agent.message.common.LineArrayCodec;
-import org.ternlang.message.ByteArrayFrame;
+import org.ternlang.message.ArrayByteBuffer;
 
 import java.util.Map;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class BreakpointConverter {
     }
 
     public static BreakpointArray convert(BreakpointMap breakpoints) {
-        ByteArrayFrame frame = new ByteArrayFrame();
+        ArrayByteBuffer frame = new ArrayByteBuffer();
         BreakpointArrayCodec codec = new BreakpointArrayCodec(Integer.MAX_VALUE);
 
         codec.with(frame, 0, Integer.MAX_VALUE);

@@ -6,7 +6,7 @@ import org.simpleframework.transport.reactor.Reactor;
 import org.ternlang.agent.message.event.ProcessEventCodec;
 import org.ternlang.agent.message.event.ProcessOrigin;
 import org.ternlang.common.thread.ThreadPool;
-import org.ternlang.message.ByteArrayFrame;
+import org.ternlang.message.ArrayByteBuffer;
 import org.ternlang.studio.agent.event.MessageEnvelope;
 import org.ternlang.studio.agent.event.ProcessEventChannel;
 import org.ternlang.studio.agent.event.ProcessEventListener;
@@ -48,7 +48,7 @@ public class AsyncEventExchanger implements MessageEnvelopeProcessor {
       int length = message.getLength();
 
       if(length > 0) {
-         ByteArrayFrame frame = new ByteArrayFrame();
+         ArrayByteBuffer frame = new ArrayByteBuffer();
          ProcessEventCodec codec = new ProcessEventCodec();
          
          frame.wrap(data, offset, length);

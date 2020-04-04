@@ -1,0 +1,88 @@
+
+namespace org.ternlang.agent.message.common;
+
+alias SourceCode = char[];
+alias Resource = char[];
+alias Process = char[];
+alias Project = char[];
+alias System = char[];
+alias Pid = char[126];
+
+enum ProcessMode {
+   REMOTE,
+   SERVICE,
+   SCRIPT,
+   TASK
+}
+
+enum ExecuteStatus {
+   REGISTERING,
+   WAITING,
+   STARTING,
+   COMPILING,
+   DEBUGGING,
+   RUNNING,
+   TERMINATING,
+   FINISHED
+}
+
+enum ThreadStatus {
+   RUNNING,
+   SUSPENDED
+}
+
+enum StepType {
+   RUN,
+   STEP_IN,
+   STEP_OVER,
+   STEP_OUT
+}
+
+struct Line {
+    line: int;
+    active: boolean;
+}
+
+struct Breakpoint {
+    resource: Resource;
+    lines: Line[];
+}
+
+struct VariablePath {
+    path: char[];
+}
+
+struct VariableAttribute {
+   name: char[];
+   value: char[];
+}
+
+struct Variable {
+   path: VariablePath;
+   attributes: VariableAttribute[];
+}
+
+struct VariableTree {
+   evaluation: Variable[];
+   local: Variable[];
+   change: int;
+}
+
+struct ExecuteData {
+   dependencies: char[];
+   process: Process;
+   resource: Resource;
+   project: Project;
+   debug: boolean;
+}
+
+struct ProgramArgument {
+   argument: char[];
+}
+
+struct ProfileResult {
+   resource: Resource;
+   line: int;
+   count: int;
+   time: long;
+}

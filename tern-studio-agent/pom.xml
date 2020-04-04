@@ -90,6 +90,7 @@
             </goals>
             <configuration>
               <language>java</language>
+              <version>1</version>              
             </configuration>
           </execution>
         </executions>

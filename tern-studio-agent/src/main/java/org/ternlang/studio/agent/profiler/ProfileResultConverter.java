@@ -2,7 +2,7 @@ package org.ternlang.studio.agent.profiler;
 
 import org.ternlang.agent.message.common.ProfileResultArray;
 import org.ternlang.agent.message.common.ProfileResultArrayCodec;
-import org.ternlang.message.ByteArrayFrame;
+import org.ternlang.message.ArrayByteBuffer;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -25,7 +25,7 @@ public class ProfileResultConverter {
     }
 
     public static ProfileResultArray convert(Set<ProfileResult> results) {
-        ByteArrayFrame frame = new ByteArrayFrame();
+        ArrayByteBuffer frame = new ArrayByteBuffer();
         ProfileResultArrayCodec codec = new ProfileResultArrayCodec(Integer.MAX_VALUE);
 
         codec.with(frame, 0, Integer.MAX_VALUE);

@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 import org.ternlang.agent.message.event.ProcessEventCodec;
 import org.ternlang.agent.message.event.ProcessEventHandler;
-import org.ternlang.message.ByteArrayFrame;
+import org.ternlang.message.ArrayByteBuffer;
 
 public class ProcessEventConsumer {
 
@@ -24,7 +24,7 @@ public class ProcessEventConsumer {
 
       if(length > 0) {
          ProcessEventCodec codec = new ProcessEventCodec(); // for the sake of concurrency
-         ByteArrayFrame frame = new ByteArrayFrame();
+         ArrayByteBuffer frame = new ArrayByteBuffer();
          
          frame.wrap(data, offset, length);
          codec.with(frame, 0, Integer.MAX_VALUE);

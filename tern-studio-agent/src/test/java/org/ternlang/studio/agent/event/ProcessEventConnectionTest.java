@@ -12,7 +12,7 @@ import org.ternlang.agent.message.common.ProcessMode;
 import org.ternlang.agent.message.event.BeginEvent;
 import org.ternlang.agent.message.event.ProcessEventCodec;
 import org.ternlang.common.thread.ThreadPool;
-import org.ternlang.message.ByteArrayFrame;
+import org.ternlang.message.ArrayByteBuffer;
 import org.ternlang.studio.agent.log.ConsoleLog;
 import org.ternlang.studio.agent.log.Log;
 import org.ternlang.studio.agent.log.LogLevel;
@@ -27,7 +27,7 @@ public class ProcessEventConnectionTest extends TestCase {
       ByteArrayOutputStream buffer = new ByteArrayOutputStream();
       MessageEnvelopeWriter writer = new MessageEnvelopeWriter(buffer, buffer);
       ProcessEventCodec codec = new ProcessEventCodec();
-      ByteArrayFrame frame = new ByteArrayFrame();
+      ArrayByteBuffer frame = new ArrayByteBuffer();
       
       codec.with(frame, 0, Integer.MAX_VALUE);      
       codec.begin()

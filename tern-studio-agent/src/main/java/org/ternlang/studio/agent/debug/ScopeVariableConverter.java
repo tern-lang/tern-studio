@@ -13,7 +13,7 @@ import org.ternlang.agent.message.common.VariableAttributeArray;
 import org.ternlang.agent.message.common.VariableBuilder;
 import org.ternlang.agent.message.common.VariableTree;
 import org.ternlang.agent.message.common.VariableTreeCodec;
-import org.ternlang.message.ByteArrayFrame;
+import org.ternlang.message.ArrayByteBuffer;
 
 public class ScopeVariableConverter {
 
@@ -51,7 +51,7 @@ public class ScopeVariableConverter {
    }
 
    public static VariableTree convert(ScopeVariableTree variableTree) {
-      ByteArrayFrame frame = new ByteArrayFrame();
+      ArrayByteBuffer frame = new ArrayByteBuffer();
       VariableTreeCodec codec = new VariableTreeCodec();
 
       codec.with(frame, 0, Integer.MAX_VALUE);

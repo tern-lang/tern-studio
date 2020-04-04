@@ -3,7 +3,7 @@ package org.ternlang.studio.agent.event;
 import java.util.Arrays;
 
 import org.ternlang.agent.message.event.ProcessEventCodec;
-import org.ternlang.message.ByteArrayFrame;
+import org.ternlang.message.ArrayByteBuffer;
 import org.ternlang.studio.agent.event.ProcessEventThreadLocal.ProcessEventSender;
 
 public class ProcessEventThreadLocal extends ThreadLocal<ProcessEventSender> {
@@ -15,10 +15,10 @@ public class ProcessEventThreadLocal extends ThreadLocal<ProcessEventSender> {
    
    public static class ProcessEventSender extends ProcessEventCodec {
       
-      private final ByteArrayFrame frame;
+      private final ArrayByteBuffer frame;
       
       public ProcessEventSender() {
-         this.frame = new ByteArrayFrame();
+         this.frame = new ArrayByteBuffer();
       }
       
       public ProcessEventSender start() {

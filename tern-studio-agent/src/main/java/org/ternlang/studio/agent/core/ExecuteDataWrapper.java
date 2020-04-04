@@ -1,8 +1,10 @@
 package org.ternlang.studio.agent.core;
 
 import org.ternlang.agent.message.common.ExecuteData;
+import org.ternlang.agent.message.common.ExecuteDataValidationResult;
 import org.ternlang.message.primitive.CharArray;
 import org.ternlang.message.primitive.StringCharArray;
+import org.ternlang.message.validate.ValidationResult;
 
 public class ExecuteDataWrapper implements ExecuteData {
 
@@ -46,5 +48,10 @@ public class ExecuteDataWrapper implements ExecuteData {
    @Override
    public boolean debug() {
       return debug;
+   }
+
+   @Override
+   public ValidationResult validate() {
+      return ExecuteDataValidationResult.OK;
    }
 }
