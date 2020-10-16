@@ -20,7 +20,7 @@ public class StudioApplication {
          .path("..")
          .file("ternd")
          .file("tern-studio")
-         .module(StudioApplication.class)
+         .register(StudioApplication.class)
          .create(list)
          .name("Apache/2.2.14")
          .session(SESSION_ID)

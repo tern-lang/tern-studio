@@ -38,7 +38,7 @@ public class ClassPathResourceLoader {
          String type = parser.parse(path);
          
          if(filter.accept(type)) {
-            data = ClassPathReader.findResource(path);
+            data = ClassPathReader.findResourceAsArray(path);
             
             if(data != null) {
                cache.put(path, data);

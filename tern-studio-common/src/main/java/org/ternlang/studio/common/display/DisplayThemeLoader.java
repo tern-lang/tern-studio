@@ -38,11 +38,11 @@ public class DisplayThemeLoader {
 
    private InputStream getThemeFile(String name) throws Exception {
       String location = getThemePath(name);
-      byte[] data = ClassPathReader.findResource(location);
+      byte[] data = ClassPathReader.findResourceAsArray(location);
       
       if(data == null) {
          location = location.toLowerCase(); // lowercase by convention
-         data = ClassPathReader.findResource(location); 
+         data = ClassPathReader.findResourceAsArray(location);
       }
       if(data == null) {
          throw new IllegalStateException("Could not find theme '" + name + "' in '" + location + "'");
