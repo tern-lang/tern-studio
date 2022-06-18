@@ -1,5 +1,6 @@
 package org.ternlang.studio;
 
+import lombok.extern.slf4j.Slf4j;
 import org.ternlang.studio.agent.cli.CommandLine;
 import org.ternlang.studio.agent.cli.CommandLineBuilder;
 import org.ternlang.studio.agent.runtime.MainClassValue;
@@ -15,10 +16,12 @@ import org.ternlang.ui.chrome.install.deploy.DeploymentTask;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.Manifest;
 
+@Slf4j
 public class StudioServiceBuilder {
 
    private static final String ABOUT_NAME = "Tern Develop";

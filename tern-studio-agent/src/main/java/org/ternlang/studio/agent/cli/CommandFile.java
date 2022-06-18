@@ -22,7 +22,7 @@ public class CommandFile {
       List<String> pairs = new ArrayList<String>();
 
       for(String path : paths) {
-         File file = new File(".", path);
+         File file = new File(".", path).exists() ? new File(".", path) : new File(path);
 
          if(file.exists() && pairs.isEmpty()) {
             try {
