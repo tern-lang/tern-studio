@@ -113,16 +113,16 @@ public class StudioServiceBuilder {
       public String[] getFiles() {
          String[] paths = new String[files.length];
 
-         for(int i = 0; i < files.length; i++) {
-            File file = new File(files[i]);
+         for (int i = 0; i < files.length; i++) {
+            File installPath = HomeDirectory.getPath(files[i]);
 
-            if(file.exists()) {
-               paths[i] = files[i];
+            if (installPath.exists()) {
+               paths[i] = installPath.getAbsolutePath();
             } else {
-               File installPath = HomeDirectory.getPath(files[i]);
+               File installParentPath = HomeDirectory.getPath("../" + files[i]);
 
-               if(installPath.exists()) {
-                  paths[i] = installPath.getAbsolutePath();
+               if (installParentPath.exists()) {
+                  paths[i] = installParentPath.getAbsolutePath();
                } else {
                   paths[i] = files[i];
                }
