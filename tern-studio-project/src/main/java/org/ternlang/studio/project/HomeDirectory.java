@@ -1,5 +1,7 @@
 package org.ternlang.studio.project;
 
+import org.ternlang.studio.project.config.OperatingSystem;
+
 import java.io.File;
 
 public class HomeDirectory {
@@ -8,8 +10,8 @@ public class HomeDirectory {
    
    public static File getRootPath() {
       try {
-         String userDir = System.getProperty("user.home");
-         File homeDir = new File(userDir, HOME_DIRECTORY);
+         File installDir = OperatingSystem.resolveSystem().getInstallDirectory();
+         File homeDir = new File(installDir, HOME_DIRECTORY);
          
          if(!homeDir.exists()) {
             homeDir.mkdirs();

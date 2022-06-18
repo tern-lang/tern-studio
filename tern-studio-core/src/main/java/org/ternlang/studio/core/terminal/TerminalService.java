@@ -3,6 +3,9 @@ package org.ternlang.studio.core.terminal;
 import java.io.File;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.socket.Frame;
@@ -14,11 +17,8 @@ import org.simpleframework.http.socket.Session;
 import org.simpleframework.http.socket.service.Service;
 import org.simpleframework.module.annotation.Component;
 import org.simpleframework.resource.annotation.Subscribe;
-import org.ternlang.studio.project.Project;
-import org.ternlang.studio.project.Workspace;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.ternlang.studio.common.FileDirectory;
+import org.ternlang.studio.common.FileDirectorySource;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,10 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 @Subscribe("/session/.*")
 public class TerminalService implements Service {
 
-   private final Workspace workspace;
+   private final FileDirectorySource workspace;
    private final ObjectMapper mapper;
    
-   public TerminalService(Workspace workspace) {
+   public TerminalService(FileDirectorySource workspace) {
       this.mapper = new ObjectMapper();
       this.workspace = workspace;
    }
@@ -40,7 +40,7 @@ public class TerminalService implements Service {
       FrameChannel channel = session.getChannel();
       Request request = session.getRequest();
       Path path = request.getPath();
-      Project project = workspace.createProject(path);
+      FileDirectory project = workspace.getByPath(path);
       String[] segments = path.getSegments();
       File root = project.getBasePath();
       String suffix = "/";

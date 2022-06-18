@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -29,6 +30,7 @@ import javax.swing.UIManager;
 import org.simpleframework.module.common.ClassPathReader;
 import org.simpleframework.module.common.ThreadBuilder;
 import org.ternlang.studio.common.ProgressManager;
+import org.ternlang.studio.project.HomeDirectory;
 import org.ternlang.ui.WindowIcon;
 import org.ternlang.ui.WindowIconLoader;
 

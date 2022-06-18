@@ -176,7 +176,7 @@ public class ArchiveBuilder {
          String pattern = path.getPattern();
          Iterator<ClassNode> resources = project.getWorkspace()
                .getClassPath()
-               .getTypes()               
+               .findTypes()
                .stream()
                .filter(info -> info.getName().matches(pattern))
                .iterator();

@@ -18,9 +18,9 @@ public enum StudioOption implements CommandOption {
    AGENT_POOL("n", "agent-pool", "Number of agents in pool", "\\d+", Integer.class, 4),
    PORT("p", "port", "Port for HTTP connections", "\\d+", Integer.class, 0),
    MODE("m", "mode", "Mode to start on", "(DEVELOP|DEBUG)", ProjectMode.class, ProjectMode.DEVELOP),
-   DIRECTORY("d", "directory", "Directory used for sources", ".*", File.class, "${user.home}/work"),
+   DIRECTORY("d", "directory", "Directory used for sources", ".*", File.class,  HomeDirectory.getPath("work")),
    LOG_LEVEL("l", "log-level", "Level of logging", "(TRACE|DEBUG|INFO)", String.class, LogLevel.INFO),
-   LOG("f", "log-file", "Log file to use", ".+", File.class, "${user.home}/" + HomeDirectory.HOME_DIRECTORY + "/log/ternd.log"),
+   LOG("f", "log-file", "Log file to use", ".+", File.class, HomeDirectory.getPath("log/ternd.log")),
    SCRIPT("s", "script", "Script to launch", ".*.tern", Path.class),
    SERVER_ONLY("o", "server-only", "Launch server only", "(true|false)", Boolean.class, false),
    CLIENT_DEBUG("i", "client-debug", "Enable client debugger", "(true|false)", String.class, false); // firebug

@@ -70,7 +70,7 @@ public class TerminalProcess implements TerminalListener {
    }
 
    private void initializeProcess() throws Exception {
-      String userHome = System.getProperty("user.home");
+      File installPath = HomeDirectory.getRootPath();
       File dataDir = HomeDirectory.getPath("terminalfx");
       String startPath = directory.getCanonicalPath();
 
@@ -87,7 +87,7 @@ public class TerminalProcess implements TerminalListener {
 
       System.setProperty("PTY_LIB_FOLDER", dataDir.toPath().resolve("libpty").toString());
 
-      this.process = PtyProcess.exec(termCommand, envs, userHome);
+      this.process = PtyProcess.exec(termCommand, envs, installPath.getCanonicalPath());
 
       process.setWinSize(new WinSize(columns, rows));
       this.inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));

@@ -26,7 +26,6 @@ public class StudioApplication {
          .session(SESSION_ID)
          .threads(10)
          .start();
-
    }
 
 }
