@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor
 public class WorkerProcessLauncher implements ProcessLauncher {
-   
+
    private final WorkerProcessNameFilter filter;
    private final Workspace workspace;
 
@@ -48,13 +48,50 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       List<String> arguments = configuration.getArguments();
       String className = WorkerProcess.class.getCanonicalName();
       List<String> command = new ArrayList<String>();
-      
+
       command.add(java);
       command.add("-XX:+IgnoreUnrecognizedVMOptions");
-      command.add("--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED"); // add support for JDK 9+    
-      command.addAll(arguments);  
-      
-      if(workspace.isSecurityEnabled()) {
+
+      addOpens(command,
+           "java.base",
+           new String[]{
+                "jdk.internal.loader",
+                "java.lang",
+                "java.security",
+                "java.math",
+                "java.text",
+                "java.time",
+                "java.time.zone",
+                "java.io",
+                "java.net",
+                "java.nio",
+                "java.nio.channels",
+                "java.util",
+                "java.util.regex",
+                "java.util.function",
+                "java.util.stream",
+                "java.util.concurrent",
+                "java.util.concurrent.atomic",
+           });
+
+      addOpens(command,
+           "java.desktop",
+           new String[]{
+                "java.awt",
+                "java.awt.color",
+                "java.awt.event",
+                "java.awt.image",
+                "java.awt.font",
+                "javax.sound.midi",
+                "javax.sound.sampled",
+                "javax.swing",
+                "javax.swing.border",
+                "javax.imageio"
+           });
+
+      command.addAll(arguments);
+
+      if (workspace.isSecurityEnabled()) {
          command.add("-Djava.security.manager");
          command.add("-Djava.security.policy=" + policyUrl);
       }
@@ -63,7 +100,7 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       command.add(classesUrl);
       command.add(className);
       command.add("org.ternlang.");
-      
+
       command.add("--host=" + host);
       command.add("--port=" + port);
       command.add("--name=" + name);
@@ -72,18 +109,28 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       command.add("--timeout=" + timeout);
 
       ProcessBuilder builder = new ProcessBuilder(command);
-      
-      if(!variables.isEmpty()) {
+
+      if (!variables.isEmpty()) {
          Map<String, String> environment = builder.environment();
          environment.putAll(variables);
       }
-      
-      log.info(name + ": " +command);
+
+      log.info(name + ": " + command);
       runPath.mkdirs();
       builder.directory(runPath);
       builder.redirectErrorStream(true);
-      
+
       Process process = builder.start();
       return new ProcessDefinition(process, name);
+   }
+
+   public static void addOpens(List<String> command, String module, String[] packages) {
+      for (String entry : packages) {
+         String value = String.format("--add-opens=%s/%s=ALL-UNNAMED", module.trim(), entry.trim());
+
+         if (!command.contains(value)) {
+            command.add(value);
+         }
+      }
    }
 }

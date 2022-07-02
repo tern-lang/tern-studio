@@ -24,13 +24,14 @@ public class LocalProcessLauncher {
       
       LocalProcess.main(
             new String[] {
-            "--cp=../snap-studio/work/demo/games/src;../snap-studio/work/demo/games/assets/",      
+                 "--cp=../tern-demo/games/mario/src;../tern-demo/games/mario/assets/",
             "--s=mario/MarioGame.tern",
             "--w=true", // suspend
             "--p=7799",
             "--v=true", 
             "foo", 
-            "blah"});     
+            "blah"});
+
       
 //      LocalProcess.main(
 //            new String[] {
