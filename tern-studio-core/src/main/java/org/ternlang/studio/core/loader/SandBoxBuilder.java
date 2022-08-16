@@ -22,7 +22,7 @@ public class SandBoxBuilder implements ComponentListener {
    }
    
    public void onReady()  {
-      File directory = HomeDirectory.getPath(TEMP_PATH);
+      File directory = HomeDirectory.getHomeChildPath(TEMP_PATH);
       
       if(!directory.exists()) {
          directory.mkdirs();

@@ -37,9 +37,9 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       String name = filter.generate();
       String mode = ProcessMode.SCRIPT.name();
       String javaHome = System.getProperty("java.home");
-      File tempPath = HomeDirectory.getPath(TEMP_PATH);
+      File tempPath = HomeDirectory.getHomeChildPath(TEMP_PATH);
       File jarFile = new File(tempPath, JAR_FILE);
-      File runPath = HomeDirectory.getPath(RUN_PATH);
+      File runPath = HomeDirectory.getHomeChildPath(RUN_PATH);
       String jarPath = jarFile.getCanonicalPath();
       String java = String.format("%s%sbin%sjava", javaHome, File.separatorChar, File.separatorChar);
       String classesUrl = String.format("http://%s:%s/class/", host, port);

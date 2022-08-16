@@ -77,7 +77,7 @@ public class BackupManager {
    
    private synchronized File createBackupFile(File file, String project) {
       long time = file.lastModified();
-      File backupRoot = HomeDirectory.getPath(WorkspaceConfiguration.BACKUP_PATH);
+      File backupRoot = HomeDirectory.getHomeChildPath(WorkspaceConfiguration.BACKUP_PATH);
       Project proj = workspace.getByName(project);
       
       if(proj == null) {

@@ -1,7 +1,5 @@
 package org.ternlang.studio.project.config;
 
-import org.ternlang.studio.project.FileSystem;
-
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -14,9 +12,11 @@ public enum OperatingSystem {
    private final String code;
    private final String explore;
    private final String terminal;
-   private final String[] install;
+   private final String install;
+   private final String home;
 
-   private OperatingSystem(String code, String explore, String terminal, String... install) {
+   private OperatingSystem(String code, String explore, String terminal, String install, String home) {
+      this.home = home;
       this.install = install;
       this.explore = explore;
       this.terminal = terminal;
@@ -39,27 +39,12 @@ public enum OperatingSystem {
       return this == MAC;
    }
 
-   public File getInstallDirectory() {
-      for (String path : install) {
-         Properties properties = System.getProperties();
-         Enumeration<?> keys = properties.propertyNames();
+   public File getHomePath() {
+      return interpolate(home, true);
+   }
 
-         while (keys.hasMoreElements()) {
-            String name = String.valueOf(keys.nextElement());
-            String value = properties.getProperty(name);
-
-            if (value != null) {
-               path = path.replace("${" + name + "}", value);
-               path = path.replace("$" + name, value);
-            }
-         }
-         File file = new File(path.trim());
-
-         if (file.exists()) {
-            return file;
-         }
-      }
-      throw new IllegalStateException("Could not resolve install directory");
+   public File getInstallPath() {
+      return interpolate(install, false);
    }
 
    public String createExploreCommand(String resource) {
@@ -81,5 +66,30 @@ public enum OperatingSystem {
          }
       }
       return WINDOWS;
+   }
+
+   private static File interpolate(String path, boolean create) {
+      Properties properties = System.getProperties();
+      Enumeration<?> keys = properties.propertyNames();
+      String original = path;
+
+      while (keys.hasMoreElements()) {
+         String name = String.valueOf(keys.nextElement());
+         String value = properties.getProperty(name);
+
+         if (value != null) {
+            path = path.replace("${" + name + "}", value);
+            path = path.replace("$" + name, value);
+         }
+      }
+      File file = new File(path.trim());
+
+      if(create) {
+         file.mkdirs();
+      }
+      if (file.exists()) {
+         return file;
+      }
+      throw new IllegalStateException("Could not resolve directory " + original);
    }
 }

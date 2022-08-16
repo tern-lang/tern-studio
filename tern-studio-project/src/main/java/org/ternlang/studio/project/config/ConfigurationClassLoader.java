@@ -64,7 +64,7 @@ public class ConfigurationClassLoader {
    private ClassLoader createClassLoader(String dependencies) {
       try {
          List<File> files = ClassPathUpdater.parseClassPath(dependencies);
-         File tempPath = HomeDirectory.getPath(WorkspaceConfiguration.TEMP_PATH);
+         File tempPath = HomeDirectory.getHomeChildPath(WorkspaceConfiguration.TEMP_PATH);
          File agentFile = new File(tempPath, WorkspaceConfiguration.JAR_FILE);
          List<URL> locations = new ArrayList<URL>();
          

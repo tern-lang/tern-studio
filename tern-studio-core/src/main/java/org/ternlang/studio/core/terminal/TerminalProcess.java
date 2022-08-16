@@ -1,5 +1,13 @@
 package org.ternlang.studio.core.terminal;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pty4j.PtyProcess;
+import com.pty4j.WinSize;
+import com.sun.jna.Platform;
+import lombok.extern.slf4j.Slf4j;
+import org.simpleframework.http.socket.FrameChannel;
+import org.ternlang.studio.project.HomeDirectory;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,16 +20,6 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import org.simpleframework.http.socket.FrameChannel;
-import org.ternlang.studio.project.HomeDirectory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pty4j.PtyProcess;
-import com.pty4j.WinSize;
-import com.sun.jna.Platform;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TerminalProcess implements TerminalListener {
@@ -70,11 +68,11 @@ public class TerminalProcess implements TerminalListener {
    }
 
    private void initializeProcess() throws Exception {
-      File installPath = HomeDirectory.getRootPath();
-      File dataDir = HomeDirectory.getPath("terminalfx");
+      File installPath = HomeDirectory.getInstallPath();
+      File dataDir = new File(installPath, "terminalfx");
       String startPath = directory.getCanonicalPath();
 
-      TerminalHelper.copyLibPty(dataDir);
+      TerminalHelper.copyLibPty(dataDir); // checks if its done
 
       if (Platform.isWindows()) {
          this.termCommand = "cmd.exe".split("\\s+");

@@ -59,17 +59,16 @@ public class StudioClientLauncher {
    @SneakyThrows
    public void launch(final String address) {
       if (!disabled) {
-         final File root = HomeDirectory.getRootPath();
-         final String path = root.getCanonicalPath();
-         final File logFile = HomeDirectory.getPath(CLIENT_LOG);
-         final File cachePath = HomeDirectory.getPath(CLIENT_CACHE);
-         final File cookiePath = HomeDirectory.getPath(COOKIE_CACHE, UUID.randomUUID().toString());
+         final String installPath = HomeDirectory.getInstallPath().getCanonicalPath();
+         final File logFile = HomeDirectory.getHomeChildPath(CLIENT_LOG);
+         final File cachePath = HomeDirectory.getHomeChildPath(CLIENT_CACHE);
+         final File cookiePath = HomeDirectory.getHomeChildPath(COOKIE_CACHE, UUID.randomUUID().toString());
          final String title = directory.getCanonicalPath();
          final ClientContext context = new ClientContext()
             .setLogFile(logFile)
             .setCachePath(cachePath)
             .setCookiePath(cookiePath)
-            .setFolder(path)
+            .setFolder(installPath)
             .setDebug(debug)            
             .setAddress(address)
             .setTitle(title);

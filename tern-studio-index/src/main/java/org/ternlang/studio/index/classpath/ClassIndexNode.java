@@ -64,7 +64,12 @@ public class ClassIndexNode implements IndexNode {
    }
 
    private String getURL() {
-      return info.getClasspathElementURL().toString();
+      String resource = info.getClasspathElementURL().toString();
+
+      if(resource != null && resource.startsWith("jrt:/")) {
+         return resource.substring(5) + "/" + getModule(); // this is a hack to fool the UI, scheme changed in Java 15
+      }
+      return resource;
    }
 
    public File getFile() {

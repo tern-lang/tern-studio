@@ -16,7 +16,6 @@ import org.ternlang.ui.chrome.install.deploy.DeploymentTask;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.Manifest;
@@ -114,21 +113,21 @@ public class StudioServiceBuilder {
          String[] paths = new String[files.length];
 
          for (int i = 0; i < files.length; i++) {
-            File installPath = HomeDirectory.getPath(files[i]);
-
-            if (installPath.exists()) {
-               paths[i] = installPath.getAbsolutePath();
-            } else {
-               File installParentPath = HomeDirectory.getPath("../" + files[i]);
-
-               if (installParentPath.exists()) {
-                  paths[i] = installParentPath.getAbsolutePath();
-               } else {
-                  paths[i] = files[i];
-               }
-            }
+            paths[i] = getFile(files[i]);
          }
          return paths;
+      }
+
+      private static String getFile(String path) {
+         File filePath = HomeDirectory.getHomeChildPath(path);
+
+         if(!filePath.exists()) {
+            filePath = HomeDirectory.getInstallChildPath(path);
+         }
+         if(filePath.exists()) {
+            return filePath.getAbsolutePath();
+         }
+         return path;
       }
    }
 }
