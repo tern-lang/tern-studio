@@ -3,6 +3,8 @@ package org.ternlang.studio.agent.local;
 import static org.ternlang.studio.agent.runtime.RuntimeAttribute.VERSION;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.ternlang.studio.agent.cli.CommandLine;
@@ -16,6 +18,7 @@ public class LocalProcess {
    private static final String WARNING = "Could not find classpath entry %s";
 
    public static void main(String[] arguments) throws Exception {
+      LocalAccessLogger.disableAccessWarnings();
       launch(arguments);
    }
 
@@ -54,5 +57,4 @@ public class LocalProcess {
       }
       executor.execute(local);
    }
-
 }
