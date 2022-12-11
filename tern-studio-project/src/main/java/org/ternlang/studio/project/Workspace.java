@@ -43,6 +43,7 @@ public class Workspace implements FileDirectorySource {
    private final Executor executor;
    private final ClassPath path;
    private final File logFile;
+   private final String stack;
    private final String level;
    private final File root;
    
@@ -51,7 +52,8 @@ public class Workspace implements FileDirectorySource {
          ClassPath path,
          @Value("${directory}") File root, 
          @Value("${log-file}") File logFile, 
-         @Value("${log-level}") String level, 
+         @Value("${log-level}") String level,
+         @Value("${stack-size}") String stack,
          @Value("${mode}") ProjectMode mode) 
    {
       this.loaded = new CopyOnWriteArraySet<String>();
@@ -60,10 +62,15 @@ public class Workspace implements FileDirectorySource {
       this.manager = new ProjectManager(reader, source, this, mode);
       this.logFile = logFile;
       this.level = level;
+      this.stack = stack;
       this.path = path;
       this.root = root;
       
       createWorkspace();
+   }
+
+   public String getStackSize() {
+      return stack;
    }
    
    public ClassPath getClassPath() {

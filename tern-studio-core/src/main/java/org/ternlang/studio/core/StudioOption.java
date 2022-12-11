@@ -20,6 +20,7 @@ public enum StudioOption implements CommandOption {
    MODE("m", "mode", "Mode to start on", "(DEVELOP|DEBUG)", ProjectMode.class, ProjectMode.DEVELOP),
    DIRECTORY("d", "directory", "Directory used for sources", ".*", File.class,  HomeDirectory.getHomeChildPath("work")),
    LOG_LEVEL("l", "log-level", "Level of logging", "(TRACE|DEBUG|INFO)", String.class, LogLevel.INFO),
+   STACK_SIZE("z", "stack-size", "Stack size", "\\w+", String.class, "32m"),
    LOG("f", "log-file", "Log file to use", ".+", File.class, HomeDirectory.getHomeChildPath("log/ternd.log")),
    SCRIPT("s", "script", "Script to launch", ".*.tern", Path.class),
    SERVER_ONLY("o", "server-only", "Launch server only", "(true|false)", Boolean.class, false),

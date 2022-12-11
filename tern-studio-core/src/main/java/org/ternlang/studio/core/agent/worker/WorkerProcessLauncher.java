@@ -37,6 +37,7 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       String level = "DEBUG";//workspace.getLogger();
       String name = filter.generate();
       String mode = ProcessMode.SCRIPT.name();
+      String stackSize = workspace.getStackSize();
       String javaHome = System.getProperty("java.home");
       File tempPath = HomeDirectory.getHomeChildPath(TEMP_PATH);
       File jarFile = new File(tempPath, JAR_FILE);
@@ -53,6 +54,9 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       command.add(java);
       command.add("-XX:+IgnoreUnrecognizedVMOptions");
 
+      if(stackSize != null) {
+         command.add("-Xss" + stackSize);
+      }
       addOpens(command,
            "java.base",
            new String[]{

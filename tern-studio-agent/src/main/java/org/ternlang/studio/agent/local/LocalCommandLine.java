@@ -21,15 +21,19 @@ public class LocalCommandLine {
    }
    
    public boolean isDebug() {
-      return (Boolean)line.getValue(LocalOption.VERBOSE.name);
+      return Boolean.TRUE.equals(line.getValue(LocalOption.VERBOSE.name));
    }
    
    public boolean isCheck() {
-      return (Boolean)line.getValue(LocalOption.CHECK.name);
+      return Boolean.TRUE.equals(line.getValue(LocalOption.CHECK.name));
    }
    
    public boolean isWait() {
-      return (Boolean)line.getValue(LocalOption.WAIT.name);
+      return Boolean.TRUE.equals(line.getValue(LocalOption.WAIT.name));
+   }
+
+   public boolean isVersion() {
+      return Boolean.TRUE.equals(line.getValue(LocalOption.VERSION.name));
    }
    
    public Integer getPort() {
@@ -54,10 +58,6 @@ public class LocalCommandLine {
    
    public URI getDownloadURI() {
       return (URI)line.getValue(LocalOption.URL.name);
-   }
-
-   public boolean isVersion() {
-      return (Boolean)line.getValue(LocalOption.VERSION.name);
    }
 
    public Path getScript() {

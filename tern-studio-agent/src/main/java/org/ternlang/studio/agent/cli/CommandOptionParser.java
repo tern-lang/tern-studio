@@ -55,6 +55,10 @@ public class CommandOptionParser {
          value = pair[1];
       } else if(option != null){
          Object object = option.getDefault();
+
+         if(object == null && type == Boolean.class) {
+            object = Boolean.TRUE; // presence means true, e.g --version
+         }
          value = interpolate(object);
       } 
       if(value == null) {

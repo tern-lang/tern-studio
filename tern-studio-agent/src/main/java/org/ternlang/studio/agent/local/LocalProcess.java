@@ -1,17 +1,15 @@
 package org.ternlang.studio.agent.local;
 
-import static org.ternlang.studio.agent.runtime.RuntimeAttribute.VERSION;
-
-import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.List;
-
 import org.ternlang.studio.agent.cli.CommandLine;
 import org.ternlang.studio.agent.cli.CommandLineBuilder;
 import org.ternlang.studio.agent.cli.CommandLineUsage;
 import org.ternlang.studio.agent.cli.CommandOption;
 import org.ternlang.studio.agent.core.ClassPathUpdater;
+
+import java.io.File;
+import java.util.List;
+
+import static org.ternlang.studio.agent.runtime.RuntimeAttribute.VERSION;
 
 public class LocalProcess {
    

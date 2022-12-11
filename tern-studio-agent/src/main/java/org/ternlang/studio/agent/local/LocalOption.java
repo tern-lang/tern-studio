@@ -19,11 +19,11 @@ public enum LocalOption implements CommandOption {
    SCRIPT("s", "script", "script to execute", ".+", Path.class),
    EXPRESSION("e", "expression", "expression to evaluate", ".+", String.class),
    CLASSPATH("cp", "classpath", "optional classpath file", ".+", File[].class),
-   VERBOSE("v", "verbose", "enable verbose logging", "(true|false)", Boolean.class, false),
-   CHECK("c", "check", "compile script only", "(true|false)", Boolean.class, false),
    PORT("p", "port", "debug port", "\\d+", Integer.class),
-   WAIT("w", "wait", "wait for debugger", "(true|false)", Boolean.class, false),
-   VERSION("ve", "version", "implementation version", ".+", Boolean.class, false);
+   VERBOSE("vb", "verbose", "enable verbose logging", "(true|false)", Boolean.class),
+   CHECK("c", "check", "compile script only", "(true|false)", Boolean.class),
+   WAIT("w", "wait", "wait for debugger", "(true|false)", Boolean.class),
+   VERSION("v", "version", "implementation version", "(true|false)", Boolean.class);
 
    public final Pattern pattern;
    public final String description;
@@ -37,7 +37,7 @@ public enum LocalOption implements CommandOption {
    }
    
    private LocalOption(String code, String name, String description, String pattern, Class type, Object value) {
-      this.pattern = Pattern.compile(pattern);
+      this.pattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
       this.description = description;
       this.value = value;
       this.name = name;
