@@ -5,26 +5,28 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
+import java.util.Queue;
 
 public class CommandFile {
 
    private final String[] paths;
-   private final String[] empty;
 
    public CommandFile(String... paths) {
-      this.empty = new String[]{};
       this.paths = paths;
    }
 
-   public String[] combine(String[] arguments) {
+   public Deque<String> combine(String[] arguments) {
       List<String> pairs = new ArrayList<String>();
 
-      for(String path : paths) {
+      for (String path : paths) {
          File file = new File(".", path).exists() ? new File(".", path) : new File(path);
 
-         if(file.exists() && pairs.isEmpty()) {
+         if (file.exists() && pairs.isEmpty()) {
             try {
                InputStream source = new FileInputStream(file);
                InputStreamReader reader = new InputStreamReader(source, "UTF-8");
@@ -46,24 +48,26 @@ public class CommandFile {
                         if (index != -1 && index < length) {
                            String key = token.substring(0, index).trim();
                            String value = token.substring(index + 1, length).trim();
-                           String argument = String.format("--%s=%s", key, value);
+                           String argument = String.format("--%s", key);
 
                            pairs.add(argument);
+                           pairs.add(value);
                         }
                      }
                   }
                } catch (Exception e) {
                   iterator.close();
                }
-            } catch(Exception e){}
+            } catch (Exception e) {
+            }
          }
       }
-      if(!pairs.isEmpty()) {
+      if (!pairs.isEmpty()) {
          for (String argument : arguments) {
             pairs.add(argument);
          }
-         return pairs.toArray(empty);
+         return new ArrayDeque<>(pairs);
       }
-      return arguments;
+      return new ArrayDeque<>(Arrays.asList(arguments));
    }
 }

@@ -18,10 +18,10 @@ public enum LocalOption implements CommandOption {
    NOTIFY("n", "notify", "notify URL for reverse debug", ".+", URI.class),
    SCRIPT("s", "script", "script to execute", ".+", Path.class),
    EXPRESSION("e", "expression", "expression to evaluate", ".+", String.class),
-   CLASSPATH("cp", "classpath", "optional classpath file", ".+", File[].class),
+   CLASSPATH("c", "classpath", "optional classpath file", ".+", File[].class),
    PORT("p", "port", "debug port", "\\d+", Integer.class),
-   VERBOSE("vb", "verbose", "enable verbose logging", "(true|false)", Boolean.class),
-   CHECK("c", "check", "compile script only", "(true|false)", Boolean.class),
+   VERBOSE("V", "verbose", "enable verbose logging", "(true|false)", Boolean.class),
+   CHECK("k", "check", "compile script only", "(true|false)", Boolean.class),
    WAIT("w", "wait", "wait for debugger", "(true|false)", Boolean.class),
    VERSION("v", "version", "implementation version", "(true|false)", Boolean.class);
 

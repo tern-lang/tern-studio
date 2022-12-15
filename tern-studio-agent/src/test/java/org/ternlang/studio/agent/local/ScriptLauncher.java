@@ -6,7 +6,6 @@ public class ScriptLauncher {
       LocalProcess.launch(
            "--cp=C:\\Work\\development\\tern-lang\\tern-demo\\demo\\misc\\src",
            "--s=text_test2.tern",
-           "--v=true",
            "foo",
            "blah");
    }

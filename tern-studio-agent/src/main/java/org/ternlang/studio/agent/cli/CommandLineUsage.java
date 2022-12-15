@@ -2,14 +2,17 @@ package org.ternlang.studio.agent.cli;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CommandLineUsage {
    
-   public static void usage(List<? extends CommandOption> options, String warning) {
+   public static void usage(Collection<? extends CommandOption> list, String warning) {
       StringWriter builder = new StringWriter();
       PrintWriter writer = new PrintWriter(builder);
-      
+      Set<CommandOption> options = new HashSet<>(list);
+
       if(warning != null) {
          writer.println(warning);
          writer.println();
