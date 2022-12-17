@@ -106,12 +106,18 @@ public class WorkerProcessLauncher implements ProcessLauncher {
       command.add(className);
       command.add("org.ternlang.");
 
-      command.add("--host=" + host);
-      command.add("--port=" + port);
-      command.add("--name=" + name);
-      command.add("--level=" + level);
-      command.add("--mode=" + mode);
-      command.add("--timeout=" + timeout);
+      command.add("--host");
+      command.add(host);
+      command.add("--port");
+      command.add(String.valueOf(port));
+      command.add("--name");
+      command.add(name);
+      command.add("--level");
+      command.add(level);
+      command.add("--mode");
+      command.add(mode);
+      command.add("--timeout");
+      command.add(String.valueOf(timeout));
 
       ProcessBuilder builder = new ProcessBuilder(command);
 

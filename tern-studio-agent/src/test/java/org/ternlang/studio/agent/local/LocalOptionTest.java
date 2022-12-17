@@ -13,7 +13,8 @@ public class LocalOptionTest extends TestCase {
       CommandLine line = builder.build(new String[]{
            "--version",
            "--verbose",
-           "--directory=."
+           "--directory",
+           "."
       });
 
       LocalCommandLine local = new LocalCommandLine(line);
@@ -28,7 +29,8 @@ public class LocalOptionTest extends TestCase {
       CommandLineBuilder builder = LocalOption.getBuilder();
       CommandLine line = builder.build(new String[]{
            "--verbose",
-           "--directory=."
+           "--directory",
+           "."
       });
 
       LocalCommandLine local = new LocalCommandLine(line);
