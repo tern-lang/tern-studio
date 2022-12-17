@@ -33,7 +33,7 @@ public class CommandLineUsage {
          }
       }
       for(CommandOption option : options) {
-         writer.print("--");
+         writer.print("-");
          writer.print(option.getCode());
          
          for(int i = option.getCode().length(); i < code + pad; i++){
